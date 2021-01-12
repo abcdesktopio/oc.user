@@ -1,0 +1,4 @@
+[submodule "etc/cups"]
+	path = etc/cups
+	url = https://github.com/abcdesktopio/cups.git
+	branch = main
