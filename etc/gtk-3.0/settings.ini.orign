@@ -1,0 +1,9 @@
+[Settings]
+gtk-application-prefer-dark-theme=0
+gtk-theme-name = elementary
+# gtk-theme-name = Ambiance
+gtk-icon-theme-name = elementary
+gtk-fallback-icon-theme = gnome
+gtk-sound-theme-name = ubuntu
+gtk-icon-sizes = panel-menu-bar=24,24
+gtk-font-name = Droid Sans 9

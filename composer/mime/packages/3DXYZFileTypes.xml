@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+
+  <mime-type type="application/sla">
+         <comment xml:lang="en">STL image</comment>
+         ...
+         <magic priority="100">
+                <match type="string" value="*.stl" offset="0"/>
+         </magic>
+         <glob pattern="*.stl"/>
+         <icon name="stl"/>
+  </mime-type>
+  <mime-type type="application/obj">
+         <comment xml:lang="en">OBJ image</comment>
+         ...
+         <magic priority="100">
+                <match type="string" value="*.obj" offset="0"/>
+         </magic>
+         <glob pattern="*.obj"/>
+         <icon name="obj"/>
+  </mime-type>
+  <mime-type type="application/x-amf">
+         <comment xml:lang="en">AMF image</comment>
+         ...
+         <magic priority="100">
+                <match type="string" value="*.amf" offset="0"/>
+         </magic>
+         <glob pattern="*.amf"/>
+         <icon name="amf"/>
+  </mime-type>
+  <mime-type type="application/ply">
+         <comment xml:lang="en">PLY image</comment>
+         ...
+         <magic priority="100">
+                <match type="string" value="*.ply" offset="0"/>
+         </magic>
+         <glob pattern="*.ply"/>
+         <icon name="ply"/>
+  </mime-type>
+  <mime-type type="application/nkg">
+         <comment xml:lang="en">NKG image</comment>
+         ...
+         <magic priority="100">
+                <match type="string" value="*.nkg" offset="0"/>
+         </magic>
+         <glob pattern="*.nkg"/>
+         <icon name="nkg"/>
+  </mime-type>
+  <mime-type type="application/3w">
+         <comment xml:lang="en">3W image</comment>
+         ...
+         <magic priority="100">
+                <match type="string" value="*.3w" offset="0"/>
+         </magic>
+         <glob pattern="*.3w"/>
+         <icon name="3w"/>
+  </mime-type>
+  <mime-type type="application/3cp">
+         <comment xml:lang="en">3CP image</comment>
+         ...
+         <magic priority="100">
+                <match type="string" value="*.3cp" offset="0"/>
+         </magic>
+         <glob pattern="*.3cp"/>
+         <icon name="3cp"/>
+  </mime-type>
+  <mime-type type="application/3mf">
+         <comment xml:lang="en">3MF image</comment>
+         ...
+         <magic priority="100">
+                <match type="string" value="*.3mf" offset="0"/>
+         </magic>
+         <glob pattern="*.3mf"/>
+         <icon name="3mf"/>
+  </mime-type>
+</mime-info>

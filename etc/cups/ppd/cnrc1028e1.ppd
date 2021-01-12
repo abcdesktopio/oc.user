@@ -1,0 +1,1029 @@
+*PPD-Adobe: "4.3"
+*% Copyright 2010 SIC International. All rights reserved.
+*% Canon PostScript(R) Printer Description File
+*% Copyright 2008 Canon Inc.
+*% All Rights Reserved.
+*% Permission is granted for redistribution of this file as
+*% long as this copyright notice is intact and the contents
+*% of the file is not altered in any way from its original form.
+*% End of Copyright statement for Canon iR C1028/C1030.
+*% Copyright 2008 Canon Inc.  All rights reserved.
+*%
+*% Release version 2.70 2008/10/27
+*%
+*FormatVersion: "4.3"
+*FileVersion: "1.0"
+*LanguageEncoding: ISOLatin1
+*LanguageVersion: English
+*Manufacturer: "Canon"
+*PCFileName: "CNRC1028E1.PPD"
+*Product: "(iR C1028/C1030)"
+*PSVersion: "(3010.103) 0"
+*ModelName: "Canon iR C1028/C1030"
+*ShortNickName: "Canon iR C1028/C1030"
+*NickName: "Canon iR C1028/C1030"
+*%
+*% ==== Device Capabilities ===============
+*LanguageLevel: "3"
+*Protocols: TBCP
+
+*FreeVM: "2157000"
+
+*ColorDevice: True
+*DefaultColorSpace: CMYK
+
+*TTRasterizer: Type42
+*?TTRasterizer: "save
+ 42 /FontType resourcestatus
+ {pop pop (Type42)} {(No Type42)} ifelse = flush
+restore"
+*End
+
+*% Optional flash rom is treated like a disk.
+*FileSystem: True
+*?FileSystem: "save statusdict /diskonline get exec
+ {(True)}{(False)} ifelse = flush restore"
+*End
+
+*Throughput: "31"
+*Password: "()"
+*ExitServer: "
+  count 0 eq
+  {false}
+  {true exch startjob}
+  ifelse
+  not
+  {
+    (WARNING: Cannot modify initial VM.) =
+    (Missing or invalid password.) =
+    (Please contact the author of this software.) = flush quit
+  } if"
+*End
+*Reset: "
+  count 0 eq
+  {false}
+  {true exch startjob}
+  ifelse
+  not
+  {
+    (WARNING: Cannot reset printer.) =
+    (Missing or invalid password.) =
+    (Please contact the author of this software.) = flush quit
+  } if
+  systemdict /quit get exec
+  (WARNING : Printer Reset Failed.) = flush"
+*End
+*OpenGroup: InstallableOptions/Options Installed
+*%
+*% ====================================
+*% ===== Optional input trays
+*%
+*OpenUI *Option1/Optional Paper Trays: PickOne
+*DefaultOption1: None
+*Option1 None/None: ""
+*Option1 ExtraTray1/Tray 500 sheets: ""
+*CloseUI: *Option1
+
+*CloseGroup: InstallableOptions
+*%
+*% ====================================
+*% ==== Option/Feature constraints ====
+
+*% ====================================
+*% ===== If Optional input trays
+*% ===== not installed, cant select trays
+*%
+*UIConstraints: *Option1 None        *InputSlot Tray2
+*UIConstraints: *InputSlot Tray2     *Option1 None
+
+
+*% ====================================
+*% === Paper size / input slot constraints ===
+*% ====================================
+*% Only MPT supports B5-ISO Envelope env.
+*%
+*UIConstraints: *PageSize ISOB5 *InputSlot Tray1
+*UIConstraints: *PageSize ISOB5 *InputSlot Tray2
+*UIConstraints: *InputSlot Tray1 *PageSize ISOB5
+*UIConstraints: *InputSlot Tray2 *PageSize ISOB5
+
+*% ====================================
+*% Only MPT supports Monarch env.
+*%
+*UIConstraints: *PageSize Monarch *InputSlot Tray1
+*UIConstraints: *PageSize Monarch *InputSlot Tray2
+*UIConstraints: *InputSlot Tray1 *PageSize Monarch
+*UIConstraints: *InputSlot Tray2 *PageSize Monarch
+
+*% ====================================
+*% Only MPT supports Comm10 env.
+*%
+*UIConstraints: *PageSize Com10 *InputSlot Tray1
+*UIConstraints: *PageSize Com10 *InputSlot Tray2
+*UIConstraints: *InputSlot Tray1 *PageSize Com10
+*UIConstraints: *InputSlot Tray2 *PageSize Com10
+
+*% ====================================
+*% Only MPT and Env support C5 env.
+*%
+*UIConstraints: *PageSize C5 *InputSlot Tray1
+*UIConstraints: *PageSize C5 *InputSlot Tray2
+*UIConstraints: *InputSlot Tray1 *PageSize C5
+*UIConstraints: *InputSlot Tray2 *PageSize C5
+
+*% ====================================
+*% Only MPT and Env support DL env.
+
+*UIConstraints: *PageSize DL *InputSlot Tray1
+*UIConstraints: *PageSize DL *InputSlot Tray2
+*UIConstraints: *InputSlot Tray1 *PageSize DL
+*UIConstraints: *InputSlot Tray2 *PageSize DL
+
+*% ====================================
+*% === end paper size / input slot constraints ===
+
+*% ====================================
+*% === media type constraints ===
+
+*% ====================================
+*% Only MPT supports heavy media.
+*%
+*UIConstraints: *InputSlot Tray1 *MediaType TRANSPR
+*UIConstraints: *InputSlot Tray1 *MediaType LABELS
+*UIConstraints: *InputSlot Tray1 *MediaType ENVELOPE
+*UIConstraints: *InputSlot Tray1 *MediaType HEAVY
+*UIConstraints: *InputSlot Tray1 *MediaType EXHEAVY
+*UIConstraints: *InputSlot Tray1 *MediaType ROUGH
+*UIConstraints: *InputSlot Tray2 *MediaType TRANSPR
+*UIConstraints: *InputSlot Tray2 *MediaType LABELS
+*UIConstraints: *InputSlot Tray2 *MediaType ENVELOPE
+*UIConstraints: *InputSlot Tray2 *MediaType HEAVY
+*UIConstraints: *InputSlot Tray2 *MediaType EXHEAVY
+*UIConstraints: *InputSlot Tray2 *MediaType ROUGH
+*UIConstraints: *MediaType TRANSPR *InputSlot Tray1
+*UIConstraints: *MediaType LABELS *InputSlot Tray1
+*UIConstraints: *MediaType ENVELOPE *InputSlot Tray1
+*UIConstraints: *MediaType HEAVY *InputSlot Tray1
+*UIConstraints: *MediaType EXHEAVY *InputSlot Tray1
+*UIConstraints: *MediaType ROUGH *InputSlot Tray1
+*UIConstraints: *MediaType TRANSPR *InputSlot Tray2
+*UIConstraints: *MediaType LABELS *InputSlot Tray2
+*UIConstraints: *MediaType ENVELOPE *InputSlot Tray2
+*UIConstraints: *MediaType HEAVY *InputSlot Tray2
+*UIConstraints: *MediaType EXHEAVY *InputSlot Tray2
+*UIConstraints: *MediaType ROUGH *InputSlot Tray2
+
+*% === end media type constraints ===
+*%
+*%
+*OpenGroup: PaperSource/Paper
+*%
+*OpenUI *InputSlot: PickOne
+*OrderDependency: 40.0 AnySetup *InputSlot
+*DefaultInputSlot: Auto
+*InputSlot Auto/Auto Select: "<</InputAttributes <</Priority []>> >>
+ setpagedevice"
+*End
+*InputSlot Tray1/Cassette 1: "
+ currentpagedevice /InputAttributes get 0 get null ne
+ {<</InputAttributes <</Priority [0]>> >>
+ setpagedevice} if
+ <</MediaType (ANY) /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*InputSlot Tray2/Cassette 2: "
+ currentpagedevice /InputAttributes get 2 get null ne
+ {<</InputAttributes <</Priority [2]>> >>
+ setpagedevice} if
+ <</MediaType (ANY) /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*InputSlot MPT/Multi Purpose Tray: "
+ currentpagedevice /InputAttributes get 1 get null ne
+ {<</InputAttributes <</Priority [1]>> >>
+ setpagedevice} if
+ <</MediaType (ANY) /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*CloseUI: *InputSlot
+
+*OpenUI *MediaType/Paper Type: PickOne
+*OrderDependency: 50.0 AnySetup *MediaType
+*DefaultMediaType: None
+*MediaType None/Printer Default: ""
+*MediaType PLAIN/Plain Paper: "<</MediaType (PLAIN)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType THIN/Plain Paper L: "<</MediaType (THIN)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType HEAVY/Heavy Paper 1: "<</MediaType (HEAVY)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType EXHEAVY/Heavy Paper 2: "<</MediaType (EXHEAVY)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType TRANSPR/Transparency: "<</MediaType (TRANSPARENCY)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType LABELS/Label: "<</MediaType (LABELS)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType ENVELOPE/Envelope: "<</MediaType (ENVELOPE)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType SINGLECOATED1/Coated Paper 1: "<</MediaType (SINGLE-SIDE-COATED1)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType SINGLECOATED2/Coated Paper 2: "<</MediaType (SINGLE-SIDE-COATED2)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType SINGLECOATED3/Coated Paper 3: "<</MediaType (SINGLE-SIDE-COATED3)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType ROUGH/Rough Paper: "<</MediaType (ROUGH)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*CloseUI: *MediaType
+
+*CloseGroup: PaperSource
+
+*DefaultResolution: 600dpi
+*RequiresPageRegion All: True
+
+*OpenGroup: Finishing/Finishing
+
+*OpenUI *Duplex/Duplex: PickOne
+*OrderDependency: 50.0 AnySetup *Duplex
+*DefaultDuplex: None
+*Duplex None/Off: "<</Duplex false /Tumble false>> setpagedevice"
+*Duplex DuplexNoTumble/Long edge: "<</Duplex true /Tumble false>> setpagedevice"
+*Duplex DuplexTumble/Short edge: "<</Duplex true /Tumble true>> setpagedevice"
+*CloseUI: *Duplex
+
+*OpenUI *BindingLocation/Binding Location: PickOne
+*OrderDependency: 50.0 AnySetup *BindingLocation
+*DefaultBindingLocation: None
+*BindingLocation None/Printer Default: ""
+*BindingLocation LongEdge/Long Edge: "<</BindingLocation (LongEdge) >> setpagedevice"
+*BindingLocation ShortEdge/Short Edge: "<</BindingLocation (ShortEdge) >> setpagedevice"
+*CloseUI: *BindingLocation
+
+*OpenUI *Gutter/Gutter: PickOne
+*OrderDependency: 50.0 AnySetup *Gutter
+*DefaultGutter: None
+*Gutter 50mm/+50 mm: "<< /Gutter 50 >> setpagedevice"
+*Gutter 48mm/+48 mm: "<< /Gutter 48 >> setpagedevice"
+*Gutter 46mm/+46 mm: "<< /Gutter 46 >> setpagedevice"
+*Gutter 44mm/+44 mm: "<< /Gutter 44 >> setpagedevice"
+*Gutter 42mm/+42 mm: "<< /Gutter 42 >> setpagedevice"
+*Gutter 40mm/+40 mm: "<< /Gutter 40 >> setpagedevice"
+*Gutter 38mm/+38 mm: "<< /Gutter 38 >> setpagedevice"
+*Gutter 36mm/+36 mm: "<< /Gutter 36 >> setpagedevice"
+*Gutter 34mm/+34 mm: "<< /Gutter 34 >> setpagedevice"
+*Gutter 32mm/+32 mm: "<< /Gutter 32 >> setpagedevice"
+*Gutter 30mm/+30 mm: "<< /Gutter 30 >> setpagedevice"
+*Gutter 28mm/+28 mm: "<< /Gutter 28 >> setpagedevice"
+*Gutter 26mm/+26 mm: "<< /Gutter 26 >> setpagedevice"
+*Gutter 24mm/+24 mm: "<< /Gutter 24 >> setpagedevice"
+*Gutter 22mm/+22 mm: "<< /Gutter 22 >> setpagedevice"
+*Gutter 20mm/+20 mm: "<< /Gutter 20 >> setpagedevice"
+*Gutter 18mm/+18 mm: "<< /Gutter 18 >> setpagedevice"
+*Gutter 16mm/+16 mm: "<< /Gutter 16 >> setpagedevice"
+*Gutter 14mm/+14 mm: "<< /Gutter 14 >> setpagedevice"
+*Gutter 12mm/+12 mm: "<< /Gutter 12 >> setpagedevice"
+*Gutter 10mm/+10 mm: "<< /Gutter 10 >> setpagedevice"
+*Gutter 8mm/+8 mm: "<< /Gutter 8 >> setpagedevice"
+*Gutter 6mm/+6 mm: "<< /Gutter 6 >> setpagedevice"
+*Gutter 4mm/+4 mm: "<< /Gutter 4 >> setpagedevice"
+*Gutter 2mm/+2 mm: "<< /Gutter 2 >> setpagedevice"
+*Gutter None/0 mm: "<< /Gutter 0 >> setpagedevice"
+*CloseUI: *Gutter
+*OpenUI *Finishing/Finishing: PickOne
+*OrderDependency: 50.0 AnySetup *Finishing
+*DefaultFinishing: None
+*Finishing None/Off: "
+<</Collate false /Rotate false /Jog 0>> setpagedevice"
+*End
+*Finishing Col/Collate: "
+<</Collate true /Rotate false /Jog 0>> setpagedevice"
+*End
+*CloseUI: *Finishing
+
+*OpenUI *Interleave/Transparency Interleaving: PickOne
+*OrderDependency: 60.0 AnySetup *Interleave
+*DefaultInterleave: None
+*Interleave None/Off: "<</Interleave 0>> setpagedevice"
+*Interleave White/Blank Interleaf Sheet: "<</Interleave 1 /Collate true
+ /MediaType (TRANSPARENCY) /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*Interleave Printed/Printed Interleaf Sheet: "<</Interleave 2 /Collate true
+ /MediaType (TRANSPARENCY) /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*CloseUI: *Interleave
+
+*CloseGroup: Finishing
+
+*OpenGroup: DetailedSettings/Quality Settings
+
+*OpenUI *Gradation/Gradation: PickOne
+*OrderDependency: 50.0 AnySetup *Gradation
+*DefaultGradation: Default
+*Gradation Default/Printer Default: ""
+*Gradation High1/High 1: "<< /ImageGradation 2 >> setpagedevice"
+*Gradation High2/High 2: "<< /ImageGradation 4 >> setpagedevice"
+*CloseUI: *Gradation
+
+
+*OpenUI *ComposOverprint/Composite Overprint: PickOne
+*OrderDependency: 50.0 AnySetup *ComposOverprint
+*DefaultComposOverprint: Default
+*ComposOverprint Default/Printer Default: ""
+*ComposOverprint Off/Off: "false setoverprintmode"
+*ComposOverprint On/On: "true setoverprintmode"
+*CloseUI: *ComposOverprint
+
+*OpenUI *GSmooth/Gradation Smoothing: PickOne
+*OrderDependency: 50.0 AnySetup *GSmooth
+*DefaultGSmooth: Default
+*GSmooth Default/Printer Default: ""
+*GSmooth Off/Off: "<</GradationSmooth <</Text 0 /Graphics 0
+ /Image 0>> >>  setpagedevice"
+*End
+*GSmooth Fine/Smooth 1: "<</GradationSmooth <</Text 0 /Graphics 1
+ /Image 0>> >>  setpagedevice"
+*End
+*GSmooth Rough/Smooth 2: "<</GradationSmooth <</Text 0 /Graphics 2
+ /Image 0>> >>  setpagedevice"
+*End
+*CloseUI: *GSmooth
+
+*OpenUI *ImgSpclProc/Image Special Process: PickOne
+*OrderDependency: 50.0 AnySetup *ImgSpclProc
+*DefaultImgSpclProc: Default
+*ImgSpclProc Default/Printer Default: ""
+*ImgSpclProc None/Off: "<< /ImageSpacialProcess 0 >> setpagedevice"
+*ImgSpclProc Level1/Level 1: "<< /ImageSpecialProcess 1 >> setpagedevice"
+*ImgSpclProc Level2/Level 2: "<< /ImageSpecialProcess 2 >> setpagedevice"
+*CloseUI: *ImgSpclProc
+
+*OpenUI *TonerSave/Toner Save: PickOne
+*OrderDependency: 50.0 AnySetup *TonerSave
+*DefaultTonerSave: Default
+*TonerSave Default/Printer Default: ""
+*TonerSave Off/Off: "<</PostRenderingEnhance true
+/PostRenderingEnhanceDetails <</Type 18 /TonerSaver 0>> >> setpagedevice"
+*End
+*TonerSave On/On: "<</PostRenderingEnhance true
+/PostRenderingEnhanceDetails <</Type 18 /TonerSaver 1>> >> setpagedevice"
+*End
+*CloseUI: *TonerSave
+
+*OpenUI *AdvancedSmooth/Advanced Smoothing: PickOne
+*OrderDependency: 50.0 AnySetup *AdvancedSmooth
+*DefaultAdvancedSmooth: Default
+*AdvancedSmooth Default/Printer Default: ""
+*AdvancedSmooth Off/Off: "<</AdvancedSmoothing true /AdvancedSmoothingDetails
+<</Type 7 /Text 1 /Image 1 /Graphics 1>> >> setpagedevice"
+*End
+*AdvancedSmooth Smooth1/Smooth 1: "<</AdvancedSmoothing true /AdvancedSmoothingDetails
+<< /Type 7 /Text 5 /Image 1 /Graphics 5 >> >> setpagedevice"
+*End
+*AdvancedSmooth Smooth2/Smooth 2: "<</AdvancedSmoothing true /AdvancedSmoothingDetails
+<< /Type 7 /Text 3 /Image 1 /Graphics 3 >> >> setpagedevice"
+*End
+*CloseUI: *AdvancedSmooth
+
+*OpenUI *TonerAdjust/Toner Volume Adjustment: PickOne
+*OrderDependency: 50.0 AnySetup *TonerAdjust
+*DefaultTonerAdjust: Default
+*TonerAdjust Default/Printer Default: ""
+*TonerAdjust Normal/Normal: "<< /TonerReduction 1 >> setpagedevice"
+*TonerAdjust GradProty/Gradation Priority: "<< /TonerReduction 2 >> setpagedevice"
+*TonerAdjust TextProty/Text Priority: "<< /TonerReduction 3 >> setpagedevice"
+*CloseUI: *TonerAdjust
+
+*OpenUI *LineCont/Line Control: PickOne
+*OrderDependency: 50.0 AnySetup *LineCont
+*DefaultLineCont: Default
+*LineCont Default/Printer Default: ""
+*LineCont ResoltProty/Resolution Priority: "<< /LineControl 0 >> setpagedevice"
+*LineCont GradProty/Gradation Priority: "<< /LineControl 1 >> setpagedevice"
+*CloseUI: *LineCont
+
+*OpenUI *CNBrightness/Brightness: PickOne
+*OrderDependency: 50.0 AnySetup *CNBrightness
+*DefaultCNBrightness: Default
+*CNBrightness Default/Printer Default: ""
+*CNBrightness B85/85%: "<</Brightness 85>> setpagedevice"
+*CNBrightness B90/90%: "<</Brightness 90>> setpagedevice"
+*CNBrightness B95/95%: "<</Brightness 95>> setpagedevice"
+*CNBrightness B100/100%: "<</Brightness 100>> setpagedevice"
+*CNBrightness B105/105%: "<</Brightness 105>> setpagedevice"
+*CNBrightness B110/110%: "<</Brightness 110>> setpagedevice"
+*CNBrightness B115/115%: "<</Brightness 115>> setpagedevice"
+*CloseUI: *CNBrightness
+
+*OpenUI *HalfTone/Halftones: PickOne
+*OrderDependency: 50.0 AnySetup *HalfTone
+*DefaultHalfTone: Default
+*HalfTone Default/Printer Default: ""
+*HalfTone Resolution/Resolution: "<</HalfTone <</Text 0 /Graphics 0
+ /Image 0>> >>  setpagedevice"
+*End
+*HalfTone HighResolution/High Resolution: "<</HalfTone <</Text 3 /Graphics 3
+ /Image 3>> >>  setpagedevice"
+*End
+*HalfTone Gradation/Gradation: "<</HalfTone <</Text 1 /Graphics 1
+ /Image 1>> >>  setpagedevice"
+*End
+*HalfTone ColorTone/Color Tone: "<</HalfTone <</Text 2 /Graphics 2 /Image 2>> >>  setpagedevice"
+*HalfTone ErrDiffusion/Error Diffusion: "<</HalfTone <</Text 4 /Graphics 4
+ /Image 4>> >>  setpagedevice"
+*End
+*HalfTone Pat1/Pattern 1: "<</HalfTone <</Text 0 /Graphics 1 /Image 1>> >>  setpagedevice"
+*HalfTone Pat2/Pattern 2: "<</HalfTone <</Text 0 /Graphics 0 /Image 1>> >>  setpagedevice"
+*HalfTone Pat3/Pattern 3: "<</HalfTone <</Text 0 /Graphics 2 /Image 2>> >>  setpagedevice"
+*HalfTone Pat4/Pattern 4: "<</HalfTone <</Text 0 /Graphics 0 /Image 2>> >>  setpagedevice"
+*HalfTone Pat5/Pattern 5: "<</HalfTone <</Text 3 /Graphics 1 /Image 1>> >>  setpagedevice"
+*HalfTone Pat6/Pattern 6: "<</HalfTone <</Text 3 /Graphics 3 /Image 1>> >>  setpagedevice"
+*HalfTone Pat7/Pattern 7: "<</HalfTone <</Text 3 /Graphics 3 /Image 2>> >> setpagedevice"
+*HalfTone Pat8/Pattern 8: "<</HalfTone <</Text 0 /Graphics 2 /Image 1>> >> setpagedevice"
+*HalfTone Pat9/Pattern 9: "<</HalfTone <</Text 3 /Graphics 0 /Image 1>> >> setpagedevice"
+*CloseUI: *HalfTone
+
+*CloseGroup: DetailedSettings
+
+*OpenGroup: Color/Color Settings
+
+*OpenUI *ColorModel/Color Mode: PickOne
+*OrderDependency: 50.0 AnySetup *ColorModel
+*DefaultColorModel: Default
+*ColorModel Default/Printer Default: ""
+*ColorModel Gray/Black and White: "<</ColorMode 0>> setpagedevice"
+*ColorModel Auto/Color: "<</ColorMode 2>> setpagedevice"
+*CloseUI: *ColorModel
+
+*OpenUI *PureBlack/Pure Black Text: PickOne
+*OrderDependency: 50.0 AnySetup *PureBlack
+*DefaultPureBlack: Default
+*PureBlack Default/Printer Default: ""
+*PureBlack Off/Off: "<</PureBlack <</Text false>> >> setpagedevice"
+*PureBlack On/On: "<</PureBlack <</Text true>> >> setpagedevice"
+*CloseUI: *PureBlack
+
+*OpenUI *BlackOver/Black Overprint: PickOne
+*OrderDependency: 50.0 AnySetup *BlackOver
+*DefaultBlackOver: Default
+*BlackOver Default/Printer Default: ""
+*BlackOver Off/Off: "<</BlackOverPrint false>> setpagedevice"
+*BlackOver On/On: "<</BlackOverPrint true>> setpagedevice"
+*CloseUI: *BlackOver
+
+*OpenUI *RGBSP/RGB Source Profile: PickOne
+*OrderDependency: 50.0 AnySetup *RGBSP
+*DefaultRGBSP: Default
+*RGBSP Default/Printer Default: ""
+*RGBSP sRGB/sRGB v1.31 (Canon): "<</ICCProfile <</SourceProfile <</Type 1
+ /ProfileName (sRGB_v1.31) >> >> >> setpagedevice"
+*End
+*RGBSP HDTVgamma15/Canon HDTV gamma 1.5 Monitor: "<</ICCProfile <<
+/SourceProfile <</Type 1 /ProfileName (HDTV_gamma_1.5) >> >> >> setpagedevice"
+*End
+*RGBSP HDTVgamma18/Canon HDTV gamma 1.8 Monitor: "<</ICCProfile <<
+/SourceProfile <</Type 1 /ProfileName (HDTV_gamma_1.8) >> >> >> setpagedevice"
+*End
+*RGBSP HDTVgamma24/Canon HDTV gamma 2.4 Monitor: "<</ICCProfile <<
+/SourceProfile <</Type 1 /ProfileName (HDTV_gamma_2.4) >> >> >> setpagedevice"
+*End
+*RGBSP None/None: "<</ICCProfile <</SourceProfile <</Type 1
+ /ProfileName (None) >> >> >> setpagedevice"
+*End
+*CloseUI: *RGBSP
+
+*OpenUI *Matching/RGB Matching Method: PickOne
+*OrderDependency: 50.0 AnySetup *Matching
+*DefaultMatching: Default
+*Matching Default/Printer Default: ""
+*Matching Saturation/Saturation: "<</RenderingIntent (Saturation) >> setpagedevice"
+*Matching Perceptual/Perceptual: "<</RenderingIntent (Perceptual) >> setpagedevice"
+*Matching Colorimetric/Colorimetric: "
+<</RenderingIntent (RelativeColorimetric) >> setpagedevice"
+*End
+*CloseUI: *Matching
+
+*OpenUI *CNRGBPBP/RGB Pure Black Process: PickOne
+*OrderDependency: 50.0 AnySetup *CNRGBPBP
+*DefaultCNRGBPBP: Default
+*CNRGBPBP Default/Printer Default: ""
+*CNRGBPBP RGBOff/Off: "<</RGBCMSMethod (Normal) >> setpagedevice"
+*CNRGBPBP RGBOn/On: "<</RGBCMSMethod (GrayCompensation) >> setpagedevice"
+*CloseUI: *CNRGBPBP
+
+*OpenUI *GrayProfile/Grayscale Profile: PickOne
+*OrderDependency: 50.0 AnySetup *GrayProfile
+*DefaultGrayProfile: Default
+*GrayProfile Default/Printer Default: ""
+*GrayProfile Off/Off: "<</ICCProfile <</GrayProfile <</Type 1
+/ProfileName (None)>> >> >> setpagedevice"
+*End
+*GrayProfile On/On: "<</ICCProfile <</GrayProfile <</Type 1
+/ProfileName (Default)>> >> >> setpagedevice"
+*End
+*CloseUI: *GrayProfile
+
+*OpenUI *OutputProfile/Output Profile: PickOne
+*OrderDependency: 60.0 AnySetup *OutputProfile
+*DefaultOutputProfile: Default
+*OutputProfile Default/Printer Default: ""
+*OutputProfile Canon1/Canon iR C1028/C1030 PS (Photo): "<</ICCProfile
+<</OutputProfile <</Type 1 /ProfileName (PS_Photo)>> >> >> setpagedevice"
+*End
+*OutputProfile Canon2/Canon iR C1028/C1030 PS (Normal): "<</ICCProfile
+<</OutputProfile <</Type 1 /ProfileName (PS_Normal)>> >> >> setpagedevice"
+*End
+*OutputProfile Canon3/Canon iR C1028/C1030 PS TR (Photo): "<</ICCProfile
+<</OutputProfile <</Type 1 /ProfileName (PS_TR_Photo)>> >> >> setpagedevice"
+*End
+*OutputProfile Canon4/Canon iR C1028/C1030 PS TR (Normal): "<</ICCProfile
+<</OutputProfile <</Type 1 /ProfileName (PS_TR_Normal)>> >> >> setpagedevice"
+*End
+*CloseUI: *OutputProfile
+
+*CloseGroup: Color
+
+*% Halftone Information ===============
+*DefaultHalftoneType: 1
+*ScreenFreq: "71.0"
+*ScreenAngle: "45.0"
+
+*DefaultScreenProc: Dot
+*ScreenProc Dot: "
+ {abs exch abs 2 copy add 1 gt {1 sub dup mul exch 1 sub dup mul add 1 sub}
+ {dup mul exch dup mul add 1 exch sub} ifelse}"
+*End
+*ScreenProc Line: "{pop}"
+*ScreenProc Ellipse: "{dup 5 mul 8 div mul exch dup mul exch add sqrt 1
+ exch sub}"
+*End
+
+*DefaultTransfer: Null
+*Transfer Null: "{ }"
+*Transfer Null.Inverse: "{1 exch sub}"
+
+*% Paper Handling =====================
+
+*NonUIOrderDependency: 50.0 AnySetup *CustomPageSize
+*MaxMediaWidth: "612"
+*MaxMediaHeight: "1008"
+*CenterRegistered: True
+*HWMargins: 14.1733 14.1733 14.1733 14.1733
+*LeadingEdge Short: ""
+*DefaultLeadingEdge: Short
+*VariablePaperSize: True
+*ParamCustomPageSize Width: 1 points 278 612
+*ParamCustomPageSize Height: 2 points 419 1008
+*ParamCustomPageSize WidthOffset: 3 points 0 0
+*ParamCustomPageSize HeightOffset: 4 points 0 0
+*ParamCustomPageSize Orientation: 5 int 0 3
+
+*CustomPageSize True: "pop pop pop <</PageSize [5 -2 roll] /ImagingBBox null
+ /DeferredMediaSelection true /Policies <</PageSize 2>> >> setpagedevice"
+*End
+
+*LandscapeOrientation: Plus90
+
+*OpenUI *PageSize: PickOne
+*OrderDependency: 50.0 AnySetup *PageSize
+*DefaultPageSize: A4
+*PageSize Letter/US Letter: "<</PageSize [612 792] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageSize Legal/US Legal: "<</PageSize [612 1008] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageSize Legal_MAX/US Legal (Print Area-Large): "<</PageSize [612 1008] /ImagingBBox null
+ /MarginMode 1 /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageSize Executive/Executive: "<</PageSize [522 756] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageSize Statement/Statement: "<</PageSize [396 612] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageSize A4/A4: "<</PageSize [595 842] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageSize A5/A5: "<</PageSize [420 595] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageSize B5/JB5: "<</PageSize [516 729] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageSize Monarch/Envelope Monarch: "<</PageSize [279 540] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageSize Com10/Envelope COM10: "<</PageSize [297 684] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageSize DL/Envelope DL: "<</PageSize [312 624] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageSize C5/Envelope C5: "<</PageSize [459 649] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageSize ISOB5/Envelope B5: "<</PageSize [499 709] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*CloseUI: *PageSize
+
+*OpenUI *PageRegion: PickOne
+*OrderDependency: 50.0 AnySetup *PageRegion
+*DefaultPageRegion: A4
+*PageRegion Letter/US Letter: "<</PageSize [612 792] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageRegion Legal/US Legal: "<</PageSize [612 1008] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageRegion Legal_MAX/US Legal (Print Area-Large): "<</PageSize [612 1008] /ImagingBBox null
+ /MarginMode 1 /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageRegion Executive/Executive: "<</PageSize [522 756] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageRegion Statement/Statement: "<</PageSize [396 612] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageRegion A4/A4: "<</PageSize [595 842] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageRegion A5/A5: "<</PageSize [420 595] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageRegion B5/JB5: "<</PageSize [516 729] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageRegion Monarch/Envelope Monarch: "<</PageSize [279 540] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageRegion Com10/Envelope COM10: "<</PageSize [297 684] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageRegion DL/Envelope DL: "<</PageSize [312 624] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageRegion C5/Envelope C5: "<</PageSize [459 649] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageRegion ISOB5/Envelope B5: "<</PageSize [499 709] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*CloseUI: *PageRegion
+
+*DefaultImageableArea: A4
+*ImageableArea Letter/US Letter: "14.1733 14.1733 597.8267 777.8267"
+*ImageableArea Legal/US Legal: "14.1733 14.1733 597.8267 993.8267"
+*ImageableArea Legal_MAX/US Legal (Print Area-Large): "0 0 612 1008"
+*ImageableArea Executive/Executive: "14.1733 14.1733 507.8267 741.8267"
+*ImageableArea Statement/Statement: "14.1733 14.1733 381.8267 597.8267"
+*ImageableArea A4/A4: "14.1733 14.1733 580.8267 827.8267"
+*ImageableArea A5/A5: "14.1733 14.1733 405.8267 580.8267"
+*ImageableArea B5/JB5: "14.1733 14.1733 501.8267 714.8267"
+*ImageableArea Monarch/Envelope Monarch: "28.3465 28.3465 250.6535 511.6535"
+*ImageableArea Com10/Envelope COM10: "28.3465 28.3465 268.6535 655.6535"
+*ImageableArea DL/Envelope DL: "28.3465 28.3465 283.6535 595.6535"
+*ImageableArea C5/Envelope C5: "28.3465 28.3465 430.6535 620.6535"
+*ImageableArea ISOB5/Envelope B5: "28.3465 28.3465 470.6535 680.6535"
+
+*DefaultPaperDimension: A4
+*PaperDimension Letter/US Letter: "612 792"
+*PaperDimension Legal/US Legal: "612 1008"
+*PaperDimension Legal_MAX/US Legal (Print Area-Large): "612 1008"
+*PaperDimension Executive/Executive: "522 756"
+*PaperDimension Statement/Statement: "396 612"
+*PaperDimension A4/A4: "595 842"
+*PaperDimension A5/A5: "420 595"
+*PaperDimension B5/JB5: "516 729"
+*PaperDimension Monarch/Envelope Monarch: "279 540"
+*PaperDimension Com10/Envelope COM10: "297 684"
+*PaperDimension DL/Envelope DL: "312 624"
+*PaperDimension C5/Envelope C5: "459 649"
+*PaperDimension ISOB5/Envelope B5: "499 709"
+
+*% Font Information ===================
+
+*FCacheSize None: 917600
+
+*DefaultFont: Courier
+*Font AlbertusMT-Italic: Standard "(001)" Standard ROM
+*Font AlbertusMT-Light: Standard "(001)" Standard ROM
+*Font AlbertusMT: Standard "(001)" Standard ROM
+*Font AntiqueOlive-Bold: Standard "(001)" Standard ROM
+*Font AntiqueOlive-Compact: Standard "(001)" ExtendedRoman ROM
+*Font AntiqueOlive-Italic: Standard "(001)" Standard ROM
+*Font AntiqueOlive-Roman: Standard "(001)" Standard ROM
+*Font AntiqueOliveCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font AntiqueOliveCE-Compact: Win1250 "(001)" ExtendedRoman ROM
+*Font AntiqueOliveCE-Italic: Win1250 "(001)" ExtendedRoman ROM
+*Font AntiqueOliveCE-Roman: Win1250 "(001)" ExtendedRoman ROM
+*Font Apple-Chancery: Standard "(001)" Standard ROM
+*Font Apple-ChanceryCE: Win1250 "(001)" ExtendedRoman ROM
+*Font Arial-BoldItalicMT: Standard "(001)" ExtendedRoman ROM
+*Font Arial-BoldMT: Standard "(001)" Standard ROM
+*Font Arial-ItalicMT: Standard "(001)" ExtendedRoman ROM
+*Font ArialCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font ArialCE-BoldItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font ArialCE-Italic: Win1250 "(001)" ExtendedRoman ROM
+*Font ArialCE: Win1250 "(001)" ExtendedRoman ROM
+*Font ArialMT: Standard "(001)" ExtendedRoman ROM
+*Font AvantGarde-Book: Standard "(001)" Standard ROM
+*Font AvantGarde-BookOblique: Standard "(001)" ExtendedRoman ROM
+*Font AvantGarde-Demi: Standard "(001)" Standard ROM
+*Font AvantGarde-DemiOblique: Standard "(001)" ExtendedRoman ROM
+*Font AvantGardeCE-Book: Win1250 "(001)" ExtendedRoman ROM
+*Font AvantGardeCE-BookOblique: Win1250 "(001)" ExtendedRoman ROM
+*Font AvantGardeCE-Demi: Win1250 "(001)" ExtendedRoman ROM
+*Font AvantGardeCE-DemiOblique: Win1250 "(001)" ExtendedRoman ROM
+*Font Bodoni-Bold: Standard "(001)" ExtendedRoman ROM
+*Font Bodoni-BoldItalic: Standard "(001)" Standard ROM
+*Font Bodoni-Italic: Standard "(001)" ExtendedRoman ROM
+*Font Bodoni-Poster: Standard "(001)" Standard ROM
+*Font Bodoni-PosterCompressed: Standard "(001)" Standard ROM
+*Font Bodoni: Standard "(001)" ExtendedRoman ROM
+*Font BodoniCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font BodoniCE-BoldItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font BodoniCE-Italic: Win1250 "(001)" ExtendedRoman ROM
+*Font BodoniCE-Poster: Win1250 "(001)" ExtendedRoman ROM
+*Font BodoniCE-PosterCompressed: Win1250 "(001)" ExtendedRoman ROM
+*Font BodoniCE: Win1250 "(001)" ExtendedRoman ROM
+*Font Bookman-Demi: Standard "(001)" Standard ROM
+*Font Bookman-DemiItalic: Standard "(001)" ExtendedRoman ROM
+*Font Bookman-Light: Standard "(001)" Standard ROM
+*Font Bookman-LightItalic: Standard "(001)" ExtendedRoman ROM
+*Font BookmanCE-Demi: Win1250 "(001)" ExtendedRoman ROM
+*Font BookmanCE-DemiItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font BookmanCE-Light: Win1250 "(001)" ExtendedRoman ROM
+*Font BookmanCE-LightItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font Carta: Special "(001)" Special ROM
+*Font Chicago: Standard "(001)" Standard ROM
+*Font ChicagoCE: Win1250 "(001)" ExtendedRoman ROM
+*Font Clarendon-Bold: Standard "(001)" Standard ROM
+*Font Clarendon-Light: Standard "(001)" ExtendedRoman ROM
+*Font Clarendon: Standard "(001)" ExtendedRoman ROM
+*Font ClarendonCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font ClarendonCE-Light: Win1250 "(001)" ExtendedRoman ROM
+*Font ClarendonCE: Win1250 "(001)" ExtendedRoman ROM
+*Font CooperBlack-Italic: Standard "(001)" Standard ROM
+*Font CooperBlack: Standard "(001)" Standard ROM
+*Font Copperplate-ThirtyThreeBC: Standard "(001)" Standard ROM
+*Font Copperplate-ThirtyTwoBC: Standard "(001)" Standard ROM
+*Font Coronet-Regular: Standard "(001)" Standard ROM
+*Font CoronetCE-Regular: Win1250 "(001)" ExtendedRoman ROM
+*Font Courier-Bold: Standard "(001)" Standard ROM
+*Font Courier-BoldOblique: Standard "(001)" ExtendedRoman ROM
+*Font Courier-Oblique: Standard "(001)" ExtendedRoman ROM
+*Font Courier: Standard "(001)" ExtendedRoman ROM
+*Font CourierCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font CourierCE-BoldOblique: Win1250 "(001)" ExtendedRoman ROM
+*Font CourierCE-Oblique: Win1250 "(001)" ExtendedRoman ROM
+*Font CourierCE: Win1250 "(001)" ExtendedRoman ROM
+*Font Eurostile-Bold: Standard "(001)" ExtendedRoman ROM
+*Font Eurostile-BoldExtendedTwo: Standard "(001)" Standard ROM
+*Font Eurostile-ExtendedTwo: Standard "(001)" Standard ROM
+*Font Eurostile: Standard "(001)" Standard ROM
+*Font EurostileCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font EurostileCE-BoldExtendedTwo: Win1250 "(001)" ExtendedRoman ROM
+*Font EurostileCE-ExtendedTwo: Win1250 "(001)" ExtendedRoman ROM
+*Font EurostileCE: Win1250 "(001)" ExtendedRoman ROM
+*Font Geneva: Standard "(001)" ExtendedRoman ROM
+*Font GenevaCE: Win1250 "(001)" ExtendedRoman ROM
+*Font GillSans-Bold: Standard "(001)" ExtendedRoman ROM
+*Font GillSans-BoldCondensed: Standard "(001)" Standard ROM
+*Font GillSans-BoldItalic: Standard "(001)" ExtendedRoman ROM
+*Font GillSans-Condensed: Standard "(001)" Standard ROM
+*Font GillSans-ExtraBold: Standard "(001)" Standard ROM
+*Font GillSans-Italic: Standard "(001)" Standard ROM
+*Font GillSans-Light: Standard "(001)" Standard ROM
+*Font GillSans-LightItalic: Standard "(001)" ExtendedRoman ROM
+*Font GillSans: Standard "(001)" ExtendedRoman ROM
+*Font GillSansCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font GillSansCE-BoldCondensed: Win1250 "(001)" ExtendedRoman ROM
+*Font GillSansCE-BoldItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font GillSansCE-Condensed: Win1250 "(001)" ExtendedRoman ROM
+*Font GillSansCE-ExtraBold: Win1250 "(001)" ExtendedRoman ROM
+*Font GillSansCE-Italic: Win1250 "(001)" ExtendedRoman ROM
+*Font GillSansCE-Light: Win1250 "(001)" ExtendedRoman ROM
+*Font GillSansCE-LightItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font GillSansCE-Roman: Win1250 "(001)" ExtendedRoman ROM
+*Font Goudy-Bold: Standard "(001)" Standard ROM
+*Font Goudy-BoldItalic: Standard "(001)" Standard ROM
+*Font Goudy-ExtraBold: Standard "(001)" Standard ROM
+*Font Goudy-Italic: Standard "(001)" Standard ROM
+*Font Goudy: Standard "(001)" Standard ROM
+*Font Helvetica-Bold: Standard "(001)" Standard ROM
+*Font Helvetica-BoldOblique: Standard "(001)" ExtendedRoman ROM
+*Font Helvetica-Condensed-Bold: Standard "(001)" Standard ROM
+*Font Helvetica-Condensed-BoldObl: Standard "(001)" ExtendedRoman ROM
+*Font Helvetica-Condensed-Oblique: Standard "(001)" ExtendedRoman ROM
+*Font Helvetica-Condensed: Standard "(001)" ExtendedRoman ROM
+*Font Helvetica-Narrow-Bold: Standard "(001)" ExtendedRoman ROM
+*Font Helvetica-Narrow-BoldOblique: Standard "(001)" ExtendedRoman ROM
+*Font Helvetica-Narrow-Oblique: Standard "(001)" ExtendedRoman ROM
+*Font Helvetica-Narrow: Standard "(001)" ExtendedRoman ROM
+*Font Helvetica-Oblique: Standard "(001)" ExtendedRoman ROM
+*Font Helvetica: Standard "(001)" Standard ROM
+*Font HelveticaCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font HelveticaCE-BoldOblique: Win1250 "(001)" ExtendedRoman ROM
+*Font HelveticaCE-Cond: Win1250 "(001)" ExtendedRoman ROM
+*Font HelveticaCE-CondBold: Win1250 "(001)" ExtendedRoman ROM
+*Font HelveticaCE-CondBoldObl: Win1250 "(001)" ExtendedRoman ROM
+*Font HelveticaCE-CondObl: Win1250 "(001)" ExtendedRoman ROM
+*Font HelveticaCE-Narrow: Win1250 "(001)" ExtendedRoman ROM
+*Font HelveticaCE-NarrowBold: Win1250 "(001)" ExtendedRoman ROM
+*Font HelveticaCE-NarrowBoldOblique: Win1250 "(001)" ExtendedRoman ROM
+*Font HelveticaCE-NarrowOblique: Win1250 "(001)" ExtendedRoman ROM
+*Font HelveticaCE-Oblique: Win1250 "(001)" ExtendedRoman ROM
+*Font HelveticaCE: Win1250 "(001)" ExtendedRoman ROM
+*Font HoeflerText-Black: Standard "(001)" Standard ROM
+*Font HoeflerText-BlackItalic: Standard "(001)" ExtendedRoman ROM
+*Font HoeflerText-Italic: Standard "(001)" ExtendedRoman ROM
+*Font HoeflerText-Ornaments: Special "(001)" Special ROM
+*Font HoeflerText-Regular: Standard "(001)" ExtendedRoman ROM
+*Font HoeflerTextCE-Black: Win1250 "(001)" ExtendedRoman ROM
+*Font HoeflerTextCE-BlackItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font HoeflerTextCE-Italic: Win1250 "(001)" ExtendedRoman ROM
+*Font HoeflerTextCE-Regular: Win1250 "(001)" ExtendedRoman ROM
+*Font JoannaMT-Bold: Standard "(001)" ExtendedRoman ROM
+*Font JoannaMT-BoldItalic: Standard "(001)" Standard ROM
+*Font JoannaMT-Italic: Standard "(001)" ExtendedRoman ROM
+*Font JoannaMT: Standard "(001)" ExtendedRoman ROM
+*Font JoannaMTCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font JoannaMTCE-BoldItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font JoannaMTCE-Italic: Win1250 "(001)" ExtendedRoman ROM
+*Font JoannaMTCE: Win1250 "(001)" ExtendedRoman ROM
+*Font LetterGothic-Bold: Standard "(001)" Standard ROM
+*Font LetterGothic-BoldSlanted: Standard "(001)" ExtendedRoman ROM
+*Font LetterGothic-Slanted: Standard "(001)" ExtendedRoman ROM
+*Font LetterGothic: Standard "(001)" ExtendedRoman ROM
+*Font LetterGothicCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font LetterGothicCE-BoldSlanted: Win1250 "(001)" ExtendedRoman ROM
+*Font LetterGothicCE-Slanted: Win1250 "(001)" ExtendedRoman ROM
+*Font LetterGothicCE: Win1250 "(001)" ExtendedRoman ROM
+*Font LubalinGraph-Book: Standard "(001)" Standard ROM
+*Font LubalinGraph-BookOblique: Standard "(001)" ExtendedRoman ROM
+*Font LubalinGraph-Demi: Standard "(001)" Standard ROM
+*Font LubalinGraph-DemiOblique: Standard "(001)" ExtendedRoman ROM
+*Font LubalinGraphCE-Book: Win1250 "(001)" ExtendedRoman ROM
+*Font LubalinGraphCE-BookOblique: Win1250 "(001)" ExtendedRoman ROM
+*Font LubalinGraphCE-Demi: Win1250 "(001)" ExtendedRoman ROM
+*Font LubalinGraphCE-DemiOblique: Win1250 "(001)" ExtendedRoman ROM
+*Font Marigold: Standard "(001)" Standard ROM
+*Font Monaco: Standard "(001)" Standard ROM
+*Font MonacoCE: Win1250 "(001)" ExtendedRoman ROM
+*Font MonaLisa-Recut: Standard "(001)" Standard ROM
+*Font NewCenturySchlbk-Bold: Standard "(001)" ExtendedRoman ROM
+*Font NewCenturySchlbk-BoldItalic: Standard "(001)" Standard ROM
+*Font NewCenturySchlbk-Italic: Standard "(001)" ExtendedRoman ROM
+*Font NewCenturySchlbk-Roman: Standard "(001)" Standard ROM
+*Font NewCenturySchlbkCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font NewCenturySchlbkCE-BoldItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font NewCenturySchlbkCE-Italic: Win1250 "(001)" ExtendedRoman ROM
+*Font NewCenturySchlbkCE-Roman: Win1250 "(001)" ExtendedRoman ROM
+*Font NewYork: Standard "(001)" ExtendedRoman ROM
+*Font NewYorkCE: Win1250 "(001)" ExtendedRoman ROM
+*Font Optima-Bold: Standard "(001)" Standard ROM
+*Font Optima-BoldItalic: Standard "(001)" ExtendedRoman ROM
+*Font Optima-Italic: Standard "(001)" ExtendedRoman ROM
+*Font Optima: Standard "(001)" ExtendedRoman ROM
+*Font OptimaCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font OptimaCE-BoldItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font OptimaCE-Italic: Win1250 "(001)" ExtendedRoman ROM
+*Font OptimaCE-Roman: Win1250 "(001)" ExtendedRoman ROM
+*Font Oxford: Standard "(001)" Standard ROM
+*Font Palatino-Bold: Standard "(001)" ExtendedRoman ROM
+*Font Palatino-BoldItalic: Standard "(001)" Standard ROM
+*Font Palatino-Italic: Standard "(001)" Standard ROM
+*Font Palatino-Roman: Standard "(001)" ExtendedRoman ROM
+*Font PalatinoCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font PalatinoCE-BoldItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font PalatinoCE-Italic: Win1250 "(001)" ExtendedRoman ROM
+*Font PalatinoCE-Roman: Win1250 "(001)" ExtendedRoman ROM
+*Font StempelGaramond-Bold: Standard "(001)" Standard ROM
+*Font StempelGaramond-BoldItalic: Standard "(001)" ExtendedRoman ROM
+*Font StempelGaramond-Italic: Standard "(001)" ExtendedRoman ROM
+*Font StempelGaramond-Roman: Standard "(001)" Standard ROM
+*Font StempelGaramondCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font StempelGaramondCE-BoldItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font StempelGaramondCE-Italic: Win1250 "(001)" ExtendedRoman ROM
+*Font StempelGaramondCE-Roman: Win1250 "(001)" ExtendedRoman ROM
+*Font Symbol: Special "(001)" Special ROM
+*Font Tekton: Standard "(001)" Standard ROM
+*Font Times-Bold: Standard "(001)" Standard ROM
+*Font Times-BoldItalic: Standard "(001)" Standard ROM
+*Font Times-Italic: Standard "(001)" Standard ROM
+*Font Times-Roman: Standard "(001)" ExtendedRoman ROM
+*Font TimesCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font TimesCE-BoldItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font TimesCE-Italic: Win1250 "(001)" ExtendedRoman ROM
+*Font TimesCE-Roman: Win1250 "(001)" ExtendedRoman ROM
+*Font TimesNewRomanCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font TimesNewRomanCE-BoldItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font TimesNewRomanCE-Italic: Win1250 "(001)" ExtendedRoman ROM
+*Font TimesNewRomanCE: Win1250 "(001)" ExtendedRoman ROM
+*Font TimesNewRomanPS-BoldItalicMT: Standard "(001)" ExtendedRoman ROM
+*Font TimesNewRomanPS-BoldMT: Standard "(001)" Standard ROM
+*Font TimesNewRomanPS-ItalicMT: Standard "(001)" Standard ROM
+*Font TimesNewRomanPSMT: Standard "(001)" ExtendedRoman ROM
+*Font Univers-Bold: Standard "(001)" Standard ROM
+*Font Univers-BoldExt: Standard "(001)" Standard ROM
+*Font Univers-BoldExtObl: Standard "(001)" ExtendedRoman ROM
+*Font Univers-BoldOblique: Standard "(001)" ExtendedRoman ROM
+*Font Univers-Condensed: Standard "(001)" Standard ROM
+*Font Univers-CondensedBold: Standard "(001)" Standard ROM
+*Font Univers-CondensedBoldOblique: Standard "(001)" ExtendedRoman ROM
+*Font Univers-CondensedOblique: Standard "(001)" ExtendedRoman ROM
+*Font Univers-Extended: Standard "(001)" Standard ROM
+*Font Univers-ExtendedObl: Standard "(001)" ExtendedRoman ROM
+*Font Univers-Light: Standard "(001)" Standard ROM
+*Font Univers-LightOblique: Standard "(001)" ExtendedRoman ROM
+*Font Univers-Oblique: Standard "(001)" ExtendedRoman ROM
+*Font Univers: Standard "(001)" Standard ROM
+*Font UniversCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-BoldExt: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-BoldExtObl: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-BoldOblique: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-Condensed: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-CondensedBold: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-CondensedBoldOblique: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-CondensedOblique: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-Extended: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-ExtendedObl: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-Light: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-LightOblique: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-Medium: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-Oblique: Win1250 "(001)" ExtendedRoman ROM
+*Font Wingdings-Regular: Special "(001)" Special ROM
+*Font ZapfChancery-MediumItalic: Standard "(001)" ExtendedRoman ROM
+*Font ZapfChanceryCE-MediumItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font ZapfDingbats: Special "(001)" Standard ROM
+
+*?FontQuery: "save
+{count 1 gt
+  {exch dup 127 string cvs (/)print print (:)print
+   /Font resourcestatus
+   {pop pop (Yes)} {(No)} ifelse =
+  }
+  {exit}
+  ifelse
+} bind loop
+(*) = flush
+restore"
+*End
+
+*?FontList: "save
+ (*) {cvn ==} 128 string /Font resourceforall
+ (*) = flush
+restore"
+*End
+
+*% Printer Messages (verbatim from printer):
+*Message: "%%[ exitserver: permanent state may be changed ]%%"
+*Message: "%%[ Flushing: rest of job (to end-of-file) will be ignored ]%%"
+*Message: "\FontName\ not found, using Courier"
+
+*% Status (format: %%[ status: <one of these> ] %%)
+*Status: "initializing"
+*Status: "idle"
+*Status: "busy"
+*Status: "waiting"
+*Status: "online"
+
+*% Input Sources (format: %%[ status: <stat>; source: <one of these> ]%% )
+*Source: "Parallel"
+*Source: "EtherTalk"
+*Source: "TokenTalk"
+
+*%DeviceAdjustMatrix: "[1 0 0 1 0 0]"
+
+*% Color Separation Information =====================
+
+
+*DefaultColorSep: ProcessBlack.106lpi.600dpi/106 lpi / 600x600 dpi
+
+*%  For 106 lpi / 600 x 600 dpi  ===============================
+
+*ColorSepScreenAngle ProcessBlack.106lpi.600dpi/106 lpi / 600x600 dpi: "45"
+*ColorSepScreenAngle CustomColor.106lpi.600dpi/106 lpi / 600x600 dpi: "45"
+*ColorSepScreenAngle ProcessCyan.106lpi.600dpi/106 lpi / 600x600 dpi: "15"
+*ColorSepScreenAngle ProcessMagenta.106lpi.600dpi/106 lpi / 600x600 dpi: "75"
+*ColorSepScreenAngle ProcessYellow.106lpi.600dpi/106 lpi / 600x600 dpi: "0"
+
+*ColorSepScreenFreq ProcessBlack.106lpi.600dpi/106 lpi / 600x600 dpi: "60"
+*ColorSepScreenFreq CustomColor.106lpi.600dpi/106 lpi / 600x600 dpi: "60"
+*ColorSepScreenFreq ProcessCyan.106lpi.600dpi/106 lpi / 600x600 dpi: "60"
+*ColorSepScreenFreq ProcessMagenta.106lpi.600dpi/106 lpi / 600x600 dpi: "60"
+*ColorSepScreenFreq ProcessYellow.106lpi.600dpi/106 lpi / 600x600 dpi: "60"
+
+*% @(#)cnrc1028e1.ppd 2.70 2008/10/27
+*% Last Edit Date: October 27, 2008
+*% The byte count of this file should be exactly 88009 or greater
+*% depending on the filesystem it resides in.
+*% end of PPD file for Canon iR C1028/C1030 Printer

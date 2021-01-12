@@ -1,0 +1,32 @@
+{
+  "name": "back-end",
+  "version": "1.0.0",
+  "description": "Backend for desktop xterm",
+  "main": "dist/main.js",
+  "scripts": {
+    "start": "tsc && node dist/main.js",
+    "test": "jest --bail"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/express-validator": "^3.0.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.4.0",
+    "express-ws": "^4.0.0",
+    "helmet": "^3.21.2",
+    "jest": "^26.3.0",
+    "node-pty": "^0.9.0",
+    "supertest": "^4.0.2",
+    "ws": "^7.3.1"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.2",
+    "@types/express-ws": "^3.0.0",
+    "@types/helmet": "0.0.45",
+    "@types/node": "^13.7.1",
+    "dotenv": "^8.2.0"
+  }
+}

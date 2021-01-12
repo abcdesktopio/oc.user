@@ -1,0 +1,11 @@
+{
+  "name": "livesound-service",
+  "main": "livesound-service.js",
+  "private": true,
+  "version": "0.0.6",
+  "description": "Node.js livesound service",
+  "author": "Alexandre DEVELY",
+  "dependencies": {
+    "ws": "*"
+  }
+}

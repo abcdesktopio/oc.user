@@ -1,0 +1,11 @@
+{
+  "name": "ocrun",
+  "main" : "ocrun.js",
+  "private": true,
+  "version": "0.0.5",
+  "description": "Node.js Open Desktop warapper to run app in container",
+  "author": "Alexandre DEVELY",
+  "dependencies": {
+    "ws": "*"
+  }
+}

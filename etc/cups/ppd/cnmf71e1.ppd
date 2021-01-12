@@ -1,0 +1,942 @@
+*PPD-Adobe: "4.3"                        
+*% Adobe Systems PostScript(R) Printer Description File
+*% Copyright 1987-2002 Adobe Systems Incorporated.
+*% All Rights Reserved.
+*% Permission is granted for redistribution of this file as
+*% long as this copyright notice is intact and the contents
+*% of the file is not altered in any way from its original form.
+*% End of Copyright statement for Canon MF7170 Printer.
+*% Copyright CANON INC. 2006
+*% Copyright 2006 SIC International
+*% NOTE: removed all PJL related stanzas.
+*%
+*%  @(#)cnir16e1.ppd    1.13         10:55:00 05/30/02
+*%
+*FormatVersion: "4.3"
+*FileVersion: "1.13"
+*LanguageEncoding: ISOLatin1
+*LanguageVersion: English
+*Manufacturer: "Canon"
+*PCFileName: "CNMF71E1.PPD"
+*Product: "(Canon MF7170i)"
+*PSVersion: "(3015.101) 112"
+*ModelName: "Canon MF7170i CPCA"
+*ShortNickName: "Canon MF7170i "
+*NickName: "Canon MF7170i CPCA"
+
+*% ====================================
+*% === Options and Constraints =========
+
+*OpenGroup: InstallableOptions/Options Installed
+
+*% ====================================
+*% ===== Optional input trays
+*%
+*OpenUI *Option1/Optional Paper Trays: PickOne
+*DefaultOption1: None
+*Option1 None/None: ""
+*Option1 ExtraTray1/Tray 250 sheets: ""
+*Option1 ExtraTray2/Tray 250 sheets x 2: ""
+*Option1 ExtraTray3/Tray 250 sheets x 3: ""
+*CloseUI: *Option1
+
+*% ====================================
+*% ===== Optional finisher
+*%
+*OpenUI *Option2/Finisher Module: PickOne
+*DefaultOption2: None
+*Option2 None/None: ""
+*Option2 FinishU1Min/Finisher U1 without two-way bin: ""
+*Option2 FinishU1Plus/Finisher U1 with two-way bin: ""
+*Option2 FinishC1/Two way bins C1: ""
+*CloseUI: *Option2
+
+*CloseGroup: InstallableOptions
+
+*% ====================================
+*% ==== Option/Feature constraints ====
+
+*% ====================================
+*% ===== If Optional input trays
+*% ===== not installed, cant select trays
+*%
+*UIConstraints: *Option1 None        *InputSlot Tray2
+*UIConstraints: *Option1 None        *InputSlot Tray3
+*UIConstraints: *Option1 None        *InputSlot Tray4
+*UIConstraints: *InputSlot Tray2     *Option1 None
+*UIConstraints: *InputSlot Tray3     *Option1 None
+*UIConstraints: *InputSlot Tray4     *Option1 None
+*UIConstraints: *Option1 ExtraTray1  *InputSlot Tray3
+*UIConstraints: *Option1 ExtraTray1  *InputSlot Tray4
+*UIConstraints: *InputSlot Tray3     *Option1 ExtraTray1
+*UIConstraints: *InputSlot Tray4     *Option1 ExtraTray1
+*UIConstraints: *Option1 ExtraTray2  *InputSlot Tray4
+*UIConstraints: *InputSlot Tray4     *Option1 ExtraTray2
+
+*% ====================================
+*% === Paper size / input slot constraints ===
+*% ====================================
+*% Only MPT supports B5-ISO Envelope env.
+*%
+*UIConstraints: *PageSize EnvISOB5 *InputSlot Tray1
+*UIConstraints: *PageSize EnvISOB5 *InputSlot Tray2
+*UIConstraints: *PageSize EnvISOB5 *InputSlot Tray3
+*UIConstraints: *PageSize EnvISOB5 *InputSlot Tray4
+*UIConstraints: *InputSlot Tray1 *PageSize EnvISOB5
+*UIConstraints: *InputSlot Tray2 *PageSize EnvISOB5
+*UIConstraints: *InputSlot Tray3 *PageSize EnvISOB5
+*UIConstraints: *InputSlot Tray4 *PageSize EnvISOB5
+*UIConstraints: *PageRegion EnvISOB5 *InputSlot Tray1
+*UIConstraints: *PageRegion EnvISOB5 *InputSlot Tray2
+*UIConstraints: *PageRegion EnvISOB5 *InputSlot Tray3
+*UIConstraints: *PageRegion EnvISOB5 *InputSlot Tray4
+*UIConstraints: *InputSlot Tray1 *PageRegion EnvISOB5
+*UIConstraints: *InputSlot Tray2 *PageRegion EnvISOB5
+*UIConstraints: *InputSlot Tray3 *PageRegion EnvISOB5
+*UIConstraints: *InputSlot Tray4 *PageRegion EnvISOB5
+
+*% ====================================
+*% Only MPT supports Monarch env.
+*%
+*UIConstraints: *PageSize EnvMonarch *InputSlot Tray1
+*UIConstraints: *PageSize EnvMonarch *InputSlot Tray2
+*UIConstraints: *PageSize EnvMonarch *InputSlot Tray3
+*UIConstraints: *PageSize EnvMonarch *InputSlot Tray4
+*UIConstraints: *InputSlot Tray1 *PageSize EnvMonarch
+*UIConstraints: *InputSlot Tray2 *PageSize EnvMonarch
+*UIConstraints: *InputSlot Tray3 *PageSize EnvMonarch
+*UIConstraints: *InputSlot Tray4 *PageSize EnvMonarch
+*UIConstraints: *PageRegion EnvMonarch *InputSlot Tray1
+*UIConstraints: *PageRegion EnvMonarch *InputSlot Tray2
+*UIConstraints: *PageRegion EnvMonarch *InputSlot Tray3
+*UIConstraints: *PageRegion EnvMonarch *InputSlot Tray4
+*UIConstraints: *InputSlot Tray1 *PageRegion EnvMonarch
+*UIConstraints: *InputSlot Tray2 *PageRegion EnvMonarch
+*UIConstraints: *InputSlot Tray3 *PageRegion EnvMonarch
+*UIConstraints: *InputSlot Tray4 *PageRegion EnvMonarch
+
+*% ====================================
+*% Only MPT supports Comm10 env.
+*%
+*UIConstraints: *PageSize Env10 *InputSlot Tray1
+*UIConstraints: *PageSize Env10 *InputSlot Tray2
+*UIConstraints: *PageSize Env10 *InputSlot Tray3
+*UIConstraints: *PageSize Env10 *InputSlot Tray4
+*UIConstraints: *InputSlot Tray1 *PageSize Env10
+*UIConstraints: *InputSlot Tray2 *PageSize Env10
+*UIConstraints: *InputSlot Tray3 *PageSize Env10
+*UIConstraints: *InputSlot Tray4 *PageSize Env10
+*UIConstraints: *PageRegion Env10 *InputSlot Tray1
+*UIConstraints: *PageRegion Env10 *InputSlot Tray2
+*UIConstraints: *PageRegion Env10 *InputSlot Tray3
+*UIConstraints: *PageRegion Env10 *InputSlot Tray4
+*UIConstraints: *InputSlot Tray1 *PageRegion Env10
+*UIConstraints: *InputSlot Tray2 *PageRegion Env10
+*UIConstraints: *InputSlot Tray3 *PageRegion Env10
+*UIConstraints: *InputSlot Tray4 *PageRegion Env10
+
+*% ====================================
+*% Only MPT and Env support C5 env.
+*%
+*UIConstraints: *PageSize EnvC5 *InputSlot Tray1
+*UIConstraints: *PageSize EnvC5 *InputSlot Tray2
+*UIConstraints: *PageSize EnvC5 *InputSlot Tray3
+*UIConstraints: *PageSize EnvC5 *InputSlot Tray4
+*UIConstraints: *InputSlot Tray1 *PageSize EnvC5
+*UIConstraints: *InputSlot Tray2 *PageSize EnvC5
+*UIConstraints: *InputSlot Tray3 *PageSize EnvC5
+*UIConstraints: *InputSlot Tray4 *PageSize EnvC5
+*UIConstraints: *PageRegion EnvC5 *InputSlot Tray1
+*UIConstraints: *PageRegion EnvC5 *InputSlot Tray2
+*UIConstraints: *PageRegion EnvC5 *InputSlot Tray3
+*UIConstraints: *PageRegion EnvC5 *InputSlot Tray4
+*UIConstraints: *InputSlot Tray1 *PageRegion EnvC5
+*UIConstraints: *InputSlot Tray2 *PageRegion EnvC5
+*UIConstraints: *InputSlot Tray3 *PageRegion EnvC5
+*UIConstraints: *InputSlot Tray4 *PageRegion EnvC5
+
+*% ====================================
+*% Only MPT and Env support DL env.
+
+*UIConstraints: *PageSize EnvDL *InputSlot Tray1
+*UIConstraints: *PageSize EnvDL *InputSlot Tray2
+*UIConstraints: *PageSize EnvDL *InputSlot Tray3
+*UIConstraints: *PageSize EnvDL *InputSlot Tray4
+*UIConstraints: *InputSlot Tray1 *PageSize EnvDL
+*UIConstraints: *InputSlot Tray2 *PageSize EnvDL
+*UIConstraints: *InputSlot Tray3 *PageSize EnvDL
+*UIConstraints: *InputSlot Tray4 *PageSize EnvDL
+*UIConstraints: *PageRegion EnvDL *InputSlot Tray1
+*UIConstraints: *PageRegion EnvDL *InputSlot Tray2
+*UIConstraints: *PageRegion EnvDL *InputSlot Tray3
+*UIConstraints: *PageRegion EnvDL *InputSlot Tray4
+*UIConstraints: *InputSlot Tray1 *PageRegion EnvDL
+*UIConstraints: *InputSlot Tray2 *PageRegion EnvDL
+*UIConstraints: *InputSlot Tray3 *PageRegion EnvDL
+*UIConstraints: *InputSlot Tray4 *PageRegion EnvDL
+
+*% ====================================
+*% === end paper size / input slot constraints ===
+
+*% ====================================
+*% === media type constraints ===
+
+*% ====================================
+*% Only MPT supports heavy media.
+*%
+*UIConstraints: *InputSlot Tray1 *MediaType ENVELOPE
+*UIConstraints: *InputSlot Tray2 *MediaType ENVELOPE
+*UIConstraints: *InputSlot Tray3 *MediaType ENVELOPE
+*UIConstraints: *InputSlot Tray4 *MediaType ENVELOPE
+*UIConstraints: *MediaType ENVELOPE *InputSlot Tray1
+*UIConstraints: *MediaType ENVELOPE *InputSlot Tray2
+*UIConstraints: *MediaType ENVELOPE *InputSlot Tray3
+*UIConstraints: *MediaType ENVELOPE *InputSlot Tray4
+
+*% === end media type constraints ===
+
+*% ====================================
+*% If Finisher not installed, can't staple.
+*%
+*UIConstraints: *Option2 None     *Staple
+*UIConstraints: *Staple           *Option2 None
+*UIConstraints: *Option2 FinishC1 *Staple
+*UIConstraints: *Staple           *Option2 FinishC1
+
+*% ====================================
+*% Collate must always be true if staple is enabled.
+*%
+*UIConstraints: *CNCollate False *Staple 1PLU
+*UIConstraints: *CNCollate False *Staple 1PRU
+*UIConstraints: *CNCollate False *Staple 1PRB
+*UIConstraints: *CNCollate False *Staple 1PLB
+*UIConstraints: *Staple 1PLU *CNCollate False
+*UIConstraints: *Staple 1PRU *CNCollate False
+*UIConstraints: *Staple 1PRB *CNCollate False
+*UIConstraints: *Staple 1PLB *CNCollate False
+
+*% ====================================
+*% If Output Tray not installed, can't select
+*%
+
+*UIConstraints: *Option2 None        *CNOutput TrayALow
+*UIConstraints: *Option2 None        *CNOutput TrayBUp
+*UIConstraints: *CNOutput TrayALow   *Option2 None
+*UIConstraints: *CNOutput TrayBUp    *Option2 None
+*UIConstraints: *Option2 FinishU1Min *CNOutput TrayALow
+*UIConstraints: *Option2 FinishU1Min *CNOutput TrayBUp
+*UIConstraints: *CNOutput TrayALow   *Option2 FinishU1Min
+*UIConstraints: *CNOutput TrayBUp    *Option2 FinishU1Min
+
+*% ====================================
+*% Page Size A3 supports only lower left staple
+*%
+*UIConstraints: *PageSize A3  *Staple 1PLU
+*UIConstraints: *PageSize A3  *Staple 1PRU
+*UIConstraints: *PageSize A3  *Staple 1PRB
+*UIConstraints: *Staple 1PLU  *PageSize A3
+*UIConstraints: *Staple 1PRU  *PageSize A3
+*UIConstraints: *Staple 1PRB  *PageSize A3
+
+*% ====================================
+*% ==== Device Capabilities ===========
+*%
+*LanguageLevel: "3"
+*Protocols: PJL TBCP
+
+*FreeVM: "2157000"
+
+*ColorDevice: False
+*DefaultColorSpace: Gray
+
+*TTRasterizer: Type42
+
+*% ====================================
+*% Optional flash rom is treated like a disk.
+*%
+*FileSystem: True
+*Throughput: "16"
+*Password: "()"
+
+*OpenGroup: Features
+
+*OpenUI *Duplex/Duplex: PickOne
+*OrderDependency: 50.0 AnySetup *Duplex
+*DefaultDuplex: None
+*Duplex None/Off: "<</Duplex false /Tumble false>> setpagedevice"
+*Duplex DuplexNoTumble/Long edge: "<</Duplex true /Tumble false>> setpagedevice"
+*Duplex DuplexTumble/Short edge: "<</Duplex true /Tumble true>> setpagedevice"
+*CloseUI: Duplex
+
+*% ====================================
+*% === Input options  ============
+*%
+*OpenUI *InputSlot: PickOne
+*OrderDependency: 20.1 AnySetup *InputSlot
+*DefaultInputSlot: Auto 
+*% tray names:
+*% Tray1 = Drawer1
+*% Tray2 = Drawer2
+*% Tray3 = Drawer3
+*% Tray4 = Drawer4
+*InputSlot Auto/Auto Select: "<</InputAttributes <</Priority []>> >>
+ setpagedevice"
+*End
+*InputSlot Tray1/Drawer1: "
+ currentpagedevice /InputAttributes get 0 get null ne
+ {<</InputAttributes <</Priority [0 5 3 2 1 4]>> >>
+ setpagedevice} if"
+*End
+*InputSlot Tray2/Drawer2: "
+ currentpagedevice /InputAttributes get 2 get null ne
+ {<</InputAttributes <</Priority [2 5 3 0 1 4]>> >>
+ setpagedevice} if"
+*End 
+*InputSlot Tray3/Drawer3: "
+ currentpagedevice /InputAttributes get 3 get null ne
+ {<</InputAttributes <</Priority [3 5 0 2 1 4]>> >>
+ setpagedevice} if"
+*End 
+*InputSlot Tray4/Drawer4: "
+ currentpagedevice /InputAttributes get 4 get null ne
+ {<</InputAttributes <</Priority [4 5 3 0 2 1]>> >>
+ setpagedevice} if"
+*End 
+*InputSlot MPT/Stack Bypass: "
+ currentpagedevice /InputAttributes get 1 get null ne
+ {<</InputAttributes <</Priority [1 5 3 0 2 4]>> >>
+ setpagedevice} if"
+*End
+*?InputSlot: "save
+ <<
+   /0 (Tray1)
+   /1 (Tray2)
+   /2 (Tray3)
+   /3 (Tray4)
+   /5 (Stack Bypass)
+ >>
+ currentpagedevice /InputAttributes get dup /Priority known
+ {/Priority get 0 get (  ) cvs cvn get}
+ {dup length 1 eq
+   {{pop} forall (       ) cvs cvn get}
+   {pop pop (Unknown)} ifelse
+ } ifelse = flush
+ restore"
+*End
+*CloseUI: *InputSlot
+
+*% ====================================
+*% === Output options ============
+
+*% ====================================
+*% ===== Collation selection
+*%
+*OpenUI *CNCollate/Collate: Boolean
+*OrderDependency: 25.0 AnySetup *CNCollate
+*DefaultCNCollate: False
+*CNCollate False/Off: "<</Collate false>> setpagedevice"
+*CNCollate True/On: "<</Collate true>> setpagedevice"
+*?CNCollate: "save
+ currentpagedevice dup /Collate known
+ {/Collate get {(True)} {(False)} ifelse}
+ {pop (Unknown)} ifelse = flush
+restore"
+*End
+*CloseUI: *CNCollate
+
+*% === Economode options ============
+*% *OpenUI *CNEconomode/Economy Mode: Boolean
+*% *OrderDependency: 51.0 AnySetup *CNEconomode
+*% *DefaultCNEconomode: False
+*% *CNEconomode False/Off: "<< /PostRenderingEnhance
+*% currentpagedevice /PostRenderingEnhanceDetails get
+*% /REValue get 0 ne
+*% /PostRenderingEnhanceDetails
+*% <</Type 18 /TonerSaver 0 /REValue
+*% currentpagedevice /PostRenderingEnhanceDetails get
+*% /REValue get >> >> setpagedevice"
+*% *End
+*% *CNEconomode True/On: "<</PostRenderingEnhance true /PostRenderingEnhanceDetails <</Type 18 /TonerSaver 1 >> >> setpagedevice"
+*% *CloseUI: *CNEconomode
+*%
+*% === Image Refinement options ============
+*% *OpenUI *CNImageRefinement/Image Refinement: Boolean
+*% *OrderDependency: 50.0 AnySetup *CNImageRefinement
+*% *DefaultCNImageRefinement: True
+*% *CNImageRefinement False/Off: "<< /PostRenderingEnhance
+*% currentpagedevice /PostRenderingEnhanceDetails get
+*% /TonerSaver get 0 ne
+*% /PostRenderingEnhanceDetails
+*% <</Type 18 /REValue 0 /TonerSaver
+*% currentpagedevice /PostRenderingEnhanceDetails get
+*% /TonerSaver get >> >> setpagedevice"
+*% *End
+*% *CNImageRefinement True/On: "<</PostRenderingEnhance true /PostRenderingEnhanceDetails
+*% <</Type 18 /REValue 1 /TonerSaver
+*% currentpagedevice /PostRenderingEnhanceDetails get
+*% /TonerSaver get >> >> setpagedevice"
+*% *End
+*% *CloseUI: *CNImageRefinement
+
+*% === Staple options ============
+*%
+*OpenUI *Staple/Staple Options: PickOne
+*OrderDependency: 50.0 AnySetup *Staple
+*DefaultStaple: None
+*Staple None/Off: "<</Staple 0 >> setpagedevice"
+*Staple 1PRU/1 Staple (Port RU/Land RB): "<</Staple 2 /Collate true
+ /StapleDetails <</Type 5 /Position (1PRU)>> >> setpagedevice"
+*End
+*Staple 1PLU/1 Staple (Port LU/Land RU): "<</Staple 2 /Collate true
+ /StapleDetails <</Type 5 /Position (1PLU)>> >> setpagedevice"
+*End
+*Staple 1PRB/1 Staple (Port RB/Land LB): "<</Staple 2 /Collate true
+ /StapleDetails <</Type 5 /Position (1PRB)>> >> setpagedevice"
+*End
+*Staple 1PLB/1 Staple (Port LB/Land LU): "<</Staple 2 /Collate true
+ /StapleDetails <</Type 5 /Position (1PLB)>> >> setpagedevice"
+*End
+*?Staple: "save
+ currentpagedevice dup /Staple get 1 ne
+ {pop (None)}
+ {pop (Staple)} ifelse = flush
+restore"
+*End
+*CloseUI: *Staple
+
+*% ====================================
+*% === Paper Output options ============
+*OpenUI *CNOutput/Paper output: PickOne
+*OrderDependency: 50.0 AnySetup *CNOutput
+*DefaultCNOutput: Auto
+*CNOutput Auto/Automatic: "<</DeferredOutputTraySelection true>> setpagedevice"
+*CNOutput TrayALow/Outputbin A (lower): "<</DeferredOutputTraySelection false
+/OutputTrayPosition 1>> setpagedevice"
+*End
+*CNOutput TrayBUp/Outputbin B (upper): "<</DeferredOutputTraySelection false
+/OutputTrayPosition 2>> setpagedevice"
+*End
+*CloseUI: **CNOutput
+
+*% ====================================
+*% ===== Media type selection
+*%
+*OpenUI *MediaType/Paper Type: PickOne
+*OrderDependency: 19.4 AnySetup *MediaType
+*DefaultMediaType: None
+*MediaType None/Printer Default: ""
+*MediaType PLAIN/Plain Paper: "<</MediaType (PLAIN)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType HEAVY/Heavy Paper: "<</MediaType (HEAVY)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType RECYCLED/Recycled: "<</MediaType (RECYCLED)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType COLOR/Color: "<</MediaType (COLOR)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType TRANSPR/Transparency: "<</MediaType (TRANSPARENCY)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType LABELS/Labels: "<</MediaType (LABELS)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType BOND/Bond Paper: "<</MediaType (BOND)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType ENVELOPE/Envelope: "<</MediaType (ENVELOPE)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*?MediaType: "save
+ currentpagedevice /MediaType 2 copy known
+ {get
+[[(None)    (ZEROPAD)]
+ [(PLAIN)   (PLAIN)]
+ [(THICK) (THICK)]
+ [(TRANSPARENCY) (TRANS)]
+ [(LABEL)  (LABEL)]
+ [(ENVELOPE)    (ENV)]
+ ]
+ {aload pop 2 index eq {(1) exit}{pop} ifelse} forall
+ (1) eq {exch pop} {(Unknown)} ifelse
+ } {pop pop (None)} ifelse
+ = flush
+restore"
+*End
+*CloseUI: *MediaType
+
+*% ====================================
+
+*CloseGroup: Features
+
+*DefaultResolution: 600dpi
+
+*% Halftone Information ===============
+*DefaultHalftoneType: 1
+*ScreenFreq: "71.0"
+*ScreenAngle: "45.0"
+*ResScreenFreq 600dpi: "65.0"
+*ResScreenAngle 600dpi: "45.0"
+*ResScreenFreq 1200dpi: "71.0"
+*ResScreenAngle 1200dpi: "45.0"
+
+*DefaultScreenProc: Dot
+*ScreenProc Dot: "
+ {abs exch abs 2 copy add 1 gt {1 sub dup mul exch 1 sub dup mul add 1 sub}
+ {dup mul exch dup mul add 1 exch sub} ifelse}"
+*End
+*ScreenProc Line: "{pop}"
+*ScreenProc Ellipse: "{dup 5 mul 8 div mul exch dup mul exch add sqrt 1
+ exch sub}"
+*End
+
+*DefaultTransfer: Null
+*Transfer Null: "{ }"
+*Transfer Null.Inverse: "{1 exch sub}"
+
+*DefaultGuaranteedMaxSeparations: 1
+*GuaranteedMaxSeparations 1: ""
+
+*% ====================================
+*% Paper Handling =====================
+*%
+*RequiresPageRegion All: True
+
+*% ====================================
+*% Custom Page Size ===================
+*%
+*NonUIOrderDependency: 80.3 AnySetup *CustomPageSize
+*MaxMediaWidth: "841"
+*MaxMediaHeight: "1224"
+*CenterRegistered: True
+*HWMargins: 12 12 12 12 
+*LeadingEdge Short: ""
+*DefaultLeadingEdge: Short
+*VariablePaperSize: True
+*ParamCustomPageSize Width: 1 points 278 841
+*ParamCustomPageSize Height: 2 points 420 1224
+*ParamCustomPageSize WidthOffset: 3 points 0 0
+*ParamCustomPageSize HeightOffset: 4 points 0 0
+*ParamCustomPageSize Orientation: 5 int 0 3
+
+*% ====================================
+*% == Current Adobe drivers do not handle NonUIConstraints.
+*% == They effectively do nothing
+
+*% ====================================
+*% Only the MPT supports custom page sizes.
+*%
+*%NonUIConstraints: *InputSlot Tray1 *CustomPageSize True
+*%NonUIConstraints: *InputSlot Tray2 *CustomPageSize True
+*%NonUIConstraints: *InputSlot Tray3 *CustomPageSize True
+*%NonUIConstraints: *InputSlot Tray4 *CustomPageSize True
+*%NonUIConstraints: *CustomPageSize True *InputSlot Tray1
+*%NonUIConstraints: *CustomPageSize True *InputSlot Tray2
+*%NonUIConstraints: *CustomPageSize True *InputSlot Tray3
+*%NonUIConstraints: *CustomPageSize True *InputSlot Tray4
+
+*% =========================1G===========
+*CustomPageSize True: "3 1 roll pop pop
+   <<
+     /PageSize [6 3 roll 1 and 0 eq {exch} if ]
+     /ImagingBBox null
+%     /Policies <</PageSize 2>>
+%     /MediaPosition 5  %can only use MPT/Manual
+%     /TraySwitch false
+   >> setpagedevice"
+*End
+
+*% end Custom Page Size ===============
+
+*% ====================================
+*% ===== PageSize selections
+*%
+*OpenUI *PageSize: PickOne
+*OrderDependency: 19.0 AnySetup *PageSize
+*DefaultPageSize: A4
+*% 
+*PageSize Letter/Letter: "<</PageSize [612 792] /ImagingBBox null
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageSize Legal/Legal: "<</PageSize [612 1008] /ImagingBBox null
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageSize A3/A3: "<</PageSize [842 1191] /ImagingBBox null
+/Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageSize A4/A4: "<</PageSize [595 842] /ImagingBBox null
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageSize A5/A5: "<</PageSize [420 595] /ImagingBBox null
+/Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageSize B4/B4-JIS: "<</PageSize [729 1032] /ImagingBBox null
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageSize B5/B5-JIS: "<</PageSize [516 729] /ImagingBBox null
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageSize EnvISOB5/B5-ISO Envelope: "<</PageSize [499 709] /ImagingBBox null
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageSize Tabloid/11x17: "<</PageSize [792 1224] /ImagingBBox null
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageSize Env10/Comm10 Envelope: "<</PageSize [297 684] /ImagingBBox null
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageSize EnvC5/C5 Envelope: "<</PageSize [459 649] /ImagingBBox null
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageSize EnvDL/DL Envelope: "<</PageSize [312 624] /ImagingBBox null
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageSize EnvMonarch/Monarch Envelope: "<</PageSize [279 540] /ImagingBBox null
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageSize Statement/Statement: "<</PageSize [396 612] /ImagingBBox null
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*?PageSize: "save
+  currentpagedevice /PageSize get aload pop
+  2 copy gt {exch} if
+  (Unknown)
+  <<
+     [612 792]  (Letter)
+     [612 1008] (Legal)
+     [842 1190] (A3)
+     [595 842]  (A4)
+     [420 595]  (A5)
+     [728 1031] (B4)
+     [515 728]  (B5)
+     [499 709]  (EnvISOB5)
+     [792 1224] (Tabloid)
+     [297 684]  (Env10)
+     [459 649]  (EnvC5)
+     [311 623]  (EnvDL)
+     [279 540]  (EnvMonarch)
+     [396 612]  (Statement)
+  >>
+  { exch aload pop
+    4 index sub abs 5 le exch 5 index sub abs 5 le and
+    {exch pop exit}
+    {pop}
+    ifelse
+  } bind forall
+  = flush pop pop
+  restore"
+*End
+*CloseUI: *PageSize
+
+*% ====================================
+*% ===== PageRegion selections, Identical to PageSize
+*%
+*OpenUI *PageRegion:  PickOne
+*OrderDependency: 19.0 AnySetup *PageRegion
+*DefaultPageRegion: A4
+*PageRegion Letter/Letter: "<</PageSize [612 792] 
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageRegion Legal/Legal: "<</PageSize [612 1008] 
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageRegion A3/A3: "<</PageSize [842 1191] 
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageRegion A4/A4: "<</PageSize [595 842] 
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageRegion A5/A5: "<</PageSize [420 595] 
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageRegion B4/B4-JIS: "<</PageSize [729 1032] 
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageRegion B5/B5-JIS: "<</PageSize [516 729] 
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageRegion EnvISOB5/B5-ISO Envelope: "<</PageSize [499 709] 
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageRegion Tabloid/11x17: "<</PageSize [792 1224] 
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageRegion Env10/Comm10 Envelope: "<</PageSize [297 684] 
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageRegion EnvC5/C5 Envelope: "<</PageSize [459 649] 
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageRegion EnvDL/DL Envelope: "<</PageSize [312 624] 
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageRegion EnvMonarch/Monarch Envelope: "<</PageSize [279 540] 
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*PageRegion Statement/Statement: "<</PageSize [396 612] 
+ /Policies <</PageSize 2>> >> setpagedevice"
+*End
+*CloseUI: *PageRegion
+
+*% ====================================
+*% The following entries provide information about specific paper keywords.
+*%
+*DefaultImageableArea: A4
+
+*% ====================================
+*% ImageableArea.
+*ImageableArea Letter/Letter:               "12.1779 11.9379 599.698 779.938  "
+*ImageableArea Legal/Legal:                 "12.1779 11.458 599.698 996.778  "
+*ImageableArea A3/A3:                       "11.9379 11.3979 829.858 1179.24  "
+*ImageableArea A4/A4:                       "11.3379 11.9379 583.858 829.858  "
+*ImageableArea A5/A5:                       "11.398 11.4579 409.558 583.618  "
+*ImageableArea B4/B4-JIS:                   "12.7779 11.458 715.498 1020.54  "
+*ImageableArea B5/B5-JIS:                   "12.1779 12.7779 503.698 715.498  "
+*ImageableArea EnvISOB5/B5-ISO Envelope:             "11.3379 11.3979 487.498 697.318  "
+*ImageableArea Tabloid/11x17:               "11.9379 11.4579 779.938 1212.78  "
+*ImageableArea Env10/Comm10 Envelope:       "12.1779 11.4579 284.818 672.778  "
+*ImageableArea EnvC5/C5 Envelope:           "12.5379 11.3979 446.458 637.798  "
+*ImageableArea EnvDL/DL Envelope:           "11.818 11.4579 299.818 612.298  "
+*ImageableArea EnvMonarch/Monarch Envelope: "12.7779 11.4579 266.218 528.778  "
+*ImageableArea Statement/Statement:         "11.3379 12.1779 384.658 599.698  "
+*?ImageableArea: "save
+ /cvp {(                ) cvs print ( )print} bind def
+ /upperright {10000 mul floor 10000 div} bind def
+ /lowerleft {10000 mul ceiling 10000 div} bind def
+ newpath clippath pathbbox
+ 4 -2 roll exch 2 {lowerleft cvp} repeat
+ exch 2 {upperright cvp} repeat ( ) = flush
+restore"
+*End
+
+*% ====================================
+*% These provide the physical dimensions of the paper by keyword
+*%
+*DefaultPaperDimension: A4
+*PaperDimension Letter/Letter: "612 792"
+*PaperDimension Legal/Legal: "612 1008"
+*PaperDimension A3/A3: "842 1191"
+*PaperDimension A4/A4: "595 842"
+*PaperDimension A5/A5: "420 595"
+*PaperDimension B4/B4-JIS: "729 1032"
+*PaperDimension B5/B5-JIS: "516 729"
+*PaperDimension EnvISOB5/B5-ISO Envelope: "499 709"
+*PaperDimension Tabloid/11x17: "792 1224"
+*PaperDimension Env10/Comm10 Envelope: "297 684"
+*PaperDimension EnvC5/C5 Envelope: "459 649"
+*PaperDimension EnvDL/DL Envelope: "312 624"
+*PaperDimension EnvMonarch/Monarch Envelope: "279 540"
+*PaperDimension Statement/Statement: "396 612"
+
+*% Font Information ===================
+*%
+*FCacheSize 8Meg/8 MB RAM: 917600
+*FCacheSize 40Meg/40 MB RAM: 4588000
+*FCacheSize 72Meg/72 MB RAM: 8258400
+
+*% ====================================
+*% ===== Default Fonts available =====
+*%
+*DefaultFont: Courier
+*Font AlbertusMT-Italic: Standard "(001.001)" Standard ROM
+*Font AlbertusMT-Light: Standard "(001.001)" Standard ROM
+*Font AlbertusMT: Standard "(001.001)" Standard ROM
+*Font AntiqueOlive-Bold: Standard "(001.002)" Standard ROM
+*Font AntiqueOlive-Compact: Standard "(001.002)" Standard ROM
+*Font AntiqueOlive-Italic: Standard "(001.002)" Standard ROM
+*Font AntiqueOlive-Roman: Standard "(001.002)" Standard ROM
+*Font Apple-Chancery: Standard "(3.0)" Standard ROM
+*Font Arial-BoldItalicMT: Standard "(001.003)" Standard ROM
+*Font Arial-BoldMT: Standard "(001.003)" Standard ROM
+*Font Arial-ItalicMT: Standard "(001.003)" Standard ROM
+*Font ArialMT: Standard "(001.003)" Standard ROM
+*Font AvantGarde-Book: Standard "(003.000)" Standard ROM
+*Font AvantGarde-BookOblique: Standard "(003.000)" Standard ROM
+*Font AvantGarde-Demi: Standard "(003.000)" Standard ROM
+*Font AvantGarde-DemiOblique: Standard "(003.000)" Standard ROM
+*Font Bodoni-Bold: Standard "(001.003)" Standard ROM
+*Font Bodoni-BoldItalic: Standard "(001.003)" Standard ROM
+*Font Bodoni-Italic: Standard "(001.003)" Standard ROM
+*Font Bodoni-Poster: Standard "(001.003)" Standard ROM
+*Font Bodoni-PosterCompressed: Standard "(001.002)" Standard ROM
+*Font Bodoni: Standard "(001.003)" Standard ROM
+*Font Bookman-Demi: Standard "(003.000)" Standard ROM
+*Font Bookman-DemiItalic: Standard "(003.000)" Standard ROM
+*Font Bookman-Light: Standard "(003.000)" Standard ROM
+*Font Bookman-LightItalic: Standard "(003.000)" Standard ROM
+*Font Carta: Special "(001.001)" Special ROM
+*Font Chicago: Standard "(3.0)" Standard ROM
+*Font Clarendon-Bold: Standard "(001.002)" Standard ROM
+*Font Clarendon-Light: Standard "(001.002)" Standard ROM
+*Font Clarendon: Standard "(001.002)" Standard ROM
+*Font CooperBlack-Italic: Standard "(001.004)" Standard ROM
+*Font CooperBlack: Standard "(001.004)" Standard ROM
+*Font Copperplate-ThirtyThreeBC: Standard "(001.003)" Standard ROM
+*Font Copperplate-ThirtyTwoBC: Standard "(001.003)" Standard ROM
+*Font Coronet-Regular: Standard "(001.002)" Standard ROM
+*Font Courier-Bold: Standard "(004.000)" Standard ROM
+*Font Courier-BoldOblique: Standard "(004.000)" Standard ROM
+*Font Courier-Oblique: Standard "(004.000)" Standard ROM
+*Font Courier: Standard "(004.000)" Standard ROM
+*Font Eurostile-Bold: Standard "(001.002)" Standard ROM
+*Font Eurostile-BoldExtendedTwo: Standard "(001.003)" Standard ROM
+*Font Eurostile-ExtendedTwo: Standard "(001.003)" Standard ROM
+*Font Eurostile: Standard "(001.003)" Standard ROM
+*Font Geneva: Standard "(3.0)" Standard ROM
+*Font GillSans-Bold: Standard "(001.002)" Standard ROM
+*Font GillSans-BoldCondensed: Standard "(001.002)" Standard ROM
+*Font GillSans-BoldItalic: Standard "(001.003)" Standard ROM
+*Font GillSans-Condensed: Standard "(001.002)" Standard ROM
+*Font GillSans-ExtraBold: Standard "(001.002)" Standard ROM
+*Font GillSans-Italic: Standard "(001.003)" Standard ROM
+*Font GillSans-Light: Standard "(001.002)" Standard ROM
+*Font GillSans-LightItalic: Standard "(001.003)" Standard ROM
+*Font GillSans: Standard "(001.003)" Standard ROM
+*Font Goudy-Bold: Standard "(001.003)" Standard ROM
+*Font Goudy-BoldItalic: Standard "(001.003)" Standard ROM
+*Font Goudy-ExtraBold: Standard "(001.002)" Standard ROM
+*Font Goudy-Italic: Standard "(001.003)" Standard ROM
+*Font Goudy: Standard "(001.004)" Standard ROM
+*Font Helvetica-Bold: Standard "(003.000)" Standard ROM
+*Font Helvetica-BoldOblique: Standard "(003.000)" Standard ROM
+*Font Helvetica-Condensed-Bold: Standard "(003.000)" Standard ROM
+*Font Helvetica-Condensed-BoldObl: Standard "(003.000)" Standard ROM
+*Font Helvetica-Condensed-Oblique: Standard "(003.000)" Standard ROM
+*Font Helvetica-Condensed: Standard "(003.000)" Standard ROM
+*Font Helvetica-Narrow-Bold: Standard "(003.000)" Standard ROM
+*Font Helvetica-Narrow-BoldOblique: Standard "(003.000)" Standard ROM
+*Font Helvetica-Narrow-Oblique: Standard "(003.000)" Standard ROM
+*Font Helvetica-Narrow: Standard "(003.000)" Standard ROM
+*Font Helvetica-Oblique: Standard "(003.000)" Standard ROM
+*Font Helvetica: Standard "(003.000)" Standard ROM
+*Font HoeflerText-Black: Standard "(1.0)" Unknown ROM
+*Font HoeflerText-BlackItalic: Standard "(1.0)" Unknown ROM
+*Font HoeflerText-Italic: Standard "(1.0)" Unknown ROM
+*Font HoeflerText-Ornaments: Special "(001.001)" Special ROM
+*Font HoeflerText-Regular: Standard "(1.0)" Unknown ROM
+*Font JoannaMT-Bold: Standard "(001.001)" Standard ROM
+*Font JoannaMT-BoldItalic: Standard "(001.001)" Standard ROM
+*Font JoannaMT-Italic: Standard "(001.001)" Standard ROM
+*Font JoannaMT: Standard "(001.001)" Standard ROM
+*Font LetterGothic-Bold: Standard "(001.007)" Standard ROM
+*Font LetterGothic-BoldSlanted: Standard "(001.006)" Standard ROM
+*Font LetterGothic-Slanted: Standard "(001.005)" Standard ROM
+*Font LetterGothic: Standard "(001.005)" Standard ROM
+*Font LubalinGraph-Book: Standard "(001.004)" Standard ROM
+*Font LubalinGraph-BookOblique: Standard "(001.004)" Standard ROM
+*Font LubalinGraph-Demi: Standard "(001.004)" Standard ROM
+*Font LubalinGraph-DemiOblique: Standard "(001.004)" Standard ROM
+*Font Marigold: Standard "(001.001)" Standard ROM
+*Font Monaco: Standard "(3.0)" Standard ROM
+*Font MonaLisa-Recut: Standard "(001.001)" Standard ROM
+*Font NewCenturySchlbk-Bold: Standard "(003.000)" Standard ROM
+*Font NewCenturySchlbk-BoldItalic: Standard "(003.000)" Standard ROM
+*Font NewCenturySchlbk-Italic: Standard "(003.000)" Standard ROM
+*Font NewCenturySchlbk-Roman: Standard "(003.000)" Standard ROM
+*Font NewYork: Standard "(001.000)" ExtendedRoman ROM
+*Font Optima-Bold: Standard "(001.007)" Standard ROM
+*Font Optima-BoldItalic: Standard "(001.001)" Standard ROM
+*Font Optima-Italic: Standard "(001.001)" Standard ROM
+*Font Optima: Standard "(001.006)" Standard ROM
+*Font Oxford: Standard "(001.001)" Standard ROM
+*Font Palatino-Bold: Standard "(003.000)" Standard ROM
+*Font Palatino-BoldItalic: Standard "(003.000)" Standard ROM
+*Font Palatino-Italic: Standard "(003.000)" Standard ROM
+*Font Palatino-Roman: Standard "(003.000)" Standard ROM
+*Font StempelGaramond-Bold: Standard "(001.003)" Standard ROM
+*Font StempelGaramond-BoldItalic: Standard "(001.003)" Standard ROM
+*Font StempelGaramond-Italic: Standard "(001.003)" Standard ROM
+*Font StempelGaramond-Roman: Standard "(001.003)" Standard ROM
+*Font Symbol: Special "(001.008)" Special ROM
+*Font Tekton: Standard "(001.002)" Standard ROM
+*Font Times-Bold: Standard "(003.000)" Standard ROM
+*Font Times-BoldItalic: Standard "(003.000)" Standard ROM
+*Font Times-Italic: Standard "(003.000)" Standard ROM
+*Font Times-Roman: Standard "(003.000)" Standard ROM
+*Font TimesNewRomanPS-BoldItalicMT: Standard "(001.003)" Standard ROM
+*Font TimesNewRomanPS-BoldMT: Standard "(001.004)" Standard ROM
+*Font TimesNewRomanPS-ItalicMT: Standard "(001.003)" Standard ROM
+*Font TimesNewRomanPSMT: Standard "(001.003)" Standard ROM
+*Font Univers-Bold: Standard "(001.004)" Standard ROM
+*Font Univers-BoldExt: Standard "(001.001)" Standard ROM
+*Font Univers-BoldExtObl: Standard "(001.001)" Standard ROM
+*Font Univers-BoldOblique: Standard "(001.004)" Standard ROM
+*Font Univers-Condensed: Standard "(001.003)" Standard ROM
+*Font Univers-CondensedBold: Standard "(001.002)" Standard ROM
+*Font Univers-CondensedBoldOblique: Standard "(001.002)" Standard ROM
+*Font Univers-CondensedOblique: Standard "(001.003)" Standard ROM
+*Font Univers-Extended: Standard "(001.001)" Standard ROM
+*Font Univers-ExtendedObl: Standard "(001.001)" Standard ROM
+*Font Univers-Light: Standard "(001.004)" Standard ROM
+*Font Univers-LightOblique: Standard "(001.004)" Standard ROM
+*Font Univers-Oblique: Standard "(001.004)" Standard ROM
+*Font Univers: Standard "(001.004)" Standard ROM
+*Font Wingdings-Regular: Special "(Version 2.00)" Special ROM
+*Font Wingdings: Unknown "(001.001)" Unknown ROM
+*Font ZapfChancery-MediumItalic: Standard "(003.000)" Standard ROM
+*Font ZapfDingbats: Special "(002.000)" Special ROM
+
+*?FontQuery: "save
+{count 1 gt
+  {exch dup 127 string cvs (/)print print (:)print
+   /Font resourcestatus
+   {pop pop (Yes)} {(No)} ifelse =
+  }
+  {exit}
+  ifelse
+} bind loop
+(*) = flush
+restore"
+*End
+
+*?FontList: "save
+ (*) {cvn ==} 128 string /Font resourceforall
+ (*) = flush
+restore"
+*End
+
+*% ====================================
+*% Printer Messages (verbatim from printer):
+*%
+*Message: "%%[ exitserver: permanent state may be changed ]%%"
+*Message: "%%[ Flushing: rest of job (to end-of-file) will be ignored ]%%"
+*Message: "\FontName\ not found, using Courier"
+
+*% ====================================
+*% Status (format: %%[ status: <one of these> ] %%)
+*%
+*Status: "initializing"
+*Status: "idle"
+*Status: "busy"
+*Status: "waiting"
+*Status: "online"
+
+*% ====================================
+*% Input Sources (format: %%[ status: <stat>; source: <one of these> ]%% )
+*%
+*Source: "EtherTalk"
+
+*%DeviceAdjustMatrix: "[1 0 0 1 0 0]"
+
+*% ====================================
+*% ==== Color Separation Information ====
+
+*DefaultColorSep: ProcessBlack.85lpi.600dpi/85 lpi / 600x600 dpi
+
+*%  For 85 lpi / 600 x 600 dpi  ===============================
+
+*% =====================================================================
+*% ==== PPD file revision number, date, and time stamp.  This must ====
+*% ==== remain here and be updated each time this file is modified. ====
+*%
+*%    File:             Revision:      Time/Date:
+*%
+*%  @(#)cnmf71e1.ppd    1.13          10:55:00 06/02/02
+*%
+
+*% Last Edit Date: May 30, 2006
+*% The byte count of this file should be 053305 approximately
+*% depending on the filesystem it resides in.
+*% end of PPD file for Canon MF7170i

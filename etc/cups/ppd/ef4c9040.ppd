@@ -1,0 +1,2958 @@
+*PPD-Adobe: "4.3"
+*% Copyright 1993-2005 Electronics for Imaging, Inc.  All Rights Reserved.
+*% *********
+*% EFI Information Block
+*%
+*%EFFileVersion: 2.0
+*%
+*% *********
+*FormatVersion: "4.3"
+*LanguageEncoding: ISOLatin1
+*LanguageVersion: English
+*FileVersion: "1.1"
+*PSVersion: "(3016.102) 1"
+*PCFileName: "EF4C9040.PPD"
+*Product: "(iR5570/iR6570-M3)"
+*ShortNickName: "Canon iR5570-6"
+*NickName: "Canon iR5570-6570-M3 PS Ver 1.1"
+*ModelName: "Canon iR5570-6570-M3 PS Ver 1.1"
+*Manufacturer: "Canon"
+
+*% ========== EFI Specific Informational Keys ==========
+
+*%EFVersion 2.0: False
+*%EFDefaultFacePrinting: down
+*%EFMixedPageSizeSupport: False
+*%EFPpmBW: "65"
+*%EFIgnoreErrors: "0"
+
+*%EFISpecialOption *EF9999Copies: True
+*%EFISpecialOption *EFForceJMDefaults: True
+*%EFISpecialOption *EFShowAdobePageSize: True
+*%EFISpecialOption *FieryDriver2: True
+
+*%EFISpecialOption *EFBillingCode: True
+*%EFISpecialOption *EFClientJobID: True
+
+*%EFVersion 1.1: True
+
+*% ========== Driver Information ==========
+
+*%EFIPropPage EFPPFieryPrint/Fiery Printing:True
+*%EFIPropPage EFPPConsumables/Consumables:True
+*%EFIPropPage EFPPPostscript/PostScript:True
+*%EFIPropPage EFPPFonts/Fonts:True
+*%EFIPropPage EFPPInstallableOptions/Configuration:True | Prop
+*%EFIPropPage EFPPAbout/About:True
+
+*%EFIGroupName EFScrollPane/EFScrollPane:True
+*%EFIParent EFScrollPane/EFPPFieryPrint:True | Scrollpane
+*%EFIGroupName Job/Job:True
+*%EFIParent Job/EFScrollPane:True | Rolldown
+*%EFIGroupName FPDestination/Destination:True
+*%EFIParent FPDestination/EFScrollPane:True | Rolldown
+*%EFIGroupName FPPaperSource/Paper Source:True
+*%EFIParent FPPaperSource/EFScrollPane:True | Rolldown
+*%EFIGroupName FPLayout/Layout:True
+*%EFIParent FPLayout/EFScrollPane:True | Rolldown
+*%EFIGroupName FPWatermarks/Watermarks:True
+*%EFIParent FPWatermarks/EFScrollPane:True | Rolldown
+*%EFIGroupName FPImageShift/Image Shift:True
+*%EFIParent FPImageShift/EFScrollPane:True | Rolldown
+*%EFIGroupName FPImageQuality/Image Quality:True
+*%EFIParent FPImageQuality/EFScrollPane:True | Rolldown
+*%EFIGroupName FPFinishing/Finishing:True
+*%EFIParent FPFinishing/EFScrollPane:True | Rolldown
+*%EFIGroupName FPFreeForm/FreeForm:True
+*%EFIParent FPFreeForm/EFScrollPane:True | Rolldown
+*%EFIGroupName FPEFNotes/Owner Information:True
+*%EFIParent FPEFNotes/EFScrollPane:True | Rolldown
+*%EFIGroupName EFPPInstallableOptions/Configuration:True
+
+*%EFShortcut *EF_PAPER_ORIENTATION
+*%EFShortcut *Duplex
+*%EFShortcut *EFSort
+*%EFShortcut *InputSlot
+*%EFShortcut *PageSize
+
+*%EFRegister *EF_LAYOUT *EF_PAPER_ORIENTATION
+*%EFRegister *Duplex *EF_PAPER_ORIENTATION
+*%EFRegister *EF_DUPLEX *Duplex
+
+*% ========== EFI Jobnotes ==========
+
+*% ========== EFI Range ==========
+
+*%EFIFlags *EFImageBackX Column|CommandEx|Rerip|Spooler
+*%EFIGroup *EFImageBackX FPImageShift/Image Shift
+*%EFIRange *EFImageBackX/Back Shift X (100*Pts):(-99999;99999;1;0): " /XJXSetImageBackX where { pop <*EFImageBackX> XJXSetImageBackX } if "
+*%EFIKeyAttribute [EFImageBackX][polymorphic:yes]
+
+*%EFIFlags *EFImageBackY Column|CommandEx|Rerip|Spooler
+*%EFIGroup *EFImageBackY FPImageShift/Image Shift
+*%EFIRange *EFImageBackY/Back Shift Y (100*Pts):(-99999;99999;1;0): " /XJXSetImageBackY where { pop <*EFImageBackY> XJXSetImageBackY } if "
+*%EFIKeyAttribute [EFImageBackY][polymorphic:yes]
+
+*%EFIFlags *EFImageFrontX Column|CommandEx|Rerip|Spooler
+*%EFIGroup *EFImageFrontX FPImageShift/Image Shift
+*%EFIRange *EFImageFrontX/Front Shift X (100*Pts):(-99999;99999;1;0): " /XJXSetImageFrontX where { pop <*EFImageFrontX> XJXSetImageFrontX } if "
+*%EFIKeyAttribute [EFImageFrontX][polymorphic:yes]
+
+*%EFIFlags *EFImageFrontY Column|CommandEx|Rerip|Spooler
+*%EFIGroup *EFImageFrontY FPImageShift/Image Shift
+*%EFIRange *EFImageFrontY/Front Shift Y (100*Pts):(-99999;99999;1;0): " /XJXSetImageFrontY where { pop <*EFImageFrontY> XJXSetImageFrontY } if "
+*%EFIKeyAttribute [EFImageFrontY][polymorphic:yes]
+
+*% ========== Installable options ==========
+
+*OpenGroup: InstallableOptions/Options Installed
+
+*%EFIFlags *EFFinisher 
+*%EFIGroup *EFFinisher EFPPInstallableOptions/Configuration
+*OpenUI *EFFinisher/Finisher Option:PickOne
+*DefaultEFFinisher: False
+*EFFinisher False/Not Installed: ""
+*EFFinisher Stacker/Shift Tray: ""
+*EFFinisher Finisher/Finisher-T1: ""
+*EFFinisher Finisher3/Saddle Finisher-T2: ""
+*?EFFinisher: " userdict /FieryXJdict known {
+FieryXJdict /getfierysysdict known
+{(EFFINISHER) FieryXJdict /getfierysysdict get exec }
+{ (False) }
+ifelse
+} { (False) } ifelse
+= flush "
+*End
+*CloseUI: *EFFinisher
+
+*%EFIFlags *EFPaperDeckOpt 
+*%EFIGroup *EFPaperDeckOpt EFPPInstallableOptions/Configuration
+*OpenUI *EFPaperDeckOpt/Paper Deck:PickOne
+*DefaultEFPaperDeckOpt: False
+*EFPaperDeckOpt False/Not Installed: ""
+*EFPaperDeckOpt Option1/Side Paper Deck: ""
+*?EFPaperDeckOpt: " userdict /FieryXJdict known {
+FieryXJdict /getfierysysdict known
+{(EFPAPERDECKOPT) FieryXJdict /getfierysysdict get exec }
+{ (False) }
+ifelse
+} { (False) } ifelse
+= flush "
+*End
+*CloseUI: *EFPaperDeckOpt
+
+*%EFIFlags *EFPunchOpt 
+*%EFIGroup *EFPunchOpt EFPPInstallableOptions/Configuration
+*OpenUI *EFPunchOpt/Punch Option:PickOne
+*DefaultEFPunchOpt: False
+*EFPunchOpt False/Not Installed: ""
+*EFPunchOpt True/Punch Unit: ""
+*?EFPunchOpt: " userdict /FieryXJdict known {
+FieryXJdict /getfierysysdict known
+{(EFPUNCHOPT) FieryXJdict /getfierysysdict get exec }
+{ (False) }
+ifelse
+} { (False) } ifelse
+= flush "
+*End
+*CloseUI: *EFPunchOpt
+
+*CloseGroup: InstallableOptions
+
+*% ========== UIConstraints ==========
+
+*UIConstraints: *EFBackCoverMode *EFStapler Stitch
+*UIConstraints: *EFStapler Stitch *EFBackCoverMode
+
+*UIConstraints: *EFCopierBooklet *Duplex
+*UIConstraints: *Duplex *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFSort False
+*UIConstraints: *EFSort False *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFSort Group
+*UIConstraints: *EFSort Group *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFSort CrossCollate
+*UIConstraints: *EFSort CrossCollate *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFOutputBin Outbin1
+*UIConstraints: *EFOutputBin Outbin1 *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFOutputBin Outbin2
+*UIConstraints: *EFOutputBin Outbin2 *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *PageSize Executive
+*UIConstraints: *PageSize Executive *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFPunch TopP
+*UIConstraints: *EFPunch TopP *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFPunch TopL
+*UIConstraints: *EFPunch TopL *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFPunch LeftP
+*UIConstraints: *EFPunch LeftP *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFPunch LeftL
+*UIConstraints: *EFPunch LeftL *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFPunch RightP
+*UIConstraints: *EFPunch RightP *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFPunch RightL
+*UIConstraints: *EFPunch RightL *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFStapler U1LeftP
+*UIConstraints: *EFStapler U1LeftP *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFStapler U1LeftL
+*UIConstraints: *EFStapler U1LeftL *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFStapler U1RightP
+*UIConstraints: *EFStapler U1RightP *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFStapler U1RightL
+*UIConstraints: *EFStapler U1RightL *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFStapler U2TopL
+*UIConstraints: *EFStapler U2TopL *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFStapler U2LeftP
+*UIConstraints: *EFStapler U2LeftP *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFStapler U2RightP
+*UIConstraints: *EFStapler U2RightP *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFBackCoverMode
+*UIConstraints: *EFBackCoverMode *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFCopyNumMode
+*UIConstraints: *EFCopyNumMode *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet HalfLeftBinding *PageSize Legal
+*UIConstraints: *PageSize Legal *EFCopierBooklet HalfLeftBinding
+*UIConstraints: *EFCopierBooklet HalfLeftBinding *PageRegion Legal
+*UIConstraints: *PageRegion Legal *EFCopierBooklet HalfLeftBinding
+*UIConstraints: *EFCopierBooklet HalfLeftBinding *PageSize Statement
+*UIConstraints: *PageSize Statement *EFCopierBooklet HalfLeftBinding
+*UIConstraints: *EFCopierBooklet HalfLeftBinding *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFCopierBooklet HalfLeftBinding
+*UIConstraints: *EFCopierBooklet HalfLeftBinding *PageSize B5
+*UIConstraints: *PageSize B5 *EFCopierBooklet HalfLeftBinding
+*UIConstraints: *EFCopierBooklet HalfLeftBinding *PageRegion B5
+*UIConstraints: *PageRegion B5 *EFCopierBooklet HalfLeftBinding
+*UIConstraints: *EFCopierBooklet HalfLeftBinding *PageSize A5
+*UIConstraints: *PageSize A5 *EFCopierBooklet HalfLeftBinding
+*UIConstraints: *EFCopierBooklet HalfLeftBinding *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFCopierBooklet HalfLeftBinding
+*UIConstraints: *EFCopierBooklet LeftBinding *PageSize Tabloid
+*UIConstraints: *PageSize Tabloid *EFCopierBooklet LeftBinding
+*UIConstraints: *EFCopierBooklet LeftBinding *PageRegion Tabloid
+*UIConstraints: *PageRegion Tabloid *EFCopierBooklet LeftBinding
+*UIConstraints: *EFCopierBooklet LeftBinding *PageSize Legal
+*UIConstraints: *PageSize Legal *EFCopierBooklet LeftBinding
+*UIConstraints: *EFCopierBooklet LeftBinding *PageRegion Legal
+*UIConstraints: *PageRegion Legal *EFCopierBooklet LeftBinding
+*UIConstraints: *EFCopierBooklet LeftBinding *PageSize A3
+*UIConstraints: *PageSize A3 *EFCopierBooklet LeftBinding
+*UIConstraints: *EFCopierBooklet LeftBinding *PageRegion A3
+*UIConstraints: *PageRegion A3 *EFCopierBooklet LeftBinding
+*UIConstraints: *EFCopierBooklet LeftBinding *PageSize B4
+*UIConstraints: *PageSize B4 *EFCopierBooklet LeftBinding
+*UIConstraints: *EFCopierBooklet LeftBinding *PageRegion B4
+*UIConstraints: *PageRegion B4 *EFCopierBooklet LeftBinding
+*UIConstraints: *EFCopierBooklet LeftBinding *EFPunch
+*UIConstraints: *EFPunch *EFCopierBooklet LeftBinding
+
+*UIConstraints: *EFCopyNumMode Auto *EFSort GroupWithShift
+*UIConstraints: *EFSort GroupWithShift *EFCopyNumMode Auto
+*UIConstraints: *EFCopyNumMode Auto *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *EFCopyNumMode Auto
+*UIConstraints: *EFCopyNumMode Mode1 *EFSort GroupWithShift
+*UIConstraints: *EFSort GroupWithShift *EFCopyNumMode Mode1
+*UIConstraints: *EFCopyNumMode Mode1 *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *EFCopyNumMode Mode1
+*UIConstraints: *EFCopyNumMode Mode2 *EFSort GroupWithShift
+*UIConstraints: *EFSort GroupWithShift *EFCopyNumMode Mode2
+*UIConstraints: *EFCopyNumMode Mode2 *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *EFCopyNumMode Mode2
+*UIConstraints: *EFCopyNumMode Mode3 *EFSort GroupWithShift
+*UIConstraints: *EFSort GroupWithShift *EFCopyNumMode Mode3
+*UIConstraints: *EFCopyNumMode Mode3 *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *EFCopyNumMode Mode3
+*UIConstraints: *EFCopyNumMode Mode4 *EFSort GroupWithShift
+*UIConstraints: *EFSort GroupWithShift *EFCopyNumMode Mode4
+*UIConstraints: *EFCopyNumMode Mode4 *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *EFCopyNumMode Mode4
+*UIConstraints: *EFCopyNumMode Mode5 *EFSort GroupWithShift
+*UIConstraints: *EFSort GroupWithShift *EFCopyNumMode Mode5
+*UIConstraints: *EFCopyNumMode Mode5 *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *EFCopyNumMode Mode5
+
+*UIConstraints: *Duplex DuplexNoTumble *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *Duplex DuplexNoTumble
+*UIConstraints: *Duplex DuplexNoTumble *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *Duplex DuplexNoTumble
+*UIConstraints: *Duplex DuplexNoTumble *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *Duplex DuplexNoTumble
+*UIConstraints: *Duplex DuplexNoTumble *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *Duplex DuplexNoTumble
+*UIConstraints: *Duplex DuplexTumble *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *Duplex DuplexTumble
+*UIConstraints: *Duplex DuplexTumble *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *Duplex DuplexTumble
+*UIConstraints: *Duplex DuplexTumble *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *Duplex DuplexTumble
+*UIConstraints: *Duplex DuplexTumble *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *Duplex DuplexTumble
+
+*UIConstraints: *EFFinisher False *EFOutputBin Outbin1
+*UIConstraints: *EFOutputBin Outbin1 *EFFinisher False
+*UIConstraints: *EFFinisher False *EFOutputBin Outbin2
+*UIConstraints: *EFOutputBin Outbin2 *EFFinisher False
+*UIConstraints: *EFFinisher False *EFPunch
+*UIConstraints: *EFPunch *EFFinisher False
+*UIConstraints: *EFFinisher False *EFStapler
+*UIConstraints: *EFStapler *EFFinisher False
+*UIConstraints: *EFFinisher False *EFSort GroupWithShift
+*UIConstraints: *EFSort GroupWithShift *EFFinisher False
+*UIConstraints: *EFFinisher False *EFOutputBin Outbin3
+*UIConstraints: *EFOutputBin Outbin3 *EFFinisher False
+*UIConstraints: *EFFinisher Finisher *EFSort CrossCollate
+*UIConstraints: *EFSort CrossCollate *EFFinisher Finisher
+*UIConstraints: *EFFinisher Finisher *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *EFFinisher Finisher
+*UIConstraints: *EFFinisher Finisher *EFStapler Stitch
+*UIConstraints: *EFStapler Stitch *EFFinisher Finisher
+*UIConstraints: *EFFinisher Finisher3 *EFSort CrossCollate
+*UIConstraints: *EFSort CrossCollate *EFFinisher Finisher3
+*UIConstraints: *EFFinisher Finisher3 *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *EFFinisher Finisher3
+*UIConstraints: *EFFinisher Stacker *EFSort CrossCollate
+*UIConstraints: *EFSort CrossCollate *EFFinisher Stacker
+*UIConstraints: *EFFinisher Stacker *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *EFFinisher Stacker
+*UIConstraints: *EFFinisher Stacker *EFPunch
+*UIConstraints: *EFPunch *EFFinisher Stacker
+*UIConstraints: *EFFinisher Stacker *EFStapler
+*UIConstraints: *EFStapler *EFFinisher Stacker
+
+*UIConstraints: *EFMMInUse *EFMediaInterlv
+*UIConstraints: *EFMediaInterlv *EFMMInUse
+
+*UIConstraints: *EFMediaInterlv *EFFrontCoverMode Both
+*UIConstraints: *EFFrontCoverMode Both *EFMediaInterlv
+*UIConstraints: *EFMediaInterlv *EFBackCoverMode Both
+*UIConstraints: *EFBackCoverMode Both *EFMediaInterlv
+*UIConstraints: *EFMediaInterlv Blank *EFMediaType Any
+*UIConstraints: *EFMediaType Any *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *EFMediaType Plain
+*UIConstraints: *EFMediaType Plain *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *EFMediaType Recycled
+*UIConstraints: *EFMediaType Recycled *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *EFMediaType Color
+*UIConstraints: *EFMediaType Color *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *EFMediaType Bond
+*UIConstraints: *EFMediaType Bond *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *EFMediaType Heavy
+*UIConstraints: *EFMediaType Heavy *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *EFMediaType Letterhead
+*UIConstraints: *EFMediaType Letterhead *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *PageSize Tabloid
+*UIConstraints: *PageSize Tabloid *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *PageRegion Tabloid
+*UIConstraints: *PageRegion Tabloid *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *PageSize Legal
+*UIConstraints: *PageSize Legal *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *PageRegion Legal
+*UIConstraints: *PageRegion Legal *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *PageSize Statement
+*UIConstraints: *PageSize Statement *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *PageSize Executive
+*UIConstraints: *PageSize Executive *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *PageSize A3
+*UIConstraints: *PageSize A3 *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *PageRegion A3
+*UIConstraints: *PageRegion A3 *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *PageSize B4
+*UIConstraints: *PageSize B4 *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *PageRegion B4
+*UIConstraints: *PageRegion B4 *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *PageSize B5
+*UIConstraints: *PageSize B5 *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *PageRegion B5
+*UIConstraints: *PageRegion B5 *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *PageSize A5
+*UIConstraints: *PageSize A5 *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Blank *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFMediaInterlv Blank
+*UIConstraints: *EFMediaInterlv Printed *EFMediaType Any
+*UIConstraints: *EFMediaType Any *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *EFMediaType Plain
+*UIConstraints: *EFMediaType Plain *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *EFMediaType Recycled
+*UIConstraints: *EFMediaType Recycled *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *EFMediaType Color
+*UIConstraints: *EFMediaType Color *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *EFMediaType Bond
+*UIConstraints: *EFMediaType Bond *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *EFMediaType Heavy
+*UIConstraints: *EFMediaType Heavy *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *EFMediaType Letterhead
+*UIConstraints: *EFMediaType Letterhead *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *PageSize Tabloid
+*UIConstraints: *PageSize Tabloid *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *PageRegion Tabloid
+*UIConstraints: *PageRegion Tabloid *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *PageSize Legal
+*UIConstraints: *PageSize Legal *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *PageRegion Legal
+*UIConstraints: *PageRegion Legal *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *PageSize Statement
+*UIConstraints: *PageSize Statement *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *PageSize Executive
+*UIConstraints: *PageSize Executive *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *PageSize A3
+*UIConstraints: *PageSize A3 *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *PageRegion A3
+*UIConstraints: *PageRegion A3 *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *PageSize B4
+*UIConstraints: *PageSize B4 *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *PageRegion B4
+*UIConstraints: *PageRegion B4 *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *PageSize B5
+*UIConstraints: *PageSize B5 *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *PageRegion B5
+*UIConstraints: *PageRegion B5 *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *PageSize A5
+*UIConstraints: *PageSize A5 *EFMediaInterlv Printed
+*UIConstraints: *EFMediaInterlv Printed *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFMediaInterlv Printed
+
+*UIConstraints: *EFMediaType Labels *PageSize Tabloid
+*UIConstraints: *PageSize Tabloid *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *PageRegion Tabloid
+*UIConstraints: *PageRegion Tabloid *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *PageSize Legal
+*UIConstraints: *PageSize Legal *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *PageRegion Legal
+*UIConstraints: *PageRegion Legal *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *PageSize Statement
+*UIConstraints: *PageSize Statement *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *PageSize Executive
+*UIConstraints: *PageSize Executive *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *PageSize A3
+*UIConstraints: *PageSize A3 *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *PageRegion A3
+*UIConstraints: *PageRegion A3 *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *PageSize B5
+*UIConstraints: *PageSize B5 *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *PageRegion B5
+*UIConstraints: *PageRegion B5 *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *PageSize A5
+*UIConstraints: *PageSize A5 *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFMediaType Labels
+
+*UIConstraints: *EFMediaType Prepunched *PageSize Tabloid
+*UIConstraints: *PageSize Tabloid *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *PageRegion Tabloid
+*UIConstraints: *PageRegion Tabloid *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *PageSize Legal
+*UIConstraints: *PageSize Legal *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *PageRegion Legal
+*UIConstraints: *PageRegion Legal *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *PageSize Statement
+*UIConstraints: *PageSize Statement *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *PageSize Executive
+*UIConstraints: *PageSize Executive *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *PageSize A4
+*UIConstraints: *PageSize A4 *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *PageRegion A4
+*UIConstraints: *PageRegion A4 *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *PageSize A3
+*UIConstraints: *PageSize A3 *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *PageRegion A3
+*UIConstraints: *PageRegion A3 *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *PageSize B4
+*UIConstraints: *PageSize B4 *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *PageRegion B4
+*UIConstraints: *PageRegion B4 *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *PageSize B5
+*UIConstraints: *PageSize B5 *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *PageRegion B5
+*UIConstraints: *PageRegion B5 *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *PageSize A5
+*UIConstraints: *PageSize A5 *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Tabstock *PageSize Tabloid
+*UIConstraints: *PageSize Tabloid *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *PageRegion Tabloid
+*UIConstraints: *PageRegion Tabloid *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *PageSize Legal
+*UIConstraints: *PageSize Legal *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *PageRegion Legal
+*UIConstraints: *PageRegion Legal *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *PageSize Statement
+*UIConstraints: *PageSize Statement *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *PageSize Executive
+*UIConstraints: *PageSize Executive *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *PageSize A3
+*UIConstraints: *PageSize A3 *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *PageRegion A3
+*UIConstraints: *PageRegion A3 *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *PageSize B4
+*UIConstraints: *PageSize B4 *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *PageRegion B4
+*UIConstraints: *PageRegion B4 *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *PageSize B5
+*UIConstraints: *PageSize B5 *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *PageRegion B5
+*UIConstraints: *PageRegion B5 *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *PageSize A5
+*UIConstraints: *PageSize A5 *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Translucent *PageSize Tabloid
+*UIConstraints: *PageSize Tabloid *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *PageRegion Tabloid
+*UIConstraints: *PageRegion Tabloid *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *PageSize Legal
+*UIConstraints: *PageSize Legal *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *PageRegion Legal
+*UIConstraints: *PageRegion Legal *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *PageSize Statement
+*UIConstraints: *PageSize Statement *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *PageSize Executive
+*UIConstraints: *PageSize Executive *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *PageSize A5
+*UIConstraints: *PageSize A5 *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *EFSort CrossCollate
+*UIConstraints: *EFSort CrossCollate *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *EFMediaInterlv
+*UIConstraints: *EFMediaInterlv *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *EFSort CollateWithShift
+*UIConstraints: *EFSort CollateWithShift *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *EFSort GroupWithShift
+*UIConstraints: *EFSort GroupWithShift *EFMediaType Translucent
+
+*UIConstraints: *EFOutputBin Outbin1 *EFStapler Stitch
+*UIConstraints: *EFStapler Stitch *EFOutputBin Outbin1
+*UIConstraints: *EFOutputBin Outbin2 *EFStapler Stitch
+*UIConstraints: *EFStapler Stitch *EFOutputBin Outbin2
+*UIConstraints: *EFOutputBin Outbin2 *PageSize Statement
+*UIConstraints: *PageSize Statement *EFOutputBin Outbin2
+*UIConstraints: *EFOutputBin Outbin2 *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFOutputBin Outbin2
+*UIConstraints: *EFOutputBin Outbin2 *PageSize A5
+*UIConstraints: *PageSize A5 *EFOutputBin Outbin2
+*UIConstraints: *EFOutputBin Outbin2 *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFOutputBin Outbin2
+*UIConstraints: *EFOutputBin Outbin3 *EFFinisher Stacker
+*UIConstraints: *EFFinisher Stacker *EFOutputBin Outbin3
+*UIConstraints: *EFOutputBin Outbin3 *EFSort CrossCollate
+*UIConstraints: *EFSort CrossCollate *EFOutputBin Outbin3
+*UIConstraints: *EFOutputBin Outbin3 *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *EFOutputBin Outbin3
+*UIConstraints: *EFOutputBin Outbin3 *EFStapler Stitch
+*UIConstraints: *EFStapler Stitch *EFOutputBin Outbin3
+*UIConstraints: *EFOutputBin Outbin3 *EFCopierBooklet LeftBinding
+*UIConstraints: *EFCopierBooklet LeftBinding *EFOutputBin Outbin3
+*UIConstraints: *EFOutputBin Outbin3 *EFCopierBooklet HalfLeftBinding
+*UIConstraints: *EFCopierBooklet HalfLeftBinding *EFOutputBin Outbin3
+
+*UIConstraints: *EFPaperDeckOpt False *EFFrontCoverSource SmallPaperDeck
+*UIConstraints: *EFFrontCoverSource SmallPaperDeck *EFPaperDeckOpt False
+*UIConstraints: *EFPaperDeckOpt False *EFBackCoverSource SmallPaperDeck
+*UIConstraints: *EFBackCoverSource SmallPaperDeck *EFPaperDeckOpt False
+
+*UIConstraints: *EFPunch *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *EFPunch
+*UIConstraints: *EFPunch *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *EFPunch
+*UIConstraints: *EFPunch *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *EFPunch
+*UIConstraints: *EFPunch *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *EFPunch
+*UIConstraints: *EFPunch *EFSort CrossCollate
+*UIConstraints: *EFSort CrossCollate *EFPunch
+*UIConstraints: *EFPunch *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *EFPunch
+*UIConstraints: *EFPunch LeftL *PageSize Statement
+*UIConstraints: *PageSize Statement *EFPunch LeftL
+*UIConstraints: *EFPunch LeftL *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFPunch LeftL
+*UIConstraints: *EFPunch LeftL *PageSize Executive
+*UIConstraints: *PageSize Executive *EFPunch LeftL
+*UIConstraints: *EFPunch LeftL *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFPunch LeftL
+*UIConstraints: *EFPunch LeftL *PageSize A5
+*UIConstraints: *PageSize A5 *EFPunch LeftL
+*UIConstraints: *EFPunch LeftL *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFPunch LeftL
+*UIConstraints: *EFPunch LeftL *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *EFPunch LeftL
+*UIConstraints: *EFPunch LeftL *EFStapler U1LeftP
+*UIConstraints: *EFStapler U1LeftP *EFPunch LeftL
+*UIConstraints: *EFPunch LeftL *EFStapler U1RightP
+*UIConstraints: *EFStapler U1RightP *EFPunch LeftL
+*UIConstraints: *EFPunch LeftL *EFStapler U1RightL
+*UIConstraints: *EFStapler U1RightL *EFPunch LeftL
+*UIConstraints: *EFPunch LeftL *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *EFPunch LeftL
+*UIConstraints: *EFPunch LeftL *EFStapler U2TopL
+*UIConstraints: *EFStapler U2TopL *EFPunch LeftL
+*UIConstraints: *EFPunch LeftL *EFStapler U2LeftP
+*UIConstraints: *EFStapler U2LeftP *EFPunch LeftL
+*UIConstraints: *EFPunch LeftL *EFStapler U2RightP
+*UIConstraints: *EFStapler U2RightP *EFPunch LeftL
+*UIConstraints: *EFPunch LeftL *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *EFPunch LeftL
+*UIConstraints: *EFPunch LeftL *EFStapler Stitch
+*UIConstraints: *EFStapler Stitch *EFPunch LeftL
+*UIConstraints: *EFPunch LeftP *PageSize Tabloid
+*UIConstraints: *PageSize Tabloid *EFPunch LeftP
+*UIConstraints: *EFPunch LeftP *PageRegion Tabloid
+*UIConstraints: *PageRegion Tabloid *EFPunch LeftP
+*UIConstraints: *EFPunch LeftP *PageSize Legal
+*UIConstraints: *PageSize Legal *EFPunch LeftP
+*UIConstraints: *EFPunch LeftP *PageRegion Legal
+*UIConstraints: *PageRegion Legal *EFPunch LeftP
+*UIConstraints: *EFPunch LeftP *PageSize Statement
+*UIConstraints: *PageSize Statement *EFPunch LeftP
+*UIConstraints: *EFPunch LeftP *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFPunch LeftP
+*UIConstraints: *EFPunch LeftP *PageSize Executive
+*UIConstraints: *PageSize Executive *EFPunch LeftP
+*UIConstraints: *EFPunch LeftP *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFPunch LeftP
+*UIConstraints: *EFPunch LeftP *PageSize A3
+*UIConstraints: *PageSize A3 *EFPunch LeftP
+*UIConstraints: *EFPunch LeftP *PageRegion A3
+*UIConstraints: *PageRegion A3 *EFPunch LeftP
+*UIConstraints: *EFPunch LeftP *PageSize B4
+*UIConstraints: *PageSize B4 *EFPunch LeftP
+*UIConstraints: *EFPunch LeftP *PageRegion B4
+*UIConstraints: *PageRegion B4 *EFPunch LeftP
+*UIConstraints: *EFPunch LeftP *PageSize A5
+*UIConstraints: *PageSize A5 *EFPunch LeftP
+*UIConstraints: *EFPunch LeftP *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFPunch LeftP
+*UIConstraints: *EFPunch LeftP *EFStapler U1LeftL
+*UIConstraints: *EFStapler U1LeftL *EFPunch LeftP
+*UIConstraints: *EFPunch LeftP *EFStapler U1RightP
+*UIConstraints: *EFStapler U1RightP *EFPunch LeftP
+*UIConstraints: *EFPunch LeftP *EFStapler U1RightL
+*UIConstraints: *EFStapler U1RightL *EFPunch LeftP
+*UIConstraints: *EFPunch LeftP *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *EFPunch LeftP
+*UIConstraints: *EFPunch LeftP *EFStapler U2TopL
+*UIConstraints: *EFStapler U2TopL *EFPunch LeftP
+*UIConstraints: *EFPunch LeftP *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *EFPunch LeftP
+*UIConstraints: *EFPunch LeftP *EFStapler U2RightP
+*UIConstraints: *EFStapler U2RightP *EFPunch LeftP
+*UIConstraints: *EFPunch LeftP *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *EFPunch LeftP
+*UIConstraints: *EFPunch LeftP *EFStapler Stitch
+*UIConstraints: *EFStapler Stitch *EFPunch LeftP
+*UIConstraints: *EFPunch RightL *PageSize Statement
+*UIConstraints: *PageSize Statement *EFPunch RightL
+*UIConstraints: *EFPunch RightL *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFPunch RightL
+*UIConstraints: *EFPunch RightL *PageSize Executive
+*UIConstraints: *PageSize Executive *EFPunch RightL
+*UIConstraints: *EFPunch RightL *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFPunch RightL
+*UIConstraints: *EFPunch RightL *PageSize A5
+*UIConstraints: *PageSize A5 *EFPunch RightL
+*UIConstraints: *EFPunch RightL *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFPunch RightL
+*UIConstraints: *EFPunch RightL *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *EFPunch RightL
+*UIConstraints: *EFPunch RightL *EFStapler U1LeftP
+*UIConstraints: *EFStapler U1LeftP *EFPunch RightL
+*UIConstraints: *EFPunch RightL *EFStapler U1LeftL
+*UIConstraints: *EFStapler U1LeftL *EFPunch RightL
+*UIConstraints: *EFPunch RightL *EFStapler U1RightP
+*UIConstraints: *EFStapler U1RightP *EFPunch RightL
+*UIConstraints: *EFPunch RightL *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *EFPunch RightL
+*UIConstraints: *EFPunch RightL *EFStapler U2TopL
+*UIConstraints: *EFStapler U2TopL *EFPunch RightL
+*UIConstraints: *EFPunch RightL *EFStapler U2LeftP
+*UIConstraints: *EFStapler U2LeftP *EFPunch RightL
+*UIConstraints: *EFPunch RightL *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *EFPunch RightL
+*UIConstraints: *EFPunch RightL *EFStapler U2RightP
+*UIConstraints: *EFStapler U2RightP *EFPunch RightL
+*UIConstraints: *EFPunch RightL *EFStapler Stitch
+*UIConstraints: *EFStapler Stitch *EFPunch RightL
+*UIConstraints: *EFPunch RightP *PageSize Tabloid
+*UIConstraints: *PageSize Tabloid *EFPunch RightP
+*UIConstraints: *EFPunch RightP *PageRegion Tabloid
+*UIConstraints: *PageRegion Tabloid *EFPunch RightP
+*UIConstraints: *EFPunch RightP *PageSize Legal
+*UIConstraints: *PageSize Legal *EFPunch RightP
+*UIConstraints: *EFPunch RightP *PageRegion Legal
+*UIConstraints: *PageRegion Legal *EFPunch RightP
+*UIConstraints: *EFPunch RightP *PageSize Statement
+*UIConstraints: *PageSize Statement *EFPunch RightP
+*UIConstraints: *EFPunch RightP *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFPunch RightP
+*UIConstraints: *EFPunch RightP *PageSize Executive
+*UIConstraints: *PageSize Executive *EFPunch RightP
+*UIConstraints: *EFPunch RightP *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFPunch RightP
+*UIConstraints: *EFPunch RightP *PageSize A3
+*UIConstraints: *PageSize A3 *EFPunch RightP
+*UIConstraints: *EFPunch RightP *PageRegion A3
+*UIConstraints: *PageRegion A3 *EFPunch RightP
+*UIConstraints: *EFPunch RightP *PageSize B4
+*UIConstraints: *PageSize B4 *EFPunch RightP
+*UIConstraints: *EFPunch RightP *PageRegion B4
+*UIConstraints: *PageRegion B4 *EFPunch RightP
+*UIConstraints: *EFPunch RightP *PageSize A5
+*UIConstraints: *PageSize A5 *EFPunch RightP
+*UIConstraints: *EFPunch RightP *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFPunch RightP
+*UIConstraints: *EFPunch RightP *EFStapler U1LeftP
+*UIConstraints: *EFStapler U1LeftP *EFPunch RightP
+*UIConstraints: *EFPunch RightP *EFStapler U1LeftL
+*UIConstraints: *EFStapler U1LeftL *EFPunch RightP
+*UIConstraints: *EFPunch RightP *EFStapler U1RightL
+*UIConstraints: *EFStapler U1RightL *EFPunch RightP
+*UIConstraints: *EFPunch RightP *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *EFPunch RightP
+*UIConstraints: *EFPunch RightP *EFStapler U2TopL
+*UIConstraints: *EFStapler U2TopL *EFPunch RightP
+*UIConstraints: *EFPunch RightP *EFStapler U2LeftP
+*UIConstraints: *EFStapler U2LeftP *EFPunch RightP
+*UIConstraints: *EFPunch RightP *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *EFPunch RightP
+*UIConstraints: *EFPunch RightP *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *EFPunch RightP
+*UIConstraints: *EFPunch RightP *EFStapler Stitch
+*UIConstraints: *EFStapler Stitch *EFPunch RightP
+*UIConstraints: *EFPunch TopL *PageSize Tabloid
+*UIConstraints: *PageSize Tabloid *EFPunch TopL
+*UIConstraints: *EFPunch TopL *PageRegion Tabloid
+*UIConstraints: *PageRegion Tabloid *EFPunch TopL
+*UIConstraints: *EFPunch TopL *PageSize Legal
+*UIConstraints: *PageSize Legal *EFPunch TopL
+*UIConstraints: *EFPunch TopL *PageRegion Legal
+*UIConstraints: *PageRegion Legal *EFPunch TopL
+*UIConstraints: *EFPunch TopL *PageSize Statement
+*UIConstraints: *PageSize Statement *EFPunch TopL
+*UIConstraints: *EFPunch TopL *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFPunch TopL
+*UIConstraints: *EFPunch TopL *PageSize Executive
+*UIConstraints: *PageSize Executive *EFPunch TopL
+*UIConstraints: *EFPunch TopL *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFPunch TopL
+*UIConstraints: *EFPunch TopL *PageSize A3
+*UIConstraints: *PageSize A3 *EFPunch TopL
+*UIConstraints: *EFPunch TopL *PageRegion A3
+*UIConstraints: *PageRegion A3 *EFPunch TopL
+*UIConstraints: *EFPunch TopL *PageSize B4
+*UIConstraints: *PageSize B4 *EFPunch TopL
+*UIConstraints: *EFPunch TopL *PageRegion B4
+*UIConstraints: *PageRegion B4 *EFPunch TopL
+*UIConstraints: *EFPunch TopL *PageSize A5
+*UIConstraints: *PageSize A5 *EFPunch TopL
+*UIConstraints: *EFPunch TopL *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFPunch TopL
+*UIConstraints: *EFPunch TopL *EFStapler U1LeftP
+*UIConstraints: *EFStapler U1LeftP *EFPunch TopL
+*UIConstraints: *EFPunch TopL *EFStapler U1RightP
+*UIConstraints: *EFStapler U1RightP *EFPunch TopL
+*UIConstraints: *EFPunch TopL *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *EFPunch TopL
+*UIConstraints: *EFPunch TopL *EFStapler U2LeftP
+*UIConstraints: *EFStapler U2LeftP *EFPunch TopL
+*UIConstraints: *EFPunch TopL *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *EFPunch TopL
+*UIConstraints: *EFPunch TopL *EFStapler U2RightP
+*UIConstraints: *EFStapler U2RightP *EFPunch TopL
+*UIConstraints: *EFPunch TopL *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *EFPunch TopL
+*UIConstraints: *EFPunch TopL *EFStapler Stitch
+*UIConstraints: *EFStapler Stitch *EFPunch TopL
+*UIConstraints: *EFPunch TopP *PageSize Statement
+*UIConstraints: *PageSize Statement *EFPunch TopP
+*UIConstraints: *EFPunch TopP *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFPunch TopP
+*UIConstraints: *EFPunch TopP *PageSize Executive
+*UIConstraints: *PageSize Executive *EFPunch TopP
+*UIConstraints: *EFPunch TopP *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFPunch TopP
+*UIConstraints: *EFPunch TopP *PageSize A5
+*UIConstraints: *PageSize A5 *EFPunch TopP
+*UIConstraints: *EFPunch TopP *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFPunch TopP
+*UIConstraints: *EFPunch TopP *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *EFPunch TopP
+*UIConstraints: *EFPunch TopP *EFStapler U1LeftL
+*UIConstraints: *EFStapler U1LeftL *EFPunch TopP
+*UIConstraints: *EFPunch TopP *EFStapler U1RightL
+*UIConstraints: *EFStapler U1RightL *EFPunch TopP
+*UIConstraints: *EFPunch TopP *EFStapler U2TopL
+*UIConstraints: *EFStapler U2TopL *EFPunch TopP
+*UIConstraints: *EFPunch TopP *EFStapler U2LeftP
+*UIConstraints: *EFStapler U2LeftP *EFPunch TopP
+*UIConstraints: *EFPunch TopP *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *EFPunch TopP
+*UIConstraints: *EFPunch TopP *EFStapler U2RightP
+*UIConstraints: *EFStapler U2RightP *EFPunch TopP
+*UIConstraints: *EFPunch TopP *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *EFPunch TopP
+*UIConstraints: *EFPunch TopP *EFStapler Stitch
+*UIConstraints: *EFStapler Stitch *EFPunch TopP
+
+*UIConstraints: *EFPunchOpt True *EFFinisher False
+*UIConstraints: *EFFinisher False *EFPunchOpt True
+*UIConstraints: *EFPunchOpt True *EFFinisher Stacker
+*UIConstraints: *EFFinisher Stacker *EFPunchOpt True
+
+*UIConstraints: *EFSort CollateWithShift *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *EFSort CollateWithShift
+*UIConstraints: *EFSort CollateWithShift *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *EFSort CollateWithShift
+*UIConstraints: *EFSort CrossCollate *PageSize Tabloid
+*UIConstraints: *PageSize Tabloid *EFSort CrossCollate
+*UIConstraints: *EFSort CrossCollate *PageRegion Tabloid
+*UIConstraints: *PageRegion Tabloid *EFSort CrossCollate
+*UIConstraints: *EFSort CrossCollate *PageSize Legal
+*UIConstraints: *PageSize Legal *EFSort CrossCollate
+*UIConstraints: *EFSort CrossCollate *PageRegion Legal
+*UIConstraints: *PageRegion Legal *EFSort CrossCollate
+*UIConstraints: *EFSort CrossCollate *PageSize Statement
+*UIConstraints: *PageSize Statement *EFSort CrossCollate
+*UIConstraints: *EFSort CrossCollate *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFSort CrossCollate
+*UIConstraints: *EFSort CrossCollate *PageSize Executive
+*UIConstraints: *PageSize Executive *EFSort CrossCollate
+*UIConstraints: *EFSort CrossCollate *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFSort CrossCollate
+*UIConstraints: *EFSort CrossCollate *PageSize A3
+*UIConstraints: *PageSize A3 *EFSort CrossCollate
+*UIConstraints: *EFSort CrossCollate *PageRegion A3
+*UIConstraints: *PageRegion A3 *EFSort CrossCollate
+*UIConstraints: *EFSort CrossCollate *PageSize B4
+*UIConstraints: *PageSize B4 *EFSort CrossCollate
+*UIConstraints: *EFSort CrossCollate *PageRegion B4
+*UIConstraints: *PageRegion B4 *EFSort CrossCollate
+*UIConstraints: *EFSort CrossCollate *PageSize A5
+*UIConstraints: *PageSize A5 *EFSort CrossCollate
+*UIConstraints: *EFSort CrossCollate *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFSort CrossCollate
+*UIConstraints: *EFSort CrossGroup *PageSize Tabloid
+*UIConstraints: *PageSize Tabloid *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *PageRegion Tabloid
+*UIConstraints: *PageRegion Tabloid *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *PageSize Legal
+*UIConstraints: *PageSize Legal *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *PageRegion Legal
+*UIConstraints: *PageRegion Legal *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *PageSize Statement
+*UIConstraints: *PageSize Statement *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *PageSize Executive
+*UIConstraints: *PageSize Executive *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *PageSize A3
+*UIConstraints: *PageSize A3 *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *PageRegion A3
+*UIConstraints: *PageRegion A3 *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *PageSize B4
+*UIConstraints: *PageSize B4 *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *PageRegion B4
+*UIConstraints: *PageRegion B4 *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *PageSize A5
+*UIConstraints: *PageSize A5 *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFSort CrossGroup
+*UIConstraints: *EFSort Group *EFCopyNumMode
+*UIConstraints: *EFCopyNumMode *EFSort Group
+*UIConstraints: *EFSort GroupWithShift *EFCopierBooklet
+*UIConstraints: *EFCopierBooklet *EFSort GroupWithShift
+*UIConstraints: *EFSort GroupWithShift *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *EFSort GroupWithShift
+*UIConstraints: *EFSort GroupWithShift *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *EFSort GroupWithShift
+
+*UIConstraints: *EFStapler *EFSort GroupWithShift
+*UIConstraints: *EFSort GroupWithShift *EFStapler
+*UIConstraints: *EFStapler *EFSort CrossCollate
+*UIConstraints: *EFSort CrossCollate *EFStapler
+*UIConstraints: *EFStapler *EFSort CrossGroup
+*UIConstraints: *EFSort CrossGroup *EFStapler
+*UIConstraints: *EFStapler Stitch *PageSize Executive
+*UIConstraints: *PageSize Executive *EFStapler Stitch
+*UIConstraints: *EFStapler Stitch *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFStapler Stitch
+*UIConstraints: *EFStapler Stitch *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *EFStapler Stitch
+*UIConstraints: *EFStapler Stitch *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *EFStapler Stitch
+*UIConstraints: *EFStapler Stitch *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *EFStapler Stitch
+*UIConstraints: *EFStapler Stitch *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *EFStapler Stitch
+*UIConstraints: *EFStapler Stitch *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *EFStapler Stitch
+*UIConstraints: *EFStapler U1LeftL *PageSize Statement
+*UIConstraints: *PageSize Statement *EFStapler U1LeftL
+*UIConstraints: *EFStapler U1LeftL *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFStapler U1LeftL
+*UIConstraints: *EFStapler U1LeftL *PageSize Executive
+*UIConstraints: *PageSize Executive *EFStapler U1LeftL
+*UIConstraints: *EFStapler U1LeftL *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFStapler U1LeftL
+*UIConstraints: *EFStapler U1LeftL *PageSize A5
+*UIConstraints: *PageSize A5 *EFStapler U1LeftL
+*UIConstraints: *EFStapler U1LeftL *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFStapler U1LeftL
+*UIConstraints: *EFStapler U1LeftL *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *EFStapler U1LeftL
+*UIConstraints: *EFStapler U1LeftL *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *EFStapler U1LeftL
+*UIConstraints: *EFStapler U1LeftL *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *EFStapler U1LeftL
+*UIConstraints: *EFStapler U1LeftL *EFSort False
+*UIConstraints: *EFSort False *EFStapler U1LeftL
+*UIConstraints: *EFStapler U1LeftP *PageSize Statement
+*UIConstraints: *PageSize Statement *EFStapler U1LeftP
+*UIConstraints: *EFStapler U1LeftP *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFStapler U1LeftP
+*UIConstraints: *EFStapler U1LeftP *PageSize Executive
+*UIConstraints: *PageSize Executive *EFStapler U1LeftP
+*UIConstraints: *EFStapler U1LeftP *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFStapler U1LeftP
+*UIConstraints: *EFStapler U1LeftP *PageSize A5
+*UIConstraints: *PageSize A5 *EFStapler U1LeftP
+*UIConstraints: *EFStapler U1LeftP *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFStapler U1LeftP
+*UIConstraints: *EFStapler U1LeftP *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *EFStapler U1LeftP
+*UIConstraints: *EFStapler U1LeftP *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *EFStapler U1LeftP
+*UIConstraints: *EFStapler U1LeftP *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *EFStapler U1LeftP
+*UIConstraints: *EFStapler U1LeftP *EFSort False
+*UIConstraints: *EFSort False *EFStapler U1LeftP
+*UIConstraints: *EFStapler U1RightL *PageSize Statement
+*UIConstraints: *PageSize Statement *EFStapler U1RightL
+*UIConstraints: *EFStapler U1RightL *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFStapler U1RightL
+*UIConstraints: *EFStapler U1RightL *PageSize Executive
+*UIConstraints: *PageSize Executive *EFStapler U1RightL
+*UIConstraints: *EFStapler U1RightL *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFStapler U1RightL
+*UIConstraints: *EFStapler U1RightL *PageSize A5
+*UIConstraints: *PageSize A5 *EFStapler U1RightL
+*UIConstraints: *EFStapler U1RightL *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFStapler U1RightL
+*UIConstraints: *EFStapler U1RightL *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *EFStapler U1RightL
+*UIConstraints: *EFStapler U1RightL *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *EFStapler U1RightL
+*UIConstraints: *EFStapler U1RightL *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *EFStapler U1RightL
+*UIConstraints: *EFStapler U1RightL *EFSort False
+*UIConstraints: *EFSort False *EFStapler U1RightL
+*UIConstraints: *EFStapler U1RightP *PageSize Statement
+*UIConstraints: *PageSize Statement *EFStapler U1RightP
+*UIConstraints: *EFStapler U1RightP *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFStapler U1RightP
+*UIConstraints: *EFStapler U1RightP *PageSize Executive
+*UIConstraints: *PageSize Executive *EFStapler U1RightP
+*UIConstraints: *EFStapler U1RightP *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFStapler U1RightP
+*UIConstraints: *EFStapler U1RightP *PageSize A5
+*UIConstraints: *PageSize A5 *EFStapler U1RightP
+*UIConstraints: *EFStapler U1RightP *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFStapler U1RightP
+*UIConstraints: *EFStapler U1RightP *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *EFStapler U1RightP
+*UIConstraints: *EFStapler U1RightP *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *EFStapler U1RightP
+*UIConstraints: *EFStapler U1RightP *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *EFStapler U1RightP
+*UIConstraints: *EFStapler U1RightP *EFSort False
+*UIConstraints: *EFSort False *EFStapler U1RightP
+*UIConstraints: *EFStapler U2LeftL *PageSize Letter
+*UIConstraints: *PageSize Letter *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *PageRegion Letter
+*UIConstraints: *PageRegion Letter *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *PageSize Legal
+*UIConstraints: *PageSize Legal *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *PageRegion Legal
+*UIConstraints: *PageRegion Legal *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *PageSize Statement
+*UIConstraints: *PageSize Statement *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *PageSize Executive
+*UIConstraints: *PageSize Executive *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *PageSize A4
+*UIConstraints: *PageSize A4 *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *PageRegion A4
+*UIConstraints: *PageRegion A4 *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *PageSize B5
+*UIConstraints: *PageSize B5 *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *PageRegion B5
+*UIConstraints: *PageRegion B5 *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *PageSize A5
+*UIConstraints: *PageSize A5 *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftL *EFSort False
+*UIConstraints: *EFSort False *EFStapler U2LeftL
+*UIConstraints: *EFStapler U2LeftP *PageSize Tabloid
+*UIConstraints: *PageSize Tabloid *EFStapler U2LeftP
+*UIConstraints: *EFStapler U2LeftP *PageRegion Tabloid
+*UIConstraints: *PageRegion Tabloid *EFStapler U2LeftP
+*UIConstraints: *EFStapler U2LeftP *PageSize Legal
+*UIConstraints: *PageSize Legal *EFStapler U2LeftP
+*UIConstraints: *EFStapler U2LeftP *PageRegion Legal
+*UIConstraints: *PageRegion Legal *EFStapler U2LeftP
+*UIConstraints: *EFStapler U2LeftP *PageSize Statement
+*UIConstraints: *PageSize Statement *EFStapler U2LeftP
+*UIConstraints: *EFStapler U2LeftP *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFStapler U2LeftP
+*UIConstraints: *EFStapler U2LeftP *PageSize Executive
+*UIConstraints: *PageSize Executive *EFStapler U2LeftP
+*UIConstraints: *EFStapler U2LeftP *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFStapler U2LeftP
+*UIConstraints: *EFStapler U2LeftP *PageSize A3
+*UIConstraints: *PageSize A3 *EFStapler U2LeftP
+*UIConstraints: *EFStapler U2LeftP *PageRegion A3
+*UIConstraints: *PageRegion A3 *EFStapler U2LeftP
+*UIConstraints: *EFStapler U2LeftP *PageSize B4
+*UIConstraints: *PageSize B4 *EFStapler U2LeftP
+*UIConstraints: *EFStapler U2LeftP *PageRegion B4
+*UIConstraints: *PageRegion B4 *EFStapler U2LeftP
+*UIConstraints: *EFStapler U2LeftP *PageSize A5
+*UIConstraints: *PageSize A5 *EFStapler U2LeftP
+*UIConstraints: *EFStapler U2LeftP *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFStapler U2LeftP
+*UIConstraints: *EFStapler U2LeftP *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *EFStapler U2LeftP
+*UIConstraints: *EFStapler U2LeftP *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *EFStapler U2LeftP
+*UIConstraints: *EFStapler U2LeftP *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *EFStapler U2LeftP
+*UIConstraints: *EFStapler U2LeftP *EFSort False
+*UIConstraints: *EFSort False *EFStapler U2LeftP
+*UIConstraints: *EFStapler U2RightL *PageSize Letter
+*UIConstraints: *PageSize Letter *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *PageRegion Letter
+*UIConstraints: *PageRegion Letter *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *PageSize Legal
+*UIConstraints: *PageSize Legal *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *PageRegion Legal
+*UIConstraints: *PageRegion Legal *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *PageSize Statement
+*UIConstraints: *PageSize Statement *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *PageSize Executive
+*UIConstraints: *PageSize Executive *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *PageSize A4
+*UIConstraints: *PageSize A4 *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *PageRegion A4
+*UIConstraints: *PageRegion A4 *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *PageSize B5
+*UIConstraints: *PageSize B5 *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *PageRegion B5
+*UIConstraints: *PageRegion B5 *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *PageSize A5
+*UIConstraints: *PageSize A5 *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightL *EFSort False
+*UIConstraints: *EFSort False *EFStapler U2RightL
+*UIConstraints: *EFStapler U2RightP *PageSize Tabloid
+*UIConstraints: *PageSize Tabloid *EFStapler U2RightP
+*UIConstraints: *EFStapler U2RightP *PageRegion Tabloid
+*UIConstraints: *PageRegion Tabloid *EFStapler U2RightP
+*UIConstraints: *EFStapler U2RightP *PageSize Legal
+*UIConstraints: *PageSize Legal *EFStapler U2RightP
+*UIConstraints: *EFStapler U2RightP *PageRegion Legal
+*UIConstraints: *PageRegion Legal *EFStapler U2RightP
+*UIConstraints: *EFStapler U2RightP *PageSize Statement
+*UIConstraints: *PageSize Statement *EFStapler U2RightP
+*UIConstraints: *EFStapler U2RightP *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFStapler U2RightP
+*UIConstraints: *EFStapler U2RightP *PageSize Executive
+*UIConstraints: *PageSize Executive *EFStapler U2RightP
+*UIConstraints: *EFStapler U2RightP *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFStapler U2RightP
+*UIConstraints: *EFStapler U2RightP *PageSize A3
+*UIConstraints: *PageSize A3 *EFStapler U2RightP
+*UIConstraints: *EFStapler U2RightP *PageRegion A3
+*UIConstraints: *PageRegion A3 *EFStapler U2RightP
+*UIConstraints: *EFStapler U2RightP *PageSize B4
+*UIConstraints: *PageSize B4 *EFStapler U2RightP
+*UIConstraints: *EFStapler U2RightP *PageRegion B4
+*UIConstraints: *PageRegion B4 *EFStapler U2RightP
+*UIConstraints: *EFStapler U2RightP *PageSize A5
+*UIConstraints: *PageSize A5 *EFStapler U2RightP
+*UIConstraints: *EFStapler U2RightP *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFStapler U2RightP
+*UIConstraints: *EFStapler U2RightP *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *EFStapler U2RightP
+*UIConstraints: *EFStapler U2RightP *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *EFStapler U2RightP
+*UIConstraints: *EFStapler U2RightP *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *EFStapler U2RightP
+*UIConstraints: *EFStapler U2RightP *EFSort False
+*UIConstraints: *EFSort False *EFStapler U2RightP
+*UIConstraints: *EFStapler U2TopL *PageSize Tabloid
+*UIConstraints: *PageSize Tabloid *EFStapler U2TopL
+*UIConstraints: *EFStapler U2TopL *PageRegion Tabloid
+*UIConstraints: *PageRegion Tabloid *EFStapler U2TopL
+*UIConstraints: *EFStapler U2TopL *PageSize Legal
+*UIConstraints: *PageSize Legal *EFStapler U2TopL
+*UIConstraints: *EFStapler U2TopL *PageRegion Legal
+*UIConstraints: *PageRegion Legal *EFStapler U2TopL
+*UIConstraints: *EFStapler U2TopL *PageSize Statement
+*UIConstraints: *PageSize Statement *EFStapler U2TopL
+*UIConstraints: *EFStapler U2TopL *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFStapler U2TopL
+*UIConstraints: *EFStapler U2TopL *PageSize Executive
+*UIConstraints: *PageSize Executive *EFStapler U2TopL
+*UIConstraints: *EFStapler U2TopL *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFStapler U2TopL
+*UIConstraints: *EFStapler U2TopL *PageSize A3
+*UIConstraints: *PageSize A3 *EFStapler U2TopL
+*UIConstraints: *EFStapler U2TopL *PageRegion A3
+*UIConstraints: *PageRegion A3 *EFStapler U2TopL
+*UIConstraints: *EFStapler U2TopL *PageSize B4
+*UIConstraints: *PageSize B4 *EFStapler U2TopL
+*UIConstraints: *EFStapler U2TopL *PageRegion B4
+*UIConstraints: *PageRegion B4 *EFStapler U2TopL
+*UIConstraints: *EFStapler U2TopL *PageSize A5
+*UIConstraints: *PageSize A5 *EFStapler U2TopL
+*UIConstraints: *EFStapler U2TopL *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFStapler U2TopL
+*UIConstraints: *EFStapler U2TopL *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *EFStapler U2TopL
+*UIConstraints: *EFStapler U2TopL *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *EFStapler U2TopL
+*UIConstraints: *EFStapler U2TopL *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *EFStapler U2TopL
+*UIConstraints: *EFStapler U2TopL *EFSort False
+*UIConstraints: *EFSort False *EFStapler U2TopL
+*UIConstraints: *EFStapler U2TopP *PageSize Letter
+*UIConstraints: *PageSize Letter *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *PageRegion Letter
+*UIConstraints: *PageRegion Letter *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *PageSize Legal
+*UIConstraints: *PageSize Legal *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *PageRegion Legal
+*UIConstraints: *PageRegion Legal *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *PageSize Statement
+*UIConstraints: *PageSize Statement *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *PageRegion Statement
+*UIConstraints: *PageRegion Statement *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *PageSize Executive
+*UIConstraints: *PageSize Executive *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *PageRegion Executive
+*UIConstraints: *PageRegion Executive *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *PageSize A4
+*UIConstraints: *PageSize A4 *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *PageRegion A4
+*UIConstraints: *PageRegion A4 *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *PageSize B5
+*UIConstraints: *PageSize B5 *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *PageRegion B5
+*UIConstraints: *PageRegion B5 *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *PageSize A5
+*UIConstraints: *PageSize A5 *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *PageRegion A5
+*UIConstraints: *PageRegion A5 *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *EFMediaType Prepunched
+*UIConstraints: *EFMediaType Prepunched *EFStapler U2TopP
+*UIConstraints: *EFStapler U2TopP *EFSort False
+*UIConstraints: *EFSort False *EFStapler U2TopP
+
+*UIConstraints: *InputSlot AutoSelect *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *InputSlot AutoSelect
+*UIConstraints: *InputSlot AutoSelect *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *InputSlot AutoSelect
+*UIConstraints: *InputSlot ManualFeed *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *InputSlot ManualFeed
+*UIConstraints: *InputSlot Tray1 *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *InputSlot Tray1
+*UIConstraints: *InputSlot Tray1 *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *InputSlot Tray1
+*UIConstraints: *InputSlot Tray1 *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *InputSlot Tray1
+*UIConstraints: *InputSlot Tray1 *PageSize Tabloid
+*UIConstraints: *PageSize Tabloid *InputSlot Tray1
+*UIConstraints: *InputSlot Tray1 *PageRegion Tabloid
+*UIConstraints: *PageRegion Tabloid *InputSlot Tray1
+*UIConstraints: *InputSlot Tray1 *PageSize Legal
+*UIConstraints: *PageSize Legal *InputSlot Tray1
+*UIConstraints: *InputSlot Tray1 *PageRegion Legal
+*UIConstraints: *PageRegion Legal *InputSlot Tray1
+*UIConstraints: *InputSlot Tray1 *PageSize Statement
+*UIConstraints: *PageSize Statement *InputSlot Tray1
+*UIConstraints: *InputSlot Tray1 *PageRegion Statement
+*UIConstraints: *PageRegion Statement *InputSlot Tray1
+*UIConstraints: *InputSlot Tray1 *PageSize Executive
+*UIConstraints: *PageSize Executive *InputSlot Tray1
+*UIConstraints: *InputSlot Tray1 *PageRegion Executive
+*UIConstraints: *PageRegion Executive *InputSlot Tray1
+*UIConstraints: *InputSlot Tray1 *PageSize A3
+*UIConstraints: *PageSize A3 *InputSlot Tray1
+*UIConstraints: *InputSlot Tray1 *PageRegion A3
+*UIConstraints: *PageRegion A3 *InputSlot Tray1
+*UIConstraints: *InputSlot Tray1 *PageSize B4
+*UIConstraints: *PageSize B4 *InputSlot Tray1
+*UIConstraints: *InputSlot Tray1 *PageRegion B4
+*UIConstraints: *PageRegion B4 *InputSlot Tray1
+*UIConstraints: *InputSlot Tray1 *PageSize A5
+*UIConstraints: *PageSize A5 *InputSlot Tray1
+*UIConstraints: *InputSlot Tray1 *PageRegion A5
+*UIConstraints: *PageRegion A5 *InputSlot Tray1
+*UIConstraints: *InputSlot Tray2 *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *InputSlot Tray2
+*UIConstraints: *InputSlot Tray2 *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *InputSlot Tray2
+*UIConstraints: *InputSlot Tray2 *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *InputSlot Tray2
+*UIConstraints: *InputSlot Tray2 *PageSize Tabloid
+*UIConstraints: *PageSize Tabloid *InputSlot Tray2
+*UIConstraints: *InputSlot Tray2 *PageRegion Tabloid
+*UIConstraints: *PageRegion Tabloid *InputSlot Tray2
+*UIConstraints: *InputSlot Tray2 *PageSize Legal
+*UIConstraints: *PageSize Legal *InputSlot Tray2
+*UIConstraints: *InputSlot Tray2 *PageRegion Legal
+*UIConstraints: *PageRegion Legal *InputSlot Tray2
+*UIConstraints: *InputSlot Tray2 *PageSize Statement
+*UIConstraints: *PageSize Statement *InputSlot Tray2
+*UIConstraints: *InputSlot Tray2 *PageRegion Statement
+*UIConstraints: *PageRegion Statement *InputSlot Tray2
+*UIConstraints: *InputSlot Tray2 *PageSize Executive
+*UIConstraints: *PageSize Executive *InputSlot Tray2
+*UIConstraints: *InputSlot Tray2 *PageRegion Executive
+*UIConstraints: *PageRegion Executive *InputSlot Tray2
+*UIConstraints: *InputSlot Tray2 *PageSize A3
+*UIConstraints: *PageSize A3 *InputSlot Tray2
+*UIConstraints: *InputSlot Tray2 *PageRegion A3
+*UIConstraints: *PageRegion A3 *InputSlot Tray2
+*UIConstraints: *InputSlot Tray2 *PageSize B4
+*UIConstraints: *PageSize B4 *InputSlot Tray2
+*UIConstraints: *InputSlot Tray2 *PageRegion B4
+*UIConstraints: *PageRegion B4 *InputSlot Tray2
+*UIConstraints: *InputSlot Tray2 *PageSize A5
+*UIConstraints: *PageSize A5 *InputSlot Tray2
+*UIConstraints: *InputSlot Tray2 *PageRegion A5
+*UIConstraints: *PageRegion A5 *InputSlot Tray2
+*UIConstraints: *InputSlot Tray3 *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *InputSlot Tray3
+*UIConstraints: *InputSlot Tray3 *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *InputSlot Tray3
+*UIConstraints: *InputSlot Tray3 *PageSize Executive
+*UIConstraints: *PageSize Executive *InputSlot Tray3
+*UIConstraints: *InputSlot Tray3 *PageRegion Executive
+*UIConstraints: *PageRegion Executive *InputSlot Tray3
+*UIConstraints: *InputSlot Tray4 *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *InputSlot Tray4
+*UIConstraints: *InputSlot Tray4 *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *InputSlot Tray4
+*UIConstraints: *InputSlot Tray4 *PageSize Executive
+*UIConstraints: *PageSize Executive *InputSlot Tray4
+*UIConstraints: *InputSlot Tray4 *PageRegion Executive
+*UIConstraints: *PageRegion Executive *InputSlot Tray4
+*UIConstraints: *InputSlot Tray5 *EFPaperDeckOpt False
+*UIConstraints: *EFPaperDeckOpt False *InputSlot Tray5
+*UIConstraints: *InputSlot Tray5 *EFMediaType Tabstock
+*UIConstraints: *EFMediaType Tabstock *InputSlot Tray5
+*UIConstraints: *InputSlot Tray5 *EFMediaType Labels
+*UIConstraints: *EFMediaType Labels *InputSlot Tray5
+*UIConstraints: *InputSlot Tray5 *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *InputSlot Tray5
+*UIConstraints: *InputSlot Tray5 *PageSize Tabloid
+*UIConstraints: *PageSize Tabloid *InputSlot Tray5
+*UIConstraints: *InputSlot Tray5 *PageRegion Tabloid
+*UIConstraints: *PageRegion Tabloid *InputSlot Tray5
+*UIConstraints: *InputSlot Tray5 *PageSize Legal
+*UIConstraints: *PageSize Legal *InputSlot Tray5
+*UIConstraints: *InputSlot Tray5 *PageRegion Legal
+*UIConstraints: *PageRegion Legal *InputSlot Tray5
+*UIConstraints: *InputSlot Tray5 *PageSize Statement
+*UIConstraints: *PageSize Statement *InputSlot Tray5
+*UIConstraints: *InputSlot Tray5 *PageRegion Statement
+*UIConstraints: *PageRegion Statement *InputSlot Tray5
+*UIConstraints: *InputSlot Tray5 *PageSize Executive
+*UIConstraints: *PageSize Executive *InputSlot Tray5
+*UIConstraints: *InputSlot Tray5 *PageRegion Executive
+*UIConstraints: *PageRegion Executive *InputSlot Tray5
+*UIConstraints: *InputSlot Tray5 *PageSize A3
+*UIConstraints: *PageSize A3 *InputSlot Tray5
+*UIConstraints: *InputSlot Tray5 *PageRegion A3
+*UIConstraints: *PageRegion A3 *InputSlot Tray5
+*UIConstraints: *InputSlot Tray5 *PageSize B4
+*UIConstraints: *PageSize B4 *InputSlot Tray5
+*UIConstraints: *InputSlot Tray5 *PageRegion B4
+*UIConstraints: *PageRegion B4 *InputSlot Tray5
+*UIConstraints: *InputSlot Tray5 *PageSize A5
+*UIConstraints: *PageSize A5 *InputSlot Tray5
+*UIConstraints: *InputSlot Tray5 *PageRegion A5
+*UIConstraints: *PageRegion A5 *InputSlot Tray5
+
+*UIConstraints: *PageSize A3 *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *PageSize A3
+*UIConstraints: *PageRegion A3 *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *PageRegion A3
+*UIConstraints: *PageSize A3 *EFFrontCoverSource UTrayMain
+*UIConstraints: *EFFrontCoverSource UTrayMain *PageSize A3
+*UIConstraints: *PageRegion A3 *EFFrontCoverSource UTrayMain
+*UIConstraints: *EFFrontCoverSource UTrayMain *PageRegion A3
+*UIConstraints: *PageSize A3 *EFFrontCoverSource UTrayAlt1
+*UIConstraints: *EFFrontCoverSource UTrayAlt1 *PageSize A3
+*UIConstraints: *PageRegion A3 *EFFrontCoverSource UTrayAlt1
+*UIConstraints: *EFFrontCoverSource UTrayAlt1 *PageRegion A3
+*UIConstraints: *PageSize A3 *EFFrontCoverSource SmallPaperDeck
+*UIConstraints: *EFFrontCoverSource SmallPaperDeck *PageSize A3
+*UIConstraints: *PageRegion A3 *EFFrontCoverSource SmallPaperDeck
+*UIConstraints: *EFFrontCoverSource SmallPaperDeck *PageRegion A3
+*UIConstraints: *PageSize A3 *EFBackCoverSource UTrayMain
+*UIConstraints: *EFBackCoverSource UTrayMain *PageSize A3
+*UIConstraints: *PageRegion A3 *EFBackCoverSource UTrayMain
+*UIConstraints: *EFBackCoverSource UTrayMain *PageRegion A3
+*UIConstraints: *PageSize A3 *EFBackCoverSource UTrayAlt1
+*UIConstraints: *EFBackCoverSource UTrayAlt1 *PageSize A3
+*UIConstraints: *PageRegion A3 *EFBackCoverSource UTrayAlt1
+*UIConstraints: *EFBackCoverSource UTrayAlt1 *PageRegion A3
+*UIConstraints: *PageSize A3 *EFBackCoverSource SmallPaperDeck
+*UIConstraints: *EFBackCoverSource SmallPaperDeck *PageSize A3
+*UIConstraints: *PageRegion A3 *EFBackCoverSource SmallPaperDeck
+*UIConstraints: *EFBackCoverSource SmallPaperDeck *PageRegion A3
+*UIConstraints: *PageSize A5 *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *PageSize A5
+*UIConstraints: *PageRegion A5 *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *PageRegion A5
+*UIConstraints: *PageSize A5 *EFFrontCoverSource UTrayMain
+*UIConstraints: *EFFrontCoverSource UTrayMain *PageSize A5
+*UIConstraints: *PageRegion A5 *EFFrontCoverSource UTrayMain
+*UIConstraints: *EFFrontCoverSource UTrayMain *PageRegion A5
+*UIConstraints: *PageSize A5 *EFFrontCoverSource UTrayAlt1
+*UIConstraints: *EFFrontCoverSource UTrayAlt1 *PageSize A5
+*UIConstraints: *PageRegion A5 *EFFrontCoverSource UTrayAlt1
+*UIConstraints: *EFFrontCoverSource UTrayAlt1 *PageRegion A5
+*UIConstraints: *PageSize A5 *EFFrontCoverSource SmallPaperDeck
+*UIConstraints: *EFFrontCoverSource SmallPaperDeck *PageSize A5
+*UIConstraints: *PageRegion A5 *EFFrontCoverSource SmallPaperDeck
+*UIConstraints: *EFFrontCoverSource SmallPaperDeck *PageRegion A5
+*UIConstraints: *PageSize A5 *EFBackCoverSource UTrayMain
+*UIConstraints: *EFBackCoverSource UTrayMain *PageSize A5
+*UIConstraints: *PageRegion A5 *EFBackCoverSource UTrayMain
+*UIConstraints: *EFBackCoverSource UTrayMain *PageRegion A5
+*UIConstraints: *PageSize A5 *EFBackCoverSource UTrayAlt1
+*UIConstraints: *EFBackCoverSource UTrayAlt1 *PageSize A5
+*UIConstraints: *PageRegion A5 *EFBackCoverSource UTrayAlt1
+*UIConstraints: *EFBackCoverSource UTrayAlt1 *PageRegion A5
+*UIConstraints: *PageSize A5 *EFBackCoverSource SmallPaperDeck
+*UIConstraints: *EFBackCoverSource SmallPaperDeck *PageSize A5
+*UIConstraints: *PageRegion A5 *EFBackCoverSource SmallPaperDeck
+*UIConstraints: *EFBackCoverSource SmallPaperDeck *PageRegion A5
+*UIConstraints: *PageSize B4 *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *PageSize B4
+*UIConstraints: *PageRegion B4 *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *PageRegion B4
+*UIConstraints: *PageSize B4 *EFFrontCoverSource UTrayMain
+*UIConstraints: *EFFrontCoverSource UTrayMain *PageSize B4
+*UIConstraints: *PageRegion B4 *EFFrontCoverSource UTrayMain
+*UIConstraints: *EFFrontCoverSource UTrayMain *PageRegion B4
+*UIConstraints: *PageSize B4 *EFFrontCoverSource UTrayAlt1
+*UIConstraints: *EFFrontCoverSource UTrayAlt1 *PageSize B4
+*UIConstraints: *PageRegion B4 *EFFrontCoverSource UTrayAlt1
+*UIConstraints: *EFFrontCoverSource UTrayAlt1 *PageRegion B4
+*UIConstraints: *PageSize B4 *EFFrontCoverSource SmallPaperDeck
+*UIConstraints: *EFFrontCoverSource SmallPaperDeck *PageSize B4
+*UIConstraints: *PageRegion B4 *EFFrontCoverSource SmallPaperDeck
+*UIConstraints: *EFFrontCoverSource SmallPaperDeck *PageRegion B4
+*UIConstraints: *PageSize B4 *EFBackCoverSource UTrayMain
+*UIConstraints: *EFBackCoverSource UTrayMain *PageSize B4
+*UIConstraints: *PageRegion B4 *EFBackCoverSource UTrayMain
+*UIConstraints: *EFBackCoverSource UTrayMain *PageRegion B4
+*UIConstraints: *PageSize B4 *EFBackCoverSource UTrayAlt1
+*UIConstraints: *EFBackCoverSource UTrayAlt1 *PageSize B4
+*UIConstraints: *PageRegion B4 *EFBackCoverSource UTrayAlt1
+*UIConstraints: *EFBackCoverSource UTrayAlt1 *PageRegion B4
+*UIConstraints: *PageSize B4 *EFBackCoverSource SmallPaperDeck
+*UIConstraints: *EFBackCoverSource SmallPaperDeck *PageSize B4
+*UIConstraints: *PageRegion B4 *EFBackCoverSource SmallPaperDeck
+*UIConstraints: *EFBackCoverSource SmallPaperDeck *PageRegion B4
+*UIConstraints: *PageSize B5 *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *PageSize B5
+*UIConstraints: *PageRegion B5 *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *PageRegion B5
+*UIConstraints: *PageSize Executive *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *PageSize Executive
+*UIConstraints: *PageRegion Executive *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *PageRegion Executive
+*UIConstraints: *PageSize Executive *EFFrontCoverSource UTrayMain
+*UIConstraints: *EFFrontCoverSource UTrayMain *PageSize Executive
+*UIConstraints: *PageRegion Executive *EFFrontCoverSource UTrayMain
+*UIConstraints: *EFFrontCoverSource UTrayMain *PageRegion Executive
+*UIConstraints: *PageSize Executive *EFFrontCoverSource UTrayAlt1
+*UIConstraints: *EFFrontCoverSource UTrayAlt1 *PageSize Executive
+*UIConstraints: *PageRegion Executive *EFFrontCoverSource UTrayAlt1
+*UIConstraints: *EFFrontCoverSource UTrayAlt1 *PageRegion Executive
+*UIConstraints: *PageSize Executive *EFFrontCoverSource SmallPaperDeck
+*UIConstraints: *EFFrontCoverSource SmallPaperDeck *PageSize Executive
+*UIConstraints: *PageRegion Executive *EFFrontCoverSource SmallPaperDeck
+*UIConstraints: *EFFrontCoverSource SmallPaperDeck *PageRegion Executive
+*UIConstraints: *PageSize Executive *EFBackCoverSource UTrayMain
+*UIConstraints: *EFBackCoverSource UTrayMain *PageSize Executive
+*UIConstraints: *PageRegion Executive *EFBackCoverSource UTrayMain
+*UIConstraints: *EFBackCoverSource UTrayMain *PageRegion Executive
+*UIConstraints: *PageSize Executive *EFBackCoverSource UTrayAlt1
+*UIConstraints: *EFBackCoverSource UTrayAlt1 *PageSize Executive
+*UIConstraints: *PageRegion Executive *EFBackCoverSource UTrayAlt1
+*UIConstraints: *EFBackCoverSource UTrayAlt1 *PageRegion Executive
+*UIConstraints: *PageSize Executive *EFBackCoverSource SmallPaperDeck
+*UIConstraints: *EFBackCoverSource SmallPaperDeck *PageSize Executive
+*UIConstraints: *PageRegion Executive *EFBackCoverSource SmallPaperDeck
+*UIConstraints: *EFBackCoverSource SmallPaperDeck *PageRegion Executive
+*UIConstraints: *PageSize Executive *EFFrontCoverSource UTrayAlt2
+*UIConstraints: *EFFrontCoverSource UTrayAlt2 *PageSize Executive
+*UIConstraints: *PageRegion Executive *EFFrontCoverSource UTrayAlt2
+*UIConstraints: *EFFrontCoverSource UTrayAlt2 *PageRegion Executive
+*UIConstraints: *PageSize Executive *EFFrontCoverSource UTrayLCT1
+*UIConstraints: *EFFrontCoverSource UTrayLCT1 *PageSize Executive
+*UIConstraints: *PageRegion Executive *EFFrontCoverSource UTrayLCT1
+*UIConstraints: *EFFrontCoverSource UTrayLCT1 *PageRegion Executive
+*UIConstraints: *PageSize Executive *EFBackCoverSource UTrayAlt2
+*UIConstraints: *EFBackCoverSource UTrayAlt2 *PageSize Executive
+*UIConstraints: *PageRegion Executive *EFBackCoverSource UTrayAlt2
+*UIConstraints: *EFBackCoverSource UTrayAlt2 *PageRegion Executive
+*UIConstraints: *PageSize Executive *EFBackCoverSource UTrayLCT1
+*UIConstraints: *EFBackCoverSource UTrayLCT1 *PageSize Executive
+*UIConstraints: *PageRegion Executive *EFBackCoverSource UTrayLCT1
+*UIConstraints: *EFBackCoverSource UTrayLCT1 *PageRegion Executive
+*UIConstraints: *PageSize Legal *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *PageSize Legal
+*UIConstraints: *PageRegion Legal *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *PageRegion Legal
+*UIConstraints: *PageSize Legal *EFFrontCoverSource UTrayMain
+*UIConstraints: *EFFrontCoverSource UTrayMain *PageSize Legal
+*UIConstraints: *PageRegion Legal *EFFrontCoverSource UTrayMain
+*UIConstraints: *EFFrontCoverSource UTrayMain *PageRegion Legal
+*UIConstraints: *PageSize Legal *EFFrontCoverSource UTrayAlt1
+*UIConstraints: *EFFrontCoverSource UTrayAlt1 *PageSize Legal
+*UIConstraints: *PageRegion Legal *EFFrontCoverSource UTrayAlt1
+*UIConstraints: *EFFrontCoverSource UTrayAlt1 *PageRegion Legal
+*UIConstraints: *PageSize Legal *EFFrontCoverSource SmallPaperDeck
+*UIConstraints: *EFFrontCoverSource SmallPaperDeck *PageSize Legal
+*UIConstraints: *PageRegion Legal *EFFrontCoverSource SmallPaperDeck
+*UIConstraints: *EFFrontCoverSource SmallPaperDeck *PageRegion Legal
+*UIConstraints: *PageSize Legal *EFBackCoverSource UTrayMain
+*UIConstraints: *EFBackCoverSource UTrayMain *PageSize Legal
+*UIConstraints: *PageRegion Legal *EFBackCoverSource UTrayMain
+*UIConstraints: *EFBackCoverSource UTrayMain *PageRegion Legal
+*UIConstraints: *PageSize Legal *EFBackCoverSource UTrayAlt1
+*UIConstraints: *EFBackCoverSource UTrayAlt1 *PageSize Legal
+*UIConstraints: *PageRegion Legal *EFBackCoverSource UTrayAlt1
+*UIConstraints: *EFBackCoverSource UTrayAlt1 *PageRegion Legal
+*UIConstraints: *PageSize Legal *EFBackCoverSource SmallPaperDeck
+*UIConstraints: *EFBackCoverSource SmallPaperDeck *PageSize Legal
+*UIConstraints: *PageRegion Legal *EFBackCoverSource SmallPaperDeck
+*UIConstraints: *EFBackCoverSource SmallPaperDeck *PageRegion Legal
+*UIConstraints: *PageSize Letter *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *PageSize Letter
+*UIConstraints: *PageRegion Letter *EFMediaType Translucent
+*UIConstraints: *EFMediaType Translucent *PageRegion Letter
+*UIConstraints: *PageSize Statement *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *PageSize Statement
+*UIConstraints: *PageRegion Statement *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *PageRegion Statement
+*UIConstraints: *PageSize Statement *EFFrontCoverSource UTrayMain
+*UIConstraints: *EFFrontCoverSource UTrayMain *PageSize Statement
+*UIConstraints: *PageRegion Statement *EFFrontCoverSource UTrayMain
+*UIConstraints: *EFFrontCoverSource UTrayMain *PageRegion Statement
+*UIConstraints: *PageSize Statement *EFFrontCoverSource UTrayAlt1
+*UIConstraints: *EFFrontCoverSource UTrayAlt1 *PageSize Statement
+*UIConstraints: *PageRegion Statement *EFFrontCoverSource UTrayAlt1
+*UIConstraints: *EFFrontCoverSource UTrayAlt1 *PageRegion Statement
+*UIConstraints: *PageSize Statement *EFFrontCoverSource SmallPaperDeck
+*UIConstraints: *EFFrontCoverSource SmallPaperDeck *PageSize Statement
+*UIConstraints: *PageRegion Statement *EFFrontCoverSource SmallPaperDeck
+*UIConstraints: *EFFrontCoverSource SmallPaperDeck *PageRegion Statement
+*UIConstraints: *PageSize Statement *EFBackCoverSource UTrayMain
+*UIConstraints: *EFBackCoverSource UTrayMain *PageSize Statement
+*UIConstraints: *PageRegion Statement *EFBackCoverSource UTrayMain
+*UIConstraints: *EFBackCoverSource UTrayMain *PageRegion Statement
+*UIConstraints: *PageSize Statement *EFBackCoverSource UTrayAlt1
+*UIConstraints: *EFBackCoverSource UTrayAlt1 *PageSize Statement
+*UIConstraints: *PageRegion Statement *EFBackCoverSource UTrayAlt1
+*UIConstraints: *EFBackCoverSource UTrayAlt1 *PageRegion Statement
+*UIConstraints: *PageSize Statement *EFBackCoverSource SmallPaperDeck
+*UIConstraints: *EFBackCoverSource SmallPaperDeck *PageSize Statement
+*UIConstraints: *PageRegion Statement *EFBackCoverSource SmallPaperDeck
+*UIConstraints: *EFBackCoverSource SmallPaperDeck *PageRegion Statement
+*UIConstraints: *PageSize Tabloid *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *PageSize Tabloid
+*UIConstraints: *PageRegion Tabloid *EFMediaType Transparency
+*UIConstraints: *EFMediaType Transparency *PageRegion Tabloid
+*UIConstraints: *PageSize Tabloid *EFFrontCoverSource UTrayMain
+*UIConstraints: *EFFrontCoverSource UTrayMain *PageSize Tabloid
+*UIConstraints: *PageRegion Tabloid *EFFrontCoverSource UTrayMain
+*UIConstraints: *EFFrontCoverSource UTrayMain *PageRegion Tabloid
+*UIConstraints: *PageSize Tabloid *EFFrontCoverSource UTrayAlt1
+*UIConstraints: *EFFrontCoverSource UTrayAlt1 *PageSize Tabloid
+*UIConstraints: *PageRegion Tabloid *EFFrontCoverSource UTrayAlt1
+*UIConstraints: *EFFrontCoverSource UTrayAlt1 *PageRegion Tabloid
+*UIConstraints: *PageSize Tabloid *EFFrontCoverSource SmallPaperDeck
+*UIConstraints: *EFFrontCoverSource SmallPaperDeck *PageSize Tabloid
+*UIConstraints: *PageRegion Tabloid *EFFrontCoverSource SmallPaperDeck
+*UIConstraints: *EFFrontCoverSource SmallPaperDeck *PageRegion Tabloid
+*UIConstraints: *PageSize Tabloid *EFBackCoverSource UTrayMain
+*UIConstraints: *EFBackCoverSource UTrayMain *PageSize Tabloid
+*UIConstraints: *PageRegion Tabloid *EFBackCoverSource UTrayMain
+*UIConstraints: *EFBackCoverSource UTrayMain *PageRegion Tabloid
+*UIConstraints: *PageSize Tabloid *EFBackCoverSource UTrayAlt1
+*UIConstraints: *EFBackCoverSource UTrayAlt1 *PageSize Tabloid
+*UIConstraints: *PageRegion Tabloid *EFBackCoverSource UTrayAlt1
+*UIConstraints: *EFBackCoverSource UTrayAlt1 *PageRegion Tabloid
+*UIConstraints: *PageSize Tabloid *EFBackCoverSource SmallPaperDeck
+*UIConstraints: *EFBackCoverSource SmallPaperDeck *PageSize Tabloid
+*UIConstraints: *PageRegion Tabloid *EFBackCoverSource SmallPaperDeck
+*UIConstraints: *EFBackCoverSource SmallPaperDeck *PageRegion Tabloid
+
+*% ========== NonUIConstraints ==========
+
+*NonUIConstraints: *CustomPageSize True *EFSort CrossCollate
+*NonUIConstraints: *EFSort CrossCollate *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *EFSort CrossGroup
+*NonUIConstraints: *EFSort CrossGroup *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *EFOutputBin Outbin2
+*NonUIConstraints: *EFOutputBin Outbin2 *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *EFMediaType Translucent
+*NonUIConstraints: *EFMediaType Translucent *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *EFMediaType Transparency
+*NonUIConstraints: *EFMediaType Transparency *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *EFMediaType Tabstock
+*NonUIConstraints: *EFMediaType Tabstock *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *EFMediaType Labels
+*NonUIConstraints: *EFMediaType Labels *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *EFMediaType Prepunched
+*NonUIConstraints: *EFMediaType Prepunched *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *InputSlot Tray1
+*NonUIConstraints: *InputSlot Tray1 *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *InputSlot Tray2
+*NonUIConstraints: *InputSlot Tray2 *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *InputSlot Tray5
+*NonUIConstraints: *InputSlot Tray5 *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *EFMediaInterlv Blank
+*NonUIConstraints: *EFMediaInterlv Blank *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *Duplex DuplexNoTumble
+*NonUIConstraints: *Duplex DuplexNoTumble *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *Duplex DuplexTumble
+*NonUIConstraints: *Duplex DuplexTumble *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *EFCopierBooklet LeftBinding
+*NonUIConstraints: *EFCopierBooklet LeftBinding *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *EFPunch
+*NonUIConstraints: *EFPunch *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *EFStapler
+*NonUIConstraints: *EFStapler *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *InputSlot Tray3
+*NonUIConstraints: *InputSlot Tray3 *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *InputSlot Tray4
+*NonUIConstraints: *InputSlot Tray4 *CustomPageSize True
+
+*NonUIConstraints: *CustomPageSize True *EFFrontCoverMode Back
+*NonUIConstraints: *EFFrontCoverMode Back *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *EFFrontCoverMode Both
+*NonUIConstraints: *EFFrontCoverMode Both *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *EFFrontCoverSource UTrayMain
+*NonUIConstraints: *EFFrontCoverSource UTrayMain *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *EFFrontCoverSource UTrayAlt1
+*NonUIConstraints: *EFFrontCoverSource UTrayAlt1 *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *EFFrontCoverSource UTrayAlt2
+*NonUIConstraints: *EFFrontCoverSource UTrayAlt2 *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *EFFrontCoverSource UTrayLCT1
+*NonUIConstraints: *EFFrontCoverSource UTrayLCT1 *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *EFFrontCoverSource SmallPaperDeck
+*NonUIConstraints: *EFFrontCoverSource SmallPaperDeck *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *EFBackCoverMode Back
+*NonUIConstraints: *EFBackCoverMode Back *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *EFBackCoverMode Both
+*NonUIConstraints: *EFBackCoverMode Both *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *EFBackCoverSource UTrayAlt1
+*NonUIConstraints: *EFBackCoverSource UTrayAlt1 *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *EFBackCoverSource UTrayAlt2
+*NonUIConstraints: *EFBackCoverSource UTrayAlt2 *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *EFBackCoverSource UTrayLCT1
+*NonUIConstraints: *EFBackCoverSource UTrayLCT1 *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *EFBackCoverSource SmallPaperDeck
+*NonUIConstraints: *EFBackCoverSource SmallPaperDeck *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *EFCopierBooklet HalfLeftBinding
+*NonUIConstraints: *EFCopierBooklet HalfLeftBinding *CustomPageSize True
+
+*% ========== General Information ==========
+
+*FileSystem: True
+*?FileSystem: "
+   save
+    statusdict /diskstatus known{(True)} {(False)} ifelse = flush
+   restore
+"
+*End
+*DefaultResolution: 600dpi
+*?Resolution: "
+save
+  initgraphics
+  0 0 moveto currentpoint matrix defaultmatrix transform
+  0 72 lineto currentpoint matrix defaultmatrix transform
+  3 -1 roll sub dup mul
+  3 1 roll exch sub dup mul
+  add sqrt round cvi
+  (          ) cvs print (dpi) = flush
+restore
+"
+*End
+*Throughput: "65"
+*LanguageLevel: "3"
+*TTRasterizer: Type42
+*ColorDevice: False
+*DefaultColorSpace: Gray
+*Reset: "
+   count 0 eq
+   { false } { true exch startjob } ifelse
+   not { (WARNING: Cannot reset printer.) =
+            (Missing or invalid password.) =
+            (Please contact the author of this software.) = flush quit
+          } if
+   systemdict /quit get exec
+   (WARNING: Printer Reset Failed.) = flush
+"
+*End
+*ExitServer:  "
+   count 0 eq
+   { false } { true exch startjob } ifelse
+   not { (WARNING: Cannot modify initial VM.) =
+            (Missing or invalid password.) =
+            (Please contact the author of this software.) = flush quit
+          } if
+"
+*End
+*Password: "0"
+*FreeVM: "6291456"
+*PrintPSErrors: True
+*AccurateScreensSupport: True
+*ContoneOnly: False
+*FCacheSize 64MB: 262144
+*RequiresPageRegion All: True
+*LandscapeOrientation: Plus90
+
+*VMOption 64MB: "6291456"
+
+*%EFIFlags *EFMMInUse Command
+*%EFIGroup *EFMMInUse FPPaperSource/Paper Source
+*OpenUI *EFMMInUse/Mixed Media In Use:PickOne
+*OrderDependency: 50.0 AnySetup *EFMMInUse
+*DefaultEFMMInUse: False
+*EFMMInUse False/No: ""
+*EFMMInUse True/Yes: ""
+*CloseUI: *EFMMInUse
+
+*% Enable MM1.3 
+*%EFIKey [ : ][EFMixedMedia:string]
+*%EFIKeyAttribute [EFMixedMedia][version:13]
+*%EFIValue [EFMixedMedia:CWS]
+*%EFIValue [EFMixedMedia:driver]
+*% Enable chapters
+*%EFIKey [ : ][EFEnableChapter:string]
+*%EFIValue [EFEnableChapter:CWS]
+*%EFIValue [EFEnableChapter:driver]
+*% Enable Subset finishing
+*%EFIKey [ : ][EFEnableSubsetFinishing:string]
+*%EFIValue [EFEnableSubsetFinishing:CWS]
+*%EFIValue [EFEnableSubsetFinishing:driver]
+*% Enable Mixed Media Insertions 
+*%EFIKey [ : ][EFEnableMixedMediaInsertion:string]
+*%EFIValue [EFEnableMixedMediaInsertion:CWS]
+*%EFIValue [EFEnableMixedMediaInsertion:driver]
+*% Enable Constraint Enforcement
+*%EFIKey [ : ][EFMixedMediaEnforceConstraints:string]
+*%EFIValue [EFMixedMediaEnforceConstraints:CWS]
+*%EFIValue [EFMixedMediaEnforceConstraints:driver]
+
+*% ========== UI Menus ==========
+
+*%EFIFlags *EFConvPaperSize Setup
+*OpenUI *EFConvPaperSize/Convert Paper Sizes:PickOne
+*OrderDependency: 25.0 AnySetup *EFConvPaperSize
+*DefaultEFConvPaperSize: False
+*EFConvPaperSize False/No: ""
+*EFConvPaperSize A4ToLetter/A4/A3->Letter/Tabloid: ""
+*EFConvPaperSize LetterToA4/Letter/Tabloid->A4/A3: ""
+*CloseUI: *EFConvPaperSize
+
+*%EFIFlags *EFDefPaperSize Setup
+*OpenUI *EFDefPaperSize/Default Paper Sizes:PickOne
+*OrderDependency: 20.0 AnySetup *EFDefPaperSize
+*DefaultEFDefPaperSize: Metric
+*EFDefPaperSize US/US: ""
+*EFDefPaperSize Metric/Metric: ""
+*CloseUI: *EFDefPaperSize
+
+*%EFIFlags *EFPSError Setup
+*OpenUI *EFPSError/Print to PS Error:PickOne
+*OrderDependency: 40.0 AnySetup *EFPSError
+*DefaultEFPSError: NO
+*EFPSError NO/No: ""
+*EFPSError YES/Yes: ""
+*CloseUI: *EFPSError
+
+*%EFIFlags *EFCourierSubst Setup
+*%EFIGroup *EFCourierSubst EFPPFonts/Fonts
+*OpenUI *EFCourierSubst/Allow Courier Substitution:PickOne
+*OrderDependency: 35.0 AnySetup *EFCourierSubst
+*DefaultEFCourierSubst: YES
+*EFCourierSubst NO/No: ""
+*EFCourierSubst YES/Yes: ""
+*CloseUI: *EFCourierSubst
+
+*%EFIFlags *EFSort Command|Spooler
+*%EFIGroup *EFSort FPFinishing/Finishing
+*OpenUI *EFSort/Sorter:PickOne
+*OrderDependency: 40.0 AnySetup *EFSort
+*DefaultEFSort: CollateWithShift
+*EFSort False/Off: " /XJXsetcollate where { pop false XJXsetcollate } if
+/XJXsetsorter where { pop 0 XJXsetsorter } if "
+*End
+*EFSort Collate/Sort without Shift: " /XJXsetcollate where { pop true XJXsetcollate } if
+/XJXsetsorter where { pop 3 XJXsetsorter } if "
+*End
+*EFSort Group/Group without Shift: " /XJXsetcollate where { pop false XJXsetcollate } if
+/XJXsetsorter where { pop 2 XJXsetsorter } if "
+*End
+*EFSort CrossCollate/Cross-Sort: " /XJXsetcollate where { pop true XJXsetcollate } if
+/XJXsetsorter where { pop 5 XJXsetsorter } if "
+*End
+*EFSort CrossGroup/Cross-Group: " /XJXsetcollate where { pop false XJXsetcollate } if
+/XJXsetsorter where { pop 4 XJXsetsorter } if "
+*End
+*EFSort CollateWithShift/Sort: " /XJXsetcollate where { pop true XJXsetcollate } if
+/XJXsetsorter where { pop 7 XJXsetsorter } if "
+*End
+*EFSort GroupWithShift/Group: " /XJXsetcollate where { pop false XJXsetcollate } if
+/XJXsetsorter where { pop 8 XJXsetsorter } if "
+*End
+*CloseUI: *EFSort
+*%EFIFlags *EFStapler Spooler|Command
+*%EFIGroup *EFStapler FPFinishing/Finishing
+*OpenUI *EFStapler/Stapler Mode: PickOne
+*OrderDependency: 52.0 AnySetup *EFStapler
+*DefaultEFStapler: None
+*EFStapler None/None: "
+   /XJXsetstaple where { pop 0 XJXsetstaple } if "
+*End
+*EFStapler U1LeftP/Corner (Upper Left-P): "
+   /XJXsetstaple where { pop 1 XJXsetstaple } if "
+*End
+*EFStapler U1LeftL/Corner (Upper Left-L): "
+   /XJXsetstaple where { pop 11 XJXsetstaple } if "
+*End
+*EFStapler U1RightP/Corner (Upper Right-P): "
+   /XJXsetstaple where { pop 2 XJXsetstaple } if "
+*End
+*EFStapler U1RightL/Corner (Upper Right-L): "
+   /XJXsetstaple where { pop 1 XJXsetstaple } if "
+*End
+*EFStapler U2TopP/Double (Top-P): "
+   /XJXsetstaple where { pop 5 XJXsetstaple } if "
+*End
+*EFStapler U2TopL/Double (Top-L): "
+   /XJXsetstaple where { pop 3 XJXsetstaple } if "
+*End
+*EFStapler U2LeftP/Double (Left-P): "
+   /XJXsetstaple where { pop 3 XJXsetstaple } if "
+*End
+*EFStapler U2LeftL/Double (Left-L): "
+   /XJXsetstaple where { pop 13 XJXsetstaple } if "
+*End
+*EFStapler U2RightP/Double (Right-P): "
+   /XJXsetstaple where { pop 4 XJXsetstaple } if "
+*End
+*EFStapler U2RightL/Double (Right-L): "
+   /XJXsetstaple where { pop 5 XJXsetstaple } if "
+*End
+*EFStapler Stitch/Saddle Stitch: "
+   /XJXsetstaple where { pop 14 XJXsetstaple } if "
+*End
+*CloseUI: *EFStapler
+*%EFIFlags *EFPunch Spooler|Command
+*%EFIGroup *EFPunch FPFinishing/Finishing
+*OpenUI *EFPunch/Hole Punch: PickOne
+*OrderDependency: 56.0 AnySetup *EFPunch
+*DefaultEFPunch: None
+*EFPunch None/None: "
+   /XJXsetpunchEdge where { pop 0 XJXsetpunchEdge } if "
+*End
+*EFPunch TopP/Top-Portrait: "
+   /XJXsetpunchEdge where { pop 3 XJXsetpunchEdge } if "
+*End
+*EFPunch TopL/Top-Landscape: "
+   /XJXsetpunchEdge where { pop 1 XJXsetpunchEdge } if "
+*End
+*EFPunch LeftP/Left-Portrait: "
+   /XJXsetpunchEdge where { pop 1 XJXsetpunchEdge } if "
+*End
+*EFPunch LeftL/Left-Landscape: "
+   /XJXsetpunchEdge where { pop 4 XJXsetpunchEdge } if "
+*End
+*EFPunch RightP/Right-Portrait: "
+   /XJXsetpunchEdge where { pop 2 XJXsetpunchEdge } if "
+*End
+*EFPunch RightL/Right-Landscape: "
+   /XJXsetpunchEdge where { pop 3 XJXsetpunchEdge } if "
+*End
+*CloseUI: *EFPunch
+*%EFIFlags *Duplex Command|Impose|Spooler|MixedMedia|MMInsertion
+*%EFIGroup *Duplex FPFinishing/Finishing
+*OpenUI *Duplex/2-sided Printing:PickOne
+*OrderDependency: 50.0 AnySetup *Duplex
+*DefaultDuplex: None
+*Duplex None/Off: " userdict /XJXEFIsetpageproperties known 
+  { << /XJXsetduplex [ false ] >> XJXEFIsetpageproperties }
+  { userdict /XJXsetduplex known
+    { false XJXsetduplex } { << /Duplex false >> setpagedevice } ifelse
+  } ifelse "
+*End
+*Duplex DuplexNoTumble/Long Edge Binding: " userdict /XJXEFIsetpageproperties known
+  { << /XJXsetduplex [ true ] /XJXSetBinding [ (long) ] >> XJXEFIsetpageproperties }
+  { userdict /XJXsetduplex known
+    { true XJXsetduplex } { << /Duplex true >> setpagedevice } ifelse
+    userdict /XJXSetBinding known { (long) XJXSetBinding } if
+  } ifelse "
+*End
+*Duplex DuplexTumble/Short Edge Binding: " userdict /XJXEFIsetpageproperties known
+  { << /XJXsetduplex [ true ] /XJXSetBinding [ (short) ] >> XJXEFIsetpageproperties }
+  { userdict /XJXsetduplex known
+    { true XJXsetduplex } { << /Duplex true >> setpagedevice } ifelse
+    userdict /XJXSetBinding known { (short) XJXSetBinding } if
+  } ifelse "
+*End
+*CloseUI: *Duplex
+*%EFIFlags *EFOutputBin Command|Spooler
+*%EFIGroup *EFOutputBin FPFinishing/Finishing
+*OpenUI *EFOutputBin/Output Tray:PickOne
+*OrderDependency: 50.0 AnySetup *EFOutputBin
+*DefaultEFOutputBin: AutoSelect
+*EFOutputBin AutoSelect/AutoSelect: "
+/XJXsetOutputBinV2 where { pop 99 XJXsetOutputBinV2 } if "
+*End
+*EFOutputBin Outbin1/Tray A: "
+/XJXsetOutputBinV2 where { pop 4 XJXsetOutputBinV2 } if "
+*End
+*EFOutputBin Outbin2/Tray B: "
+/XJXsetOutputBinV2 where { pop 5 XJXsetOutputBinV2 } if "
+*End
+*EFOutputBin Outbin3/Tray C: "
+/XJXsetOutputBinV2 where { pop 6 XJXsetOutputBinV2 } if "
+*End
+*CloseUI: *EFOutputBin
+*%EFIFlags *EFCopierBooklet Command|Spooler
+*%EFIGroup *EFCopierBooklet FPFinishing/Finishing
+*OpenUI *EFCopierBooklet/Booklet:PickOne
+*OrderDependency: 50.0 AnySetup *EFCopierBooklet
+*DefaultEFCopierBooklet: False
+*EFCopierBooklet False/Off: "
+/XJXsetbooklet where { pop 0 XJXsetbooklet } if "
+*End
+*EFCopierBooklet LeftBinding/On: " /XJXsetbooklet where { pop 1 XJXsetbooklet } if "
+*EFCopierBooklet HalfLeftBinding/Reduced Booklet: "
+   /XJXSetHalfPageSize where { pop true XJXSetHalfPageSize } if
+   /XJXsetbooklet where { pop 1 XJXsetbooklet } if "
+*End
+*CloseUI: *EFCopierBooklet
+
+*%EFIFlags *EFFaceDown Command|Spooler
+*%EFIGroup *EFFaceDown FPFinishing/Finishing
+*OpenUI *EFFaceDown/Face of Output Copies:PickOne 
+*OrderDependency: 12.0 AnySetup *EFFaceDown
+*DefaultEFFaceDown: EFFaceDownDEF
+*EFFaceDown EFFaceDownDEF/Printer's default: "
+        userdict /XJXsetPrintFace known
+        { (printdef) XJXsetPrintFace } if "
+*End
+*EFFaceDown FaceUp/Face Up (Reverse Order): "
+        userdict /XJXsetPrintFace known
+        { (faceup) XJXsetPrintFace } if "
+*End
+*EFFaceDown FaceDown/Face Down (Normal Order): "
+        userdict /XJXsetPrintFace known
+        { (facedown) XJXsetPrintFace } if "
+*End
+*CloseUI: *EFFaceDown
+
+*%EFIFlags *EFPrange Spooler|Command|Column
+*%EFIGroup *EFPrange FPFinishing/Finishing
+*OpenUI *EFPrange/Page Range:PickOne
+*OrderDependency: 70.0 AnySetup *EFPrange
+*DefaultEFPrange: All
+*EFPrange All/All: " userdict /XJXSetEFPrange known {
+   currentglobal true setglobal
+   [ ] exch setglobal XJXSetEFPrange } if "
+*End
+*EFPrange Even/Even: " userdict /XJXSetEFPrange known {
+   currentglobal true setglobal
+   [ 1 10000 { dup 2 add } repeat ] exch setglobal
+   XJXSetEFPrange } if "
+*End
+*EFPrange Odd/Odd: " userdict /XJXSetEFPrange known {
+   currentglobal true setglobal
+   [ 0 10000 { dup 2 add } repeat ] exch setglobal
+   XJXSetEFPrange } if "
+*End
+*CloseUI: *EFPrange
+
+*%EFIFlags *EFPowerForm ColorSetup|Command|Rerip|Spooler
+*%EFIGroup *EFPowerForm FPFreeForm/FreeForm
+*OpenUI *EFPowerForm/Optimize PowerPoint:PickOne
+*OrderDependency: 58.4 AnySetup *EFPowerForm
+*DefaultEFPowerForm: True
+*EFPowerForm False/Off: " /XJXSetPowerForm where { pop false XJXSetPowerForm } if "
+*EFPowerForm True/On: " /XJXSetPowerForm where { pop true XJXSetPowerForm } if "
+*CloseUI: *EFPowerForm
+*%EFIFlags *EFCreateMaster Column|Command|Rerip|Spooler
+*%EFIGroup *EFCreateMaster FPFreeForm/FreeForm
+*OpenUI *EFCreateMaster/Create Master:PickOne
+*OrderDependency: 57.0 AnySetup *EFCreateMaster
+*DefaultEFCreateMaster: None
+*EFCreateMaster None/None: " /XJXCreateMaster where { pop 0 XJXCreateMaster } if "
+*EFCreateMaster formC1/1: " /XJXCreateMaster where { pop 1 XJXCreateMaster } if "
+*EFCreateMaster formC2/2: " /XJXCreateMaster where { pop 2 XJXCreateMaster } if "
+*EFCreateMaster formC3/3: " /XJXCreateMaster where { pop 3 XJXCreateMaster } if "
+*EFCreateMaster formC4/4: " /XJXCreateMaster where { pop 4 XJXCreateMaster } if "
+*EFCreateMaster formC5/5: " /XJXCreateMaster where { pop 5 XJXCreateMaster } if "
+*EFCreateMaster formC6/6: " /XJXCreateMaster where { pop 6 XJXCreateMaster } if "
+*EFCreateMaster formC7/7: " /XJXCreateMaster where { pop 7 XJXCreateMaster } if "
+*EFCreateMaster formC8/8: " /XJXCreateMaster where { pop 8 XJXCreateMaster } if "
+*EFCreateMaster formC9/9: " /XJXCreateMaster where { pop 9 XJXCreateMaster } if "
+*EFCreateMaster formC10/10: " /XJXCreateMaster where { pop 10 XJXCreateMaster } if "
+*EFCreateMaster formC11/11: " /XJXCreateMaster where { pop 11 XJXCreateMaster } if "
+*EFCreateMaster formC12/12: " /XJXCreateMaster where { pop 12 XJXCreateMaster } if "
+*EFCreateMaster formC13/13: " /XJXCreateMaster where { pop 13 XJXCreateMaster } if "
+*EFCreateMaster formC14/14: " /XJXCreateMaster where { pop 14 XJXCreateMaster } if "
+*EFCreateMaster formC15/15: " /XJXCreateMaster where { pop 15 XJXCreateMaster } if "
+*CloseUI: *EFCreateMaster
+*%EFIFlags *EFUseMaster Column|Command|Rerip|Spooler
+*%EFIGroup *EFUseMaster FPFreeForm/FreeForm
+*OpenUI *EFUseMaster/Use Master:PickOne
+*OrderDependency: 57.0 AnySetup *EFUseMaster
+*DefaultEFUseMaster: None
+*EFUseMaster None/None: " /XJXUseMaster where { pop 0 XJXUseMaster } if "
+*EFUseMaster formU1/1: " /XJXUseMaster where { pop 1 XJXUseMaster } if "
+*EFUseMaster formU2/2: " /XJXUseMaster where { pop 2 XJXUseMaster } if "
+*EFUseMaster formU3/3: " /XJXUseMaster where { pop 3 XJXUseMaster } if "
+*EFUseMaster formU4/4: " /XJXUseMaster where { pop 4 XJXUseMaster } if "
+*EFUseMaster formU5/5: " /XJXUseMaster where { pop 5 XJXUseMaster } if "
+*EFUseMaster formU6/6: " /XJXUseMaster where { pop 6 XJXUseMaster } if "
+*EFUseMaster formU7/7: " /XJXUseMaster where { pop 7 XJXUseMaster } if "
+*EFUseMaster formU8/8: " /XJXUseMaster where { pop 8 XJXUseMaster } if "
+*EFUseMaster formU9/9: " /XJXUseMaster where { pop 9 XJXUseMaster } if "
+*EFUseMaster formU10/10: " /XJXUseMaster where { pop 10 XJXUseMaster } if "
+*EFUseMaster formU11/11: " /XJXUseMaster where { pop 11 XJXUseMaster } if "
+*EFUseMaster formU12/12: " /XJXUseMaster where { pop 12 XJXUseMaster } if "
+*EFUseMaster formU13/13: " /XJXUseMaster where { pop 13 XJXUseMaster } if "
+*EFUseMaster formU14/14: " /XJXUseMaster where { pop 14 XJXUseMaster } if "
+*EFUseMaster formU15/15: " /XJXUseMaster where { pop 15 XJXUseMaster } if "
+*CloseUI: *EFUseMaster
+*%EFIFlags *EFPrintMaster Column|Command|Rerip|Setup|Spooler
+*%EFIGroup *EFPrintMaster FPFreeForm/FreeForm
+*OpenUI *EFPrintMaster/Print Master:PickOne
+*OrderDependency: 57.0 AnySetup *EFPrintMaster
+*DefaultEFPrintMaster: EFPrintMasterDEF
+*EFPrintMaster EFPrintMasterDEF/Printer's default: " "
+*EFPrintMaster False/No: " /XJXFFMPrint where { pop false XJXFFMPrint } if "
+*EFPrintMaster True/Yes: " /XJXFFMPrint where { pop true XJXFFMPrint } if "
+*CloseUI: *EFPrintMaster
+
+*%EFIFlags *EFPPTSlide Column|Command|Rerip|Spooler
+*%EFIGroup *EFPPTSlide FPFreeForm/FreeForm
+*OpenUI *EFPPTSlide/Remove White PPT Background:Boolean
+*OrderDependency: 58.0 AnySetup *EFPPTSlide
+*DefaultEFPPTSlide: False
+*EFPPTSlide False/No: " userdict /XJXKeepPPTBackground known { XJXKeepPPTBackground } if "
+*EFPPTSlide True/Yes: " userdict /XJXRemovePPTBackground known { XJXRemovePPTBackground } if "
+*CloseUI: *EFPPTSlide
+
+*%EFIFlags *EFLineControl Command|Spooler
+*%EFIGroup *EFLineControl FPImageQuality/Image Quality
+*OpenUI *EFLineControl/Line Refinement:PickOne
+*OrderDependency: 40.0 AnySetup *EFLineControl
+*DefaultEFLineControl: False
+*EFLineControl False/Off: " /XJXsetLineControl where { pop 0 XJXsetLineControl } if "
+*EFLineControl True/On: " /XJXsetLineControl where { pop 1 XJXsetLineControl } if "
+*CloseUI: *EFLineControl
+
+*%EFIFlags *EFRefine Command|Spooler
+*%EFIGroup *EFRefine FPImageQuality/Image Quality
+*OpenUI *EFRefine/Smoothing:PickOne
+*OrderDependency: 50.0 AnySetup *EFRefine
+*DefaultEFRefine: Type1
+*EFRefine Off/Off: "/XJXsetrefine where { pop 0 XJXsetrefine } if "
+*EFRefine Type1/On: "/XJXsetrefine where { pop 1 XJXsetrefine } if "
+*CloseUI: *EFRefine
+*%EFIFlags *EFTonerSave Command|Spooler
+*%EFIGroup *EFTonerSave FPImageQuality/Image Quality
+*OpenUI *EFTonerSave/Toner Reduction:PickOne
+*OrderDependency: 50.0 AnySetup *EFTonerSave
+*DefaultEFTonerSave: False
+*EFTonerSave False/Off: " /XJXsetTonerSave where { pop 0 XJXsetTonerSave } if "
+*EFTonerSave Level1/On: " /XJXsetTonerSave where { pop 1 XJXsetTonerSave } if "
+*CloseUI: *EFTonerSave
+*%EFIFlags *EFDensity Command|Spooler
+*%EFIGroup *EFDensity FPImageQuality/Image Quality
+*OpenUI *EFDensity/Density:PickOne
+*OrderDependency: 50.0 AnySetup *EFDensity
+*DefaultEFDensity: 5
+*EFDensity 1/1 (Lightness): "/XJXsetdensity where { pop 1 XJXsetdensity } if "
+*EFDensity 2/2: "/XJXsetdensity where { pop 2 XJXsetdensity } if "
+*EFDensity 3/3: "/XJXsetdensity where { pop 3 XJXsetdensity } if "
+*EFDensity 4/4: "/XJXsetdensity where { pop 4 XJXsetdensity } if "
+*EFDensity 5/5: "/XJXsetdensity where { pop 5 XJXsetdensity } if "
+*EFDensity 6/6: "/XJXsetdensity where { pop 6 XJXsetdensity } if "
+*EFDensity 7/7: "/XJXsetdensity where { pop 7 XJXsetdensity } if "
+*EFDensity 8/8: "/XJXsetdensity where { pop 8 XJXsetdensity } if "
+*EFDensity 9/9 (Darkest): "/XJXsetdensity where { pop 9 XJXsetdensity } if "
+*CloseUI: *EFDensity
+
+*%EFIFlags *EFImageAlign Column|CommandEx|Rerip
+*%EFIGroup *EFImageAlign FPImageShift/Image Shift
+*OpenUI *EFImageAlign/Align front and back images:Boolean
+*OrderDependency: 40.0 AnySetup *EFImageAlign
+*DefaultEFImageAlign: False
+*EFImageAlign False/Off: " userdict /XJXImageShiftAlign known { false XJXImageShiftAlign } if "
+*EFImageAlign True/On: " userdict /XJXImageShiftAlign known { true XJXImageShiftAlign } if "
+*CloseUI: *EFImageAlign
+
+*%EFIFlags *EFImageUnit Column|CommandEx|Rerip
+*%EFIGroup *EFImageUnit FPImageShift/Image Shift
+*OpenUI *EFImageUnit/Units:PickOne
+*OrderDependency: 54.0 AnySetup *EFImageUnit
+*DefaultEFImageUnit: MM
+*EFImageUnit MM/mm: ""
+*EFImageUnit Inches/inches: ""
+*EFImageUnit Points/points: ""
+*CloseUI: *EFImageUnit
+
+*%EFIFlags *EFMediaType Command|Impose|Spooler|MixedMedia|MMInsertion
+*%EFIGroup *EFMediaType FPPaperSource/Paper Source
+*OpenUI *EFMediaType/Media Type:PickOne
+*OrderDependency: 50.0 AnySetup *EFMediaType
+*DefaultEFMediaType: Any
+*EFMediaType Any/Any Media Type: "
+userdict /XJXEFIsetpageproperties known
+{  << /XJXsetmediatypeV2 [ 199 ] >> XJXEFIsetpageproperties  }
+{  userdict /XJXsetmediatypeV2 known
+{ 199 XJXsetmediatypeV2 } if
+} ifelse"
+*End
+*EFMediaType Plain/Plain Paper: "
+userdict /XJXEFIsetpageproperties known
+{  << /XJXsetmediatypeV2 [ 0 ] >> XJXEFIsetpageproperties  }
+{  userdict /XJXsetmediatypeV2 known
+{ 0 XJXsetmediatypeV2 } if
+} ifelse"
+*End
+*EFMediaType Transparency/Transparency: "
+userdict /XJXEFIsetpageproperties known
+{  << /XJXsetmediatypeV2 [ 4 ] >> XJXEFIsetpageproperties  }
+{  userdict /XJXsetmediatypeV2 known
+{ 4 XJXsetmediatypeV2 } if
+} ifelse"
+*End
+*EFMediaType Translucent/Tracing Paper: "
+userdict /XJXEFIsetpageproperties known
+{  << /XJXsetmediatypeV2 [ 140 ] >> XJXEFIsetpageproperties  }
+{  userdict /XJXsetmediatypeV2 known
+{ 140 XJXsetmediatypeV2 } if
+} ifelse"
+*End
+*EFMediaType Tabstock/Index Tab: "
+userdict /XJXEFIsetpageproperties known
+{  << /XJXsetmediatypeV2 [ 130 ] >> XJXEFIsetpageproperties  }
+{  userdict /XJXsetmediatypeV2 known
+{ 130 XJXsetmediatypeV2 } if
+} ifelse"
+*End
+*EFMediaType Labels/Labels: "
+userdict /XJXEFIsetpageproperties known
+{  << /XJXsetmediatypeV2 [ 104 ] >> XJXEFIsetpageproperties  }
+{  userdict /XJXsetmediatypeV2 known
+{ 104 XJXsetmediatypeV2 } if
+} ifelse"
+*End
+*EFMediaType Recycled/Recycled: "
+userdict /XJXEFIsetpageproperties known
+{  << /XJXsetmediatypeV2 [ 105 ] >> XJXEFIsetpageproperties  }
+{  userdict /XJXsetmediatypeV2 known
+{ 105 XJXsetmediatypeV2 } if
+} ifelse"
+*End
+*EFMediaType Color/Color: "
+userdict /XJXEFIsetpageproperties known
+{  << /XJXsetmediatypeV2 [ 106 ] >> XJXEFIsetpageproperties  }
+{  userdict /XJXsetmediatypeV2 known
+{ 106 XJXsetmediatypeV2 } if
+} ifelse"
+*End
+*EFMediaType Bond/Bond Paper: "
+userdict /XJXEFIsetpageproperties known
+{  << /XJXsetmediatypeV2 [ 1 ] >> XJXEFIsetpageproperties  }
+{  userdict /XJXsetmediatypeV2 known
+{ 1 XJXsetmediatypeV2 } if
+} ifelse"
+*End
+*EFMediaType Prepunched/3-Hole Punch: "
+userdict /XJXEFIsetpageproperties known
+{  << /XJXsetmediatypeV2 [ 103 ] >> XJXEFIsetpageproperties  }
+{  userdict /XJXsetmediatypeV2 known
+{ 103 XJXsetmediatypeV2 } if
+} ifelse"
+*End
+*EFMediaType Heavy/Heavy Paper: "
+userdict /XJXEFIsetpageproperties known
+{  << /XJXsetmediatypeV2 [ 108 ] >> XJXEFIsetpageproperties  }
+{  userdict /XJXsetmediatypeV2 known
+{ 108 XJXsetmediatypeV2 } if
+} ifelse"
+*End
+*EFMediaType Letterhead/Letterhead: "
+userdict /XJXEFIsetpageproperties known
+{  << /XJXsetmediatypeV2 [ 102 ] >> XJXEFIsetpageproperties  }
+{  userdict /XJXsetmediatypeV2 known
+{ 102 XJXsetmediatypeV2 } if
+} ifelse"
+*End
+*?EFMediaType: "/XJGetPrinterInfo where { pop (mediatype) XJGetPrinterInfo == } if"
+*CloseUI: *EFMediaType
+
+*%EFIFlags *InputSlot Column|Command|Impose|Spooler|MixedMedia|MMInsertion
+*%EFIGroup *InputSlot FPPaperSource/Paper Source
+*OpenUI *InputSlot/Paper Source:PickOne
+*OrderDependency: 20.0 AnySetup *InputSlot
+*DefaultInputSlot: AutoSelect
+*InputSlot AutoSelect/Auto Tray Select: "
+userdict /XJXEFIsetpageproperties known
+{ << /XJXsettrayselV2 [ 7 ] >> XJXEFIsetpageproperties }
+{ /XJXsettrayselV2 where
+{ pop 7 XJXsettrayselV2 } if
+} ifelse"
+*End
+*InputSlot Tray1/Drawer 1(Right Deck): "
+userdict /XJXEFIsetpageproperties known
+{ << /XJXsettrayselV2 [ 1 ] >> XJXEFIsetpageproperties }
+{ /XJXsettrayselV2 where
+{ pop 1 XJXsettrayselV2 } if
+} ifelse"
+*End
+*InputSlot Tray2/Drawer 2(Left Deck): "
+userdict /XJXEFIsetpageproperties known
+{ << /XJXsettrayselV2 [ 4 ] >> XJXEFIsetpageproperties }
+{ /XJXsettrayselV2 where
+{ pop 4 XJXsettrayselV2 } if
+} ifelse"
+*End
+*InputSlot Tray3/Drawer 3(Upper Cassette): "
+userdict /XJXEFIsetpageproperties known
+{ << /XJXsettrayselV2 [ 5 ] >> XJXEFIsetpageproperties }
+{ /XJXsettrayselV2 where
+{ pop 5 XJXsettrayselV2 } if
+} ifelse"
+*End
+*InputSlot Tray4/Drawer 4(Lower Cassette): "
+userdict /XJXEFIsetpageproperties known
+{ << /XJXsettrayselV2 [ 20 ] >> XJXEFIsetpageproperties }
+{ /XJXsettrayselV2 where
+{ pop 20 XJXsettrayselV2 } if
+} ifelse"
+*End
+*InputSlot Tray5/Side Paper Deck: "
+userdict /XJXEFIsetpageproperties known
+{ << /XJXsettrayselV2 [ 21 ] >> XJXEFIsetpageproperties }
+{ /XJXsettrayselV2 where
+{ pop 21 XJXsettrayselV2 } if
+} ifelse"
+*End
+*InputSlot ManualFeed/Stack Bypass: "
+userdict /XJXEFIsetpageproperties known
+{ << /XJXsettrayselV2 [ 2 ] >> XJXEFIsetpageproperties }
+{ /XJXsettrayselV2 where
+{ pop 2 XJXsettrayselV2 } if
+} ifelse"
+*End
+*CloseUI: *InputSlot
+
+*%EFIFlags *EFMediaInterlv Command|Spooler
+*%EFIGroup *EFMediaInterlv FPPaperSource/Paper Source
+*OpenUI *EFMediaInterlv/Transparency Interleaving:PickOne
+*OrderDependency: 50.0 AnySetup *EFMediaInterlv
+*DefaultEFMediaInterlv: False
+*EFMediaInterlv False/Off: " userdict /XJXsetTransInterleave known { 0 XJXsetTransInterleave } if "
+*EFMediaInterlv Blank/Blank Interleave: " userdict /XJXsetTransInterleave known { 1 XJXsetTransInterleave } if "
+*EFMediaInterlv Printed/Printed Interleave: " userdict /XJXsetTransInterleave known { 2 XJXsetTransInterleave } if "
+*CloseUI: *EFMediaInterlv
+*%EFIFlags *EFTabPosition 
+*%EFIGroup *EFTabPosition FPPaperSource/Paper Source
+*%EFIRange *EFTabPosition/Select Tab Position : (0;254;1;0):"/XJXsetTabShift where { pop <*EFTabPosition> XJXsetTabShift} if"
+
+*%EFIFlags *EFFrontCoverMode Spooler|Command
+*%EFIGroup *EFFrontCoverMode FPPaperSource/Paper Source
+*OpenUI *EFFrontCoverMode/Front Cover Mode      :PickOne
+*OrderDependency: 50.0 AnySetup *EFFrontCoverMode
+*DefaultEFFrontCoverMode: None
+*EFFrontCoverMode None/None: "
+   userdict /XJXsetFrontCoverMode known { 0 XJXsetFrontCoverMode } if "
+*End
+*EFFrontCoverMode Front/Front Page Print: "
+   userdict /XJXsetFrontCoverMode known { 1 XJXsetFrontCoverMode } if "
+*End
+*EFFrontCoverMode Back/Back Page Print: "
+   userdict /XJXsetFrontCoverMode known { 2 XJXsetFrontCoverMode } if "
+*End
+*EFFrontCoverMode Both/Both Page Print: "
+   userdict /XJXsetFrontCoverMode known { 3 XJXsetFrontCoverMode } if "
+*End
+*EFFrontCoverMode Blank/Blank Page: "
+   userdict /XJXsetFrontCoverMode known { 4 XJXsetFrontCoverMode } if "
+*End
+*CloseUI: *EFFrontCoverMode
+
+*%EFIFlags *EFFrontCoverSource Spooler|Command
+*%EFIGroup *EFFrontCoverSource FPPaperSource/Paper Source
+*OpenUI *EFFrontCoverSource/Front Cover Source  :PickOne
+*OrderDependency: 50.0 AnySetup *EFFrontCoverSource
+*DefaultEFFrontCoverSource: TrayManual
+*EFFrontCoverSource TrayManual/Stack Bypass: " userdict /XJXsetFrontCoverSource known
+   { 2 XJXsetFrontCoverSource } if "
+*End
+*EFFrontCoverSource UTrayMain/Drawer 1(Right Deck): " userdict /XJXsetFrontCoverSource known
+   { 1 XJXsetFrontCoverSource } if "
+*End
+*EFFrontCoverSource UTrayAlt1/Drawer 2(Left Deck): " userdict /XJXsetFrontCoverSource known
+   { 4 XJXsetFrontCoverSource } if "
+*End
+*EFFrontCoverSource UTrayAlt2/Drawer 3(Upper Cassette): " userdict /XJXsetFrontCoverSource known
+   { 5 XJXsetFrontCoverSource } if "
+*End
+*EFFrontCoverSource UTrayLCT1/Drawer 4(Lower Cassette): " userdict /XJXsetFrontCoverSource known
+   { 20 XJXsetFrontCoverSource } if "
+*End
+*EFFrontCoverSource SmallPaperDeck/Side Paper Deck: " userdict /XJXsetFrontCoverSource known
+   { 21 XJXsetFrontCoverSource } if "
+*End
+*CloseUI: *EFFrontCoverSource
+
+*%EFIFlags *EFBackCoverMode Spooler|Command
+*%EFIGroup *EFBackCoverMode FPPaperSource/Paper Source
+*OpenUI *EFBackCoverMode/Back Cover Mode        :PickOne
+*OrderDependency: 50.0 AnySetup *EFBackCoverMode
+*DefaultEFBackCoverMode: None
+*EFBackCoverMode None/None: "
+   userdict /XJXsetBackCoverMode known { 0 XJXsetBackCoverMode } if "
+*End
+*EFBackCoverMode Front/Front Page Print: "
+   userdict /XJXsetBackCoverMode known { 1 XJXsetBackCoverMode } if "
+*End
+*EFBackCoverMode Back/Back Page Print: "
+   userdict /XJXsetBackCoverMode known { 2 XJXsetBackCoverMode } if "
+*End
+*EFBackCoverMode Both/Both Page Print: "
+   userdict /XJXsetBackCoverMode known { 3 XJXsetBackCoverMode } if "
+*End
+*EFBackCoverMode Blank/Blank Page: "
+   userdict /XJXsetBackCoverMode known { 4 XJXsetBackCoverMode } if "
+*End
+*CloseUI: *EFBackCoverMode
+
+*%EFIFlags *EFBackCoverSource Spooler|Command
+*%EFIGroup *EFBackCoverSource FPPaperSource/Paper Source
+*OpenUI *EFBackCoverSource/Back Cover Source    :PickOne
+*OrderDependency: 50.0 AnySetup *EFBackCoverSource
+*DefaultEFBackCoverSource: TrayManual
+*EFBackCoverSource TrayManual/Stack Bypass: " userdict /XJXsetBackCoverSource known
+   { 2 XJXsetBackCoverSource } if "
+*End
+*EFBackCoverSource UTrayMain/Drawer 1(Right Deck): " userdict /XJXsetBackCoverSource known
+   { 1 XJXsetBackCoverSource } if "
+*End
+*EFBackCoverSource UTrayAlt1/Drawer 2(Left Deck): " userdict /XJXsetBackCoverSource known
+   { 4 XJXsetBackCoverSource } if "
+*End
+*EFBackCoverSource UTrayAlt2/Drawer 3(Upper Cassette): " userdict /XJXsetBackCoverSource known
+   { 5 XJXsetBackCoverSource } if "
+*End
+*EFBackCoverSource UTrayLCT1/Drawer 4(Lower Cassette): " userdict /XJXsetBackCoverSource known
+   { 20 XJXsetBackCoverSource } if "
+*End
+*EFBackCoverSource SmallPaperDeck/Side Paper Deck: " userdict /XJXsetBackCoverSource known
+   { 21 XJXsetBackCoverSource } if "
+*End
+*CloseUI: *EFBackCoverSource
+
+*%EFIFlags *EFCopyNumMode 
+*%EFIGroup *EFCopyNumMode FPLayout/Layout
+*OpenUI *EFCopyNumMode/Copy Numbering Mode:PickOne
+*OrderDependency: 65.0 AnySetup *EFCopyNumMode
+*DefaultEFCopyNumMode: None
+*EFCopyNumMode None/None: " /XJXsetSerialNumberMode where { pop 1 XJXsetSerialNumberMode } if "
+*EFCopyNumMode Auto/Auto: " /XJXsetSerialNumberMode where { pop 2 XJXsetSerialNumberMode } if "
+*EFCopyNumMode Mode1/Level 1: " /XJXsetSerialNumberMode where { pop 11 XJXsetSerialNumberMode } if "
+*EFCopyNumMode Mode2/Level 2: " /XJXsetSerialNumberMode where { pop 12 XJXsetSerialNumberMode } if "
+*EFCopyNumMode Mode3/Level 3: " /XJXsetSerialNumberMode where { pop 13 XJXsetSerialNumberMode } if "
+*EFCopyNumMode Mode4/Level 4: " /XJXsetSerialNumberMode where { pop 14 XJXsetSerialNumberMode } if "
+*EFCopyNumMode Mode5/Level 5: " /XJXsetSerialNumberMode where { pop 15 XJXsetSerialNumberMode } if "
+*CloseUI: *EFCopyNumMode
+*%EFIFlags *EFCopyNumStart 
+*%EFIGroup *EFCopyNumStart FPLayout/Layout
+*%EFIRange *EFCopyNumStart/Copy Numbering Start:(1;9999;1;1): " /XJXsetSerialNumberStart where { pop <*EFCopyNumStart> XJXsetSerialNumberStart } if "
+*%EFIKeyAttribute [EFCopyNumStart][polymorphic:yes]
+*%EFIFlags *EFEngRotate180 Command|Spooler
+*%EFIGroup *EFEngRotate180 FPLayout/Layout
+*OpenUI *EFEngRotate180/Rotate 180:PickOne
+*OrderDependency: 50.0 AnySetup *EFEngRotate180
+*DefaultEFEngRotate180: False
+*EFEngRotate180 False/Off: " /XJXsetEngineRotate180 where { pop 0 XJXsetEngineRotate180 } if "
+*EFEngRotate180 True/On: " /XJXsetEngineRotate180 where { pop 1 XJXsetEngineRotate180 } if "
+*EFEngRotate180 LargePaperOnly/Large Paper Only: " /XJXsetEngineRotate180 where { pop 2 XJXsetEngineRotate180 } if "
+*EFEngRotate180 SmallPaperOnly/Small Paper Only: " /XJXsetEngineRotate180 where { pop 3 XJXsetEngineRotate180 } if "
+*CloseUI: *EFEngRotate180
+
+*% ========== Media Selection ==========
+
+*%EFIFlags *PageSize Command|Rerip|Spooler
+*%EFIGroup *PageSize FPPaperSource/Paper Source
+*OpenUI *PageSize/Page Size:PickOne
+*OrderDependency: 90.0 AnySetup *PageSize
+*DefaultPageSize: A4
+*PageSize A4/A4: " /XJXSetImageable where { pop () XJXSetImageable } if /XJXsetpagesize where 
+ { pop (LEFA4) XJXsetpagesize } { << /PageSize [595 843] >> setpagedevice } ifelse "
+*End
+*PageSize Tabloid/11x17: " /XJXSetImageable where { pop () XJXSetImageable } if /XJXsetpagesize where 
+ { pop (SEFTabloid) XJXsetpagesize } { << /PageSize [792 1224] >> setpagedevice } ifelse "
+*End
+*PageSize Legal/Legal: " /XJXSetImageable where { pop () XJXSetImageable } if /XJXsetpagesize where 
+ { pop (SEFLegal) XJXsetpagesize } { << /PageSize [612 1008] >> setpagedevice } ifelse "
+*End
+*PageSize Statement/Statement: " /XJXSetImageable where { pop () XJXSetImageable } if /XJXsetpagesize where 
+ { pop (LEFStatement) XJXsetpagesize } { << /PageSize [396 612] >> setpagedevice } ifelse "
+*End
+*PageSize Executive/Executive: " /XJXSetImageable where { pop () XJXSetImageable } if /XJXsetpagesize where 
+ { pop (LEFExecutive) XJXsetpagesize } { << /PageSize [522 756] >> setpagedevice } ifelse "
+*End
+*PageSize Letter/Letter: " /XJXSetImageable where { pop () XJXSetImageable } if /XJXsetpagesize where 
+ { pop (LEFLetter) XJXsetpagesize } { << /PageSize [612 792] >> setpagedevice } ifelse "
+*End
+*PageSize A3/A3: " /XJXSetImageable where { pop () XJXSetImageable } if /XJXsetpagesize where 
+ { pop (SEFA3) XJXsetpagesize } { << /PageSize [843 1191] >> setpagedevice } ifelse "
+*End
+*PageSize B4/B4: " /XJXSetImageable where { pop () XJXSetImageable } if /XJXsetpagesize where 
+ { pop (SEFB4) XJXsetpagesize } { << /PageSize [727 1031] >> setpagedevice } ifelse "
+*End
+*PageSize B5/B5: " /XJXSetImageable where { pop () XJXSetImageable } if /XJXsetpagesize where 
+ { pop (LEFB5) XJXsetpagesize } { << /PageSize [517 730] >> setpagedevice } ifelse "
+*End
+*PageSize A5/A5: " /XJXSetImageable where { pop () XJXSetImageable } if /XJXsetpagesize where 
+ { pop (LEFA5) XJXsetpagesize } { << /PageSize [420 596] >> setpagedevice } ifelse "
+*End
+*?PageSize: " FieryXJdict /PageSizeQuery get exec = flush "
+*CloseUI: *PageSize
+
+*OpenUI *PageRegion:PickOne
+*OrderDependency: 95.0 AnySetup *PageRegion
+*DefaultPageRegion: A4
+*PageRegion A4/A4: " /XJXSetImageable where { pop () XJXSetImageable } if /XJXsetpagesize where 
+ { pop (LEFA4) XJXsetpagesize } { << /PageSize [595 843] >> setpagedevice } ifelse "
+*End
+*PageRegion Tabloid/11x17: " /XJXSetImageable where { pop () XJXSetImageable } if /XJXsetpagesize where 
+ { pop (SEFTabloid) XJXsetpagesize } { << /PageSize [792 1224] >> setpagedevice } ifelse "
+*End
+*PageRegion Legal/Legal: " /XJXSetImageable where { pop () XJXSetImageable } if /XJXsetpagesize where 
+ { pop (SEFLegal) XJXsetpagesize } { << /PageSize [612 1008] >> setpagedevice } ifelse "
+*End
+*PageRegion Statement/Statement: " /XJXSetImageable where { pop () XJXSetImageable } if /XJXsetpagesize where 
+ { pop (LEFStatement) XJXsetpagesize } { << /PageSize [396 612] >> setpagedevice } ifelse "
+*End
+*PageRegion Executive/Executive: " /XJXSetImageable where { pop () XJXSetImageable } if /XJXsetpagesize where 
+ { pop (LEFExecutive) XJXsetpagesize } { << /PageSize [522 756] >> setpagedevice } ifelse "
+*End
+*PageRegion Letter/Letter: " /XJXSetImageable where { pop () XJXSetImageable } if /XJXsetpagesize where 
+ { pop (LEFLetter) XJXsetpagesize } { << /PageSize [612 792] >> setpagedevice } ifelse "
+*End
+*PageRegion A3/A3: " /XJXSetImageable where { pop () XJXSetImageable } if /XJXsetpagesize where 
+ { pop (SEFA3) XJXsetpagesize } { << /PageSize [843 1191] >> setpagedevice } ifelse "
+*End
+*PageRegion B4/B4: " /XJXSetImageable where { pop () XJXSetImageable } if /XJXsetpagesize where 
+ { pop (SEFB4) XJXsetpagesize } { << /PageSize [727 1031] >> setpagedevice } ifelse "
+*End
+*PageRegion B5/B5: " /XJXSetImageable where { pop () XJXSetImageable } if /XJXsetpagesize where 
+ { pop (LEFB5) XJXsetpagesize } { << /PageSize [517 730] >> setpagedevice } ifelse "
+*End
+*PageRegion A5/A5: " /XJXSetImageable where { pop () XJXSetImageable } if /XJXsetpagesize where 
+ { pop (LEFA5) XJXsetpagesize } { << /PageSize [420 596] >> setpagedevice } ifelse "
+*End
+*CloseUI: *PageRegion
+
+*DefaultImageableArea: A4
+*ImageableArea A4/A4: "12.0 12.0 583.0 830.0"
+*ImageableArea Tabloid/11x17: "12.0 12.0 780.0 1212.0"
+*ImageableArea Legal/Legal: "12.0 12.0 600.0 996.0"
+*ImageableArea Statement/Statement: "12.0 12.0 384.0 600.0"
+*ImageableArea Executive/Executive: "12.0 12.0 510.0 744.0"
+*ImageableArea Letter/Letter: "12.0 12.0 600.0 780.0"
+*ImageableArea A3/A3: "12.0 11.9 830.0 1179.0"
+*ImageableArea B4/B4: "12.0 12.0 717.0 1020.0"
+*ImageableArea B5/B5: "12.0 12.0 504.0 717.0"
+*ImageableArea A5/A5: "12.0 12.0 408.0 583.0"
+*?ImageableArea: "save /cvp { cvi 12 string cvs print ( ) print } bind def
+newpath clippath pathbbox
+4 -2 roll exch 2 {ceiling cvp} repeat
+exch 2 {floor cvp} repeat flush
+restore"
+*End
+
+*DefaultPaperDimension: A4
+*PaperDimension A4/A4: "595.0 842.0"
+*PaperDimension Tabloid/11x17: "792.0 1224.0"
+*PaperDimension Legal/Legal: "612.0 1008.0"
+*PaperDimension Statement/Statement: "396.0 612.0"
+*PaperDimension Executive/Executive: "522.0 756.0"
+*PaperDimension Letter/Letter: "612.0 792.0"
+*PaperDimension A3/A3: "842.0 1191.0"
+*PaperDimension B4/B4: "729.0 1032.0"
+*PaperDimension B5/B5: "516.0 729.0"
+*PaperDimension A5/A5: "420.0 595.0"
+
+*% ========== Halftone Information ==========
+
+*ScreenAngle: "0"
+*ScreenFreq: "66.0"
+*Transfer Null: "{ }"
+*Transfer Null.Inverse: "{ 1 exch sub }"
+*DefaultTransfer: Null
+*DefaultScreenProc: Line
+*ScreenProc Line: "
+   {2 4
+   { 3 1 roll 4 -1 roll exch
+   {dup 8  ge { 8 sub} if exch
+   dup -1.0 le {pop -1.0} if dup 0.97 gt {pop 0.97} if
+   1.0 add 8 2 div  mul add dup 8 ge {8 sub} if
+   dup 0 lt {0 exch sub} if  cvi
+   }
+   exec 8 mul 3 1 roll exch
+   {dup 8  ge { 8 sub} if exch
+   dup -1.0 le {pop -1.0} if dup 0.97 gt {pop 0.97} if
+   1.0 add 8 2 div  mul add dup 8 ge {8 sub} if
+   dup 0 lt {0 exch sub} if  cvi
+   }
+   exec add
+   {
+   48 18  8 16   46 16  6 14
+   56 60 32 24   54 58 30 22
+   4 12 44 40    2 10 42 38
+   28 20 52 64   26 18 50 62
+
+   45 15  5 13   47 17  7 15
+   53 57 29 21   55 59 31 23
+   1  9 41 37    3 11 43 39
+   25 17 49 61   27 19 51 63
+   }
+   exch get 8 dup mul div} exec}"
+*End
+
+*% Black substitution is always on.
+*DefaultBlackSubstitution: True
+*BlackSubstitution True: ""
+
+*% ========== Custom Pagesize ==========
+
+*LeadingEdge Short: " "
+*LeadingEdge Long: " "
+*LeadingEdge PreferLong: " "
+*DefaultLeadingEdge: PreferLong
+*NonUIOrderDependency: 90.0 AnySetup *CustomPageSize
+*ParamCustomPageSize Width: 1 points 283.46 841.89
+*ParamCustomPageSize Height: 2 points 419.52 1224.72 
+*ParamCustomPageSize WidthOffset: 3 points 0 841.68 
+*ParamCustomPageSize HeightOffset: 4 points 0 1224.72 
+*ParamCustomPageSize Orientation: 5 int 0 3 
+*CustomPageSize True: "
+   /XJXsetpagesize where { pop XJXsetpagesize }
+    { 3 1 roll pop pop dup 0 eq exch 2 eq or { exch } if
+      2 array astore << /PageSize 3 -1 roll >>
+   setpagedevice } ifelse "
+*End
+*HWMargins: 13 13 13 13
+*MaxMediaWidth: "841.89"
+*MaxMediaHeight: "1224.72"
+*CenterRegistered: False
+
+*VariablePaperSize: True
+
+*% ========== Font Information ==========
+
+*DefaultFont: Courier
+
+*Font AdobeSansMM: Standard "(001.000)" Standard ROM
+*Font AdobeSerifMM: Standard "(001.001)" Standard ROM
+*Font AlbertusMT: Standard "(001.000)" Standard Disk
+*Font AlbertusMT-Italic: Standard "(001.000)" Standard Disk
+*Font AlbertusMT-Light: Standard "(001.000)" Standard Disk
+*Font AntiqueOlive-Bold: Standard "(001.001)" Standard Disk
+*Font AntiqueOlive-Compact: Standard "(001.001)" Standard Disk
+*Font AntiqueOlive-Italic: Standard "(001.001)" Standard Disk
+*Font AntiqueOlive-Roman: Standard "(001.001)" Standard Disk
+*Font Apple-Chancery: Standard "(2.0)" Standard Disk
+*Font Arial-BoldItalicMT: Standard "(MS core font:v2.00)" Standard Disk
+*Font Arial-BoldMT: Standard "(MS core font :V2.00)" Standard Disk
+*Font Arial-ItalicMT: Standard "(MS core font:V2.00)" Standard Disk
+*Font ArialMT: Standard "(MS core font:V2.00)" Standard Disk
+*Font AvantGarde-Book: Standard "(002.000)" ExtendedRoman Disk
+*Font AvantGarde-BookOblique: Standard "(002.000)" ExtendedRoman Disk
+*Font AvantGarde-Demi: Standard "(002.000)" ExtendedRoman Disk
+*Font AvantGarde-DemiOblique: Standard "(002.000)" ExtendedRoman Disk
+*Font Bodoni: Standard "(001.002)" Standard Disk
+*Font Bodoni-Bold: Standard "(001.002)" Standard Disk
+*Font Bodoni-BoldItalic: Standard "(001.002)" Standard Disk
+*Font Bodoni-Italic: Standard "(001.002)" Standard Disk
+*Font Bodoni-Poster: Standard "(001.002)" Standard Disk
+*Font Bodoni-PosterCompressed: Standard "(001.001)" Standard Disk
+*Font Bookman-Demi: Standard "(002.000)" ExtendedRoman Disk
+*Font Bookman-DemiItalic: Standard "(002.000)" ExtendedRoman Disk
+*Font Bookman-Light: Standard "(002.000)" ExtendedRoman Disk
+*Font Bookman-LightItalic: Standard "(002.000)" ExtendedRoman Disk
+*Font Carta: Special "(001.001)" Special Disk
+*Font Chicago: Standard "(2.0)" Standard Disk
+*Font Clarendon: Standard "(001.001)" Standard Disk
+*Font Clarendon-Bold: Standard "(001.001)" Standard Disk
+*Font Clarendon-Light: Standard "(001.001)" Standard Disk
+*Font CooperBlack: Standard "(001.003)" Standard Disk
+*Font CooperBlack-Italic: Standard "(001.003)" Standard Disk
+*Font Copperplate-ThirtyThreeBC: Standard "(001.002)" Standard Disk
+*Font Copperplate-ThirtyTwoBC: Standard "(001.002)" Standard Disk
+*Font Coronet-Regular: Standard "(001.000)" ExtendedRoman Disk
+*Font Courier: Standard "(003.000)" ExtendedRoman Disk
+*Font Courier-Bold: Standard "(003.000)" ExtendedRoman Disk
+*Font Courier-BoldOblique: Standard "(003.000)" ExtendedRoman Disk
+*Font Courier-Oblique: Standard "(003.000)" ExtendedRoman Disk
+*Font Eurostile: Standard "(001.002)" Standard Disk
+*Font Eurostile-Bold: Standard "(001.001)" Standard Disk
+*Font Eurostile-BoldExtendedTwo: Standard "(001.002)" Standard Disk
+*Font Eurostile-ExtendedTwo: Standard "(001.002)" Standard Disk
+*Font Geneva: Standard "(2.0)" Standard Disk
+*Font GillSans: Standard "(001.002)" Standard Disk
+*Font GillSans-Bold: Standard "(001.001)" Standard Disk
+*Font GillSans-BoldCondensed: Standard "(001.001)" Standard Disk
+*Font GillSans-BoldItalic: Standard "(001.002)" Standard Disk
+*Font GillSans-Condensed: Standard "(001.001)" Standard Disk
+*Font GillSans-ExtraBold: Standard "(001.001)" Standard Disk
+*Font GillSans-Italic: Standard "(001.002)" Standard Disk
+*Font GillSans-Light: Standard "(001.001)" Standard Disk
+*Font GillSans-LightItalic: Standard "(001.002)" Standard Disk
+*Font Goudy: Standard "(001.003)" Standard Disk
+*Font Goudy-Bold: Standard "(001.002)" Standard Disk
+*Font Goudy-BoldItalic: Standard "(001.002)" Standard Disk
+*Font Goudy-ExtraBold: Standard "(001.001)" Standard Disk
+*Font Goudy-Italic: Standard "(001.002)" Standard Disk
+*Font Helvetica: Standard "(002.000)" ExtendedRoman Disk
+*Font Helvetica-Bold: Standard "(002.000)" ExtendedRoman Disk
+*Font Helvetica-BoldOblique: Standard "(002.000)" ExtendedRoman Disk
+*Font Helvetica-Condensed: Standard "(002.000)" ExtendedRoman Disk
+*Font Helvetica-Condensed-Bold: Standard "(002.000)" ExtendedRoman Disk
+*Font Helvetica-Condensed-BoldObl: Standard "(002.000)" ExtendedRoman Disk
+*Font Helvetica-Condensed-Oblique: Standard "(002.000)" ExtendedRoman Disk
+*Font Helvetica-Narrow: Standard "(002.000)" ExtendedRoman ROM
+*Font Helvetica-Narrow-Bold: Standard "(002.000)" ExtendedRoman ROM
+*Font Helvetica-Narrow-BoldOblique: Standard "(002.000)" ExtendedRoman ROM
+*Font Helvetica-Narrow-Oblique: Standard "(002.000)" ExtendedRoman ROM
+*Font Helvetica-Oblique: Standard "(002.000)" ExtendedRoman Disk
+*Font HoeflerText-Black: Standard "(2.0)" Standard Disk
+*Font HoeflerText-BlackItalic: Standard "(2.0)" Standard Disk
+*Font HoeflerText-Italic: Standard "(2.0)" Standard Disk
+*Font HoeflerText-Ornaments: Special "(2.0)" Special Disk
+*Font HoeflerText-Regular: Standard "(2.0)" Standard Disk
+*Font JoannaMT: Standard "(001.000)" Standard Disk
+*Font JoannaMT-Bold: Standard "(001.000)" Standard Disk
+*Font JoannaMT-BoldItalic: Standard "(001.000)" Standard Disk
+*Font JoannaMT-Italic: Standard "(001.000)" Standard Disk
+*Font LetterGothic: Standard "(001.004)" Standard Disk
+*Font LetterGothic-Bold: Standard "(001.006)" Standard Disk
+*Font LetterGothic-BoldSlanted: Standard "(001.005)" Standard Disk
+*Font LetterGothic-Slanted: Standard "(001.004)" Standard Disk
+*Font LubalinGraph-Book: Standard "(001.002)" Standard Disk
+*Font LubalinGraph-BookOblique: Standard "(001.002)" Standard Disk
+*Font LubalinGraph-Demi: Standard "(001.002)" Standard Disk
+*Font LubalinGraph-DemiOblique: Standard "(001.002)" Standard Disk
+*Font Marigold: Standard "(001.000)" Standard Disk
+*Font Monaco: Standard "(2.0)" Standard Disk
+*Font MonaLisa-Recut: Standard "(001.000)" Standard Disk
+*Font NewCenturySchlbk-Bold: Standard "(002.000)" ExtendedRoman Disk
+*Font NewCenturySchlbk-BoldItalic: Standard "(002.000)" ExtendedRoman Disk
+*Font NewCenturySchlbk-Italic: Standard "(002.000)" ExtendedRoman Disk
+*Font NewCenturySchlbk-Roman: Standard "(002.000)" ExtendedRoman Disk
+*Font NewYork: Standard "(2.0)" Standard Disk
+*Font Optima: Standard "(001.005)" Standard Disk
+*Font Optima-Bold: Standard "(001.005)" Standard Disk
+*Font Optima-BoldItalic: Standard "(001.000)" Standard Disk
+*Font Optima-Italic: Standard "(001.000)" Standard Disk
+*Font Oxford: Standard "(001.000)" Standard Disk
+*Font Palatino-Bold: Standard "(002.000)" ExtendedRoman Disk
+*Font Palatino-BoldItalic: Standard "(002.000)" ExtendedRoman Disk
+*Font Palatino-Italic: Standard "(002.000)" ExtendedRoman Disk
+*Font Palatino-Roman: Standard "(002.000)" ExtendedRoman Disk
+*Font StempelGaramond-Bold: Standard "(001.002)" Standard Disk
+*Font StempelGaramond-BoldItalic: Standard "(001.002)" Standard Disk
+*Font StempelGaramond-Italic: Standard "(001.002)" Standard Disk
+*Font StempelGaramond-Roman: Standard "(001.002)" Standard Disk
+*Font Symbol: Special "(001.008)" Special Disk
+*Font Tekton: Standard "(001.001)" Standard Disk
+*Font Times-Bold: Standard "(002.000)" ExtendedRoman Disk
+*Font Times-BoldItalic: Standard "(002.000)" ExtendedRoman Disk
+*Font Times-Italic: Standard "(002.000)" ExtendedRoman Disk
+*Font Times-Roman: Standard "(002.000)" ExtendedRoman Disk
+*Font TimesNewRomanPS-BoldItalicMT: Standard "(MS core font:V2.00)" Standard Disk
+*Font TimesNewRomanPS-BoldMT: Standard "(MS core font:V2.00)" Standard Disk
+*Font TimesNewRomanPS-ItalicMT: Standard "(MS core font:V2.00)" Standard Disk
+*Font TimesNewRomanPSMT: Standard "(MS core font:V2.00)" Standard Disk
+*Font Univers: Standard "(001.003)" Standard Disk
+*Font Univers-Bold: Standard "(001.003)" Standard Disk
+*Font Univers-BoldExt: Standard "(001.000)" Standard Disk
+*Font Univers-BoldExtObl: Standard "(001.000)" Standard Disk
+*Font Univers-BoldOblique: Standard "(001.003)" Standard Disk
+*Font Univers-Condensed: Standard "(001.002)" Standard Disk
+*Font Univers-CondensedBold: Standard "(001.001)" Standard Disk
+*Font Univers-CondensedBoldOblique: Standard "(001.001)" Standard Disk
+*Font Univers-CondensedOblique: Standard "(001.002)" Standard Disk
+*Font Univers-Extended: Standard "(001.000)" Standard Disk
+*Font Univers-ExtendedObl: Standard "(001.000)" Standard Disk
+*Font Univers-Light: Standard "(001.003)" Standard Disk
+*Font Univers-LightOblique: Standard "(001.003)" Standard Disk
+*Font Univers-Oblique: Standard "(001.003)" Standard Disk
+*Font Wingdings-Regular: Special "(Version 2.00)" Special Disk
+*Font ZapfChancery-MediumItalic: Standard "(002.000)" ExtendedRoman Disk
+*Font ZapfDingbats: Special "(002.000)" Special Disk
+
+*?FontQuery: "
+save
+{ count 1 gt
+{ exch dup 212 string cvs (/) print print (:) print
+/Font resourcestatus {pop pop (Yes)} {(No)} ifelse =
+} { exit } ifelse
+} bind loop
+(*) = flush
+restore"
+*End
+*?FontList: "
+save (*) {cvn ==} 128 string /Font resourceforall
+(*) = flush restore"
+*End
+
+*% ========== Printer Messages ==========
+
+*Message: "%%[ exitserver: permanent state may be changed ]%%"
+*Message: "%%[ Flushing: rest of job (to end-of-file) will be ignored ]%%"
+*Message: "\FontName\ not found, using Courier"
+*Source: "LocalTalk"
+*Source: "EtherTalk"
+*Source: "Novell IPX"
+*Source: "TCP/IP"
+*Source: "Parallel"
+*PrinterError: "Copier is busy"
+*PrinterError: "Copier is in standby mode"
+*PrinterError: "Service cable is disconnected"
+*PrinterError: "Out of Fuser Oil"
+*PrinterError: "Copier Door is Open"
+*PrinterError: "Paper jam"
+*PrinterError: "Out of paper"
+*PrinterError: "Waste toner container is full"
+*PrinterError: "Out of toner"
+*PrinterError: "There is no key"
+*PrinterError: "There is no control card"
+*PrinterError: "ID mode"
+*PrinterError: "Copier needs attention; see copier control panel"
+*PrinterError: "Load A3 paper in tray"
+*PrinterError: "Load A4 paper in tray"
+*PrinterError: "Load 11x17 paper in tray"
+*PrinterError: "Load Letter paper"
+*PrinterError: "Load Legal paper"
+*PrinterError: "Load Letter-R paper"
+*PrinterError: "Load A4-R paper"
+*PrinterError: "Load B4 paper"
+*PrinterError: "Load B5-R paper"
+*PrinterError: "Check copier power and cable connection"
+*PrinterError: "Check film scanner connection"
+*PrinterError: "Copier is warming up"
+*PrinterError: "Copier communication error; call copier technician"
+*PrinterError: "Set paper size, then load manual feed paper"
+*PrinterError: "An unknown copier error occurred"
+*PrinterError: "Load manual feed paper"
+*PrinterError: "Remove manual feed paper, then set size"
+*PrinterError: "Copier is disconnected"
+*PrinterError: "Film Scanner has copy control"
+*% Status (format: %%[ status: <one of these> ]%% )
+*Status: "idle"
+*Status: "busy"
+*Status: "waiting"
+*Status: "printing"
+*Status: "scanning"
+*Status: "PrinterError: Copier is busy"
+*Status: "PrinterError: Copier is in standby mode"
+*Status: "PrinterError: Service cable is disconnected"
+*Status: "PrinterError: Out of Fuser Oil"
+*Status: "PrinterError: Copier Door is Open; Check Copier Panel"
+*Status: "PrinterError: Paper jam"
+*Status: "PrinterError: Out of paper"
+*Status: "PrinterError: Waste toner container is full"
+*Status: "PrinterError: Out of toner"
+*Status: "PrinterError: There is no key"
+*Status: "PrinterError: There is no control card"
+*Status: "PrinterError: ID mode"
+*Status: "PrinterError: Copier needs attention; see copier control panel"
+*Status: "PrinterError: Load A3 paper in tray"
+*Status: "PrinterError: Load A4 paper in tray"
+*Status: "PrinterError: Load 11x17 paper in tray"
+*Status: "PrinterError: Load Letter paper"
+*Status: "PrinterError: Load Letter-R paper"
+*Status: "PrinterError: Load A4-R paper"
+*Status: "PrinterError: Load B4 paper"
+*Status: "PrinterError: Load B5-R paper"
+*Status: "PrinterError: Load Legal paper"
+*Status: "PrinterError: Check copier power and cable connection"
+*Status: "PrinterError: Check film scanner connection"
+*Status: "PrinterError: Copier is warming up"
+*Status: "PrinterError: Copier communication error; call copier technician"
+*Status: "PrinterError: Set paper size, then load manual feed paper"
+*Status: "PrinterError: An unknown copier error occurred"
+*Status: "PrinterError: Load manual feed paper"
+*Status: "PrinterError: Remove manual feed paper, then set size"
+*Status: "PrinterError: Copier is disconnected"
+*Status: "PrinterError: Film Scanner has copy control"
+
+*% ========== Color Seperation ==========
+
+*DefaultColorSep: Black.100lpi.400dpi
+
+*ColorSepScreenAngle Cyan.100lpi.400dpi: "0"
+*ColorSepScreenAngle Magenta.100lpi.400dpi: "0"
+*ColorSepScreenAngle Yellow.100lpi.400dpi: "0"
+*ColorSepScreenAngle Black.100lpi.400dpi: "0"
+*ColorSepScreenFreq Cyan.100lpi.400dpi: "50.0"
+*ColorSepScreenFreq Magenta.100lpi.400dpi: "50.0"
+*ColorSepScreenFreq Yellow.100lpi.400dpi: "50.0"
+*ColorSepScreenFreq Black.100lpi.400dpi: "50.0"
+*ColorSepScreenProc Cyan.100lpi.400dpi: "{6 5
+   { 3 1 roll 4 -1 roll exch
+   {dup 8 ge { 8 sub} if exch
+   dup -1.0 le {pop -1.0} if dup 0.97 gt {pop 0.97} if
+   1.0 add 8 2 div mul add dup 8 ge {8 sub} if
+   dup 0 lt {0 exch sub} if cvi
+   }
+   exec 8 mul 3 1 roll exch
+   {dup 8 ge { 8 sub} if exch
+   dup -1.0 le {pop -1.0} if dup 0.97 gt {pop 0.97} if
+   1.0 add 8 2 div mul add dup 8 ge {8 sub} if
+   dup 0 lt {0 exch sub} if cvi
+   }
+   exec add
+   [
+   48 18 8 16 46 16 6 14
+   56 60 32 24 54 58 30 22
+   4 12 44 40 2 10 42 38
+   28 20 52 64 26 18 50 62
+
+   45 15 5 13 47 17 7 15
+   53 57 29 21 55 59 31 23
+   1 9 41 37 3 11 43 39
+   25 17 49 61 27 19 51 63
+   ]
+   exch get 8 dup mul div} exec}"
+*End
+
+*ColorSepScreenProc Magenta.100lpi.400dpi: "{4 7
+   { 3 1 roll 4 -1 roll exch
+   {dup 8 ge { 8 sub} if exch
+   dup -1.0 le {pop -1.0} if dup 0.97 gt {pop 0.97} if
+   1.0 add 8 2 div mul add dup 8 ge {8 sub} if
+   dup 0 lt {0 exch sub} if cvi
+   }
+   exec 8 mul 3 1 roll exch
+   {dup 8 ge { 8 sub} if exch
+   dup -1.0 le {pop -1.0} if dup 0.97 gt {pop 0.97} if
+   1.0 add 8 2 div mul add dup 8 ge {8 sub} if
+   dup 0 lt {0 exch sub} if cvi
+   }
+   exec add
+   [
+   48 18 8 16 46 16 6 14
+   56 60 32 24 54 58 30 22
+   4 12 44 40 2 10 42 38
+   28 20 52 64 26 18 50 62
+
+   45 15 5 13 47 17 7 15
+   53 57 29 21 55 59 31 23
+   1 9 41 37 3 11 43 39
+   25 17 49 61 27 19 51 63
+   ]
+   exch get 8 dup mul div} exec}"
+*End
+
+*ColorSepScreenProc Yellow.100lpi.400dpi: "{5 2
+   { 3 1 roll 4 -1 roll exch
+   {dup 8 ge { 8 sub} if exch
+   dup -1.0 le {pop -1.0} if dup 0.97 gt {pop 0.97} if
+   1.0 add 8 2 div mul add dup 8 ge {8 sub} if
+   dup 0 lt {0 exch sub} if cvi
+   }
+   exec 8 mul 3 1 roll exch
+   {dup 8 ge { 8 sub} if exch
+   dup -1.0 le {pop -1.0} if dup 0.97 gt {pop 0.97} if
+   1.0 add 8 2 div mul add dup 8 ge {8 sub} if
+   dup 0 lt {0 exch sub} if cvi
+   }
+   exec add
+   [
+   48 18 8 16 46 16 6 14
+   56 60 32 24 54 58 30 22
+   4 12 44 40 2 10 42 38
+   28 20 52 64 26 18 50 62
+
+   45 15 5 13 47 17 7 15
+   53 57 29 21 55 59 31 23
+   1 9 41 37 3 11 43 39
+   25 17 49 61 27 19 51 63
+   ]
+   exch get 8 dup mul div} exec}"
+*End
+
+*ColorSepScreenProc Black.100lpi.400dpi: "{2 4
+   { 3 1 roll 4 -1 roll exch
+   {dup 8 ge { 8 sub} if exch
+   dup -1.0 le {pop -1.0} if dup 0.97 gt {pop 0.97} if
+   1.0 add 8 2 div mul add dup 8 ge {8 sub} if
+   dup 0 lt {0 exch sub} if cvi
+   }
+   exec 8 mul 3 1 roll exch
+   {dup 8 ge { 8 sub} if exch
+   dup -1.0 le {pop -1.0} if dup 0.97 gt {pop 0.97} if
+   1.0 add 8 2 div mul add dup 8 ge {8 sub} if
+   dup 0 lt {0 exch sub} if cvi
+   }
+   exec add
+   [
+   48 18 8 16 46 16 6 14
+   56 60 32 24 54 58 30 22
+   4 12 44 40 2 10 42 38
+   28 20 52 64 26 18 50 62
+
+   45 15 5 13 47 17 7 15
+   53 57 29 21 55 59 31 23
+   1 9 41 37 3 11 43 39
+   25 17 49 61 27 19 51 63
+   ]
+   exch get 8 dup mul div} exec}"
+*End
+*InkName: P300FieryBlue/Fiery Blue
+*InkName: P199FieryRed/Fiery Red
+*InkName: PblackFieryBlack/Fiery Black
+*CustomCMYK P300FieryBlue: ".9 .9 .0 .0"
+*CustomCMYK P199FieryRed: ".0 .9 .9 .0"
+*CustomCMYK PblackFieryBlack: ".2 .1 .1 .9"
+
+*% ========== Meta Data ==========
+
+*% DATABASE VERSION: 15
+*% DATABASE SIZE: 6078464
+*% DATABASE IDENTIFICATION: webtool_db.mdb@@\main\155
+*% WEBTOOL VERSION: 27
+*% TEMPLATE VERSION: 1.4
+*% PROJECT ROOT: Canon
+
+*% PPD Last Modified 2005.03.03
+*% End of PPD file
+

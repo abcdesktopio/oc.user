@@ -1,0 +1,96 @@
+"use strict";
+
+var PORT = 8000;
+
+var spawn 	= require('child_process').spawn;
+var http 	= require('http');
+// var lame = require('lame');
+var wav = require('wav');
+var util = require('util');
+// var stream = require('stream');
+
+function runrecorder(response) {
+
+  var ret; 
+
+  // console.log( util.inspect(response.socket._writableState.highWaterMark));
+  // console.log( util.inspect(response.connection._writableState.highWaterMark));
+  //response.socket._writableState.highWaterMark = 1024;
+  //response.connection._writableState.highWaterMark = 1024;
+  // console.log( util.inspect(response.socket._writableState));
+  // var command = 'parec --device=rtp.monitor | oggenc --raw --quiet -';
+
+  var command = 'parec --device=auto_null.monitor';  
+  try {
+      //var s = new stream.Duplex( { highWaterMark: 1024} );
+
+  		//var cmd = spawn('parec', ['--device=rtp.monitor'], { detached: false });
+      var cmd = spawn('parec', ['--device=auto_null.monitor'],  { detached: false } );
+      if (cmd && cmd.pid ) {
+
+                
+            /*      
+            // create the Encoder instance 
+            var encoder = new lame.Encoder({
+                // input 
+                channels: 2,        // 2 channels (left and right) 
+                bitDepth: 16,       // 16-bit samples 
+                sampleRate: 44100,  // 44,100 Hz sample rate 
+               
+                // output 
+                bitRate: 128,
+                outSampleRate: 22050,
+                mode: lame.STEREO // STEREO (default), JOINTSTEREO, DUALCHANNEL or MONO 
+            });
+            */
+
+            var encoder = new wav.Writer();
+
+            cmd.stdout.pipe( encoder ); 
+            encoder.pipe( response );
+			 
+
+            cmd.on('close', function (code) {
+            	console.log('child process closed with code ' + code);
+            	response.end();
+            });
+
+            cmd.on('exit', function (code) {
+             	console.log('child process exited with code ' + code);
+            	response.end();
+            });
+
+        }
+    }
+    catch (e) {
+    		console.log (e);
+    		response.end();
+    }
+}
+
+
+
+//response.writeHead(code, { "Content-Type": 'audio/ogg' });
+//response.write(data);
+
+http.createServer(function(request, response) {
+	if (request.method === 'GET') {
+		response.writeHead(200, { 	
+            // "Content-Type": 'audio/ogg',
+            "Content-Type": 'audio/wav',
+						"Connection": "keep-alive",
+						"Transfer-Encoding": "chunked",	
+// 					"Accept-Ranges": "bytes"   // for Chrome  
+								});
+		console.log( request.method + ' ' + request.url );
+		runrecorder( response);    	
+  	}
+}).listen( PORT, function() {
+  console.log('Listening for requests');
+});
+
+
+
+
+
+

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mime-type xmlns="http://www.freedesktop.org/standards/shared-mime-info" type="application/sla">
+  <!--Created automatically by update-mime-database. DO NOT EDIT!-->
+  <comment xml:lang="en">STL image</comment>
+  <glob pattern="*.stl"/>
+  <icon name="stl"/>
+</mime-type>

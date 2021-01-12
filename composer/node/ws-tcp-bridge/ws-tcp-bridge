@@ -1,0 +1,169 @@
+#!/usr/bin/env node
+/*
+* Software Name : abcdesktop.io
+* Version: 0.2
+* SPDX-FileCopyrightText: Copyright (c) 2020-2021 Orange
+* SPDX-License-Identifier: GPL-2.0-only
+*
+* This software is distributed under the GNU General Public License v2.0 only
+* see the "license.txt" file for more details.
+*
+* Author: abcdesktop.io team
+* Software description: cloud native desktop service
+*/
+
+const ws_module    = require('ws');
+const net          = require('net');
+const os           = require('os');
+const { assertIp } = require('/composer/node/common-libraries/index.js');
+
+const { argv }     = require('optimist')
+					.usage('Forward tcp connections to websocket servers, or websocket connections to tcp servers.')
+					.demand('lport')
+					.describe('lport','port to listen for connections on.')
+					.demand('rhost')
+					.describe('rhost','address to forward the connection to.')
+					.demand('method')
+					.describe('method','either tcp2ws or ws2tcp');
+
+const networkInterfaces = os.networkInterfaces( );
+let firstNotLoIface = '';
+const wsMask = (argv.method == 'tcp2ws');
+
+// This should always return eth0
+function getEth0OrFirstNotLoIface(){
+	if('eth0' in networkInterfaces) return 'eth0';
+
+	Object.keys(networkInterfaces).forEach(i => {
+		if( i !== 'lo'){
+			console.log(i);
+			return i;
+		}
+	});
+}
+
+function initSocketCallbacks(state,ws,s) {
+	function flushSocketBuffer() {
+		if(state.sBuffer.length > 0) {
+			s.write(Buffer.concat(state.sBuffer));
+		}
+		state.sBuffer = null;
+	};
+
+	function flushWebsocketBuffer() {
+		if(state.wsBuffer.length > 0) {
+			ws.send(Buffer.concat(state.wsBuffer),{binary: true,mask: wsMask});
+		}
+		state.wsBuffer = null;
+	};
+
+	s.on('close', () => {
+		ws.removeAllListeners('close');		
+		ws.close();
+	});
+
+	ws.on('close', () => {
+		s.removeAllListeners('close');	
+		s.end();
+	});
+
+	ws.on('error', e => {
+		console.log('websocket error');
+		console.log(e);
+		ws.removeAllListeners('close');
+		s.removeAllListeners('close');
+		ws.close();
+		s.end();
+	});
+
+	s.on('error', e => {
+		console.log('socket error');
+		console.log(e);
+		ws.removeAllListeners('close');
+		s.removeAllListeners('close');
+		ws.close();
+		s.end();
+	});
+
+	s.on('connect', () => {
+		state.sReady = true;
+		flushSocketBuffer();
+	});
+
+	ws.on('open', () => {
+		state.wsReady = true;
+		flushWebsocketBuffer();
+	});
+
+	s.on('data', data => {
+		if(! state.wsReady) {
+			state.wsBuffer.push(data);
+		} else {
+			ws.send(data,{binary: true,mask: wsMask});
+		}
+	});
+
+	ws.on('message', m  => {
+		if(!state.sReady) {
+			state.sBuffer.push(m);
+		} else {
+			s.write(m);			
+		}
+	});
+}
+
+function tcp2ws() {
+	console.log('proxy mode tcp -> ws');
+	console.log('forwarding port ' + argv.lport + ' to ' + argv.rhost);
+	const server = net.createServer(function(s) {
+		const ws = new ws_module(argv.rhost);
+		const state = {
+			sReady : true,
+			wsReady : false,
+			wsBuffer: [],
+			sBuffer : []
+		};
+		initSocketCallbacks(state, ws, s);
+	});
+	server.listen(argv.lport);
+}
+
+function initConnection(ws, rhost) {
+	const addr_port = rhost.split(':');
+	const s = net.connect(addr_port[1],addr_port[0]);
+	const state = {
+		sReady : false,
+		wsReady : true, // there is no callback so i assume its already connected
+		wsBuffer: [],
+		sBuffer : []
+	};
+	initSocketCallbacks(state, ws, s);
+}
+
+function ws2tcp() {
+	console.log('proxy mode ws -> tcp');
+	console.log('forwarding port ' + argv.lport + ' to ' + argv.rhost);
+	const host = process.env.CONTAINER_IP_ADDR || networkInterfaces[firstNotLoIface][0].address;
+	const wss = new ws_module.Server({port: argv.lport, host: host });
+	wss.on('connection', async (ws, req) => {
+		const { remoteAddress } = req.socket;
+		console.log('Incoming connexion: ' + remoteAddress);
+		try {
+			await assertIp(remoteAddress);
+			initConnection(ws, argv.rhost);
+		} catch(e) {
+			console.log('caught', e);
+			console.log('IP:' + remoteAddress + ' not allowed, rejecting connexion');
+			ws.close();
+		}
+	});
+}
+
+if(argv.method == 'tcp2ws') {
+	tcp2ws();
+} else if (argv.method == 'ws2tcp') {
+	firstNotLoIface=getEth0OrFirstNotLoIface();
+	ws2tcp();
+} else {
+	console.error("Method must be either tcp2ws or ws2tcp!");
+}

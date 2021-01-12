@@ -1,0 +1,12 @@
+{
+  "name": "printer-servive",
+  "main": "printer-service.js",
+  "private": true,
+  "version": "0.0.5",
+  "description": "Node.js printer service",
+  "author": "Alexandre DEVELY",
+  "dependencies": {
+    "chokidar": "*",
+    "ws": "*"
+  }
+}

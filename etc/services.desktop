@@ -1,0 +1,8 @@
+desktop-pulseaudio          	4714/tcp	# desktop pulseaudio http
+desktop-ws-tcp-bridge       	6081/tcp	# desktop websocket brigde
+desktop-filemanager-bridge	29780/tcp	# desktop filemanager nodejs
+desktop-xterm			29781/tcp	# desktop terminal nodejs
+desktop-reserved		29782/tcp	# desktop printer reserved
+desktop-broadcast		29784/tcp	# desktop broadcast nodejs
+desktop-lync			29785/tcp	# desktop lync proxy nodejs 
+desktop-spawner			29786/tcp	# desktop spawner nodejs 

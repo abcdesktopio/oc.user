@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mime-type xmlns="http://www.freedesktop.org/standards/shared-mime-info" type="application/3cp">
+  <!--Created automatically by update-mime-database. DO NOT EDIT!-->
+  <comment xml:lang="en">3CP image</comment>
+  <glob pattern="*.3cp"/>
+  <icon name="3cp"/>
+</mime-type>

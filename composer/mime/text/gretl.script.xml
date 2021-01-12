@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mime-type xmlns="http://www.freedesktop.org/standards/shared-mime-info" type="text/gretl.script">
+  <!--Created automatically by update-mime-database. DO NOT EDIT!-->
+  <comment>gretl script file</comment>
+  <glob pattern="*.inp"/>
+</mime-type>

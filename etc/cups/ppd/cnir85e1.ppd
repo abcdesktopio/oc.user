@@ -1,0 +1,3260 @@
+*PPD-Adobe: "4.3"
+*% Canon PostScript(R) Printer Description File
+*% Copyright 2003 Canon Inc.
+*% All Rights Reserved.
+*% Permission is granted for redistribution of this file as
+*% long as this copyright notice is intact and the contents
+*% of the file is not altered in any way from its original form.
+*% End of Copyright statement for Canon iR8500.
+*% Copyright 2003 Canon Inc.  All rights reserved.
+*%
+*% Release version 2.10 2003/03/24
+*%
+*FormatVersion: "4.3"
+*FileVersion: "1.0"
+*LanguageEncoding: ISOLatin1
+*LanguageVersion: English
+*Manufacturer: "Canon"
+*PCFileName: "CNIR85E1.PPD"
+*Product: "(iR8500)"
+*PSVersion: "(3010.103) 0"
+*ModelName: "Canon iR8500"
+*ShortNickName: "Canon iR8500"
+*NickName: "Canon iR8500"
+
+*% === Options and Constraints =========
+*OpenGroup: InstallableOptions/Options Installed
+
+*% Optional 3500 sheet large capacity trays.
+*OpenUI *Option1/Side Paper Deck: PickOne
+*DefaultOption1: None
+*Option1 None/Not Installed: ""
+*Option1 Normal/Side Paper Deck-M1: ""
+*Option1 Large/Side Paper Deck-T1: ""
+*CloseUI: *Option1
+
+*% Optional output units.
+*OpenUI *Option2/Output Option: PickOne
+*DefaultOption2: None
+*Option2 None/Not Installed: ""
+*Option2 FINK1/Finisher-K1: ""
+*Option2 FINK2/Finisher-K2: ""
+*Option2 FINK3/Saddle Finisher-K3/K4: ""
+*Option2 3K/Stacker-A1: ""
+*CloseUI: *Option2
+
+*OpenUI *Option3/Puncher Unit: Boolean
+*DefaultOption3: False
+*Option3 True/Installed: ""
+*Option3 False/Not Installed: ""
+*CloseUI: *Option3
+
+*OpenUI *Option4/Paper Folding Unit-C1: Boolean
+*DefaultOption4: False
+*Option4 True/Installed: ""
+*Option4 False/Not Installed: ""
+*CloseUI: *Option4
+
+*OpenUI *Option5/Document Insertion Unit-B1: Boolean
+*DefaultOption5: False
+*Option5 True/Installed: ""
+*Option5 False/Not Installed: ""
+*CloseUI: *Option5
+
+*OpenUI *Option6/Trimmer: Boolean
+*DefaultOption6: False
+*Option6 True/Installed: ""
+*Option6 False/Not Installed: ""
+*CloseUI: *Option6
+
+*CloseGroup: InstallableOptions
+
+*% Optional 3500 sheets large capacity trays.
+*UIConstraints: *Option1 None *InputSlot Tray5
+*UIConstraints: *Option1 None *InputSlot Tray6
+*UIConstraints: *Option1 Large *InputSlot Tray5
+*UIConstraints: *Option1 Normal *InputSlot Tray6
+*UIConstraints: *InputSlot Tray5 *Option1 None
+*UIConstraints: *InputSlot Tray6 *Option1 None
+*UIConstraints: *InputSlot Tray5 *Option1 Large
+*UIConstraints: *InputSlot Tray6 *Option1 Normal
+
+*% Puncher Unit can be set only when Finisher K2, K3 or K4 is installed.
+*UIConstraints: *Option2 None *Option3 True
+*UIConstraints: *Option2 FINK1 *Option3 True
+*UIConstraints: *Option2 3K *Option3 True
+*UIConstraints: *Option3 True *Option2 None
+*UIConstraints: *Option3 True *Option2 FINK1
+*UIConstraints: *Option3 True *Option2 3K
+
+*% Paper Folding Unit can be set only when Finisher K3 or K4 is installed.
+*UIConstraints: *Option2 None *Option4 True
+*UIConstraints: *Option2 FINK1 *Option4 True
+*UIConstraints: *Option2 FINK2 *Option4 True
+*UIConstraints: *Option2 3K *Option4 True
+*UIConstraints: *Option4 True *Option2 None
+*UIConstraints: *Option4 True *Option2 FINK1
+*UIConstraints: *Option4 True *Option2 FINK2
+*UIConstraints: *Option4 True *Option2 3K
+
+*% Document Insertion Unit can be set only when Finisher K3 or K4 is installed.
+*UIConstraints: *Option2 None *Option5 True
+*UIConstraints: *Option2 FINK1 *Option5 True
+*UIConstraints: *Option2 FINK2 *Option5 True
+*UIConstraints: *Option2 3K *Option5 True
+*UIConstraints: *Option5 True *Option2 None
+*UIConstraints: *Option5 True *Option2 FINK1
+*UIConstraints: *Option5 True *Option2 FINK2
+*UIConstraints: *Option5 True *Option2 3K
+
+*% Trimmer Unit can be set only when Finisher K3 or K4 is installed.
+*UIConstraints: *Option2 None *Option6 True
+*UIConstraints: *Option2 FINK1 *Option6 True
+*UIConstraints: *Option2 FINK2 *Option6 True
+*UIConstraints: *Option2 3K *Option6 True
+*UIConstraints: *Option6 True *Option2 None
+*UIConstraints: *Option6 True *Option2 FINK1
+*UIConstraints: *Option6 True *Option2 FINK2
+*UIConstraints: *Option6 True *Option2 3K
+
+*% Optional Output Unit.
+*UIConstraints: *Option2 None *SaddleStitch On
+*UIConstraints: *Option2 FINK1 *SaddleStitch On
+*UIConstraints: *Option2 FINK2 *SaddleStitch On
+*UIConstraints: *Option2 3K *SaddleStitch On
+*UIConstraints: *Option2 None *Trimmer On
+*UIConstraints: *Option2 FINK1 *Trimmer On
+*UIConstraints: *Option2 FINK2 *Trimmer On
+*UIConstraints: *Option2 3K *Trimmer On
+*UIConstraints: *Option2 None *ZFold OnL
+*UIConstraints: *Option2 FINK1 *ZFold OnL
+*UIConstraints: *Option2 FINK2 *ZFold OnL
+*UIConstraints: *Option2 3K *ZFold OnL
+*UIConstraints: *Option2 None *ZFold OnR
+*UIConstraints: *Option2 FINK1 *ZFold OnR
+*UIConstraints: *Option2 FINK2 *ZFold OnR
+*UIConstraints: *Option2 3K *ZFold OnR
+*UIConstraints: *Option2 None *Inserter On
+*UIConstraints: *Option2 FINK1 *Inserter On
+*UIConstraints: *Option2 FINK2 *Inserter On
+*UIConstraints: *Option2 3K *Inserter On
+*UIConstraints: *Option2 None *Finishing OffCol
+*UIConstraints: *Option2 None *Finishing OffGr
+*UIConstraints: *Option2 None *Staple 1PRU
+*UIConstraints: *Option2 None *Staple 1PLU
+*UIConstraints: *Option2 None *Staple 1PRB
+*UIConstraints: *Option2 None *Staple 1PLB
+*UIConstraints: *Option2 None *Staple 2PL
+*UIConstraints: *Option2 None *Staple 2PR
+*UIConstraints: *Option2 None *Staple 2PU
+*UIConstraints: *Option2 None *Staple 2PB
+*UIConstraints: *Option2 3K *Staple 1PRU
+*UIConstraints: *Option2 3K *Staple 1PLU
+*UIConstraints: *Option2 3K *Staple 1PRB
+*UIConstraints: *Option2 3K *Staple 1PLB
+*UIConstraints: *Option2 3K *Staple 2PL
+*UIConstraints: *Option2 3K *Staple 2PR
+*UIConstraints: *Option2 3K *Staple 2PU
+*UIConstraints: *Option2 3K *Staple 2PB
+*UIConstraints: *Option2 3K *Punch PL
+*UIConstraints: *Option2 3K *Punch PR
+*UIConstraints: *Option2 3K *Punch PU
+*UIConstraints: *Option2 3K *Punch PB
+*UIConstraints: *Option2 None *CNOutput TrayA
+*UIConstraints: *Option2 None *CNOutput TrayB
+
+*UIConstraints: *SaddleStitch On *Option2 None
+*UIConstraints: *SaddleStitch On *Option2 FINK1
+*UIConstraints: *SaddleStitch On *Option2 FINK2
+*UIConstraints: *SaddleStitch On *Option2 3K
+*UIConstraints: *Trimmer On *Option2 None
+*UIConstraints: *Trimmer On *Option2 FINK1
+*UIConstraints: *Trimmer On *Option2 FINK2
+*UIConstraints: *Trimmer On *Option2 3K
+*UIConstraints: *ZFold OnL *Option2 None
+*UIConstraints: *ZFold OnL *Option2 FINK1
+*UIConstraints: *ZFold OnL *Option2 FINK2
+*UIConstraints: *ZFold OnL *Option2 3K
+*UIConstraints: *ZFold OnR *Option2 None
+*UIConstraints: *ZFold OnR *Option2 FINK1
+*UIConstraints: *ZFold OnR *Option2 FINK2
+*UIConstraints: *ZFold OnR *Option2 3K
+*UIConstraints: *Inserter On *Option2 None
+*UIConstraints: *Inserter On *Option2 FINK1
+*UIConstraints: *Inserter On *Option2 FINK2
+*UIConstraints: *Inserter On *Option2 3K
+*UIConstraints: *Finishing OffCol *Option2 None
+*UIConstraints: *Finishing OffGr *Option2 None
+*UIConstraints: *Staple 1PRU *Option2 None
+*UIConstraints: *Staple 1PLU *Option2 None
+*UIConstraints: *Staple 1PRB *Option2 None
+*UIConstraints: *Staple 1PLB *Option2 None
+*UIConstraints: *Staple 2PL *Option2 None
+*UIConstraints: *Staple 2PR *Option2 None
+*UIConstraints: *Staple 2PU *Option2 None
+*UIConstraints: *Staple 2PB *Option2 None
+*UIConstraints: *Staple 1PRU *Option2 3K
+*UIConstraints: *Staple 1PLU *Option2 3K
+*UIConstraints: *Staple 1PRB *Option2 3K
+*UIConstraints: *Staple 1PLB *Option2 3K
+*UIConstraints: *Staple 2PL *Option2 3K
+*UIConstraints: *Staple 2PR *Option2 3K
+*UIConstraints: *Staple 2PU *Option2 3K
+*UIConstraints: *Staple 2PB *Option2 3K
+*UIConstraints: *Punch PL *Option2 3K
+*UIConstraints: *Punch PR *Option2 3K
+*UIConstraints: *Punch PU *Option2 3K
+*UIConstraints: *Punch PB *Option2 3K
+*UIConstraints: *CNOutput TrayA *Option2 None
+*UIConstraints: *CNOutput TrayB *Option2 None
+
+*UIConstraints: *Option2 FINK1 *Finishing RotCol
+*UIConstraints: *Option2 FINK1 *Finishing RotGr
+*UIConstraints: *Option2 FINK2 *Finishing RotCol
+*UIConstraints: *Option2 FINK2 *Finishing RotGr
+*UIConstraints: *Option2 FINK3 *Finishing RotCol
+*UIConstraints: *Option2 FINK3 *Finishing RotGr
+*UIConstraints: *Option2 3K *Finishing RotCol
+*UIConstraints: *Option2 3K *Finishing RotGr
+*UIConstraints: *Finishing RotCol *Option2 FINK1
+*UIConstraints: *Finishing RotGr *Option2 FINK1
+*UIConstraints: *Finishing RotCol *Option2 FINK2
+*UIConstraints: *Finishing RotGr *Option2 FINK2
+*UIConstraints: *Finishing RotCol *Option2 FINK3
+*UIConstraints: *Finishing RotGr *Option2 FINK3
+*UIConstraints: *Finishing RotCol *Option2 3K
+*UIConstraints: *Finishing RotGr *Option2 3K
+
+*% Optional Puncher Unit.
+*UIConstraints: *Option3 False *Punch PL
+*UIConstraints: *Option3 False *Punch PR
+*UIConstraints: *Option3 False *Punch PU
+*UIConstraints: *Option3 False *Punch PB
+*UIConstraints: *Punch PL *Option3 False
+*UIConstraints: *Punch PR *Option3 False
+*UIConstraints: *Punch PU *Option3 False
+*UIConstraints: *Punch PB *Option3 False
+
+*% Does not Z-Fold when Paper Folding Unit is not attached.
+*UIConstraints: *Option4 False *ZFold OnL
+*UIConstraints: *Option4 False *ZFold OnR
+*UIConstraints: *ZFold OnL *Option4 False
+*UIConstraints: *ZFold OnR *Option4 False
+
+*% Does not insert sheet when Inserter is not attached.
+*UIConstraints: *Option5 False *Inserter On
+*UIConstraints: *Inserter On *Option5 False
+
+*% Does not trim when Trimmer Unit is not attached.
+*UIConstraints: *Option6 False *Trimmer On
+*UIConstraints: *Trimmer On *Option6 False
+
+*% Can not Feed out Tray-A when trimmer is attached.
+*UIConstraints: *Option6 True *CNOutput TrayA
+*UIConstraints: *CNOutput TrayA *Option6 True
+
+*% Does not trim when Saddle Stitch is default or off.
+*UIConstraints: *SaddleStitch Default *Trimmer On
+*UIConstraints: *SaddleStitch Off *Trimmer On
+*UIConstraints: *Trimmer On *SaddleStitch Default
+*UIConstraints: *Trimmer On *SaddleStitch Off
+*UIConstraints: *Booklet None *Trimmer On
+*UIConstraints: *Trimmer On *Booklet None
+
+*% Does not Feed out Tray-A and B when Saddle Stitch is On.
+*UIConstraints: *SaddleStitch Default *CNOutput TrayA
+*UIConstraints: *SaddleStitch Default *CNOutput TrayB
+*UIConstraints: *SaddleStitch On *CNOutput TrayA
+*UIConstraints: *SaddleStitch On *CNOutput TrayB
+*UIConstraints: *CNOutput TrayA *SaddleStitch Default
+*UIConstraints: *CNOutput TrayB *SaddleStitch Default
+*UIConstraints: *CNOutput TrayA *SaddleStitch On
+*UIConstraints: *CNOutput TrayB *SaddleStitch On
+
+*% Does not Saddle Stitch or Trim when Booklet is Off.
+*UIConstraints: *Booklet None *SaddleStitch On
+*UIConstraints: *Booklet None *Trimmer On
+*UIConstraints: *SaddleStitch On *Booklet None
+*UIConstraints: *Trimmer On *Booklet None
+
+*% Can not Saddle Stitch when feed from Drawer1,2 or Side Paper Deck.
+*UIConstraints: *SaddleStitch On *InputSlot Tray1
+*UIConstraints: *SaddleStitch On *InputSlot Tray2
+*UIConstraints: *SaddleStitch On *InputSlot Tray5
+*UIConstraints: *InputSlot Tray1 *SaddleStitch On
+*UIConstraints: *InputSlot Tray2 *SaddleStitch On
+*UIConstraints: *InputSlot Tray5 *SaddleStitch On
+
+*% Can not Trim when feed from Drawer1,2 or Side Paper Deck.
+*UIConstraints: *Trimmer On *InputSlot Tray1
+*UIConstraints: *Trimmer On *InputSlot Tray2
+*UIConstraints: *Trimmer On *InputSlot Tray5
+*UIConstraints: *InputSlot Tray1 *Trimmer On
+*UIConstraints: *InputSlot Tray2 *Trimmer On
+*UIConstraints: *InputSlot Tray5 *Trimmer On
+
+*% Does not Finishing when Booklet is On.
+*UIConstraints: *Booklet Left *Finishing OffCol
+*UIConstraints: *Booklet Left *Finishing OffGr
+*UIConstraints: *Booklet Left *Finishing RotCol
+*UIConstraints: *Booklet Left *Finishing RotGr
+*UIConstraints: *Finishing OffCol *Booklet Left
+*UIConstraints: *Finishing OffGr *Booklet Left
+*UIConstraints: *Finishing RotCol *Booklet Left
+*UIConstraints: *Finishing RotGr *Booklet Left
+*UIConstraints: *SaddleStitch On *Finishing OffCol
+*UIConstraints: *SaddleStitch On *Finishing OffGr
+*UIConstraints: *SaddleStitch On *Finishing RotCol
+*UIConstraints: *SaddleStitch On *Finishing RotGr
+*UIConstraints: *Finishing OffCol *SaddleStitch On
+*UIConstraints: *Finishing OffGr *SaddleStitch On
+*UIConstraints: *Finishing RotCol *SaddleStitch On
+*UIConstraints: *Finishing RotGr *SaddleStitch On
+*UIConstraints: *Trimmer On *Finishing OffCol
+*UIConstraints: *Trimmer On *Finishing OffGr
+*UIConstraints: *Trimmer On *Finishing RotCol
+*UIConstraints: *Trimmer On *Finishing RotGr
+*UIConstraints: *Finishing OffCol *Trimmer On
+*UIConstraints: *Finishing OffGr *Trimmer On
+*UIConstraints: *Finishing RotCol *Trimmer On
+*UIConstraints: *Finishing RotGr *Trimmer On
+
+*% Does not Staple when Booklet is On.
+*UIConstraints: *Booklet Left *Staple 1PRU
+*UIConstraints: *Booklet Left *Staple 1PLU
+*UIConstraints: *Booklet Left *Staple 1PRB
+*UIConstraints: *Booklet Left *Staple 1PLB
+*UIConstraints: *Booklet Left *Staple 2PL
+*UIConstraints: *Booklet Left *Staple 2PR
+*UIConstraints: *Booklet Left *Staple 2PU
+*UIConstraints: *Booklet Left *Staple 2PB
+*UIConstraints: *Staple 1PRU *Booklet Left
+*UIConstraints: *Staple 1PLU *Booklet Left
+*UIConstraints: *Staple 1PRB *Booklet Left
+*UIConstraints: *Staple 1PLB *Booklet Left
+*UIConstraints: *Staple 2PL *Booklet Left
+*UIConstraints: *Staple 2PR *Booklet Left
+*UIConstraints: *Staple 2PU *Booklet Left
+*UIConstraints: *Staple 2PB *Booklet Left
+*UIConstraints: *SaddleStitch On *Staple 1PRU
+*UIConstraints: *SaddleStitch On *Staple 1PLU
+*UIConstraints: *SaddleStitch On *Staple 1PRB
+*UIConstraints: *SaddleStitch On *Staple 1PLB
+*UIConstraints: *SaddleStitch On *Staple 2PL
+*UIConstraints: *SaddleStitch On *Staple 2PR
+*UIConstraints: *SaddleStitch On *Staple 2PU
+*UIConstraints: *SaddleStitch On *Staple 2PB
+*UIConstraints: *Staple 1PRU *SaddleStitch On
+*UIConstraints: *Staple 1PLU *SaddleStitch On
+*UIConstraints: *Staple 1PRB *SaddleStitch On
+*UIConstraints: *Staple 1PLB *SaddleStitch On
+*UIConstraints: *Staple 2PL *SaddleStitch On
+*UIConstraints: *Staple 2PR *SaddleStitch On
+*UIConstraints: *Staple 2PU *SaddleStitch On
+*UIConstraints: *Staple 2PB *SaddleStitch On
+*UIConstraints: *Trimmer On *Staple 1PRU
+*UIConstraints: *Trimmer On *Staple 1PLU
+*UIConstraints: *Trimmer On *Staple 1PRB
+*UIConstraints: *Trimmer On *Staple 1PLB
+*UIConstraints: *Trimmer On *Staple 2PL
+*UIConstraints: *Trimmer On *Staple 2PR
+*UIConstraints: *Trimmer On *Staple 2PU
+*UIConstraints: *Trimmer On *Staple 2PB
+*UIConstraints: *Staple 1PRU *Trimmer On
+*UIConstraints: *Staple 1PLU *Trimmer On
+*UIConstraints: *Staple 1PRB *Trimmer On
+*UIConstraints: *Staple 1PLB *Trimmer On
+*UIConstraints: *Staple 2PL *Trimmer On
+*UIConstraints: *Staple 2PR *Trimmer On
+*UIConstraints: *Staple 2PU *Trimmer On
+*UIConstraints: *Staple 2PB *Trimmer On
+
+*% Does not Punch when Booklet is On.
+*UIConstraints: *Booklet Left *Punch PL
+*UIConstraints: *Booklet Left *Punch PR
+*UIConstraints: *Booklet Left *Punch PU
+*UIConstraints: *Booklet Left *Punch PB
+*UIConstraints: *Punch PL *Booklet Left
+*UIConstraints: *Punch PR *Booklet Left
+*UIConstraints: *Punch PU *Booklet Left
+*UIConstraints: *Punch PB *Booklet Left
+*UIConstraints: *SaddleStitch On *Punch PL
+*UIConstraints: *SaddleStitch On *Punch PR
+*UIConstraints: *SaddleStitch On *Punch PU
+*UIConstraints: *SaddleStitch On *Punch PB
+*UIConstraints: *Punch PL *SaddleStitch On
+*UIConstraints: *Punch PR *SaddleStitch On
+*UIConstraints: *Punch PU *SaddleStitch On
+*UIConstraints: *Punch PB *SaddleStitch On
+*UIConstraints: *Trimmer On *Punch PL
+*UIConstraints: *Trimmer On *Punch PR
+*UIConstraints: *Trimmer On *Punch PU
+*UIConstraints: *Trimmer On *Punch PB
+*UIConstraints: *Punch PL *Trimmer On
+*UIConstraints: *Punch PR *Trimmer On
+*UIConstraints: *Punch PU *Trimmer On
+*UIConstraints: *Punch PB *Trimmer On
+
+*% Does not Duplex when Booklet is On.
+*UIConstraints: *Booklet Left *Duplex DuplexTumble
+*UIConstraints: *Booklet Left *Duplex DuplexNoTumble
+*UIConstraints: *Duplex DuplexTumble *Booklet Left
+*UIConstraints: *Duplex DuplexNoTumble *Booklet Left
+*UIConstraints: *SaddleStitch On *Duplex DuplexTumble
+*UIConstraints: *SaddleStitch On *Duplex DuplexNoTumble
+*UIConstraints: *Duplex DuplexTumble *SaddleStitch On
+*UIConstraints: *Duplex DuplexNoTumble *SaddleStitch On
+*UIConstraints: *Trimmer On *Duplex DuplexTumble
+*UIConstraints: *Trimmer On *Duplex DuplexNoTumble
+*UIConstraints: *Duplex DuplexTumble *Trimmer On
+*UIConstraints: *Duplex DuplexNoTumble *Trimmer On
+
+*% Does not Gutter when Booklet is On.
+*UIConstraints: *Gutter 30mm *Booklet Left
+*UIConstraints: *Gutter 28mm *Booklet Left
+*UIConstraints: *Gutter 26mm *Booklet Left
+*UIConstraints: *Gutter 24mm *Booklet Left
+*UIConstraints: *Gutter 22mm *Booklet Left
+*UIConstraints: *Gutter 20mm *Booklet Left
+*UIConstraints: *Gutter 18mm *Booklet Left
+*UIConstraints: *Gutter 16mm *Booklet Left
+*UIConstraints: *Gutter 14mm *Booklet Left
+*UIConstraints: *Gutter 12mm *Booklet Left
+*UIConstraints: *Gutter 10mm *Booklet Left
+*UIConstraints: *Gutter 8mm *Booklet Left
+*UIConstraints: *Gutter 6mm *Booklet Left
+*UIConstraints: *Gutter 4mm *Booklet Left
+*UIConstraints: *Gutter 2mm *Booklet Left
+*UIConstraints: *Booklet Left *Gutter 30mm
+*UIConstraints: *Booklet Left *Gutter 28mm
+*UIConstraints: *Booklet Left *Gutter 26mm
+*UIConstraints: *Booklet Left *Gutter 24mm
+*UIConstraints: *Booklet Left *Gutter 22mm
+*UIConstraints: *Booklet Left *Gutter 20mm
+*UIConstraints: *Booklet Left *Gutter 18mm
+*UIConstraints: *Booklet Left *Gutter 16mm
+*UIConstraints: *Booklet Left *Gutter 14mm
+*UIConstraints: *Booklet Left *Gutter 12mm
+*UIConstraints: *Booklet Left *Gutter 10mm
+*UIConstraints: *Booklet Left *Gutter 8mm
+*UIConstraints: *Booklet Left *Gutter 6mm
+*UIConstraints: *Booklet Left *Gutter 4mm
+*UIConstraints: *Booklet Left *Gutter 2mm
+
+*% Does not use Duplex and Gutter Location simultaneously.
+*UIConstraints: *Duplex DuplexTumble *BindingLocation LongEdge
+*UIConstraints: *Duplex DuplexNoTumble *BindingLocation LongEdge
+*UIConstraints: *Duplex DuplexTumble *BindingLocation ShortEdge
+*UIConstraints: *Duplex DuplexNoTumble *BindingLocation ShortEdge
+*UIConstraints: *BindingLocation LongEdge *Duplex DuplexTumble
+*UIConstraints: *BindingLocation LongEdge *Duplex DuplexNoTumble
+*UIConstraints: *BindingLocation ShortEdge *Duplex DuplexTumble
+*UIConstraints: *BindingLocation ShortEdge *Duplex DuplexNoTumble
+
+*% Does not Interleaving when Duplex is not Off.
+*UIConstraints: *Interleave White *Duplex DuplexTumble
+*UIConstraints: *Interleave White *Duplex DuplexNoTumble
+*UIConstraints: *Interleave Printed *Duplex DuplexTumble
+*UIConstraints: *Interleave Printed *Duplex DuplexNoTumble
+*UIConstraints: *Duplex DuplexTumble *Interleave White
+*UIConstraints: *Duplex DuplexNoTumble *Interleave White
+*UIConstraints: *Duplex DuplexTumble *Interleave Printed
+*UIConstraints: *Duplex DuplexNoTumble *Interleave Printed
+
+*% Does not Interleaving when Punch is not Off.
+*UIConstraints: *Interleave White *Punch PR
+*UIConstraints: *Interleave White *Punch PL
+*UIConstraints: *Interleave White *Punch PU
+*UIConstraints: *Interleave White *Punch PB
+*UIConstraints: *Interleave Printed *Punch PR
+*UIConstraints: *Interleave Printed *Punch PL
+*UIConstraints: *Interleave Printed *Punch PU
+*UIConstraints: *Interleave Printed *Punch PB
+*UIConstraints: *Punch PR *Interleave White
+*UIConstraints: *Punch PL *Interleave White
+*UIConstraints: *Punch PU *Interleave White
+*UIConstraints: *Punch PB *Interleave White
+*UIConstraints: *Punch PR *Interleave Printed
+*UIConstraints: *Punch PL *Interleave Printed
+*UIConstraints: *Punch PU *Interleave Printed
+*UIConstraints: *Punch PB *Interleave Printed
+
+*% Does not Interleaving when Finishing is not Off.
+*UIConstraints: *Interleave White *Finishing RotGr
+*UIConstraints: *Interleave White *Finishing RotCol
+*UIConstraints: *Interleave White *Finishing OffGr
+*UIConstraints: *Interleave White *Finishing OffCol
+*UIConstraints: *Interleave Printed *Finishing RotGr
+*UIConstraints: *Interleave Printed *Finishing RotCol
+*UIConstraints: *Interleave Printed *Finishing OffGr
+*UIConstraints: *Interleave Printed *Finishing OffCol
+*UIConstraints: *Finishing RotGr *Interleave White
+*UIConstraints: *Finishing RotCol *Interleave White
+*UIConstraints: *Finishing OffGr *Interleave White
+*UIConstraints: *Finishing OffCol *Interleave White
+*UIConstraints: *Finishing RotGr *Interleave Printed
+*UIConstraints: *Finishing RotCol *Interleave Printed
+*UIConstraints: *Finishing OffGr *Interleave Printed
+*UIConstraints: *Finishing OffCol *Interleave Printed
+
+*UIConstraints: *Interleave White *Booklet Left
+*UIConstraints: *Interleave Printed *Booklet Left
+*UIConstraints: *Interleave White *SaddleStitch On
+*UIConstraints: *Interleave Printed *SaddleStitch On
+*UIConstraints: *Interleave White *Trimmer On
+*UIConstraints: *Interleave Printed *Trimmer On
+*UIConstraints: *Booklet Left *Interleave White
+*UIConstraints: *Booklet Left *Interleave Printed
+*UIConstraints: *SaddleStitch On *Interleave White
+*UIConstraints: *SaddleStitch On *Interleave Printed
+*UIConstraints: *Trimmer On *Interleave White
+*UIConstraints: *Trimmer On *Interleave Printed
+
+*% Does not Interleaving when Insertion is not Off.
+*UIConstraints: *Interleave White *Inserter On
+*UIConstraints: *Interleave Printed *Inserter On
+*UIConstraints: *Inserter On *Interleave White
+*UIConstraints: *Inserter On *Interleave Printed
+
+*% Does not Insert when Booklet is not Off.
+*UIConstraints: *Inserter On *SaddleStitch Off
+*UIConstraints: *SaddleStitch Off *Inserter On
+
+*% Does not Insert when Finishing is Offset-Group.
+*UIConstraints: *Inserter On *Finishing OffGr
+*UIConstraints: *Finishing OffGr *Inserter On
+
+*% Constraints between Staple and Punch settings.
+*UIConstraints: *Staple 1PLU *Punch PR
+*UIConstraints: *Staple 1PLU *Punch PB
+*UIConstraints: *Staple 1PRU *Punch PL
+*UIConstraints: *Staple 1PRU *Punch PB
+*UIConstraints: *Staple 1PRB *Punch PL
+*UIConstraints: *Staple 1PRB *Punch PU
+*UIConstraints: *Staple 1PLB *Punch PR
+*UIConstraints: *Staple 1PLB *Punch PU
+*UIConstraints: *Staple 2PL *Punch PU
+*UIConstraints: *Staple 2PL *Punch PB
+*UIConstraints: *Staple 2PL *Punch PR
+*UIConstraints: *Staple 2PU *Punch PR
+*UIConstraints: *Staple 2PU *Punch PB
+*UIConstraints: *Staple 2PU *Punch PL
+*UIConstraints: *Staple 2PR *Punch PB
+*UIConstraints: *Staple 2PR *Punch PL
+*UIConstraints: *Staple 2PR *Punch PU
+*UIConstraints: *Staple 2PB *Punch PL
+*UIConstraints: *Staple 2PB *Punch PU
+*UIConstraints: *Staple 2PB *Punch PR
+*UIConstraints: *Punch PR *Staple 1PLU
+*UIConstraints: *Punch PB *Staple 1PLU
+*UIConstraints: *Punch PL *Staple 1PRU
+*UIConstraints: *Punch PB *Staple 1PRU
+*UIConstraints: *Punch PL *Staple 1PRB
+*UIConstraints: *Punch PU *Staple 1PRB
+*UIConstraints: *Punch PR *Staple 1PLB
+*UIConstraints: *Punch PU *Staple 1PLB
+*UIConstraints: *Punch PU *Staple 2PL
+*UIConstraints: *Punch PB *Staple 2PL
+*UIConstraints: *Punch PR *Staple 2PL
+*UIConstraints: *Punch PR *Staple 2PU
+*UIConstraints: *Punch PB *Staple 2PU
+*UIConstraints: *Punch PL *Staple 2PU
+*UIConstraints: *Punch PB *Staple 2PR
+*UIConstraints: *Punch PL *Staple 2PR
+*UIConstraints: *Punch PU *Staple 2PR
+*UIConstraints: *Punch PL *Staple 2PB
+*UIConstraints: *Punch PU *Staple 2PB
+*UIConstraints: *Punch PR *Staple 2PB
+
+*% Do not staple when other Finishing setting is On.
+*UIConstraints: *Staple 1PRU *Finishing RotCol
+*UIConstraints: *Staple 1PLU *Finishing RotCol
+*UIConstraints: *Staple 1PRB *Finishing RotCol
+*UIConstraints: *Staple 1PLB *Finishing RotCol
+*UIConstraints: *Staple 2PL *Finishing RotCol
+*UIConstraints: *Staple 2PR *Finishing RotCol
+*UIConstraints: *Staple 2PU *Finishing RotCol
+*UIConstraints: *Staple 2PB *Finishing RotCol
+*UIConstraints: *Finishing RotCol *Staple 1PRU
+*UIConstraints: *Finishing RotCol *Staple 1PLU
+*UIConstraints: *Finishing RotCol *Staple 1PRB
+*UIConstraints: *Finishing RotCol *Staple 1PLB
+*UIConstraints: *Finishing RotCol *Staple 2PL
+*UIConstraints: *Finishing RotCol *Staple 2PR
+*UIConstraints: *Finishing RotCol *Staple 2PU
+*UIConstraints: *Finishing RotCol *Staple 2PB
+*UIConstraints: *Staple 1PRU *Finishing RotGr
+*UIConstraints: *Staple 1PLU *Finishing RotGr
+*UIConstraints: *Staple 1PRB *Finishing RotGr
+*UIConstraints: *Staple 1PLB *Finishing RotGr
+*UIConstraints: *Staple 2PL *Finishing RotGr
+*UIConstraints: *Staple 2PR *Finishing RotGr
+*UIConstraints: *Staple 2PU *Finishing RotGr
+*UIConstraints: *Staple 2PB *Finishing RotGr
+*UIConstraints: *Finishing RotGr *Staple 1PRU
+*UIConstraints: *Finishing RotGr *Staple 1PLU
+*UIConstraints: *Finishing RotGr *Staple 1PRB
+*UIConstraints: *Finishing RotGr *Staple 1PLB
+*UIConstraints: *Finishing RotGr *Staple 2PL
+*UIConstraints: *Finishing RotGr *Staple 2PR
+*UIConstraints: *Finishing RotGr *Staple 2PU
+*UIConstraints: *Finishing RotGr *Staple 2PB
+*UIConstraints: *Staple 1PRU *Finishing OffCol
+*UIConstraints: *Staple 1PLU *Finishing OffCol
+*UIConstraints: *Staple 1PRB *Finishing OffCol
+*UIConstraints: *Staple 1PLB *Finishing OffCol
+*UIConstraints: *Staple 2PL *Finishing OffCol
+*UIConstraints: *Staple 2PR *Finishing OffCol
+*UIConstraints: *Staple 2PU *Finishing OffCol
+*UIConstraints: *Staple 2PB *Finishing OffCol
+*UIConstraints: *Finishing OffCol *Staple 1PRU
+*UIConstraints: *Finishing OffCol *Staple 1PLU
+*UIConstraints: *Finishing OffCol *Staple 1PRB
+*UIConstraints: *Finishing OffCol *Staple 1PLB
+*UIConstraints: *Finishing OffCol *Staple 2PL
+*UIConstraints: *Finishing OffCol *Staple 2PR
+*UIConstraints: *Finishing OffCol *Staple 2PU
+*UIConstraints: *Finishing OffCol *Staple 2PB
+*UIConstraints: *Staple 1PRU *Finishing OffGr
+*UIConstraints: *Staple 1PLU *Finishing OffGr
+*UIConstraints: *Staple 1PRB *Finishing OffGr
+*UIConstraints: *Staple 1PLB *Finishing OffGr
+*UIConstraints: *Staple 2PL *Finishing OffGr
+*UIConstraints: *Staple 2PR *Finishing OffGr
+*UIConstraints: *Staple 2PU *Finishing OffGr
+*UIConstraints: *Staple 2PB *Finishing OffGr
+*UIConstraints: *Finishing OffGr *Staple 1PRU
+*UIConstraints: *Finishing OffGr *Staple 1PLU
+*UIConstraints: *Finishing OffGr *Staple 1PRB
+*UIConstraints: *Finishing OffGr *Staple 1PLB
+*UIConstraints: *Finishing OffGr *Staple 2PL
+*UIConstraints: *Finishing OffGr *Staple 2PR
+*UIConstraints: *Finishing OffGr *Staple 2PU
+*UIConstraints: *Finishing OffGr *Staple 2PB
+
+*UIConstraints: *Staple 1PRU *Interleave White
+*UIConstraints: *Staple 1PLU *Interleave White
+*UIConstraints: *Staple 1PRB *Interleave White
+*UIConstraints: *Staple 1PLB *Interleave White
+*UIConstraints: *Staple 2PL *Interleave White
+*UIConstraints: *Staple 2PR *Interleave White
+*UIConstraints: *Staple 2PU *Interleave White
+*UIConstraints: *Staple 2PB *Interleave White
+*UIConstraints: *Staple 1PRU *Interleave Printed
+*UIConstraints: *Staple 1PLU *Interleave Printed
+*UIConstraints: *Staple 1PRB *Interleave Printed
+*UIConstraints: *Staple 1PLB *Interleave Printed
+*UIConstraints: *Staple 2PL *Interleave Printed
+*UIConstraints: *Staple 2PR *Interleave Printed
+*UIConstraints: *Staple 2PU *Interleave Printed
+*UIConstraints: *Staple 2PB *Interleave Printed
+*UIConstraints: *Interleave White *Staple 1PRU
+*UIConstraints: *Interleave White *Staple 1PLU
+*UIConstraints: *Interleave White *Staple 1PRB
+*UIConstraints: *Interleave White *Staple 1PLB
+*UIConstraints: *Interleave White *Staple 2PL
+*UIConstraints: *Interleave White *Staple 2PR
+*UIConstraints: *Interleave White *Staple 2PU
+*UIConstraints: *Interleave White *Staple 2PB
+*UIConstraints: *Interleave Printed *Staple 1PRU
+*UIConstraints: *Interleave Printed *Staple 1PLU
+*UIConstraints: *Interleave Printed *Staple 1PRB
+*UIConstraints: *Interleave Printed *Staple 1PLB
+*UIConstraints: *Interleave Printed *Staple 2PL
+*UIConstraints: *Interleave Printed *Staple 2PR
+*UIConstraints: *Interleave Printed *Staple 2PU
+*UIConstraints: *Interleave Printed *Staple 2PB
+
+*% === Input slot constraints ===
+
+*UIConstraints: *InputSlot MPT *Finishing RotCol
+*UIConstraints: *InputSlot Tray1 *Finishing RotCol
+*UIConstraints: *InputSlot Tray2 *Finishing RotCol
+*UIConstraints: *InputSlot Tray3 *Finishing RotCol
+*UIConstraints: *InputSlot Tray4 *Finishing RotCol
+*UIConstraints: *InputSlot Tray5 *Finishing RotCol
+*UIConstraints: *InputSlot Tray6 *Finishing RotCol
+*UIConstraints: *InputSlot MPT *Finishing RotGr
+*UIConstraints: *InputSlot Tray1 *Finishing RotGr
+*UIConstraints: *InputSlot Tray2 *Finishing RotGr
+*UIConstraints: *InputSlot Tray3 *Finishing RotGr
+*UIConstraints: *InputSlot Tray4 *Finishing RotGr
+*UIConstraints: *InputSlot Tray5 *Finishing RotGr
+*UIConstraints: *InputSlot Tray6 *Finishing RotGr
+*UIConstraints: *Finishing RotCol *InputSlot MPT
+*UIConstraints: *Finishing RotCol *InputSlot Tray1
+*UIConstraints: *Finishing RotCol *InputSlot Tray2
+*UIConstraints: *Finishing RotCol *InputSlot Tray3
+*UIConstraints: *Finishing RotCol *InputSlot Tray4
+*UIConstraints: *Finishing RotCol *InputSlot Tray5
+*UIConstraints: *Finishing RotCol *InputSlot Tray6
+*UIConstraints: *Finishing RotGr *InputSlot MPT
+*UIConstraints: *Finishing RotGr *InputSlot Tray1
+*UIConstraints: *Finishing RotGr *InputSlot Tray2
+*UIConstraints: *Finishing RotGr *InputSlot Tray3
+*UIConstraints: *Finishing RotGr *InputSlot Tray4
+*UIConstraints: *Finishing RotGr *InputSlot Tray5
+*UIConstraints: *Finishing RotGr *InputSlot Tray6
+
+*% === Paper size constraints ===
+
+*% Drawer 1, 2 and Side Deck do not support A3.
+*UIConstraints: *PageSize A3 *InputSlot Tray1
+*UIConstraints: *PageSize A3 *InputSlot Tray2
+*UIConstraints: *PageSize A3 *InputSlot Tray5
+*UIConstraints: *InputSlot Tray1 *PageSize A3
+*UIConstraints: *InputSlot Tray2 *PageSize A3
+*UIConstraints: *InputSlot Tray5 *PageSize A3
+*UIConstraints: *PageRegion A3 *InputSlot Tray1
+*UIConstraints: *PageRegion A3 *InputSlot Tray2
+*UIConstraints: *PageRegion A3 *InputSlot Tray5
+*UIConstraints: *InputSlot Tray1 *PageRegion A3
+*UIConstraints: *InputSlot Tray2 *PageRegion A3
+*UIConstraints: *InputSlot Tray5 *PageRegion A3
+
+*% Drawer 1, 2 and Side Decks do not support A5.
+*UIConstraints: *PageSize A5 *InputSlot Tray1
+*UIConstraints: *PageSize A5 *InputSlot Tray2
+*UIConstraints: *PageSize A5 *InputSlot Tray5
+*UIConstraints: *PageSize A5 *InputSlot Tray6
+*UIConstraints: *InputSlot Tray1 *PageSize A5
+*UIConstraints: *InputSlot Tray2 *PageSize A5
+*UIConstraints: *InputSlot Tray5 *PageSize A5
+*UIConstraints: *InputSlot Tray6 *PageSize A5
+*UIConstraints: *PageRegion A5 *InputSlot Tray1
+*UIConstraints: *PageRegion A5 *InputSlot Tray2
+*UIConstraints: *PageRegion A5 *InputSlot Tray5
+*UIConstraints: *PageRegion A5 *InputSlot Tray6
+*UIConstraints: *InputSlot Tray1 *PageRegion A5
+*UIConstraints: *InputSlot Tray2 *PageRegion A5
+*UIConstraints: *InputSlot Tray5 *PageRegion A5
+*UIConstraints: *InputSlot Tray6 *PageRegion A5
+
+*% Drawer 1, 2 and Small Side Deck do not support B4.
+*UIConstraints: *PageSize B4 *InputSlot Tray1
+*UIConstraints: *PageSize B4 *InputSlot Tray2
+*UIConstraints: *PageSize B4 *InputSlot Tray5
+*UIConstraints: *InputSlot Tray1 *PageSize B4
+*UIConstraints: *InputSlot Tray2 *PageSize B4
+*UIConstraints: *InputSlot Tray5 *PageSize B4
+*UIConstraints: *PageRegion B4 *InputSlot Tray1
+*UIConstraints: *PageRegion B4 *InputSlot Tray2
+*UIConstraints: *PageRegion B4 *InputSlot Tray5
+*UIConstraints: *InputSlot Tray1 *PageRegion B4
+*UIConstraints: *InputSlot Tray2 *PageRegion B4
+*UIConstraints: *InputSlot Tray5 *PageRegion B4
+
+*% Drawer 1, 2 and Small Side Deck do not support Tabloid.
+*UIConstraints: *PageSize Tabloid *InputSlot Tray1
+*UIConstraints: *PageSize Tabloid *InputSlot Tray2
+*UIConstraints: *PageSize Tabloid *InputSlot Tray5
+*UIConstraints: *InputSlot Tray1 *PageSize Tabloid
+*UIConstraints: *InputSlot Tray2 *PageSize Tabloid
+*UIConstraints: *InputSlot Tray5 *PageSize Tabloid
+*UIConstraints: *PageRegion Tabloid *InputSlot Tray1
+*UIConstraints: *PageRegion Tabloid *InputSlot Tray2
+*UIConstraints: *PageRegion Tabloid *InputSlot Tray5
+*UIConstraints: *InputSlot Tray1 *PageRegion Tabloid
+*UIConstraints: *InputSlot Tray2 *PageRegion Tabloid
+*UIConstraints: *InputSlot Tray5 *PageRegion Tabloid
+
+*% Drawer 1, 2 and Small Side Deck do not support Legal.
+*UIConstraints: *PageSize Legal *InputSlot Tray1
+*UIConstraints: *PageSize Legal *InputSlot Tray2
+*UIConstraints: *PageSize Legal *InputSlot Tray5
+*UIConstraints: *InputSlot Tray1 *PageSize Legal
+*UIConstraints: *InputSlot Tray2 *PageSize Legal
+*UIConstraints: *InputSlot Tray5 *PageSize Legal
+*UIConstraints: *PageRegion Legal *InputSlot Tray1
+*UIConstraints: *PageRegion Legal *InputSlot Tray2
+*UIConstraints: *PageRegion Legal *InputSlot Tray5
+*UIConstraints: *InputSlot Tray1 *PageRegion Legal
+*UIConstraints: *InputSlot Tray2 *PageRegion Legal
+*UIConstraints: *InputSlot Tray5 *PageRegion Legal
+
+*% Drawer 1, 2 and Side Decks do not support Statement.
+*UIConstraints: *PageSize Statement *InputSlot Tray1
+*UIConstraints: *PageSize Statement *InputSlot Tray2
+*UIConstraints: *PageSize Statement *InputSlot Tray5
+*UIConstraints: *PageSize Statement *InputSlot Tray6
+*UIConstraints: *InputSlot Tray1 *PageSize Statement
+*UIConstraints: *InputSlot Tray2 *PageSize Statement
+*UIConstraints: *InputSlot Tray5 *PageSize Statement
+*UIConstraints: *InputSlot Tray6 *PageSize Statement
+*UIConstraints: *PageRegion Statement *InputSlot Tray1
+*UIConstraints: *PageRegion Statement *InputSlot Tray2
+*UIConstraints: *PageRegion Statement *InputSlot Tray5
+*UIConstraints: *PageRegion Statement *InputSlot Tray6
+*UIConstraints: *InputSlot Tray1 *PageRegion Statement
+*UIConstraints: *InputSlot Tray2 *PageRegion Statement
+*UIConstraints: *InputSlot Tray5 *PageRegion Statement
+*UIConstraints: *InputSlot Tray6 *PageRegion Statement
+
+*% Only MPT supports Executive.
+*UIConstraints: *PageSize Executive *InputSlot Auto
+*UIConstraints: *PageSize Executive *InputSlot Tray1
+*UIConstraints: *PageSize Executive *InputSlot Tray2
+*UIConstraints: *PageSize Executive *InputSlot Tray3
+*UIConstraints: *PageSize Executive *InputSlot Tray4
+*UIConstraints: *PageSize Executive *InputSlot Tray5
+*UIConstraints: *PageSize Executive *InputSlot Tray6
+*UIConstraints: *InputSlot Auto *PageSize Executive
+*UIConstraints: *InputSlot Tray1 *PageSize Executive
+*UIConstraints: *InputSlot Tray2 *PageSize Executive
+*UIConstraints: *InputSlot Tray3 *PageSize Executive
+*UIConstraints: *InputSlot Tray4 *PageSize Executive
+*UIConstraints: *InputSlot Tray5 *PageSize Executive
+*UIConstraints: *InputSlot Tray6 *PageSize Executive
+*UIConstraints: *PageRegion Executive *InputSlot Auto
+*UIConstraints: *PageRegion Executive *InputSlot Tray1
+*UIConstraints: *PageRegion Executive *InputSlot Tray2
+*UIConstraints: *PageRegion Executive *InputSlot Tray3
+*UIConstraints: *PageRegion Executive *InputSlot Tray4
+*UIConstraints: *PageRegion Executive *InputSlot Tray5
+*UIConstraints: *PageRegion Executive *InputSlot Tray6
+*UIConstraints: *InputSlot Auto *PageRegion Executive
+*UIConstraints: *InputSlot Tray1 *PageRegion Executive
+*UIConstraints: *InputSlot Tray2 *PageRegion Executive
+*UIConstraints: *InputSlot Tray3 *PageRegion Executive
+*UIConstraints: *InputSlot Tray4 *PageRegion Executive
+*UIConstraints: *InputSlot Tray5 *PageRegion Executive
+*UIConstraints: *InputSlot Tray6 *PageRegion Executive
+
+*% Only MPT supports Card Stocks.
+*UIConstraints: *PageSize Cardstock46 *InputSlot Auto
+*UIConstraints: *PageSize Cardstock46 *InputSlot Tray1
+*UIConstraints: *PageSize Cardstock46 *InputSlot Tray2
+*UIConstraints: *PageSize Cardstock46 *InputSlot Tray3
+*UIConstraints: *PageSize Cardstock46 *InputSlot Tray4
+*UIConstraints: *PageSize Cardstock46 *InputSlot Tray5
+*UIConstraints: *PageSize Cardstock46 *InputSlot Tray6
+*UIConstraints: *InputSlot Auto *PageSize Cardstock46
+*UIConstraints: *InputSlot Tray1 *PageSize Cardstock46
+*UIConstraints: *InputSlot Tray2 *PageSize Cardstock46
+*UIConstraints: *InputSlot Tray3 *PageSize Cardstock46
+*UIConstraints: *InputSlot Tray4 *PageSize Cardstock46
+*UIConstraints: *InputSlot Tray5 *PageSize Cardstock46
+*UIConstraints: *InputSlot Tray6 *PageSize Cardstock46
+*UIConstraints: *PageRegion Cardstock46 *InputSlot Auto
+*UIConstraints: *PageRegion Cardstock46 *InputSlot Tray1
+*UIConstraints: *PageRegion Cardstock46 *InputSlot Tray2
+*UIConstraints: *PageRegion Cardstock46 *InputSlot Tray3
+*UIConstraints: *PageRegion Cardstock46 *InputSlot Tray4
+*UIConstraints: *PageRegion Cardstock46 *InputSlot Tray5
+*UIConstraints: *PageRegion Cardstock46 *InputSlot Tray6
+*UIConstraints: *InputSlot Auto *PageRegion Cardstock46
+*UIConstraints: *InputSlot Tray1 *PageRegion Cardstock46
+*UIConstraints: *InputSlot Tray2 *PageRegion Cardstock46
+*UIConstraints: *InputSlot Tray3 *PageRegion Cardstock46
+*UIConstraints: *InputSlot Tray4 *PageRegion Cardstock46
+*UIConstraints: *InputSlot Tray5 *PageRegion Cardstock46
+*UIConstraints: *InputSlot Tray6 *PageRegion Cardstock46
+
+*UIConstraints: *PageSize Cardstock58 *InputSlot Auto
+*UIConstraints: *PageSize Cardstock58 *InputSlot Tray1
+*UIConstraints: *PageSize Cardstock58 *InputSlot Tray2
+*UIConstraints: *PageSize Cardstock58 *InputSlot Tray3
+*UIConstraints: *PageSize Cardstock58 *InputSlot Tray4
+*UIConstraints: *PageSize Cardstock58 *InputSlot Tray5
+*UIConstraints: *PageSize Cardstock58 *InputSlot Tray6
+*UIConstraints: *InputSlot Auto *PageSize Cardstock58
+*UIConstraints: *InputSlot Tray1 *PageSize Cardstock58
+*UIConstraints: *InputSlot Tray2 *PageSize Cardstock58
+*UIConstraints: *InputSlot Tray3 *PageSize Cardstock58
+*UIConstraints: *InputSlot Tray4 *PageSize Cardstock58
+*UIConstraints: *InputSlot Tray5 *PageSize Cardstock58
+*UIConstraints: *InputSlot Tray6 *PageSize Cardstock58
+*UIConstraints: *PageRegion Cardstock58 *InputSlot Auto
+*UIConstraints: *PageRegion Cardstock58 *InputSlot Tray1
+*UIConstraints: *PageRegion Cardstock58 *InputSlot Tray2
+*UIConstraints: *PageRegion Cardstock58 *InputSlot Tray3
+*UIConstraints: *PageRegion Cardstock58 *InputSlot Tray4
+*UIConstraints: *PageRegion Cardstock58 *InputSlot Tray5
+*UIConstraints: *PageRegion Cardstock58 *InputSlot Tray6
+*UIConstraints: *InputSlot Auto *PageRegion Cardstock58
+*UIConstraints: *InputSlot Tray1 *PageRegion Cardstock58
+*UIConstraints: *InputSlot Tray2 *PageRegion Cardstock58
+*UIConstraints: *InputSlot Tray3 *PageRegion Cardstock58
+*UIConstraints: *InputSlot Tray4 *PageRegion Cardstock58
+*UIConstraints: *InputSlot Tray5 *PageRegion Cardstock58
+*UIConstraints: *InputSlot Tray6 *PageRegion Cardstock58
+
+*% === end paper size / input slot constraints ===
+
+*% Duplex cannot support Card Stocks.
+*UIConstraints: *Duplex DuplexTumble *PageSize Cardstock46
+*UIConstraints: *Duplex DuplexNoTumble *PageSize Cardstock46
+*UIConstraints: *PageSize Cardstock46 *Duplex DuplexTumble
+*UIConstraints: *PageSize Cardstock46 *Duplex DuplexNoTumble
+*UIConstraints: *Duplex DuplexTumble *PageRegion Cardstock46
+*UIConstraints: *Duplex DuplexNoTumble *PageRegion Cardstock46
+*UIConstraints: *PageRegion Cardstock46 *Duplex DuplexTumble
+*UIConstraints: *PageRegion Cardstock46 *Duplex DuplexNoTumble
+*UIConstraints: *Duplex DuplexTumble *PageSize Cardstock58
+*UIConstraints: *Duplex DuplexNoTumble *PageSize Cardstock58
+*UIConstraints: *PageSize Cardstock58 *Duplex DuplexTumble
+*UIConstraints: *PageSize Cardstock58 *Duplex DuplexNoTumble
+*UIConstraints: *Duplex DuplexTumble *PageRegion Cardstock58
+*UIConstraints: *Duplex DuplexNoTumble *PageRegion Cardstock58
+*UIConstraints: *PageRegion Cardstock58 *Duplex DuplexTumble
+*UIConstraints: *PageRegion Cardstock58 *Duplex DuplexNoTumble
+
+*% Can only staple Letter, Legal, A3, A4, B4, B5 and Tabloid.
+
+*% A4 paper constraints with Staple
+*UIConstraints: *Staple 2PU *PageSize A4
+*UIConstraints: *Staple 2PB *PageSize A4
+*UIConstraints: *PageSize A4 *Staple 2PU
+*UIConstraints: *PageSize A4 *Staple 2PB
+*UIConstraints: *Staple 2PU *PageRegion A4
+*UIConstraints: *Staple 2PB *PageRegion A4
+*UIConstraints: *PageRegion A4 *Staple 2PU
+*UIConstraints: *PageRegion A4 *Staple 2PB
+
+*% Letter paper constraints with Staple
+*UIConstraints: *Staple 2PU *PageSize Letter
+*UIConstraints: *Staple 2PB *PageSize Letter
+*UIConstraints: *PageSize Letter *Staple 2PU
+*UIConstraints: *PageSize Letter *Staple 2PB
+*UIConstraints: *Staple 2PU *PageRegion Letter
+*UIConstraints: *Staple 2PB *PageRegion Letter
+*UIConstraints: *PageRegion Letter *Staple 2PU
+*UIConstraints: *PageRegion Letter *Staple 2PB
+
+*% B5 paper constraints with Staple
+*UIConstraints: *Staple 2PU *PageSize B5
+*UIConstraints: *Staple 2PB *PageSize B5
+*UIConstraints: *PageSize B5 *Staple 2PU
+*UIConstraints: *PageSize B5 *Staple 2PB
+*UIConstraints: *Staple 2PU *PageRegion B5
+*UIConstraints: *Staple 2PB *PageRegion B5
+*UIConstraints: *PageRegion B5 *Staple 2PU
+*UIConstraints: *PageRegion B5 *Staple 2PB
+
+*% A3 paper constraints with Staple
+*UIConstraints: *Staple 2PL *PageSize A3
+*UIConstraints: *Staple 2PR *PageSize A3
+*UIConstraints: *PageSize A3 *Staple 2PL
+*UIConstraints: *PageSize A3 *Staple 2PR
+*UIConstraints: *Staple 2PL *PageRegion A3
+*UIConstraints: *Staple 2PR *PageRegion A3
+*UIConstraints: *PageRegion A3 *Staple 2PL
+*UIConstraints: *PageRegion A3 *Staple 2PR
+
+*% B4 paper constraints with Staple
+*UIConstraints: *Staple 2PL *PageSize B4
+*UIConstraints: *Staple 2PR *PageSize B4
+*UIConstraints: *PageSize B4 *Staple 2PL
+*UIConstraints: *PageSize B4 *Staple 2PR
+*UIConstraints: *Staple 2PL *PageRegion B4
+*UIConstraints: *Staple 2PR *PageRegion B4
+*UIConstraints: *PageRegion B4 *Staple 2PL
+*UIConstraints: *PageRegion B4 *Staple 2PR
+
+*% A5 paper constraints with Staple
+*UIConstraints: *Staple 1PRU *PageSize A5
+*UIConstraints: *Staple 1PLU *PageSize A5
+*UIConstraints: *Staple 1PRB *PageSize A5
+*UIConstraints: *Staple 1PLB *PageSize A5
+*UIConstraints: *PageSize A5 *Staple 1PRU
+*UIConstraints: *PageSize A5 *Staple 1PLU
+*UIConstraints: *PageSize A5 *Staple 1PRB
+*UIConstraints: *PageSize A5 *Staple 1PLB
+*UIConstraints: *Staple 2PL *PageSize A5
+*UIConstraints: *Staple 2PR *PageSize A5
+*UIConstraints: *Staple 2PU *PageSize A5
+*UIConstraints: *Staple 2PB *PageSize A5
+*UIConstraints: *PageSize A5 *Staple 2PL
+*UIConstraints: *PageSize A5 *Staple 2PR
+*UIConstraints: *PageSize A5 *Staple 2PU
+*UIConstraints: *PageSize A5 *Staple 2PB
+*UIConstraints: *Staple 1PRU *PageRegion A5
+*UIConstraints: *Staple 1PLU *PageRegion A5
+*UIConstraints: *Staple 1PRB *PageRegion A5
+*UIConstraints: *Staple 1PLB *PageRegion A5
+*UIConstraints: *PageRegion A5 *Staple 1PRU
+*UIConstraints: *PageRegion A5 *Staple 1PLU
+*UIConstraints: *PageRegion A5 *Staple 1PRB
+*UIConstraints: *PageRegion A5 *Staple 1PLB
+*UIConstraints: *Staple 2PL *PageRegion A5
+*UIConstraints: *Staple 2PR *PageRegion A5
+*UIConstraints: *Staple 2PU *PageRegion A5
+*UIConstraints: *Staple 2PB *PageRegion A5
+*UIConstraints: *PageRegion A5 *Staple 2PL
+*UIConstraints: *PageRegion A5 *Staple 2PR
+*UIConstraints: *PageRegion A5 *Staple 2PU
+*UIConstraints: *PageRegion A5 *Staple 2PB
+
+*% Tabloid paper constraints with Staple
+*UIConstraints: *Staple 2PL *PageSize Tabloid
+*UIConstraints: *Staple 2PR *PageSize Tabloid
+*UIConstraints: *PageSize Tabloid *Staple 2PL
+*UIConstraints: *PageSize Tabloid *Staple 2PR
+*UIConstraints: *Staple 2PL *PageRegion Tabloid
+*UIConstraints: *Staple 2PR *PageRegion Tabloid
+*UIConstraints: *PageRegion Tabloid *Staple 2PL
+*UIConstraints: *PageRegion Tabloid *Staple 2PR
+
+*% Legal only supports single-staple.
+*UIConstraints: *Staple 2PL *PageSize Legal
+*UIConstraints: *Staple 2PR *PageSize Legal
+*UIConstraints: *Staple 2PU *PageSize Legal
+*UIConstraints: *Staple 2PB *PageSize Legal
+*UIConstraints: *PageSize Legal *Staple 2PL
+*UIConstraints: *PageSize Legal *Staple 2PR
+*UIConstraints: *PageSize Legal *Staple 2PU
+*UIConstraints: *PageSize Legal *Staple 2PB
+*UIConstraints: *Staple 2PL *PageRegion Legal
+*UIConstraints: *Staple 2PR *PageRegion Legal
+*UIConstraints: *Staple 2PU *PageRegion Legal
+*UIConstraints: *Staple 2PB *PageRegion Legal
+*UIConstraints: *PageRegion Legal *Staple 2PL
+*UIConstraints: *PageRegion Legal *Staple 2PR
+*UIConstraints: *PageRegion Legal *Staple 2PU
+*UIConstraints: *PageRegion Legal *Staple 2PB
+
+*% Executive, Statement and Card Stocks don't support any staple.
+
+*UIConstraints: *Staple 1PRU *PageSize Executive
+*UIConstraints: *Staple 1PLU *PageSize Executive
+*UIConstraints: *Staple 1PRB *PageSize Executive
+*UIConstraints: *Staple 1PLB *PageSize Executive
+*UIConstraints: *PageSize Executive *Staple 1PRU
+*UIConstraints: *PageSize Executive *Staple 1PLU
+*UIConstraints: *PageSize Executive *Staple 1PRB
+*UIConstraints: *PageSize Executive *Staple 1PLB
+*UIConstraints: *Staple 2PL *PageSize Executive
+*UIConstraints: *Staple 2PR *PageSize Executive
+*UIConstraints: *Staple 2PU *PageSize Executive
+*UIConstraints: *Staple 2PB *PageSize Executive
+*UIConstraints: *PageSize Executive *Staple 2PL
+*UIConstraints: *PageSize Executive *Staple 2PR
+*UIConstraints: *PageSize Executive *Staple 2PU
+*UIConstraints: *PageSize Executive *Staple 2PB
+*UIConstraints: *Staple 1PRU *PageRegion Executive
+*UIConstraints: *Staple 1PLU *PageRegion Executive
+*UIConstraints: *Staple 1PRB *PageRegion Executive
+*UIConstraints: *Staple 1PLB *PageRegion Executive
+*UIConstraints: *PageRegion Executive *Staple 1PRU
+*UIConstraints: *PageRegion Executive *Staple 1PLU
+*UIConstraints: *PageRegion Executive *Staple 1PRB
+*UIConstraints: *PageRegion Executive *Staple 1PLB
+*UIConstraints: *Staple 2PL *PageRegion Executive
+*UIConstraints: *Staple 2PR *PageRegion Executive
+*UIConstraints: *Staple 2PU *PageRegion Executive
+*UIConstraints: *Staple 2PB *PageRegion Executive
+*UIConstraints: *PageRegion Executive *Staple 2PL
+*UIConstraints: *PageRegion Executive *Staple 2PR
+*UIConstraints: *PageRegion Executive *Staple 2PU
+*UIConstraints: *PageRegion Executive *Staple 2PB
+
+*UIConstraints: *Staple 1PRU *PageSize Statement
+*UIConstraints: *Staple 1PLU *PageSize Statement
+*UIConstraints: *Staple 1PRB *PageSize Statement
+*UIConstraints: *Staple 1PLB *PageSize Statement
+*UIConstraints: *PageSize Statement *Staple 1PRU
+*UIConstraints: *PageSize Statement *Staple 1PLU
+*UIConstraints: *PageSize Statement *Staple 1PRB
+*UIConstraints: *PageSize Statement *Staple 1PLB
+*UIConstraints: *Staple 2PL *PageSize Statement
+*UIConstraints: *Staple 2PR *PageSize Statement
+*UIConstraints: *Staple 2PU *PageSize Statement
+*UIConstraints: *Staple 2PB *PageSize Statement
+*UIConstraints: *PageSize Statement *Staple 2PL
+*UIConstraints: *PageSize Statement *Staple 2PR
+*UIConstraints: *PageSize Statement *Staple 2PU
+*UIConstraints: *PageSize Statement *Staple 2PB
+*UIConstraints: *Staple 1PRU *PageRegion Statement
+*UIConstraints: *Staple 1PLU *PageRegion Statement
+*UIConstraints: *Staple 1PRB *PageRegion Statement
+*UIConstraints: *Staple 1PLB *PageRegion Statement
+*UIConstraints: *PageRegion Statement *Staple 1PRU
+*UIConstraints: *PageRegion Statement *Staple 1PLU
+*UIConstraints: *PageRegion Statement *Staple 1PRB
+*UIConstraints: *PageRegion Statement *Staple 1PLB
+*UIConstraints: *Staple 2PL *PageRegion Statement
+*UIConstraints: *Staple 2PR *PageRegion Statement
+*UIConstraints: *Staple 2PU *PageRegion Statement
+*UIConstraints: *Staple 2PB *PageRegion Statement
+*UIConstraints: *PageRegion Statement *Staple 2PL
+*UIConstraints: *PageRegion Statement *Staple 2PR
+*UIConstraints: *PageRegion Statement *Staple 2PU
+*UIConstraints: *PageRegion Statement *Staple 2PB
+
+*UIConstraints: *Staple 1PRU *PageSize Cardstock46
+*UIConstraints: *Staple 1PLU *PageSize Cardstock46
+*UIConstraints: *Staple 1PRB *PageSize Cardstock46
+*UIConstraints: *Staple 1PLB *PageSize Cardstock46
+*UIConstraints: *PageSize Cardstock46 *Staple 1PRU
+*UIConstraints: *PageSize Cardstock46 *Staple 1PLU
+*UIConstraints: *PageSize Cardstock46 *Staple 1PRB
+*UIConstraints: *PageSize Cardstock46 *Staple 1PLB
+*UIConstraints: *Staple 2PL *PageSize Cardstock46
+*UIConstraints: *Staple 2PR *PageSize Cardstock46
+*UIConstraints: *Staple 2PU *PageSize Cardstock46
+*UIConstraints: *Staple 2PB *PageSize Cardstock46
+*UIConstraints: *PageSize Cardstock46 *Staple 2PL
+*UIConstraints: *PageSize Cardstock46 *Staple 2PR
+*UIConstraints: *PageSize Cardstock46 *Staple 2PU
+*UIConstraints: *PageSize Cardstock46 *Staple 2PB
+*UIConstraints: *Staple 1PRU *PageRegion Cardstock46
+*UIConstraints: *Staple 1PLU *PageRegion Cardstock46
+*UIConstraints: *Staple 1PRB *PageRegion Cardstock46
+*UIConstraints: *Staple 1PLB *PageRegion Cardstock46
+*UIConstraints: *PageRegion Cardstock46 *Staple 1PRU
+*UIConstraints: *PageRegion Cardstock46 *Staple 1PLU
+*UIConstraints: *PageRegion Cardstock46 *Staple 1PRB
+*UIConstraints: *PageRegion Cardstock46 *Staple 1PLB
+*UIConstraints: *Staple 2PL *PageRegion Cardstock46
+*UIConstraints: *Staple 2PR *PageRegion Cardstock46
+*UIConstraints: *Staple 2PU *PageRegion Cardstock46
+*UIConstraints: *Staple 2PB *PageRegion Cardstock46
+*UIConstraints: *PageRegion Cardstock46 *Staple 2PL
+*UIConstraints: *PageRegion Cardstock46 *Staple 2PR
+*UIConstraints: *PageRegion Cardstock46 *Staple 2PU
+*UIConstraints: *PageRegion Cardstock46 *Staple 2PB
+
+*UIConstraints: *Staple 1PRU *PageSize Cardstock58
+*UIConstraints: *Staple 1PLU *PageSize Cardstock58
+*UIConstraints: *Staple 1PRB *PageSize Cardstock58
+*UIConstraints: *Staple 1PLB *PageSize Cardstock58
+*UIConstraints: *PageSize Cardstock58 *Staple 1PRU
+*UIConstraints: *PageSize Cardstock58 *Staple 1PLU
+*UIConstraints: *PageSize Cardstock58 *Staple 1PRB
+*UIConstraints: *PageSize Cardstock58 *Staple 1PLB
+*UIConstraints: *Staple 2PL *PageSize Cardstock58
+*UIConstraints: *Staple 2PR *PageSize Cardstock58
+*UIConstraints: *Staple 2PU *PageSize Cardstock58
+*UIConstraints: *Staple 2PB *PageSize Cardstock58
+*UIConstraints: *PageSize Cardstock58 *Staple 2PL
+*UIConstraints: *PageSize Cardstock58 *Staple 2PR
+*UIConstraints: *PageSize Cardstock58 *Staple 2PU
+*UIConstraints: *PageSize Cardstock58 *Staple 2PB
+*UIConstraints: *Staple 1PRU *PageRegion Cardstock58
+*UIConstraints: *Staple 1PLU *PageRegion Cardstock58
+*UIConstraints: *Staple 1PRB *PageRegion Cardstock58
+*UIConstraints: *Staple 1PLB *PageRegion Cardstock58
+*UIConstraints: *PageRegion Cardstock58 *Staple 1PRU
+*UIConstraints: *PageRegion Cardstock58 *Staple 1PLU
+*UIConstraints: *PageRegion Cardstock58 *Staple 1PRB
+*UIConstraints: *PageRegion Cardstock58 *Staple 1PLB
+*UIConstraints: *Staple 2PL *PageRegion Cardstock58
+*UIConstraints: *Staple 2PR *PageRegion Cardstock58
+*UIConstraints: *Staple 2PU *PageRegion Cardstock58
+*UIConstraints: *Staple 2PB *PageRegion Cardstock58
+*UIConstraints: *PageRegion Cardstock58 *Staple 2PL
+*UIConstraints: *PageRegion Cardstock58 *Staple 2PR
+*UIConstraints: *PageRegion Cardstock58 *Staple 2PU
+*UIConstraints: *PageRegion Cardstock58 *Staple 2PB
+
+*% Can only Rotate Letter, B5 and A4 paper.
+*UIConstraints: *PageSize A3 *Finishing RotCol
+*UIConstraints: *PageSize A3 *Finishing RotGr
+*UIConstraints: *Finishing RotCol *PageSize A3
+*UIConstraints: *Finishing RotGr *PageSize A3
+*UIConstraints: *PageRegion A3 *Finishing RotCol
+*UIConstraints: *PageRegion A3 *Finishing RotGr
+*UIConstraints: *Finishing RotCol *PageRegion A3
+*UIConstraints: *Finishing RotGr *PageRegion A3
+*UIConstraints: *PageSize A5 *Finishing RotCol
+*UIConstraints: *PageSize A5 *Finishing RotGr
+*UIConstraints: *Finishing RotCol *PageSize A5
+*UIConstraints: *Finishing RotGr *PageSize A5
+*UIConstraints: *PageRegion A5 *Finishing RotCol
+*UIConstraints: *PageRegion A5 *Finishing RotGr
+*UIConstraints: *Finishing RotCol *PageRegion A5
+*UIConstraints: *Finishing RotGr *PageRegion A5
+*UIConstraints: *PageSize B4 *Finishing RotCol
+*UIConstraints: *PageSize B4 *Finishing RotGr
+*UIConstraints: *Finishing RotCol *PageSize B4
+*UIConstraints: *Finishing RotGr *PageSize B4
+*UIConstraints: *PageRegion B4 *Finishing RotCol
+*UIConstraints: *PageRegion B4 *Finishing RotGr
+*UIConstraints: *Finishing RotCol *PageRegion B4
+*UIConstraints: *Finishing RotGr *PageRegion B4
+*UIConstraints: *PageSize Legal *Finishing RotCol
+*UIConstraints: *PageSize Legal *Finishing RotGr
+*UIConstraints: *Finishing RotCol *PageSize Legal
+*UIConstraints: *Finishing RotGr *PageSize Legal
+*UIConstraints: *PageRegion Legal *Finishing RotCol
+*UIConstraints: *PageRegion Legal *Finishing RotGr
+*UIConstraints: *Finishing RotCol *PageRegion Legal
+*UIConstraints: *Finishing RotGr *PageRegion Legal
+*UIConstraints: *PageSize Tabloid *Finishing RotCol
+*UIConstraints: *PageSize Tabloid *Finishing RotGr
+*UIConstraints: *Finishing RotCol *PageSize Tabloid
+*UIConstraints: *Finishing RotGr *PageSize Tabloid
+*UIConstraints: *PageRegion Tabloid *Finishing RotCol
+*UIConstraints: *PageRegion Tabloid *Finishing RotGr
+*UIConstraints: *Finishing RotCol *PageRegion Tabloid
+*UIConstraints: *Finishing RotGr *PageRegion Tabloid
+*UIConstraints: *PageSize Statement *Finishing RotCol
+*UIConstraints: *PageSize Statement *Finishing RotGr
+*UIConstraints: *Finishing RotCol *PageSize Statement
+*UIConstraints: *Finishing RotGr *PageSize Statement
+*UIConstraints: *PageRegion Statement *Finishing RotCol
+*UIConstraints: *PageRegion Statement *Finishing RotGr
+*UIConstraints: *Finishing RotCol *PageRegion Statement
+*UIConstraints: *Finishing RotGr *PageRegion Statement
+*UIConstraints: *PageSize Executive *Finishing RotCol
+*UIConstraints: *PageSize Executive *Finishing RotGr
+*UIConstraints: *Finishing RotCol *PageSize Executive
+*UIConstraints: *Finishing RotGr *PageSize Executive
+*UIConstraints: *PageRegion Executive *Finishing RotCol
+*UIConstraints: *PageRegion Executive *Finishing RotGr
+*UIConstraints: *Finishing RotCol *PageRegion Executive
+*UIConstraints: *Finishing RotGr *PageRegion Executive
+*UIConstraints: *PageSize Cardstock46 *Finishing RotCol
+*UIConstraints: *PageSize Cardstock46 *Finishing RotGr
+*UIConstraints: *Finishing RotCol *PageSize Cardstock46
+*UIConstraints: *Finishing RotGr *PageSize Cardstock46
+*UIConstraints: *PageRegion Cardstock46 *Finishing RotCol
+*UIConstraints: *PageRegion Cardstock46 *Finishing RotGr
+*UIConstraints: *Finishing RotCol *PageRegion Cardstock46
+*UIConstraints: *Finishing RotGr *PageRegion Cardstock46
+*UIConstraints: *PageSize Cardstock58 *Finishing RotCol
+*UIConstraints: *PageSize Cardstock58 *Finishing RotGr
+*UIConstraints: *Finishing RotCol *PageSize Cardstock58
+*UIConstraints: *Finishing RotGr *PageSize Cardstock58
+*UIConstraints: *PageRegion Cardstock58 *Finishing RotCol
+*UIConstraints: *PageRegion Cardstock58 *Finishing RotGr
+*UIConstraints: *Finishing RotCol *PageRegion Cardstock58
+*UIConstraints: *Finishing RotGr *PageRegion Cardstock58
+
+*% Can only Z-Fold A3, B4 and 11x17 paper.
+*UIConstraints: *PageSize A4 *ZFold OnL
+*UIConstraints: *PageSize A5 *ZFold OnL
+*UIConstraints: *PageSize B5 *ZFold OnL
+*UIConstraints: *PageSize Letter *ZFold OnL
+*UIConstraints: *PageSize Legal *ZFold OnL
+*UIConstraints: *PageSize Executive *ZFold OnL
+*UIConstraints: *PageSize Statement *ZFold OnL
+*UIConstraints: *PageSize Cardstock46 *ZFold OnL
+*UIConstraints: *PageSize Cardstock58 *ZFold OnL
+*UIConstraints: *PageSize A4 *ZFold OnR
+*UIConstraints: *PageSize A5 *ZFold OnR
+*UIConstraints: *PageSize B5 *ZFold OnR
+*UIConstraints: *PageSize Letter *ZFold OnR
+*UIConstraints: *PageSize Legal *ZFold OnR
+*UIConstraints: *PageSize Executive *ZFold OnR
+*UIConstraints: *PageSize Statement *ZFold OnR
+*UIConstraints: *PageSize Cardstock46 *ZFold OnR
+*UIConstraints: *PageSize Cardstock58 *ZFold OnR
+*UIConstraints: *ZFold OnL *PageSize A4
+*UIConstraints: *ZFold OnL *PageSize A5
+*UIConstraints: *ZFold OnL *PageSize B5
+*UIConstraints: *ZFold OnL *PageSize Letter
+*UIConstraints: *ZFold OnL *PageSize Legal
+*UIConstraints: *ZFold OnL *PageSize Executive
+*UIConstraints: *ZFold OnL *PageSize Statement
+*UIConstraints: *ZFold OnL *PageSize Cardstock46
+*UIConstraints: *ZFold OnL *PageSize Cardstock58
+*UIConstraints: *ZFold OnR *PageSize A4
+*UIConstraints: *ZFold OnR *PageSize A5
+*UIConstraints: *ZFold OnR *PageSize B5
+*UIConstraints: *ZFold OnR *PageSize Letter
+*UIConstraints: *ZFold OnR *PageSize Legal
+*UIConstraints: *ZFold OnR *PageSize Executive
+*UIConstraints: *ZFold OnR *PageSize Statement
+*UIConstraints: *ZFold OnR *PageSize Cardstock46
+*UIConstraints: *ZFold OnR *PageSize Cardstock58
+*UIConstraints: *PageRegion A4 *ZFold OnL
+*UIConstraints: *PageRegion A5 *ZFold OnL
+*UIConstraints: *PageRegion B5 *ZFold OnL
+*UIConstraints: *PageRegion Letter *ZFold OnL
+*UIConstraints: *PageRegion Legal *ZFold OnL
+*UIConstraints: *PageRegion Executive *ZFold OnL
+*UIConstraints: *PageRegion Statement *ZFold OnL
+*UIConstraints: *PageRegion Cardstock46 *ZFold OnL
+*UIConstraints: *PageRegion Cardstock58 *ZFold OnL
+*UIConstraints: *PageRegion A4 *ZFold OnR
+*UIConstraints: *PageRegion A5 *ZFold OnR
+*UIConstraints: *PageRegion B5 *ZFold OnR
+*UIConstraints: *PageRegion Letter *ZFold OnR
+*UIConstraints: *PageRegion Legal *ZFold OnR
+*UIConstraints: *PageRegion Executive *ZFold OnR
+*UIConstraints: *PageRegion Statement *ZFold OnR
+*UIConstraints: *PageRegion Cardstock46 *ZFold OnR
+*UIConstraints: *PageRegion Cardstock58 *ZFold OnR
+*UIConstraints: *ZFold OnL *PageRegion A4
+*UIConstraints: *ZFold OnL *PageRegion A5
+*UIConstraints: *ZFold OnL *PageRegion B5
+*UIConstraints: *ZFold OnL *PageRegion Letter
+*UIConstraints: *ZFold OnL *PageRegion Legal
+*UIConstraints: *ZFold OnL *PageRegion Executive
+*UIConstraints: *ZFold OnL *PageRegion Statement
+*UIConstraints: *ZFold OnL *PageRegion Cardstock46
+*UIConstraints: *ZFold OnL *PageRegion Cardstock58
+*UIConstraints: *ZFold OnR *PageRegion A4
+*UIConstraints: *ZFold OnR *PageRegion A5
+*UIConstraints: *ZFold OnR *PageRegion B5
+*UIConstraints: *ZFold OnR *PageRegion Letter
+*UIConstraints: *ZFold OnR *PageRegion Legal
+*UIConstraints: *ZFold OnR *PageRegion Executive
+*UIConstraints: *ZFold OnR *PageRegion Statement
+*UIConstraints: *ZFold OnR *PageRegion Cardstock46
+*UIConstraints: *ZFold OnR *PageRegion Cardstock58
+
+*% Can not Offset with Cardstock papers.
+*UIConstraints: *PageSize Cardstock46 *Finishing OffCol
+*UIConstraints: *PageSize Cardstock46 *Finishing OffGr
+*UIConstraints: *PageRegion Cardstock46 *Finishing OffCol
+*UIConstraints: *PageRegion Cardstock46 *Finishing OffGr
+*UIConstraints: *PageSize Cardstock58 *Finishing OffCol
+*UIConstraints: *PageSize Cardstock58 *Finishing OffGr
+*UIConstraints: *PageRegion Cardstock58 *Finishing OffCol
+*UIConstraints: *PageRegion Cardstock58 *Finishing OffGr
+*UIConstraints: *Finishing OffCol *PageSize Cardstock46
+*UIConstraints: *Finishing OffGr *PageSize Cardstock46
+*UIConstraints: *Finishing OffCol *PageRegion Cardstock46
+*UIConstraints: *Finishing OffGr *PageRegion Cardstock46
+*UIConstraints: *Finishing OffCol *PageSize Cardstock58
+*UIConstraints: *Finishing OffGr *PageSize Cardstock58
+*UIConstraints: *Finishing OffCol *PageRegion Cardstock58
+*UIConstraints: *Finishing OffGr *PageRegion Cardstock58
+
+*% Can only Hole Punch A3, A4, B4, B5, Letter, Legal and Tabloid paper.
+*UIConstraints: *PageSize A5 *Punch PL
+*UIConstraints: *PageSize A5 *Punch PR
+*UIConstraints: *PageSize A5 *Punch PU
+*UIConstraints: *PageSize A5 *Punch PB
+*UIConstraints: *Punch PL *PageSize A5
+*UIConstraints: *Punch PR *PageSize A5
+*UIConstraints: *Punch PU *PageSize A5
+*UIConstraints: *Punch PB *PageSize A5
+*UIConstraints: *PageRegion A5 *Punch PL
+*UIConstraints: *PageRegion A5 *Punch PR
+*UIConstraints: *PageRegion A5 *Punch PU
+*UIConstraints: *PageRegion A5 *Punch PB
+*UIConstraints: *Punch PL *PageRegion A5
+*UIConstraints: *Punch PR *PageRegion A5
+*UIConstraints: *Punch PU *PageRegion A5
+*UIConstraints: *Punch PB *PageRegion A5
+*UIConstraints: *PageSize Executive *Punch PL
+*UIConstraints: *PageSize Executive *Punch PR
+*UIConstraints: *PageSize Executive *Punch PU
+*UIConstraints: *PageSize Executive *Punch PB
+*UIConstraints: *Punch PL *PageSize Executive
+*UIConstraints: *Punch PR *PageSize Executive
+*UIConstraints: *Punch PU *PageSize Executive
+*UIConstraints: *Punch PB *PageSize Executive
+*UIConstraints: *PageRegion Executive *Punch PL
+*UIConstraints: *PageRegion Executive *Punch PR
+*UIConstraints: *PageRegion Executive *Punch PU
+*UIConstraints: *PageRegion Executive *Punch PB
+*UIConstraints: *Punch PL *PageRegion Executive
+*UIConstraints: *Punch PR *PageRegion Executive
+*UIConstraints: *Punch PU *PageRegion Executive
+*UIConstraints: *Punch PB *PageRegion Executive
+*UIConstraints: *PageSize Statement *Punch PL
+*UIConstraints: *PageSize Statement *Punch PR
+*UIConstraints: *PageSize Statement *Punch PU
+*UIConstraints: *PageSize Statement *Punch PB
+*UIConstraints: *Punch PL *PageSize Statement
+*UIConstraints: *Punch PR *PageSize Statement
+*UIConstraints: *Punch PU *PageSize Statement
+*UIConstraints: *Punch PB *PageSize Statement
+*UIConstraints: *PageRegion Statement *Punch PL
+*UIConstraints: *PageRegion Statement *Punch PR
+*UIConstraints: *PageRegion Statement *Punch PU
+*UIConstraints: *PageRegion Statement *Punch PB
+*UIConstraints: *Punch PL *PageRegion Statement
+*UIConstraints: *Punch PR *PageRegion Statement
+*UIConstraints: *Punch PU *PageRegion Statement
+*UIConstraints: *Punch PB *PageRegion Statement
+*UIConstraints: *PageSize Cardstock46 *Punch PL
+*UIConstraints: *PageSize Cardstock46 *Punch PR
+*UIConstraints: *PageSize Cardstock46 *Punch PU
+*UIConstraints: *PageSize Cardstock46 *Punch PB
+*UIConstraints: *Punch PL *PageSize Cardstock46
+*UIConstraints: *Punch PR *PageSize Cardstock46
+*UIConstraints: *Punch PU *PageSize Cardstock46
+*UIConstraints: *Punch PB *PageSize Cardstock46
+*UIConstraints: *PageRegion Cardstock46 *Punch PL
+*UIConstraints: *PageRegion Cardstock46 *Punch PR
+*UIConstraints: *PageRegion Cardstock46 *Punch PU
+*UIConstraints: *PageRegion Cardstock46 *Punch PB
+*UIConstraints: *Punch PL *PageRegion Cardstock46
+*UIConstraints: *Punch PR *PageRegion Cardstock46
+*UIConstraints: *Punch PU *PageRegion Cardstock46
+*UIConstraints: *Punch PB *PageRegion Cardstock46
+*UIConstraints: *PageSize Cardstock58 *Punch PL
+*UIConstraints: *PageSize Cardstock58 *Punch PR
+*UIConstraints: *PageSize Cardstock58 *Punch PU
+*UIConstraints: *PageSize Cardstock58 *Punch PB
+*UIConstraints: *Punch PL *PageSize Cardstock58
+*UIConstraints: *Punch PR *PageSize Cardstock58
+*UIConstraints: *Punch PU *PageSize Cardstock58
+*UIConstraints: *Punch PB *PageSize Cardstock58
+*UIConstraints: *PageRegion Cardstock58 *Punch PL
+*UIConstraints: *PageRegion Cardstock58 *Punch PR
+*UIConstraints: *PageRegion Cardstock58 *Punch PU
+*UIConstraints: *PageRegion Cardstock58 *Punch PB
+*UIConstraints: *Punch PL *PageRegion Cardstock58
+*UIConstraints: *Punch PR *PageRegion Cardstock58
+*UIConstraints: *Punch PU *PageRegion Cardstock58
+*UIConstraints: *Punch PB *PageRegion Cardstock58
+
+*UIConstraints: *PageSize A3 *Punch PL
+*UIConstraints: *PageSize A3 *Punch PR
+*UIConstraints: *Punch PL *PageSize A3
+*UIConstraints: *Punch PR *PageSize A3
+*UIConstraints: *PageRegion A3 *Punch PL
+*UIConstraints: *PageRegion A3 *Punch PR
+*UIConstraints: *Punch PL *PageRegion A3
+*UIConstraints: *Punch PR *PageRegion A3
+
+*UIConstraints: *PageSize Legal *Punch PL
+*UIConstraints: *PageSize Legal *Punch PR
+*UIConstraints: *Punch PL *PageSize Legal
+*UIConstraints: *Punch PR *PageSize Legal
+*UIConstraints: *PageRegion Legal *Punch PL
+*UIConstraints: *PageRegion Legal *Punch PR
+*UIConstraints: *Punch PL *PageRegion Legal
+*UIConstraints: *Punch PR *PageRegion Legal
+
+*UIConstraints: *PageSize Tabloid *Punch PL
+*UIConstraints: *PageSize Tabloid *Punch PR
+*UIConstraints: *Punch PL *PageSize Tabloid
+*UIConstraints: *Punch PR *PageSize Tabloid
+*UIConstraints: *PageRegion Tabloid *Punch PL
+*UIConstraints: *PageRegion Tabloid *Punch PR
+*UIConstraints: *Punch PL *PageRegion Tabloid
+*UIConstraints: *Punch PR *PageRegion Tabloid
+
+*UIConstraints: *PageSize B4 *Punch PL
+*UIConstraints: *PageSize B4 *Punch PR
+*UIConstraints: *Punch PL *PageSize B4
+*UIConstraints: *Punch PR *PageSize B4
+*UIConstraints: *PageRegion B4 *Punch PL
+*UIConstraints: *PageRegion B4 *Punch PR
+*UIConstraints: *Punch PL *PageRegion B4
+*UIConstraints: *Punch PR *PageRegion B4
+
+*% Can only Booklet printing A5, A4, B5, Letter and Statement paper.
+*UIConstraints: *PageSize B4 *Booklet Left
+*UIConstraints: *PageSize A3 *Booklet Left
+*UIConstraints: *PageSize Legal *Booklet Left
+*UIConstraints: *PageSize Tabloid *Booklet Left
+*UIConstraints: *PageSize Executive *Booklet Left
+*UIConstraints: *PageSize Cardstock46 *Booklet Left
+*UIConstraints: *PageSize Cardstock58 *Booklet Left
+*UIConstraints: *Booklet Left *PageSize B4
+*UIConstraints: *Booklet Left *PageSize A3
+*UIConstraints: *Booklet Left *PageSize Legal
+*UIConstraints: *Booklet Left *PageSize Tabloid
+*UIConstraints: *Booklet Left *PageSize Executive
+*UIConstraints: *Booklet Left *PageSize Cardstock46
+*UIConstraints: *Booklet Left *PageSize Cardstock58
+*UIConstraints: *PageRegion B4 *Booklet Left
+*UIConstraints: *PageRegion A3 *Booklet Left
+*UIConstraints: *PageRegion Legal *Booklet Left
+*UIConstraints: *PageRegion Tabloid *Booklet Left
+*UIConstraints: *PageRegion Executive *Booklet Left
+*UIConstraints: *PageRegion Cardstock46 *Booklet Left
+*UIConstraints: *PageRegion Cardstock58 *Booklet Left
+*UIConstraints: *Booklet Left *PageRegion B4
+*UIConstraints: *Booklet Left *PageRegion A3
+*UIConstraints: *Booklet Left *PageRegion Legal
+*UIConstraints: *Booklet Left *PageRegion Tabloid
+*UIConstraints: *Booklet Left *PageRegion Executive
+*UIConstraints: *Booklet Left *PageRegion Cardstock46
+*UIConstraints: *Booklet Left *PageRegion Cardstock58
+
+*% Can only Saddle Stitch A5, A4, B5, Letter and Statement paper.
+*UIConstraints: *PageSize B4 *SaddleStitch On
+*UIConstraints: *PageSize A3 *SaddleStitch On
+*UIConstraints: *PageSize Legal *SaddleStitch On
+*UIConstraints: *PageSize Tabloid *SaddleStitch On
+*UIConstraints: *PageSize Executive *SaddleStitch On
+*UIConstraints: *PageSize Cardstock46 *SaddleStitch On
+*UIConstraints: *PageSize Cardstock58 *SaddleStitch On
+*UIConstraints: *SaddleStitch On *PageSize B4
+*UIConstraints: *SaddleStitch On *PageSize A3
+*UIConstraints: *SaddleStitch On *PageSize Legal
+*UIConstraints: *SaddleStitch On *PageSize Tabloid
+*UIConstraints: *SaddleStitch On *PageSize Executive
+*UIConstraints: *SaddleStitch On *PageSize Cardstock46
+*UIConstraints: *SaddleStitch On *PageSize Cardstock58
+*UIConstraints: *PageRegion B4 *SaddleStitch On
+*UIConstraints: *PageRegion A3 *SaddleStitch On
+*UIConstraints: *PageRegion Legal *SaddleStitch On
+*UIConstraints: *PageRegion Tabloid *SaddleStitch On
+*UIConstraints: *PageRegion Executive *SaddleStitch On
+*UIConstraints: *PageRegion Cardstock46 *SaddleStitch On
+*UIConstraints: *PageRegion Cardstock58 *SaddleStitch On
+*UIConstraints: *SaddleStitch On *PageRegion B4
+*UIConstraints: *SaddleStitch On *PageRegion A3
+*UIConstraints: *SaddleStitch On *PageRegion Legal
+*UIConstraints: *SaddleStitch On *PageRegion Tabloid
+*UIConstraints: *SaddleStitch On *PageRegion Executive
+*UIConstraints: *SaddleStitch On *PageRegion Cardstock46
+*UIConstraints: *SaddleStitch On *PageRegion Cardstock58
+
+*% Can only Trimmer A5, A4, B5, Letter and Statement paper.
+*UIConstraints: *PageSize B4 *Trimmer On
+*UIConstraints: *PageSize A3 *Trimmer On
+*UIConstraints: *PageSize Legal *Trimmer On
+*UIConstraints: *PageSize Tabloid *Trimmer On
+*UIConstraints: *PageSize Executive *Trimmer On
+*UIConstraints: *PageSize Cardstock46 *Trimmer On
+*UIConstraints: *PageSize Cardstock58 *Trimmer On
+*UIConstraints: *Trimmer On *PageSize B4
+*UIConstraints: *Trimmer On *PageSize A3
+*UIConstraints: *Trimmer On *PageSize Legal
+*UIConstraints: *Trimmer On *PageSize Tabloid
+*UIConstraints: *Trimmer On *PageSize Executive
+*UIConstraints: *Trimmer On *PageSize Cardstock46
+*UIConstraints: *Trimmer On *PageSize Cardstock58
+*UIConstraints: *PageRegion B4 *Trimmer On
+*UIConstraints: *PageRegion A3 *Trimmer On
+*UIConstraints: *PageRegion Legal *Trimmer On
+*UIConstraints: *PageRegion Tabloid *Trimmer On
+*UIConstraints: *PageRegion Executive *Trimmer On
+*UIConstraints: *PageRegion Cardstock46 *Trimmer On
+*UIConstraints: *PageRegion Cardstock58 *Trimmer On
+*UIConstraints: *Trimmer On *PageRegion B4
+*UIConstraints: *Trimmer On *PageRegion A3
+*UIConstraints: *Trimmer On *PageRegion Legal
+*UIConstraints: *Trimmer On *PageRegion Tabloid
+*UIConstraints: *Trimmer On *PageRegion Executive
+*UIConstraints: *Trimmer On *PageRegion Cardstock46
+*UIConstraints: *Trimmer On *PageRegion Cardstock58
+
+*% Can only Interleave A4 and Letter paper.
+*UIConstraints: *PageSize A3 *Interleave
+*UIConstraints: *PageSize A5 *Interleave
+*UIConstraints: *PageSize B4 *Interleave
+*UIConstraints: *PageSize B5 *Interleave
+*UIConstraints: *PageSize Legal *Interleave
+*UIConstraints: *PageSize Tabloid *Interleave
+*UIConstraints: *PageSize Statement *Interleave
+*UIConstraints: *PageSize Executive *Interleave
+*UIConstraints: *PageSize Cardstock46 *Interleave
+*UIConstraints: *PageSize Cardstock58 *Interleave
+*UIConstraints: *Interleave *PageSize A3
+*UIConstraints: *Interleave *PageSize A5
+*UIConstraints: *Interleave *PageSize B4
+*UIConstraints: *Interleave *PageSize B5
+*UIConstraints: *Interleave *PageSize Legal
+*UIConstraints: *Interleave *PageSize Tabloid
+*UIConstraints: *Interleave *PageSize Statement
+*UIConstraints: *Interleave *PageSize Executive
+*UIConstraints: *Interleave *PageSize Cardstock46
+*UIConstraints: *Interleave *PageSize Cardstock58
+*UIConstraints: *PageRegion A3 *Interleave
+*UIConstraints: *PageRegion A5 *Interleave
+*UIConstraints: *PageRegion B4 *Interleave
+*UIConstraints: *PageRegion B5 *Interleave
+*UIConstraints: *PageRegion Legal *Interleave
+*UIConstraints: *PageRegion Tabloid *Interleave
+*UIConstraints: *PageRegion Statement *Interleave
+*UIConstraints: *PageRegion Executive *Interleave
+*UIConstraints: *PageRegion Cardstock46 *Interleave
+*UIConstraints: *PageRegion Cardstock58 *Interleave
+*UIConstraints: *Interleave *PageRegion A3
+*UIConstraints: *Interleave *PageRegion A5
+*UIConstraints: *Interleave *PageRegion B4
+*UIConstraints: *Interleave *PageRegion B5
+*UIConstraints: *Interleave *PageRegion Legal
+*UIConstraints: *Interleave *PageRegion Tabloid
+*UIConstraints: *Interleave *PageRegion Statement
+*UIConstraints: *Interleave *PageRegion Executive
+*UIConstraints: *Interleave *PageRegion Cardstock46
+*UIConstraints: *Interleave *PageRegion Cardstock58
+
+*% === media type constraints ===
+
+*% Can't duplex OHP, Label and Tracing media types.
+*UIConstraints: *Duplex DuplexTumble *MediaType TRANSPR
+*UIConstraints: *Duplex DuplexTumble *MediaType LABELS
+*UIConstraints: *Duplex DuplexTumble *MediaType TRACING
+*UIConstraints: *Duplex DuplexTumble *MediaType CARDSTOCK
+*UIConstraints: *MediaType TRANSPR *Duplex DuplexTumble
+*UIConstraints: *MediaType LABELS *Duplex DuplexTumble
+*UIConstraints: *MediaType TRACING *Duplex DuplexTumble
+*UIConstraints: *MediaType CARDSTOCK *Duplex DuplexTumble
+*UIConstraints: *Duplex DuplexNoTumble *MediaType TRANSPR
+*UIConstraints: *Duplex DuplexNoTumble *MediaType LABELS
+*UIConstraints: *Duplex DuplexNoTumble *MediaType TRACING
+*UIConstraints: *Duplex DuplexNoTumble *MediaType CARDSTOCK
+*UIConstraints: *MediaType TRANSPR *Duplex DuplexNoTumble
+*UIConstraints: *MediaType LABELS *Duplex DuplexNoTumble
+*UIConstraints: *MediaType TRACING *Duplex DuplexNoTumble
+*UIConstraints: *MediaType CARDSTOCK *Duplex DuplexNoTumble
+
+*% Can't staple OHP, Label, Tracing and Heavy media types.
+*UIConstraints: *Staple 1PRU *MediaType TRANSPR
+*UIConstraints: *Staple 1PRB *MediaType TRANSPR
+*UIConstraints: *Staple 1PLU *MediaType TRANSPR
+*UIConstraints: *Staple 1PLB *MediaType TRANSPR
+*UIConstraints: *Staple 2PU *MediaType TRANSPR
+*UIConstraints: *Staple 2PB *MediaType TRANSPR
+*UIConstraints: *Staple 2PR *MediaType TRANSPR
+*UIConstraints: *Staple 2PL *MediaType TRANSPR
+*UIConstraints: *Staple 1PRU *MediaType LABELS
+*UIConstraints: *Staple 1PRB *MediaType LABELS
+*UIConstraints: *Staple 1PLU *MediaType LABELS
+*UIConstraints: *Staple 1PLB *MediaType LABELS
+*UIConstraints: *Staple 2PU *MediaType LABELS
+*UIConstraints: *Staple 2PB *MediaType LABELS
+*UIConstraints: *Staple 2PR *MediaType LABELS
+*UIConstraints: *Staple 2PL *MediaType LABELS
+*UIConstraints: *Staple 1PRU *MediaType TRACING
+*UIConstraints: *Staple 1PRB *MediaType TRACING
+*UIConstraints: *Staple 1PLU *MediaType TRACING
+*UIConstraints: *Staple 1PLB *MediaType TRACING
+*UIConstraints: *Staple 2PU *MediaType TRACING
+*UIConstraints: *Staple 2PB *MediaType TRACING
+*UIConstraints: *Staple 2PR *MediaType TRACING
+*UIConstraints: *Staple 2PL *MediaType TRACING
+*UIConstraints: *Staple 1PRU *MediaType CARDSTOCK
+*UIConstraints: *Staple 1PRB *MediaType CARDSTOCK
+*UIConstraints: *Staple 1PLU *MediaType CARDSTOCK
+*UIConstraints: *Staple 1PLB *MediaType CARDSTOCK
+*UIConstraints: *Staple 2PU *MediaType CARDSTOCK
+*UIConstraints: *Staple 2PB *MediaType CARDSTOCK
+*UIConstraints: *Staple 2PR *MediaType CARDSTOCK
+*UIConstraints: *Staple 2PL *MediaType CARDSTOCK
+*UIConstraints: *MediaType TRANSPR *Staple 1PRU
+*UIConstraints: *MediaType TRANSPR *Staple 1PRB
+*UIConstraints: *MediaType TRANSPR *Staple 1PLU
+*UIConstraints: *MediaType TRANSPR *Staple 1PLB
+*UIConstraints: *MediaType TRANSPR *Staple 2PU
+*UIConstraints: *MediaType TRANSPR *Staple 2PB
+*UIConstraints: *MediaType TRANSPR *Staple 2PR
+*UIConstraints: *MediaType TRANSPR *Staple 2PL
+*UIConstraints: *MediaType LABELS *Staple 1PRU
+*UIConstraints: *MediaType LABELS *Staple 1PRB
+*UIConstraints: *MediaType LABELS *Staple 1PLU
+*UIConstraints: *MediaType LABELS *Staple 1PLB
+*UIConstraints: *MediaType LABELS *Staple 2PU
+*UIConstraints: *MediaType LABELS *Staple 2PB
+*UIConstraints: *MediaType LABELS *Staple 2PR
+*UIConstraints: *MediaType LABELS *Staple 2PL
+*UIConstraints: *MediaType TRACING *Staple 1PRU
+*UIConstraints: *MediaType TRACING *Staple 1PRB
+*UIConstraints: *MediaType TRACING *Staple 1PLU
+*UIConstraints: *MediaType TRACING *Staple 1PLB
+*UIConstraints: *MediaType TRACING *Staple 2PU
+*UIConstraints: *MediaType TRACING *Staple 2PB
+*UIConstraints: *MediaType TRACING *Staple 2PR
+*UIConstraints: *MediaType TRACING *Staple 2PL
+*UIConstraints: *MediaType CARDSTOCK *Staple 1PRU
+*UIConstraints: *MediaType CARDSTOCK *Staple 1PRB
+*UIConstraints: *MediaType CARDSTOCK *Staple 1PLU
+*UIConstraints: *MediaType CARDSTOCK *Staple 1PLB
+*UIConstraints: *MediaType CARDSTOCK *Staple 2PU
+*UIConstraints: *MediaType CARDSTOCK *Staple 2PB
+*UIConstraints: *MediaType CARDSTOCK *Staple 2PR
+*UIConstraints: *MediaType CARDSTOCK *Staple 2PL
+
+*% Can't punch OHP, Label, Tracing and Heavy media types.
+*UIConstraints: *Punch PL *MediaType TRANSPR
+*UIConstraints: *Punch PR *MediaType TRANSPR
+*UIConstraints: *Punch PU *MediaType TRANSPR
+*UIConstraints: *Punch PB *MediaType TRANSPR
+*UIConstraints: *Punch PL *MediaType LABELS
+*UIConstraints: *Punch PR *MediaType LABELS
+*UIConstraints: *Punch PU *MediaType LABELS
+*UIConstraints: *Punch PB *MediaType LABELS
+*UIConstraints: *Punch PL *MediaType TRACING
+*UIConstraints: *Punch PR *MediaType TRACING
+*UIConstraints: *Punch PU *MediaType TRACING
+*UIConstraints: *Punch PB *MediaType TRACING
+*UIConstraints: *Punch PL *MediaType CARDSTOCK
+*UIConstraints: *Punch PR *MediaType CARDSTOCK
+*UIConstraints: *Punch PU *MediaType CARDSTOCK
+*UIConstraints: *Punch PB *MediaType CARDSTOCK
+*UIConstraints: *MediaType TRANSPR *Punch PL
+*UIConstraints: *MediaType TRANSPR *Punch PR
+*UIConstraints: *MediaType TRANSPR *Punch PU
+*UIConstraints: *MediaType TRANSPR *Punch PB
+*UIConstraints: *MediaType LABELS *Punch PL
+*UIConstraints: *MediaType LABELS *Punch PR
+*UIConstraints: *MediaType LABELS *Punch PU
+*UIConstraints: *MediaType LABELS *Punch PB
+*UIConstraints: *MediaType TRACING *Punch PL
+*UIConstraints: *MediaType TRACING *Punch PR
+*UIConstraints: *MediaType TRACING *Punch PU
+*UIConstraints: *MediaType TRACING *Punch PB
+*UIConstraints: *MediaType CARDSTOCK *Punch PL
+*UIConstraints: *MediaType CARDSTOCK *Punch PR
+*UIConstraints: *MediaType CARDSTOCK *Punch PU
+*UIConstraints: *MediaType CARDSTOCK *Punch PB
+
+*% Can't rotate or offset OHP, Label and Tracing media types.
+*UIConstraints: *Finishing RotCol *MediaType TRANSPR
+*UIConstraints: *Finishing RotCol *MediaType LABELS
+*UIConstraints: *Finishing RotCol *MediaType TRACING
+*UIConstraints: *Finishing RotCol *MediaType CARDSTOCK
+*UIConstraints: *Finishing RotGr *MediaType TRANSPR
+*UIConstraints: *Finishing RotGr *MediaType LABELS
+*UIConstraints: *Finishing RotGr *MediaType TRACING
+*UIConstraints: *Finishing RotGr *MediaType CARDSTOCK
+*UIConstraints: *Finishing OffCol *MediaType TRANSPR
+*UIConstraints: *Finishing OffCol *MediaType LABELS
+*UIConstraints: *Finishing OffCol *MediaType TRACING
+*UIConstraints: *Finishing OffCol *MediaType CARDSTOCK
+*UIConstraints: *Finishing OffGr *MediaType TRANSPR
+*UIConstraints: *Finishing OffGr *MediaType LABELS
+*UIConstraints: *Finishing OffGr *MediaType TRACING
+*UIConstraints: *Finishing OffGr *MediaType CARDSTOCK
+*UIConstraints: *MediaType TRANSPR *Finishing RotCol
+*UIConstraints: *MediaType LABELS *Finishing RotCol
+*UIConstraints: *MediaType TRACING *Finishing RotCol
+*UIConstraints: *MediaType CARDSTOCK *Finishing RotCol
+*UIConstraints: *MediaType TRANSPR *Finishing RotGr
+*UIConstraints: *MediaType LABELS *Finishing RotGr
+*UIConstraints: *MediaType TRACING *Finishing RotGr
+*UIConstraints: *MediaType CARDSTOCK *Finishing RotGr
+*UIConstraints: *MediaType TRANSPR *Finishing OffCol
+*UIConstraints: *MediaType LABELS *Finishing OffCol
+*UIConstraints: *MediaType TRACING *Finishing OffCol
+*UIConstraints: *MediaType CARDSTOCK *Finishing OffCol
+*UIConstraints: *MediaType TRANSPR *Finishing OffGr
+*UIConstraints: *MediaType LABELS *Finishing OffGr
+*UIConstraints: *MediaType TRACING *Finishing OffGr
+*UIConstraints: *MediaType CARDSTOCK *Finishing OffGr
+
+*% Can't Booklet OHP, Label, Tracing and Heavy media types.
+*UIConstraints: *Booklet Left *MediaType TRANSPR
+*UIConstraints: *Booklet Left *MediaType LABELS
+*UIConstraints: *Booklet Left *MediaType TRACING
+*UIConstraints: *Booklet Left *MediaType CARDSTOCK
+*UIConstraints: *MediaType TRANSPR *Booklet Left
+*UIConstraints: *MediaType LABELS *Booklet Left
+*UIConstraints: *MediaType TRACING *Booklet Left
+*UIConstraints: *MediaType CARDSTOCK *Booklet Left
+
+*% Can't Saddle Stitch OHP, Label, Tracing and Heavy media types.
+*UIConstraints: *SaddleStitch On *MediaType TRANSPR
+*UIConstraints: *SaddleStitch On *MediaType LABELS
+*UIConstraints: *SaddleStitch On *MediaType TRACING
+*UIConstraints: *SaddleStitch On *MediaType CARDSTOCK
+*UIConstraints: *MediaType TRANSPR *SaddleStitch On
+*UIConstraints: *MediaType LABELS *SaddleStitch On
+*UIConstraints: *MediaType TRACING *SaddleStitch On
+*UIConstraints: *MediaType CARDSTOCK *SaddleStitch On
+
+*% Can't Trimmer OHP, Label, Tracing and Heavy media types.
+*UIConstraints: *Trimmer On *MediaType TRANSPR
+*UIConstraints: *Trimmer On *MediaType LABELS
+*UIConstraints: *Trimmer On *MediaType TRACING
+*UIConstraints: *Trimmer On *MediaType CARDSTOCK
+*UIConstraints: *MediaType TRANSPR *Trimmer On
+*UIConstraints: *MediaType LABELS *Trimmer On
+*UIConstraints: *MediaType TRACING *Trimmer On
+*UIConstraints: *MediaType CARDSTOCK *Trimmer On
+
+*% Only MPT supports OHP, Labels, Card Stock and Tracing.
+*UIConstraints: *InputSlot Tray1 *MediaType TRACING
+*UIConstraints: *InputSlot Tray1 *MediaType TRANSPR
+*UIConstraints: *InputSlot Tray1 *MediaType LABELS
+*UIConstraints: *InputSlot Tray1 *MediaType CARDSTOCK
+*UIConstraints: *InputSlot Tray2 *MediaType TRACING
+*UIConstraints: *InputSlot Tray2 *MediaType TRANSPR
+*UIConstraints: *InputSlot Tray2 *MediaType LABELS
+*UIConstraints: *InputSlot Tray2 *MediaType CARDSTOCK
+*UIConstraints: *InputSlot Tray3 *MediaType HEAVY
+*UIConstraints: *InputSlot Tray3 *MediaType TRACING
+*UIConstraints: *InputSlot Tray3 *MediaType TRANSPR
+*UIConstraints: *InputSlot Tray3 *MediaType LABELS
+*UIConstraints: *InputSlot Tray3 *MediaType CARDSTOCK
+*UIConstraints: *InputSlot Tray4 *MediaType HEAVY
+*UIConstraints: *InputSlot Tray4 *MediaType TRACING
+*UIConstraints: *InputSlot Tray4 *MediaType TRANSPR
+*UIConstraints: *InputSlot Tray4 *MediaType LABELS
+*UIConstraints: *InputSlot Tray4 *MediaType CARDSTOCK
+*UIConstraints: *InputSlot Tray5 *MediaType TRACING
+*UIConstraints: *InputSlot Tray5 *MediaType TRANSPR
+*UIConstraints: *InputSlot Tray5 *MediaType LABELS
+*UIConstraints: *InputSlot Tray5 *MediaType CARDSTOCK
+*UIConstraints: *InputSlot Tray6 *MediaType TRACING
+*UIConstraints: *InputSlot Tray6 *MediaType TRANSPR
+*UIConstraints: *InputSlot Tray6 *MediaType LABELS
+*UIConstraints: *InputSlot Tray6 *MediaType CARDSTOCK
+*UIConstraints: *MediaType TRACING *InputSlot Tray1
+*UIConstraints: *MediaType TRANSPR *InputSlot Tray1
+*UIConstraints: *MediaType LABELS *InputSlot Tray1
+*UIConstraints: *MediaType CARDSTOCK *InputSlot Tray1
+*UIConstraints: *MediaType TRACING *InputSlot Tray2
+*UIConstraints: *MediaType TRANSPR *InputSlot Tray2
+*UIConstraints: *MediaType LABELS *InputSlot Tray2
+*UIConstraints: *MediaType CARDSTOCK *InputSlot Tray2
+*UIConstraints: *MediaType HEAVY *InputSlot Tray3
+*UIConstraints: *MediaType TRACING *InputSlot Tray3
+*UIConstraints: *MediaType TRANSPR *InputSlot Tray3
+*UIConstraints: *MediaType LABELS *InputSlot Tray3
+*UIConstraints: *MediaType CARDSTOCK *InputSlot Tray3
+*UIConstraints: *MediaType HEAVY *InputSlot Tray4
+*UIConstraints: *MediaType TRACING *InputSlot Tray4
+*UIConstraints: *MediaType TRANSPR *InputSlot Tray4
+*UIConstraints: *MediaType LABELS *InputSlot Tray4
+*UIConstraints: *MediaType CARDSTOCK *InputSlot Tray4
+*UIConstraints: *MediaType TRACING *InputSlot Tray5
+*UIConstraints: *MediaType TRANSPR *InputSlot Tray5
+*UIConstraints: *MediaType LABELS *InputSlot Tray5
+*UIConstraints: *MediaType CARDSTOCK *InputSlot Tray5
+*UIConstraints: *MediaType TRACING *InputSlot Tray6
+*UIConstraints: *MediaType TRANSPR *InputSlot Tray6
+*UIConstraints: *MediaType LABELS *InputSlot Tray6
+*UIConstraints: *MediaType CARDSTOCK *InputSlot Tray6
+
+*% OHP media type can be only A4 or Letter .
+*UIConstraints: *MediaType TRANSPR *PageSize A3
+*UIConstraints: *MediaType TRANSPR *PageSize A5
+*UIConstraints: *MediaType TRANSPR *PageSize B4
+*UIConstraints: *MediaType TRANSPR *PageSize B5
+*UIConstraints: *MediaType TRANSPR *PageSize Legal
+*UIConstraints: *MediaType TRANSPR *PageSize Tabloid
+*UIConstraints: *MediaType TRANSPR *PageSize Executive
+*UIConstraints: *MediaType TRANSPR *PageSize Statement
+*UIConstraints: *MediaType TRANSPR *PageSize Cardstock46
+*UIConstraints: *MediaType TRANSPR *PageSize Cardstock58
+*UIConstraints: *PageSize A3 *MediaType TRANSPR
+*UIConstraints: *PageSize A5 *MediaType TRANSPR
+*UIConstraints: *PageSize B4 *MediaType TRANSPR
+*UIConstraints: *PageSize B5 *MediaType TRANSPR
+*UIConstraints: *PageSize Legal *MediaType TRANSPR
+*UIConstraints: *PageSize Tabloid *MediaType TRANSPR
+*UIConstraints: *PageSize Executive *MediaType TRANSPR
+*UIConstraints: *PageSize Statement *MediaType TRANSPR
+*UIConstraints: *PageSize Cardstock46 *MediaType TRANSPR
+*UIConstraints: *PageSize Cardstock58 *MediaType TRANSPR
+
+*UIConstraints: *MediaType TRANSPR *PageRegion A3
+*UIConstraints: *MediaType TRANSPR *PageRegion A5
+*UIConstraints: *MediaType TRANSPR *PageRegion B4
+*UIConstraints: *MediaType TRANSPR *PageRegion B5
+*UIConstraints: *MediaType TRANSPR *PageRegion Legal
+*UIConstraints: *MediaType TRANSPR *PageRegion Tabloid
+*UIConstraints: *MediaType TRANSPR *PageRegion Executive
+*UIConstraints: *MediaType TRANSPR *PageRegion Statement
+*UIConstraints: *MediaType TRANSPR *PageRegion Cardstock46
+*UIConstraints: *MediaType TRANSPR *PageRegion Cardstock58
+*UIConstraints: *PageRegion A3 *MediaType TRANSPR
+*UIConstraints: *PageRegion A5 *MediaType TRANSPR
+*UIConstraints: *PageRegion B4 *MediaType TRANSPR
+*UIConstraints: *PageRegion B5 *MediaType TRANSPR
+*UIConstraints: *PageRegion Legal *MediaType TRANSPR
+*UIConstraints: *PageRegion Tabloid *MediaType TRANSPR
+*UIConstraints: *PageRegion Executive *MediaType TRANSPR
+*UIConstraints: *PageRegion Statement *MediaType TRANSPR
+*UIConstraints: *PageRegion Cardstock46 *MediaType TRANSPR
+*UIConstraints: *PageRegion Cardstock58 *MediaType TRANSPR
+
+*% Label media type can be only A4, B4 and Letter.
+*UIConstraints: *MediaType LABELS *PageSize A3
+*UIConstraints: *MediaType LABELS *PageSize A5
+*UIConstraints: *MediaType LABELS *PageSize B5
+*UIConstraints: *MediaType LABELS *PageSize Legal
+*UIConstraints: *MediaType LABELS *PageSize Tabloid
+*UIConstraints: *MediaType LABELS *PageSize Executive
+*UIConstraints: *MediaType LABELS *PageSize Statement
+*UIConstraints: *MediaType LABELS *PageSize Cardstock46
+*UIConstraints: *MediaType LABELS *PageSize Cardstock58
+*UIConstraints: *PageSize A3 *MediaType LABELS
+*UIConstraints: *PageSize A5 *MediaType LABELS
+*UIConstraints: *PageSize B5 *MediaType LABELS
+*UIConstraints: *PageSize Legal *MediaType LABELS
+*UIConstraints: *PageSize Tabloid *MediaType LABELS
+*UIConstraints: *PageSize Executive *MediaType LABELS
+*UIConstraints: *PageSize Statement *MediaType LABELS
+*UIConstraints: *PageSize Cardstock46 *MediaType LABELS
+*UIConstraints: *PageSize Cardstock58 *MediaType LABELS
+
+*UIConstraints: *MediaType LABELS *PageRegion A3
+*UIConstraints: *MediaType LABELS *PageRegion A5
+*UIConstraints: *MediaType LABELS *PageRegion B5
+*UIConstraints: *MediaType LABELS *PageRegion Legal
+*UIConstraints: *MediaType LABELS *PageRegion Tabloid
+*UIConstraints: *MediaType LABELS *PageRegion Executive
+*UIConstraints: *MediaType LABELS *PageRegion Statement
+*UIConstraints: *MediaType LABELS *PageRegion Cardstock46
+*UIConstraints: *MediaType LABELS *PageRegion Cardstock58
+*UIConstraints: *PageRegion A3 *MediaType LABELS
+*UIConstraints: *PageRegion A5 *MediaType LABELS
+*UIConstraints: *PageRegion B5 *MediaType LABELS
+*UIConstraints: *PageRegion Legal *MediaType LABELS
+*UIConstraints: *PageRegion Tabloid *MediaType LABELS
+*UIConstraints: *PageRegion Executive *MediaType LABELS
+*UIConstraints: *PageRegion Statement *MediaType LABELS
+*UIConstraints: *PageRegion Cardstock46 *MediaType LABELS
+*UIConstraints: *PageRegion Cardstock58 *MediaType LABELS
+
+*% Tracing paper media type can be only A3, A4, B4 or B5 .
+*UIConstraints: *MediaType TRACING *PageSize A5
+*UIConstraints: *MediaType TRACING *PageSize Letter
+*UIConstraints: *MediaType TRACING *PageSize Legal
+*UIConstraints: *MediaType TRACING *PageSize Tabloid
+*UIConstraints: *MediaType TRACING *PageSize Executive
+*UIConstraints: *MediaType TRACING *PageSize Statement
+*UIConstraints: *MediaType TRACING *PageSize Cardstock46
+*UIConstraints: *MediaType TRACING *PageSize Cardstock58
+*UIConstraints: *PageSize A5 *MediaType TRACING
+*UIConstraints: *PageSize Letter *MediaType TRACING
+*UIConstraints: *PageSize Legal *MediaType TRACING
+*UIConstraints: *PageSize Tabloid *MediaType TRACING
+*UIConstraints: *PageSize Executive *MediaType TRACING
+*UIConstraints: *PageSize Statement *MediaType TRACING
+*UIConstraints: *PageSize Cardstock46 *MediaType TRACING
+*UIConstraints: *PageSize Cardstock58 *MediaType TRACING
+
+*UIConstraints: *MediaType TRACING *PageRegion A5
+*UIConstraints: *MediaType TRACING *PageRegion Letter
+*UIConstraints: *MediaType TRACING *PageRegion Legal
+*UIConstraints: *MediaType TRACING *PageRegion Tabloid
+*UIConstraints: *MediaType TRACING *PageRegion Executive
+*UIConstraints: *MediaType TRACING *PageRegion Statement
+*UIConstraints: *MediaType TRACING *PageRegion Cardstock46
+*UIConstraints: *MediaType TRACING *PageRegion Cardstock58
+*UIConstraints: *PageRegion A5 *MediaType TRACING
+*UIConstraints: *PageRegion Letter *MediaType TRACING
+*UIConstraints: *PageRegion Legal *MediaType TRACING
+*UIConstraints: *PageRegion Tabloid *MediaType TRACING
+*UIConstraints: *PageRegion Executive *MediaType TRACING
+*UIConstraints: *PageRegion Statement *MediaType TRACING
+*UIConstraints: *PageRegion Cardstock46 *MediaType TRACING
+*UIConstraints: *PageRegion Cardstock58 *MediaType TRACING
+
+*% Cardstock media type can be only Cardstock paper size .
+*UIConstraints: *MediaType CARDSTOCK *PageSize A3
+*UIConstraints: *MediaType CARDSTOCK *PageSize A4
+*UIConstraints: *MediaType CARDSTOCK *PageSize A5
+*UIConstraints: *MediaType CARDSTOCK *PageSize B4
+*UIConstraints: *MediaType CARDSTOCK *PageSize B5
+*UIConstraints: *MediaType CARDSTOCK *PageSize Letter
+*UIConstraints: *MediaType CARDSTOCK *PageSize Legal
+*UIConstraints: *MediaType CARDSTOCK *PageSize Tabloid
+*UIConstraints: *MediaType CARDSTOCK *PageSize Executive
+*UIConstraints: *MediaType CARDSTOCK *PageSize Statement
+*UIConstraints: *PageSize A3 *MediaType CARDSTOCK
+*UIConstraints: *PageSize A4 *MediaType CARDSTOCK
+*UIConstraints: *PageSize A5 *MediaType CARDSTOCK
+*UIConstraints: *PageSize B4 *MediaType CARDSTOCK
+*UIConstraints: *PageSize B5 *MediaType CARDSTOCK
+*UIConstraints: *PageSize Letter *MediaType CARDSTOCK
+*UIConstraints: *PageSize Legal *MediaType CARDSTOCK
+*UIConstraints: *PageSize Tabloid *MediaType CARDSTOCK
+*UIConstraints: *PageSize Executive *MediaType CARDSTOCK
+*UIConstraints: *PageSize Statement *MediaType CARDSTOCK
+
+*UIConstraints: *MediaType CARDSTOCK *PageRegion A3
+*UIConstraints: *MediaType CARDSTOCK *PageRegion A4
+*UIConstraints: *MediaType CARDSTOCK *PageRegion A5
+*UIConstraints: *MediaType CARDSTOCK *PageRegion B4
+*UIConstraints: *MediaType CARDSTOCK *PageRegion B5
+*UIConstraints: *MediaType CARDSTOCK *PageRegion Letter
+*UIConstraints: *MediaType CARDSTOCK *PageRegion Legal
+*UIConstraints: *MediaType CARDSTOCK *PageRegion Tabloid
+*UIConstraints: *MediaType CARDSTOCK *PageRegion Executive
+*UIConstraints: *MediaType CARDSTOCK *PageRegion Statement
+*UIConstraints: *PageRegion A3 *MediaType CARDSTOCK
+*UIConstraints: *PageRegion A4 *MediaType CARDSTOCK
+*UIConstraints: *PageRegion A5 *MediaType CARDSTOCK
+*UIConstraints: *PageRegion B4 *MediaType CARDSTOCK
+*UIConstraints: *PageRegion B5 *MediaType CARDSTOCK
+*UIConstraints: *PageRegion Letter *MediaType CARDSTOCK
+*UIConstraints: *PageRegion Legal *MediaType CARDSTOCK
+*UIConstraints: *PageRegion Tabloid *MediaType CARDSTOCK
+*UIConstraints: *PageRegion Executive *MediaType CARDSTOCK
+*UIConstraints: *PageRegion Statement *MediaType CARDSTOCK
+
+*UIConstraints: *MediaType PLAIN *PageSize Cardstock46
+*UIConstraints: *MediaType HEAVY *PageSize Cardstock46
+*UIConstraints: *MediaType RECYCLED *PageSize Cardstock46
+*UIConstraints: *MediaType COLOR *PageSize Cardstock46
+*UIConstraints: *MediaType LHEAD *PageSize Cardstock46
+*UIConstraints: *MediaType BOND *PageSize Cardstock46
+*UIConstraints: *MediaType PLAIN *PageRegion Cardstock46
+*UIConstraints: *MediaType HEAVY *PageRegion Cardstock46
+*UIConstraints: *MediaType RECYCLED *PageRegion Cardstock46
+*UIConstraints: *MediaType COLOR *PageRegion Cardstock46
+*UIConstraints: *MediaType LHEAD *PageRegion Cardstock46
+*UIConstraints: *MediaType BOND *PageRegion Cardstock46
+*UIConstraints: *PageSize Cardstock46 *MediaType PLAIN
+*UIConstraints: *PageSize Cardstock46 *MediaType HEAVY
+*UIConstraints: *PageSize Cardstock46 *MediaType RECYCLED
+*UIConstraints: *PageSize Cardstock46 *MediaType COLOR
+*UIConstraints: *PageSize Cardstock46 *MediaType LHEAD
+*UIConstraints: *PageSize Cardstock46 *MediaType BOND
+*UIConstraints: *PageRegion Cardstock46 *MediaType PLAIN
+*UIConstraints: *PageRegion Cardstock46 *MediaType HEAVY
+*UIConstraints: *PageRegion Cardstock46 *MediaType RECYCLED
+*UIConstraints: *PageRegion Cardstock46 *MediaType COLOR
+*UIConstraints: *PageRegion Cardstock46 *MediaType LHEAD
+*UIConstraints: *PageRegion Cardstock46 *MediaType BOND
+*UIConstraints: *MediaType PLAIN *PageSize Cardstock58
+*UIConstraints: *MediaType HEAVY *PageSize Cardstock58
+*UIConstraints: *MediaType RECYCLED *PageSize Cardstock58
+*UIConstraints: *MediaType COLOR *PageSize Cardstock58
+*UIConstraints: *MediaType LHEAD *PageSize Cardstock58
+*UIConstraints: *MediaType BOND *PageSize Cardstock58
+*UIConstraints: *MediaType PLAIN *PageRegion Cardstock58
+*UIConstraints: *MediaType HEAVY *PageRegion Cardstock58
+*UIConstraints: *MediaType RECYCLED *PageRegion Cardstock58
+*UIConstraints: *MediaType COLOR *PageRegion Cardstock58
+*UIConstraints: *MediaType LHEAD *PageRegion Cardstock58
+*UIConstraints: *MediaType BOND *PageRegion Cardstock58
+*UIConstraints: *PageSize Cardstock58 *MediaType PLAIN
+*UIConstraints: *PageSize Cardstock58 *MediaType HEAVY
+*UIConstraints: *PageSize Cardstock58 *MediaType RECYCLED
+*UIConstraints: *PageSize Cardstock58 *MediaType COLOR
+*UIConstraints: *PageSize Cardstock58 *MediaType LHEAD
+*UIConstraints: *PageSize Cardstock58 *MediaType BOND
+*UIConstraints: *PageRegion Cardstock58 *MediaType PLAIN
+*UIConstraints: *PageRegion Cardstock58 *MediaType HEAVY
+*UIConstraints: *PageRegion Cardstock58 *MediaType RECYCLED
+*UIConstraints: *PageRegion Cardstock58 *MediaType COLOR
+*UIConstraints: *PageRegion Cardstock58 *MediaType LHEAD
+*UIConstraints: *PageRegion Cardstock58 *MediaType BOND
+
+*% Can only interleave OHP media types.
+*UIConstraints: *Interleave White *MediaType None
+*UIConstraints: *Interleave White *MediaType PLAIN
+*UIConstraints: *Interleave White *MediaType HEAVY
+*UIConstraints: *Interleave White *MediaType RECYCLED
+*UIConstraints: *Interleave White *MediaType COLOR
+*UIConstraints: *Interleave White *MediaType LHEAD
+*UIConstraints: *Interleave White *MediaType TRACING
+*UIConstraints: *Interleave White *MediaType LABELS
+*UIConstraints: *Interleave White *MediaType BOND
+*UIConstraints: *Interleave White *MediaType CARDSTOCK
+*UIConstraints: *Interleave Printed *MediaType None
+*UIConstraints: *Interleave Printed *MediaType PLAIN
+*UIConstraints: *Interleave Printed *MediaType HEAVY
+*UIConstraints: *Interleave Printed *MediaType RECYCLED
+*UIConstraints: *Interleave Printed *MediaType COLOR
+*UIConstraints: *Interleave Printed *MediaType LHEAD
+*UIConstraints: *Interleave Printed *MediaType TRACING
+*UIConstraints: *Interleave Printed *MediaType LABELS
+*UIConstraints: *Interleave Printed *MediaType BOND
+*UIConstraints: *Interleave Printed *MediaType CARDSTOCK
+*UIConstraints: *MediaType None *Interleave White
+*UIConstraints: *MediaType PLAIN *Interleave White
+*UIConstraints: *MediaType HEAVY *Interleave White
+*UIConstraints: *MediaType RECYCLED *Interleave White
+*UIConstraints: *MediaType COLOR *Interleave White
+*UIConstraints: *MediaType LHEAD *Interleave White
+*UIConstraints: *MediaType TRACING *Interleave White
+*UIConstraints: *MediaType LABELS *Interleave White
+*UIConstraints: *MediaType BOND *Interleave White
+*UIConstraints: *MediaType CARDSTOCK *Interleave White
+*UIConstraints: *MediaType None *Interleave Printed
+*UIConstraints: *MediaType PLAIN *Interleave Printed
+*UIConstraints: *MediaType HEAVY *Interleave Printed
+*UIConstraints: *MediaType RECYCLED *Interleave Printed
+*UIConstraints: *MediaType COLOR *Interleave Printed
+*UIConstraints: *MediaType LHEAD *Interleave Printed
+*UIConstraints: *MediaType TRACING *Interleave Printed
+*UIConstraints: *MediaType LABELS *Interleave Printed
+*UIConstraints: *MediaType BOND *Interleave Printed
+*UIConstraints: *MediaType CARDSTOCK *Interleave Printed
+
+*% === end media type constraints ===
+
+*% ==== Device Capabilities ===============
+*LanguageLevel: "3"
+*Protocols: TBCP
+
+*FreeVM: "2157000"
+
+*ColorDevice: False
+*DefaultColorSpace: Gray
+
+*TTRasterizer: Type42
+*?TTRasterizer: "save
+ 42 /FontType resourcestatus
+ {pop pop (Type42)} {(No Type42)} ifelse = flush
+restore"
+*End
+
+*% Optional flash rom is treated like a disk.
+*FileSystem: True
+*?FileSystem: "save statusdict /diskonline get exec
+ {(True)}{(False)} ifelse = flush restore"
+*End
+
+*Throughput: "85"
+*Password: "()"
+*ExitServer: "
+  count 0 eq
+  {false}
+  {true exch startjob}
+  ifelse
+  not
+  {
+    (WARNING: Cannot modify initial VM.) =
+    (Missing or invalid password.) =
+    (Please contact the author of this software.) = flush quit
+  } if"
+*End
+*Reset: "
+  count 0 eq
+  {false}
+  {true exch startjob}
+  ifelse
+  not
+  {
+    (WARNING: Cannot reset printer.) =
+    (Missing or invalid password.) =
+    (Please contact the author of this software.) = flush quit
+  } if
+  systemdict /quit get exec
+  (WARNING : Printer Reset Failed.) = flush"
+*End
+
+*OpenGroup: Features
+
+*% === Duplex options ============
+*OpenUI *Duplex/Duplex: PickOne
+*OrderDependency: 50.0 AnySetup *Duplex
+*DefaultDuplex: None
+*Duplex None/Off: "<</Duplex false /Tumble false>> setpagedevice"
+*Duplex DuplexNoTumble/Long edge: "<</Duplex true /Tumble false>> setpagedevice"
+*Duplex DuplexTumble/Short edge: "<</Duplex true /Tumble true>> setpagedevice"
+*?Duplex: "save
+ currentpagedevice dup /Duplex known
+ {
+  dup /Duplex get
+  {/Tumble get {(DuplexTumble)} {(DuplexNoTumble)} ifelse}
+  {pop (None)}
+  ifelse
+ } {pop (None)}
+ ifelse = flush
+restore"
+*End
+*CloseUI: *Duplex
+
+*RequiresPageRegion All: True
+
+*% === Input options  ============
+*OpenUI *InputSlot: PickOne
+*OrderDependency: 50.0 AnySetup *InputSlot
+*DefaultInputSlot: Auto
+*% tray names:
+*% Tray1 = Right Deck = Drawer1
+*% Tray2 = Left Deck  = Drawer2
+*% Tray3 = Drawer3
+*% Tray4 = Drawer4
+*% Tray5 = Option Paper Deck = Small Side Paper Deck
+*% Tray6 = Option Paper Deck = Large Side Paper Deck
+*InputSlot Auto/Auto Select: "<</InputAttributes <</Priority []>> >>
+ setpagedevice"
+*End
+*InputSlot MPT/Stack Bypass: "
+ currentpagedevice /InputAttributes get 1 get null ne
+ {<</InputAttributes <</Priority [1 5 3 0 2 4]>> >>
+ setpagedevice} if"
+*End
+*InputSlot Tray1/Drawer1: "
+ currentpagedevice /InputAttributes get 0 get null ne
+ {<</InputAttributes <</Priority [0 5 3 2 1 4]>> >>
+ setpagedevice} if"
+*End
+*InputSlot Tray2/Drawer2: "
+ currentpagedevice /InputAttributes get 2 get null ne
+ {<</InputAttributes <</Priority [2 5 3 0 1 4]>> >>
+ setpagedevice} if"
+*End 
+*InputSlot Tray3/Drawer3: "
+ currentpagedevice /InputAttributes get 3 get null ne
+ {<</InputAttributes <</Priority [3 5 0 2 1 4]>> >>
+ setpagedevice} if"
+*End 
+*InputSlot Tray4/Drawer4: "
+ currentpagedevice /InputAttributes get 4 get null ne
+ {<</InputAttributes <</Priority [4 5 3 0 2 1]>> >>
+ setpagedevice} if"
+*End 
+*InputSlot Tray5/Side Paper Deck-M1: "
+ currentpagedevice /InputAttributes get 5 get null ne
+ {<</InputAttributes <</Priority [5 3 0 2 1 4]>> >>
+ setpagedevice} if"
+*End 
+*InputSlot Tray6/Side Paper Deck-T1: "
+ currentpagedevice /InputAttributes get 5 get null ne
+ {<</InputAttributes <</Priority [5 3 0 2 1 4]>> >>
+ setpagedevice} if"
+*End 
+*?InputSlot: "save
+ <<
+   /0 (Tray1)
+   /1 (MPT)
+   /2 (Tray2)
+   /3 (Tray3)
+   /4 (Tray4)
+   /5 (Tray5)
+   /5 (Tray6)
+ >>
+ currentpagedevice /InputAttributes get dup /Priority known
+ {/Priority get 0 get (  ) cvs cvn get}
+ {dup length 1 eq
+   {{pop} forall (       ) cvs cvn get}
+   {pop pop (Unknown)} ifelse
+ } ifelse = flush
+restore"
+*End
+*CloseUI: *InputSlot
+
+*% === Tray Switching options ============
+*OpenUI *TSwitch/Tray Switch: PickOne
+*OrderDependency: 50.0 AnySetup *TSwitch
+*DefaultTSwitch: Default
+*TSwitch Default/Printer Default: ""
+*TSwitch Off/Off: "<</TraySwitch false>> setpagedevice"
+*TSwitch On/On: "<</TraySwitch true>> setpagedevice"
+*?TSwitch: "save
+ currentpagedevice dup /TraySwitch known
+ {/TraySwitch get {(On)}{(Off)} ifelse}
+ {pop (None)}
+ ifelse = flush
+restore"
+*End
+*CloseUI: *TSwitch
+
+*OpenUI *MediaType/Media Type: PickOne
+*OrderDependency: 50.0 AnySetup *MediaType
+*DefaultMediaType: None
+*MediaType None/Printer Default: ""
+
+*MediaType PLAIN/Plain Paper: "<</MediaType (PLAIN)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType HEAVY/Heavy Paper: "<</MediaType (HEAVY)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType RECYCLED/Recycled: "<</MediaType (RECYCLED)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType COLOR/Color: "<</MediaType (COLOR)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType LHEAD/Letterhead: "<</MediaType (LETTERHEAD)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType TRACING/Tracing Paper: "<</MediaType (TRACING)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType TRANSPR/Transparency: "<</MediaType (TRANSPARENCY)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType LABELS/Labels: "<</MediaType (LABELS)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType BOND/Bond Paper: "<</MediaType (BOND)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+*MediaType CARDSTOCK/Card Stock: "<</MediaType (CARDSTOCK)
+ /Policies <</MediaType 2>> >> setpagedevice"
+*End
+
+*?MediaType: "save
+ currentpagedevice /MediaType 2 copy known
+ {get
+[[(PLAIN)   (PLAIN)]
+ [(HEAVY) (HEAVY)]
+ [(RECYCLED) (RECYCLED)]
+ [(COLOR) (COLOR)]
+ [(LHEAD) (LETTERHEAD)]
+ [(TRACING) (TRACING)]
+ [(TRANSPR) (TRANSPARENCY)]
+ [(LABELS)  (LABELS)]
+ [(BOND) (BOND)]
+ [(CARDSTOCK) (CARDSTOCK)]]
+  {aload pop 2 index eq {(1) exit}{pop} ifelse} forall
+ (1) eq {exch pop} {(Unknown)} ifelse
+ } {pop pop (None)} ifelse
+ = flush
+restore"
+*End
+*CloseUI: *MediaType
+
+*DefaultResolution: 600dpi
+
+*% === Booklet options ============
+*OpenUI *Booklet/Booklet Printing: PickOne
+*OrderDependency: 5.0 AnySetup *Booklet
+*DefaultBooklet: None
+*Booklet None/Off: "<</Booklet false>> setpagedevice"
+
+*%Booklet Right/Right Opening Booklet: "
+*%<</Booklet true /BookletDetails <</Type 31
+*%/Layout (RighttoLeft)>> >> setpagedevice"
+*%*End
+
+*Booklet Left/On: "
+<</Booklet true /BookletDetails <</Type 31
+/Layout (LefttoRight)>> >> setpagedevice"
+*End
+
+*?Booklet: "save
+ currentpagedevice dup /Booklet known
+ {/Booklet get {currentpagedevice /BookletDetails get
+ /Layout get (RighttoLeft) eq {(Right)}{(Left)} ifelse} {(None)} ifelse}
+ {pop (None)} ifelse = flush
+restore"
+*End
+*CloseUI: *Booklet
+
+*% === Saddle Stitch options ============
+*OpenUI *SaddleStitch/Saddle Stitch: PickOne
+*OrderDependency: 50.0 AnySetup *SaddleStitch
+*DefaultSaddleStitch: Default
+*SaddleStitch Default/Printer Default: ""
+*SaddleStitch Off/Off: "<<currentpagedevice /Booklet get /Booklet exch
+/BookletDetails <</Type 31 /SaddleStitch false
+currentpagedevice /BookletDetails get /Layout get
+/Layout exch >> >> setpagedevice"
+*End
+*SaddleStitch On/On: "<</Booklet true
+/BookletDetails <</Type 31 /SaddleStitch true
+currentpagedevice /BookletDetails get /Layout get
+/Layout exch >> >> setpagedevice"
+*End
+*?SaddleStitch: "save
+ currentpagedevice dup /Booklet known
+ {/BookletDetails get /SaddleStitch get {(On)}{(Off)} ifelse}
+ {pop (Default)}
+ ifelse = flush
+restore"
+*End
+*CloseUI: *SaddleStitch
+
+*% === Trimmer options ============
+*OpenUI *Trimmer/Use Trimmer to trim paper: PickOne
+*OrderDependency: 50.0 AnySetup *Trimmer
+*DefaultTrimmer: Default
+*Trimmer Default/Printer Default: ""
+*Trimmer Off/Off: "<</Trim 0>> setpagedevice"
+*Trimmer On/On: "<</Trim 3>> setpagedevice"
+*?Trimmer: "save
+ currentpagedevice dup /Trim known
+ {/Trim get 3 eq {(On)}{(Off)} ifelse}
+ {pop (Default)}
+ ifelse = flush
+restore"
+*End
+*CloseUI: *Trimmer
+
+*% === Z-Fold options ============
+*OpenUI *ZFold/Z-Fold: PickOne
+*OrderDependency: 50.0 AnySetup *ZFold
+*DefaultZFold: Default
+*ZFold Default/Printer Default: ""
+*ZFold Off/Off: "<</Fold 0>> setpagedevice"
+*ZFold OnL/On - Portrait: "<</Fold 5 /FoldDetails <</FoldType (Mode1)>> >> setpagedevice"
+*ZFold OnR/On - Landscape: "<</Fold 5 /FoldDetails <</FoldType (Mode2)>> >> setpagedevice"
+*?ZFold: "save
+ currentpagedevice dup /Fold known
+ {/Fold get 5 eq {(On)}{(Off)} ifelse}
+ {pop (Default)}
+ ifelse = flush
+restore"
+*End
+*CloseUI: *ZFold
+
+*% === Gutter Location options ============
+*OpenUI *BindingLocation/Gutter Location: PickOne
+*OrderDependency: 50.0 AnySetup *BindingLocation
+*DefaultBindingLocation: None
+*BindingLocation None/Printer Default: ""
+*BindingLocation LongEdge/Long Edge: "<</BindingLocation (LongEdge) >> setpagedevice"
+*BindingLocation ShortEdge/Short Edge: "<</BindingLocation (ShortEdge) >> setpagedevice"
+*% 
+*?BindingLocation: "save
+ currentpagedevice dup /BindingLocation known
+ {/BindingLocation get}
+ {pop (None)}
+ ifelse = flush
+restore"
+*End
+*CloseUI: *BindingLocation
+
+*% === Binding Margin's Gutter options ============
+*OpenUI *Gutter/Gutter: PickOne
+*OrderDependency: 50.0 AnySetup *Gutter
+*DefaultGutter: None
+*Gutter 30mm/+30 mm: "<< /Gutter 30 >> setpagedevice"
+*Gutter 28mm/+28 mm: "<< /Gutter 28 >> setpagedevice"
+*Gutter 26mm/+26 mm: "<< /Gutter 26 >> setpagedevice"
+*Gutter 24mm/+24 mm: "<< /Gutter 24 >> setpagedevice"
+*Gutter 22mm/+22 mm: "<< /Gutter 22 >> setpagedevice"
+*Gutter 20mm/+20 mm: "<< /Gutter 20 >> setpagedevice"
+*Gutter 18mm/+18 mm: "<< /Gutter 18 >> setpagedevice"
+*Gutter 16mm/+16 mm: "<< /Gutter 16 >> setpagedevice"
+*Gutter 14mm/+14 mm: "<< /Gutter 14 >> setpagedevice"
+*Gutter 12mm/+12 mm: "<< /Gutter 12 >> setpagedevice"
+*Gutter 10mm/+10 mm: "<< /Gutter 10 >> setpagedevice"
+*Gutter 8mm/+8 mm: "<< /Gutter 8 >> setpagedevice"
+*Gutter 6mm/+6 mm: "<< /Gutter 6 >> setpagedevice"
+*Gutter 4mm/+4 mm: "<< /Gutter 4 >> setpagedevice"
+*Gutter 2mm/+2 mm: "<< /Gutter 2 >> setpagedevice"
+*Gutter None/0 mm: "<< /Gutter 0 >> setpagedevice"
+
+*?Gutter: "save
+ currentpagedevice dup /Gutter known
+ {/Gutter get cvi dup 0 ne
+ 	{3 string cvs dup length dup 2 add string
+	 dup 4 -1 roll 0 exch putinterval dup 3 -1 roll (mm) putinterval}
+	{pop (None)}
+ ifelse}
+{(None)} ifelse  
+  = flush
+restore"
+*End
+*CloseUI: *Gutter
+
+*% === Finishing option ============
+*OpenUI *Finishing/Finishing: PickOne
+*OrderDependency: 50.0 AnySetup *Finishing
+*DefaultFinishing: None
+*Finishing None/Off: "
+<</Collate false /Rotate false /Jog 0>> setpagedevice"
+*End
+*Finishing RotCol/Rotate-Collate: "
+<</Collate true /Rotate true /Jog 0>> setpagedevice"
+*End
+*Finishing RotGr/Rotate-Group: "
+<</Collate false /Rotate true /Jog 0>> setpagedevice"
+*End
+*Finishing OffCol/Offset-Collate: "
+<</Collate true /Rotate false /Jog 2>> setpagedevice"
+*End
+*Finishing OffGr/Offset-Group: "
+<</Collate false /Rotate false /Jog 2>> setpagedevice"
+*End
+
+*?Finishing: "save
+currentpagedevice /Jog known
+	{currentpagedevice /Collate known
+		{currentpagedevice /RotateSort known
+			{currentpagedevice /Jog get 0 eq
+				{currentpagedevice /Collate get
+					{currentpagedevice /RotateSort get
+						{(RotCol)}{(OffCol)}
+					ifelse}
+					{currentpagedevice /RotateSort get
+						{(RotGr)}{(OffGr)}
+					ifelse}
+				  ifelse}
+				{currentpagedevice /Jog get 2 eq
+					{currentpagedevice /Collate get
+						{(None)}
+						{currentpagedevice /RotateSort get
+							{(None)}{(Off)}
+						 ifelse}
+					 ifelse}
+				 ifelse}
+			 ifelse}
+			{(None)}
+		 ifelse}
+		{(None)}
+	 ifelse}
+	{(None)}
+ ifelse
+currentpagedevice /Staple 2 copy known
+	{get 2 eq
+		{pop (FinStaple)}
+	 if}
+if
+ = flush
+restore"
+*End
+*CloseUI: *Finishing
+
+*% === Staple Position options ===============
+*%
+*OpenUI *Staple/Staple Position: PickOne
+*OrderDependency: 50.0 AnySetup *Staple
+*DefaultStaple: None
+*Staple None/Off: "<</Staple 0 >> setpagedevice"
+*Staple 1PRU/1 Staple (Port RU/Land RB): "<</Staple 2 /Collate true
+ /StapleDetails <</Type 5 /Position (1PRU)>> >> setpagedevice"
+*End
+*Staple 1PLU/1 Staple (Port LU/Land RU): "<</Staple 2 /Collate true
+ /StapleDetails <</Type 5 /Position (1PLU)>> >> setpagedevice"
+*End
+*Staple 1PRB/1 Staple (Port RB/Land LB): "<</Staple 2 /Collate true
+ /StapleDetails <</Type 5 /Position (1PRB)>> >> setpagedevice"
+*End
+*Staple 1PLB/1 Staple (Port LB/Land LU): "<</Staple 2 /Collate true
+ /StapleDetails <</Type 5 /Position (1PLB)>> >> setpagedevice"
+*End
+*Staple 2PL/2 Staple (Port L/Land U): "<</Staple 2 /Collate true
+ /StapleDetails <</Type 5 /Position (2PL)>> >> setpagedevice"
+*End
+*Staple 2PR/2 Staple (Port R/Land B): "<</Staple 2 /Collate true
+ /StapleDetails <</Type 5 /Position (2PR)>> >> setpagedevice"
+*End
+*Staple 2PU/2 Staple (Port U/Land R): "<</Staple 2 /Collate true
+ /StapleDetails <</Type 5 /Position (2PU)>> >> setpagedevice"
+*End
+*Staple 2PB/2 Staple (Port B/Land L): "<</Staple 2 /Collate true
+ /StapleDetails <</Type 5 /Position (2PB)>> >> setpagedevice"
+*End
+*?Staple: "save
+ /sg {3 1 roll 2 copy known {get exch} {pop} ifelse pop} def
+ currentpagedevice dup /Staple 0 sg 2 eq
+ {
+  /StapleDetails <<>> sg /Position () sg true
+  [(1PRU) (1PLU) (1PRB) (1PLB) (2PL) (2PR) (2PU) (2PB)]
+  {2 index eq {false exit} if} forall
+  exch pop {(None)} if
+ } {pop (None)} ifelse = flush
+restore"
+*End
+*CloseUI: *Staple
+
+*% === Hole Punch options ============
+*OpenUI *Punch/Hole Punch: PickOne
+*OrderDependency: 50.0 AnySetup *Punch
+*DefaultPunch: None
+*Punch None/Off: "<</Punch false>> setpagedevice"
+*Punch PL/Punch (Port L/Land U): "<</Punch true
+  /PunchDetails <</Type 19 /Position (PL)>> >> setpagedevice"
+*End
+*Punch PR/Punch (Port R/Land B): "<</Punch true
+  /PunchDetails <</Type 19 /Position (PR)>> >> setpagedevice"
+*End
+*Punch PU/Punch (Port U/Land R): "<</Punch true
+  /PunchDetails <</Type 19 /Position (PU)>> >> setpagedevice"
+*End
+*Punch PB/Punch (Port B/Land L): "<</Punch true
+  /PunchDetails <</Type 19 /Position (PB)>> >> setpagedevice"
+*End
+*?Punch: "save
+ /sg {3 1 roll 2 copy known {get exch} {pop} ifelse pop} def
+ currentpagedevice dup /Punch 0 sg 2 eq
+ {
+  /PunchDetails <<>> sg /Position () sg true
+  [(PL) (PR) (PU) (PB)]
+  {2 index eq {false exit} if} forall
+  exch pop {(None)} if
+ } {pop (None)} ifelse = flush
+restore"
+*End
+*CloseUI: *Punch
+
+*% === Insert Sheet options ============
+*OpenUI *Inserter/Insert Sheet: PickOne
+*OrderDependency: 50.0 AnySetup *Inserter
+*DefaultInserter: Default
+*Inserter Default/Printer Default: ""
+*Inserter Off/Off: "<</SlipSheet 0>> setpagedevice"
+*Inserter On/On: "<</SlipSheet 5 /Collate true>> setpagedevice"
+*?Inserter: "save
+ currentpagedevice dup /SlipSheet known
+ {/SlipSheet get 5 eq {(On)}{(Off)} ifelse}
+ {pop (Default)}
+ ifelse = flush
+restore"
+*End
+*CloseUI: *Inserter
+
+*% === Interleaving options ============
+*OpenUI *Interleave/Transparency Interleaving: PickOne
+*OrderDependency: 60.0 AnySetup *Interleave
+*DefaultInterleave: None
+*Interleave None/Off: "<</Interleave 0>> setpagedevice"
+*Interleave White/Blank Interleaf Sheet: "<</Interleave 1 /Collate true
+ /MediaType (TRANSPARENCY) /Policies <</MediaType 2>> >> setpagedevice
+ currentpagedevice /InputAttributes get 1 get null ne
+ {<</InputAttributes <</Priority [1 5 3 0 2 4]>> >>
+ setpagedevice} if"
+*End
+*Interleave Printed/Printed Interleaf Sheet: "<</Interleave 2 /Collate true
+ /MediaType (TRANSPARENCY) /Policies <</MediaType 2>> >> setpagedevice
+ currentpagedevice /InputAttributes get 1 get null ne
+ {<</InputAttributes <</Priority [1 5 3 0 2 4]>> >>
+ setpagedevice} if"
+*End
+*?Interleave: "save
+ currentpagedevice dup /Interleave known
+ {/Interleave get dup 1 ge {1 eq {(White)}{(Printed)} ifelse}
+ {pop (None)}
+ ifelse}{pop (None)} ifelse  = flush
+restore"
+*End
+*CloseUI: *Interleave
+
+*% === Paper Output options ============
+*OpenUI *CNOutput/Paper Output: PickOne
+*OrderDependency: 50.0 AnySetup *CNOutput
+*DefaultCNOutput: Auto
+*CNOutput Auto/Auto: "<</DeferredOutputTraySelection true>> setpagedevice"
+*CNOutput TrayA/Tray-A: "<</DeferredOutputTraySelection false
+/OutputTrayPosition 0>> setpagedevice"
+*End
+*CNOutput TrayB/Tray-B: "<</DeferredOutputTraySelection false
+/OutputTrayPosition 1>> setpagedevice"
+*End
+*?CNOutput: "save
+ currentpagedevice dup /DeferredOutputTraySelection known
+ {dup /DeferredOutputTraySelection get
+ 	{pop (Auto)}
+ 	{/OutputTrayPosition get 0 eq {(TrayA)}{(TrayB)} ifelse}
+ }
+ {(Auto)} ifelse
+ = flush restore"
+*End
+*CloseUI: *CNOutput
+
+*% === Image Refinement options =====
+*OpenUI *ImageRefine/Image Refinement: PickOne
+*OrderDependency: 50.0 AnySetup *ImageRefine
+*DefaultImageRefine: Default
+*ImageRefine Default/Printer Default: ""
+*ImageRefine Off/Off: "<</PostRenderingEnhance false /PostRenderingEnhanceDetails
+ <</Type 18 /REValue 1>> >> setpagedevice"
+*End
+*ImageRefine On/On: "<</PostRenderingEnhance true /PostRenderingEnhanceDetails
+ <</Type 18 /REValue 0>> >> setpagedevice"
+*End
+*?ImageRefine: "save
+ currentpagedevice dup /PostRenderingEnhance known
+ {dup /PostRenderingEnhance get
+  {
+   /PostRenderingEnhanceDetails get
+   dup /Type get 18 eq
+   {
+    dup /REValue get dup 0 eq
+    {pop (On)}
+    {1 eq {(Off)}{(Default)}ifelse}
+    ifelse
+   }
+   {pop (Default)} ifelse
+  }
+  {pop (Off)}
+  ifelse}
+ {pop (Default)}
+ ifelse = flush
+restore"
+*End
+*CloseUI: *ImageRefine
+
+*% === Line Refinement options ============
+*OpenUI *LineRefine/Line Refinement: PickOne
+*OrderDependency: 50.0 AnySetup *LineRefine
+*DefaultLineRefine: Default
+*LineRefine Default/Printer Default: ""
+*LineRefine Off/Off: "<</LineRefine false>> setpagedevice"
+*LineRefine On/On: "<</LineRefine true>> setpagedevice"
+*?LineRefine: "save
+ currentpagedevice dup /LineRefine known
+ {/LineRefine get {(On)}{(Off)} ifelse}
+ {pop (None)}
+ ifelse = flush
+restore"
+*End
+*CloseUI: *LineRefine
+
+*% === Toner Reduction options ============
+*OpenUI *TonerReduction/Toner Reduction: PickOne
+*OrderDependency: 50.0 AnySetup *TonerReduction
+*DefaultTonerReduction: Default
+*TonerReduction Default/Printer Default: ""
+*TonerReduction Off/Off: "<</PostRenderingEnhance true
+/PostRenderingEnhanceDetails <</Type 18 /TonerSaver 0>> >> setpagedevice"
+*End
+*TonerReduction On/On: "<</PostRenderingEnhance true
+/PostRenderingEnhanceDetails <</Type 18 /TonerSaver 1>> >> setpagedevice"
+*End
+*?TonerReduction: "save
+ currentpagedevice dup /PostRenderingEnhanceDetails known
+ {/PostRenderingEnhanceDetails get /TonerSaver get 1 eq {(On)}{(Off)} ifelse}
+ {pop (None)}
+ ifelse = flush
+restore"
+*End
+*CloseUI: *TonerReduction
+
+*CloseGroup: Features
+
+*% Halftone Information ===============
+*DefaultHalftoneType: 1
+*ScreenFreq: "71.0"
+*ScreenAngle: "45.0"
+
+*DefaultScreenProc: Dot
+*ScreenProc Dot: "
+ {abs exch abs 2 copy add 1 gt {1 sub dup mul exch 1 sub dup mul add 1 sub}
+ {dup mul exch dup mul add 1 exch sub} ifelse}"
+*End
+*ScreenProc Line: "{pop}"
+*ScreenProc Ellipse: "{dup 5 mul 8 div mul exch dup mul exch add sqrt 1
+ exch sub}"
+*End
+
+*DefaultTransfer: Null
+*Transfer Null: "{ }"
+*Transfer Null.Inverse: "{1 exch sub}"
+
+*% Paper Handling =====================
+
+*% Custom Page Size ===================
+
+*NonUIOrderDependency: 50.0 AnySetup *CustomPageSize
+*MaxMediaWidth: "842"
+*MaxMediaHeight: "1225"
+*CenterRegistered: True
+*HWMargins: 11.3386 11.3386 11.3386 11.3386
+*LeadingEdge Short: ""
+*DefaultLeadingEdge: Short
+*VariablePaperSize: True
+*ParamCustomPageSize Width: 1 points 283 842
+*ParamCustomPageSize Height: 2 points 420 1225
+*ParamCustomPageSize WidthOffset: 3 points 0 0
+*ParamCustomPageSize HeightOffset: 4 points 0 0
+*ParamCustomPageSize Orientation: 5 int 0 3
+
+*CustomPageSize True: "pop pop pop <</PageSize [5 -2 roll] /ImagingBBox null
+ /DeferredMediaSelection true /Policies <</PageSize 2>> >> setpagedevice"
+*End
+
+*% Only the MPT supports custom page sizes.
+*NonUIConstraints: *InputSlot Tray1 *CustomPageSize True
+*NonUIConstraints: *InputSlot Tray2 *CustomPageSize True
+*NonUIConstraints: *InputSlot Tray3 *CustomPageSize True
+*NonUIConstraints: *InputSlot Tray4 *CustomPageSize True
+*NonUIConstraints: *InputSlot Tray5 *CustomPageSize True
+*NonUIConstraints: *InputSlot Tray6 *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *InputSlot Tray1
+*NonUIConstraints: *CustomPageSize True *InputSlot Tray2
+*NonUIConstraints: *CustomPageSize True *InputSlot Tray3
+*NonUIConstraints: *CustomPageSize True *InputSlot Tray4
+*NonUIConstraints: *CustomPageSize True *InputSlot Tray5
+*NonUIConstraints: *CustomPageSize True *InputSlot Tray6
+
+*% Can't be OHP, labels or tracing for custom page sizes.
+*NonUIConstraints: *MediaType TRANSPR *CustomPageSize True
+*NonUIConstraints: *MediaType LABELS *CustomPageSize True
+*NonUIConstraints: *MediaType TRACING *CustomPageSize True
+*NonUIConstraints: *MediaType CARDSTOCK *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *MediaType TRANSPR
+*NonUIConstraints: *CustomPageSize True *MediaType LABELS
+*NonUIConstraints: *CustomPageSize True *MediaType TRACING
+*NonUIConstraints: *CustomPageSize True *MediaType CARDSTOCK
+
+*% Can't duplex custom page sizes.
+*NonUIConstraints: *Duplex DuplexTumble *CustomPageSize True
+*NonUIConstraints: *Duplex DuplexNoTumble *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *Duplex DuplexTumble
+*NonUIConstraints: *CustomPageSize True *Duplex DuplexNoTumble
+
+*% Can't staple custom page sizes.
+*NonUIConstraints: *Finishing RotCol *CustomPageSize True
+*NonUIConstraints: *Finishing RotGr *CustomPageSize True
+*NonUIConstraints: *Finishing OffCol *CustomPageSize True
+*NonUIConstraints: *Finishing OffGr *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *Finishing RotCol
+*NonUIConstraints: *CustomPageSize True *Finishing RotGr
+*NonUIConstraints: *CustomPageSize True *Finishing OffCol
+*NonUIConstraints: *CustomPageSize True *Finishing OffGr
+*NonUIConstraints: *Staple *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *Staple
+
+*% Can't punch custom page sizes.
+*NonUIConstraints: *Punch *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *Punch
+
+*% Can't booklet custom page sizes.
+*NonUIConstraints: *Booklet *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *Booklet
+
+*% Can't saddle stitch custom page sizes.
+*NonUIConstraints: *SaddleStitch *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *SaddleStitch
+
+*% Can't trim custom page sizes.
+*NonUIConstraints: *Trimmer *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *Trimmer
+
+*% Can't interleaving custom page sizes.
+*NonUIConstraints: *Interleave *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *Interleave
+
+*% Can't insert sheet custom page sizes.
+*NonUIConstraints: *Inserter *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *Inserter
+
+*% Can't F-fold custom page sizes.
+*NonUIConstraints: *ZFold *CustomPageSize True
+*NonUIConstraints: *CustomPageSize True *ZFold
+
+*% end Custom Page Size ===============
+
+*LandscapeOrientation:  Plus90
+
+*OpenUI *PageSize: PickOne
+*OrderDependency: 50.0 AnySetup *PageSize
+*DefaultPageSize: A4
+*% 
+*PageSize Letter/Letter: "<</PageSize [612 792] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageSize Legal/Legal: "<</PageSize [612 1008] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageSize A3/A3: "<</PageSize [842 1191] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageSize A4/A4: "<</PageSize [595 842] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageSize A5/A5: "<</PageSize [420 595] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageSize B4/B4: "<</PageSize [729 1032] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageSize B5/B5: "<</PageSize [516 729] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageSize Tabloid/11x17: "<</PageSize [792 1224] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageSize Executive/Executive: "<</PageSize [522 756] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageSize Statement/Statement: "<</PageSize [396 612] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageSize Cardstock46/Card Stock 4x6 inch: "<</PageSize [289 431] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageSize Cardstock58/Card Stock 5x8 inch: "<</PageSize [360 575] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+
+*?PageSize: "save
+  currentpagedevice /PageSize get aload pop
+  2 copy gt {exch} if
+  (Unknown)
+  <<
+     [612 792]  (Letter)
+     [612 1008] (Legal)
+     [842 1191] (A3)
+     [595 842]  (A4)
+     [420 595]  (A5)
+     [729 1032] (B4)
+     [516 729]  (B5)
+     [792 1224] (Tabloid)
+     [522 756] (Executive)
+     [396 612]  (Statement)
+     [289 431]  (Cardstock46)
+     [360 575]  (Cardstock58)
+  >>
+  { exch aload pop
+    4 index sub abs 5 le exch 5 index sub abs 5 le and
+    {exch pop exit}
+    {pop}
+    ifelse
+  } bind forall
+  = flush pop pop
+  restore"
+*End
+*CloseUI: *PageSize
+
+*OpenUI *PageRegion:  PickOne
+*OrderDependency: 50.0 AnySetup *PageRegion
+*DefaultPageRegion: A4
+*PageRegion Letter/Letter: "<</PageSize [612 792] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageRegion Legal/Legal: "<</PageSize [612 1008] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageRegion A3/A3: "<</PageSize [842 1191] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageRegion A4/A4: "<</PageSize [595 842] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageRegion A5/A5: "<</PageSize [420 595] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageRegion B4/B4: "<</PageSize [729 1032] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageRegion B5/B5: "<</PageSize [516 729] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageRegion Tabloid/11x17: "<</PageSize [792 1224] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageRegion Executive/Executive: "<</PageSize [522 756] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageRegion Statement/Statement: "<</PageSize [396 612] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageRegion Cardstock46/Card Stock 4x6 inch: "<</PageSize [289 431] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*PageRegion Cardstock58/Card Stock 5x8 inch: "<</PageSize [360 575] /ImagingBBox null
+ /Policies <</PageSize 2>> /DeferredMediaSelection false>> setpagedevice"
+*End
+*CloseUI: *PageRegion
+
+*% The following entries provide information about specific paper keywords.
+*DefaultImageableArea: A4
+
+*% ImageableArea.
+*ImageableArea Letter/Letter: "11.3386 11.3386 600.6613 780.6613"
+*ImageableArea Legal/Legal: "11.3386 11.3386 600.6613 996.6613"
+*ImageableArea A3/A3: "11.3386 11.3386 830.6613 1179.6613"
+*ImageableArea A4/A4: "11.3386 11.3386 583.6613 830.6613"
+*ImageableArea A5/A5: "11.3386 11.3386 408.6613 583.6613"
+*ImageableArea B4/B4: "11.3386 11.3386 717.6613 1020.6613"
+*ImageableArea B5/B5: "11.3386 11.3386 504.6613 717.6613"
+*ImageableArea Tabloid/11x17: "11.3386 11.3386 780.6613 1212.6613"
+*ImageableArea Executive/Executive: "11.3386 11.3386 510.6613 744.6613"
+*ImageableArea Statement/Statement: "11.3386 11.3386 384.6613 600.6613"
+*ImageableArea Cardstock46/Card Stock 4x6 inch: "11.3386 11.3386 277.6613 419.6613"
+*ImageableArea Cardstock58/Card Stock 5x8 inch: "11.3386 11.3386 348.6613 563.6613"
+
+*?ImageableArea: "save
+ /cvp {(                ) cvs print ( )print} bind def
+ /upperright {10000 mul floor 10000 div} bind def
+ /lowerleft {10000 mul ceiling 10000 div} bind def
+ newpath clippath pathbbox
+ 4 -2 roll exch 2 {lowerleft cvp} repeat
+ exch 2 {upperright cvp} repeat ( ) = flush
+restore"
+*End
+
+*% These provide the physical dimensions of the paper by keyword
+*DefaultPaperDimension: A4
+*PaperDimension Letter/Letter: "612 792"
+*PaperDimension Legal/Legal: "612 1008"
+*PaperDimension A3/A3: "842 1191"
+*PaperDimension A4/A4: "595 842"
+*PaperDimension A5/A5: "420 595"
+*PaperDimension B4/B4: "729 1032"
+*PaperDimension B5/B5: "516 729"
+*PaperDimension Tabloid/11x17: "792 1224"
+*PaperDimension Executive/Executive: "522 756"
+*PaperDimension Statement/Statement: "396 612"
+*PaperDimension Cardstock46/Card Stock 4x6 inch: "289 431"
+*PaperDimension Cardstock58/Card Stock 5x8 inch: "360 575"
+
+*% Font Information ===================
+
+*FCacheSize None: 917600
+
+*DefaultFont: Courier
+*Font AlbertusMT-Italic: Standard "(001)" Standard ROM
+*Font AlbertusMT-Light: Standard "(001)" Standard ROM
+*Font AlbertusMT: Standard "(001)" Standard ROM
+*Font AntiqueOlive-Bold: Standard "(001)" Standard ROM
+*Font AntiqueOlive-Compact: Standard "(001)" ExtendedRoman ROM
+*Font AntiqueOlive-Italic: Standard "(001)" Standard ROM
+*Font AntiqueOlive-Roman: Standard "(001)" Standard ROM
+*Font AntiqueOliveCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font AntiqueOliveCE-Compact: Win1250 "(001)" ExtendedRoman ROM
+*Font AntiqueOliveCE-Italic: Win1250 "(001)" ExtendedRoman ROM
+*Font AntiqueOliveCE-Roman: Win1250 "(001)" ExtendedRoman ROM
+*Font Apple-Chancery: Standard "(001)" Standard ROM
+*Font Apple-ChanceryCE: Win1250 "(001)" ExtendedRoman ROM
+*Font Arial-BoldItalicMT: Standard "(001)" ExtendedRoman ROM
+*Font Arial-BoldMT: Standard "(001)" Standard ROM
+*Font Arial-ItalicMT: Standard "(001)" ExtendedRoman ROM
+*Font ArialCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font ArialCE-BoldItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font ArialCE-Italic: Win1250 "(001)" ExtendedRoman ROM
+*Font ArialCE: Win1250 "(001)" ExtendedRoman ROM
+*Font ArialMT: Standard "(001)" ExtendedRoman ROM
+*Font AvantGarde-Book: Standard "(001)" Standard ROM
+*Font AvantGarde-BookOblique: Standard "(001)" ExtendedRoman ROM
+*Font AvantGarde-Demi: Standard "(001)" Standard ROM
+*Font AvantGarde-DemiOblique: Standard "(001)" ExtendedRoman ROM
+*Font AvantGardeCE-Book: Win1250 "(001)" ExtendedRoman ROM
+*Font AvantGardeCE-BookOblique: Win1250 "(001)" ExtendedRoman ROM
+*Font AvantGardeCE-Demi: Win1250 "(001)" ExtendedRoman ROM
+*Font AvantGardeCE-DemiOblique: Win1250 "(001)" ExtendedRoman ROM
+*Font Bodoni-Bold: Standard "(001)" ExtendedRoman ROM
+*Font Bodoni-BoldItalic: Standard "(001)" Standard ROM
+*Font Bodoni-Italic: Standard "(001)" ExtendedRoman ROM
+*Font Bodoni-Poster: Standard "(001)" Standard ROM
+*Font Bodoni-PosterCompressed: Standard "(001)" Standard ROM
+*Font Bodoni: Standard "(001)" ExtendedRoman ROM
+*Font BodoniCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font BodoniCE-BoldItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font BodoniCE-Italic: Win1250 "(001)" ExtendedRoman ROM
+*Font BodoniCE-Poster: Win1250 "(001)" ExtendedRoman ROM
+*Font BodoniCE-PosterCompressed: Win1250 "(001)" ExtendedRoman ROM
+*Font BodoniCE: Win1250 "(001)" ExtendedRoman ROM
+*Font Bookman-Demi: Standard "(001)" Standard ROM
+*Font Bookman-DemiItalic: Standard "(001)" ExtendedRoman ROM
+*Font Bookman-Light: Standard "(001)" Standard ROM
+*Font Bookman-LightItalic: Standard "(001)" ExtendedRoman ROM
+*Font BookmanCE-Demi: Win1250 "(001)" ExtendedRoman ROM
+*Font BookmanCE-DemiItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font BookmanCE-Light: Win1250 "(001)" ExtendedRoman ROM
+*Font BookmanCE-LightItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font Carta: Special "(001)" Special ROM
+*Font Chicago: Standard "(001)" Standard ROM
+*Font ChicagoCE: Win1250 "(001)" ExtendedRoman ROM
+*Font Clarendon-Bold: Standard "(001)" Standard ROM
+*Font Clarendon-Light: Standard "(001)" ExtendedRoman ROM
+*Font Clarendon: Standard "(001)" ExtendedRoman ROM
+*Font ClarendonCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font ClarendonCE-Light: Win1250 "(001)" ExtendedRoman ROM
+*Font ClarendonCE: Win1250 "(001)" ExtendedRoman ROM
+*Font CooperBlack-Italic: Standard "(001)" Standard ROM
+*Font CooperBlack: Standard "(001)" Standard ROM
+*Font Copperplate-ThirtyThreeBC: Standard "(001)" Standard ROM
+*Font Copperplate-ThirtyTwoBC: Standard "(001)" Standard ROM
+*Font Coronet-Regular: Standard "(001)" Standard ROM
+*Font CoronetCE-Regular: Win1250 "(001)" ExtendedRoman ROM
+*Font Courier-Bold: Standard "(001)" Standard ROM
+*Font Courier-BoldOblique: Standard "(001)" ExtendedRoman ROM
+*Font Courier-Oblique: Standard "(001)" ExtendedRoman ROM
+*Font Courier: Standard "(001)" ExtendedRoman ROM
+*Font CourierCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font CourierCE-BoldOblique: Win1250 "(001)" ExtendedRoman ROM
+*Font CourierCE-Oblique: Win1250 "(001)" ExtendedRoman ROM
+*Font CourierCE: Win1250 "(001)" ExtendedRoman ROM
+*Font Eurostile-Bold: Standard "(001)" ExtendedRoman ROM
+*Font Eurostile-BoldExtendedTwo: Standard "(001)" Standard ROM
+*Font Eurostile-ExtendedTwo: Standard "(001)" Standard ROM
+*Font Eurostile: Standard "(001)" Standard ROM
+*Font EurostileCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font EurostileCE-BoldExtendedTwo: Win1250 "(001)" ExtendedRoman ROM
+*Font EurostileCE-ExtendedTwo: Win1250 "(001)" ExtendedRoman ROM
+*Font EurostileCE: Win1250 "(001)" ExtendedRoman ROM
+*Font Geneva: Standard "(001)" ExtendedRoman ROM
+*Font GenevaCE: Win1250 "(001)" ExtendedRoman ROM
+*Font GillSans-Bold: Standard "(001)" ExtendedRoman ROM
+*Font GillSans-BoldCondensed: Standard "(001)" Standard ROM
+*Font GillSans-BoldItalic: Standard "(001)" ExtendedRoman ROM
+*Font GillSans-Condensed: Standard "(001)" Standard ROM
+*Font GillSans-ExtraBold: Standard "(001)" Standard ROM
+*Font GillSans-Italic: Standard "(001)" Standard ROM
+*Font GillSans-Light: Standard "(001)" Standard ROM
+*Font GillSans-LightItalic: Standard "(001)" ExtendedRoman ROM
+*Font GillSans: Standard "(001)" ExtendedRoman ROM
+*Font GillSansCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font GillSansCE-BoldCondensed: Win1250 "(001)" ExtendedRoman ROM
+*Font GillSansCE-BoldItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font GillSansCE-Condensed: Win1250 "(001)" ExtendedRoman ROM
+*Font GillSansCE-ExtraBold: Win1250 "(001)" ExtendedRoman ROM
+*Font GillSansCE-Italic: Win1250 "(001)" ExtendedRoman ROM
+*Font GillSansCE-Light: Win1250 "(001)" ExtendedRoman ROM
+*Font GillSansCE-LightItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font GillSansCE-Roman: Win1250 "(001)" ExtendedRoman ROM
+*Font Goudy-Bold: Standard "(001)" Standard ROM
+*Font Goudy-BoldItalic: Standard "(001)" Standard ROM
+*Font Goudy-ExtraBold: Standard "(001)" Standard ROM
+*Font Goudy-Italic: Standard "(001)" Standard ROM
+*Font Goudy: Standard "(001)" Standard ROM
+*Font Helvetica-Bold: Standard "(001)" Standard ROM
+*Font Helvetica-BoldOblique: Standard "(001)" ExtendedRoman ROM
+*Font Helvetica-Condensed-Bold: Standard "(001)" Standard ROM
+*Font Helvetica-Condensed-BoldObl: Standard "(001)" ExtendedRoman ROM
+*Font Helvetica-Condensed-Oblique: Standard "(001)" ExtendedRoman ROM
+*Font Helvetica-Condensed: Standard "(001)" ExtendedRoman ROM
+*Font Helvetica-Narrow-Bold: Standard "(001)" ExtendedRoman ROM
+*Font Helvetica-Narrow-BoldOblique: Standard "(001)" ExtendedRoman ROM
+*Font Helvetica-Narrow-Oblique: Standard "(001)" ExtendedRoman ROM
+*Font Helvetica-Narrow: Standard "(001)" ExtendedRoman ROM
+*Font Helvetica-Oblique: Standard "(001)" ExtendedRoman ROM
+*Font Helvetica: Standard "(001)" Standard ROM
+*Font HelveticaCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font HelveticaCE-BoldOblique: Win1250 "(001)" ExtendedRoman ROM
+*Font HelveticaCE-Cond: Win1250 "(001)" ExtendedRoman ROM
+*Font HelveticaCE-CondBold: Win1250 "(001)" ExtendedRoman ROM
+*Font HelveticaCE-CondBoldObl: Win1250 "(001)" ExtendedRoman ROM
+*Font HelveticaCE-CondObl: Win1250 "(001)" ExtendedRoman ROM
+*Font HelveticaCE-Narrow: Win1250 "(001)" ExtendedRoman ROM
+*Font HelveticaCE-NarrowBold: Win1250 "(001)" ExtendedRoman ROM
+*Font HelveticaCE-NarrowBoldOblique: Win1250 "(001)" ExtendedRoman ROM
+*Font HelveticaCE-NarrowOblique: Win1250 "(001)" ExtendedRoman ROM
+*Font HelveticaCE-Oblique: Win1250 "(001)" ExtendedRoman ROM
+*Font HelveticaCE: Win1250 "(001)" ExtendedRoman ROM
+*Font HoeflerText-Black: Standard "(001)" Standard ROM
+*Font HoeflerText-BlackItalic: Standard "(001)" ExtendedRoman ROM
+*Font HoeflerText-Italic: Standard "(001)" ExtendedRoman ROM
+*Font HoeflerText-Ornaments: Special "(001)" Special ROM
+*Font HoeflerText-Regular: Standard "(001)" ExtendedRoman ROM
+*Font HoeflerTextCE-Black: Win1250 "(001)" ExtendedRoman ROM
+*Font HoeflerTextCE-BlackItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font HoeflerTextCE-Italic: Win1250 "(001)" ExtendedRoman ROM
+*Font HoeflerTextCE-Regular: Win1250 "(001)" ExtendedRoman ROM
+*Font JoannaMT-Bold: Standard "(001)" ExtendedRoman ROM
+*Font JoannaMT-BoldItalic: Standard "(001)" Standard ROM
+*Font JoannaMT-Italic: Standard "(001)" ExtendedRoman ROM
+*Font JoannaMT: Standard "(001)" ExtendedRoman ROM
+*Font JoannaMTCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font JoannaMTCE-BoldItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font JoannaMTCE-Italic: Win1250 "(001)" ExtendedRoman ROM
+*Font JoannaMTCE: Win1250 "(001)" ExtendedRoman ROM
+*Font LetterGothic-Bold: Standard "(001)" Standard ROM
+*Font LetterGothic-BoldSlanted: Standard "(001)" ExtendedRoman ROM
+*Font LetterGothic-Slanted: Standard "(001)" ExtendedRoman ROM
+*Font LetterGothic: Standard "(001)" ExtendedRoman ROM
+*Font LetterGothicCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font LetterGothicCE-BoldSlanted: Win1250 "(001)" ExtendedRoman ROM
+*Font LetterGothicCE-Slanted: Win1250 "(001)" ExtendedRoman ROM
+*Font LetterGothicCE: Win1250 "(001)" ExtendedRoman ROM
+*Font LubalinGraph-Book: Standard "(001)" Standard ROM
+*Font LubalinGraph-BookOblique: Standard "(001)" ExtendedRoman ROM
+*Font LubalinGraph-Demi: Standard "(001)" Standard ROM
+*Font LubalinGraph-DemiOblique: Standard "(001)" ExtendedRoman ROM
+*Font LubalinGraphCE-Book: Win1250 "(001)" ExtendedRoman ROM
+*Font LubalinGraphCE-BookOblique: Win1250 "(001)" ExtendedRoman ROM
+*Font LubalinGraphCE-Demi: Win1250 "(001)" ExtendedRoman ROM
+*Font LubalinGraphCE-DemiOblique: Win1250 "(001)" ExtendedRoman ROM
+*Font Marigold: Standard "(001)" Standard ROM
+*Font Monaco: Standard "(001)" Standard ROM
+*Font MonacoCE: Win1250 "(001)" ExtendedRoman ROM
+*Font MonaLisa-Recut: Standard "(001)" Standard ROM
+*Font NewCenturySchlbk-Bold: Standard "(001)" ExtendedRoman ROM
+*Font NewCenturySchlbk-BoldItalic: Standard "(001)" Standard ROM
+*Font NewCenturySchlbk-Italic: Standard "(001)" ExtendedRoman ROM
+*Font NewCenturySchlbk-Roman: Standard "(001)" Standard ROM
+*Font NewCenturySchlbkCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font NewCenturySchlbkCE-BoldItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font NewCenturySchlbkCE-Italic: Win1250 "(001)" ExtendedRoman ROM
+*Font NewCenturySchlbkCE-Roman: Win1250 "(001)" ExtendedRoman ROM
+*Font NewYork: Standard "(001)" ExtendedRoman ROM
+*Font NewYorkCE: Win1250 "(001)" ExtendedRoman ROM
+*Font Optima-Bold: Standard "(001)" Standard ROM
+*Font Optima-BoldItalic: Standard "(001)" ExtendedRoman ROM
+*Font Optima-Italic: Standard "(001)" ExtendedRoman ROM
+*Font Optima: Standard "(001)" ExtendedRoman ROM
+*Font OptimaCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font OptimaCE-BoldItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font OptimaCE-Italic: Win1250 "(001)" ExtendedRoman ROM
+*Font OptimaCE-Roman: Win1250 "(001)" ExtendedRoman ROM
+*Font Oxford: Standard "(001)" Standard ROM
+*Font Palatino-Bold: Standard "(001)" ExtendedRoman ROM
+*Font Palatino-BoldItalic: Standard "(001)" Standard ROM
+*Font Palatino-Italic: Standard "(001)" Standard ROM
+*Font Palatino-Roman: Standard "(001)" ExtendedRoman ROM
+*Font PalatinoCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font PalatinoCE-BoldItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font PalatinoCE-Italic: Win1250 "(001)" ExtendedRoman ROM
+*Font PalatinoCE-Roman: Win1250 "(001)" ExtendedRoman ROM
+*Font StempelGaramond-Bold: Standard "(001)" Standard ROM
+*Font StempelGaramond-BoldItalic: Standard "(001)" ExtendedRoman ROM
+*Font StempelGaramond-Italic: Standard "(001)" ExtendedRoman ROM
+*Font StempelGaramond-Roman: Standard "(001)" Standard ROM
+*Font StempelGaramondCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font StempelGaramondCE-BoldItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font StempelGaramondCE-Italic: Win1250 "(001)" ExtendedRoman ROM
+*Font StempelGaramondCE-Roman: Win1250 "(001)" ExtendedRoman ROM
+*Font Symbol: Special "(001)" Special ROM
+*Font Tekton: Standard "(001)" Standard ROM
+*Font Times-Bold: Standard "(001)" Standard ROM
+*Font Times-BoldItalic: Standard "(001)" Standard ROM
+*Font Times-Italic: Standard "(001)" Standard ROM
+*Font Times-Roman: Standard "(001)" ExtendedRoman ROM
+*Font TimesCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font TimesCE-BoldItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font TimesCE-Italic: Win1250 "(001)" ExtendedRoman ROM
+*Font TimesCE-Roman: Win1250 "(001)" ExtendedRoman ROM
+*Font TimesNewRomanCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font TimesNewRomanCE-BoldItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font TimesNewRomanCE-Italic: Win1250 "(001)" ExtendedRoman ROM
+*Font TimesNewRomanCE: Win1250 "(001)" ExtendedRoman ROM
+*Font TimesNewRomanPS-BoldItalicMT: Standard "(001)" ExtendedRoman ROM
+*Font TimesNewRomanPS-BoldMT: Standard "(001)" Standard ROM
+*Font TimesNewRomanPS-ItalicMT: Standard "(001)" Standard ROM
+*Font TimesNewRomanPSMT: Standard "(001)" ExtendedRoman ROM
+*Font Univers-Bold: Standard "(001)" Standard ROM
+*Font Univers-BoldExt: Standard "(001)" Standard ROM
+*Font Univers-BoldExtObl: Standard "(001)" ExtendedRoman ROM
+*Font Univers-BoldOblique: Standard "(001)" ExtendedRoman ROM
+*Font Univers-Condensed: Standard "(001)" Standard ROM
+*Font Univers-CondensedBold: Standard "(001)" Standard ROM
+*Font Univers-CondensedBoldOblique: Standard "(001)" ExtendedRoman ROM
+*Font Univers-CondensedOblique: Standard "(001)" ExtendedRoman ROM
+*Font Univers-Extended: Standard "(001)" Standard ROM
+*Font Univers-ExtendedObl: Standard "(001)" ExtendedRoman ROM
+*Font Univers-Light: Standard "(001)" Standard ROM
+*Font Univers-LightOblique: Standard "(001)" ExtendedRoman ROM
+*Font Univers-Oblique: Standard "(001)" ExtendedRoman ROM
+*Font Univers: Standard "(001)" Standard ROM
+*Font UniversCE-Bold: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-BoldExt: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-BoldExtObl: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-BoldOblique: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-Condensed: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-CondensedBold: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-CondensedBoldOblique: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-CondensedOblique: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-Extended: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-ExtendedObl: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-Light: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-LightOblique: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-Medium: Win1250 "(001)" ExtendedRoman ROM
+*Font UniversCE-Oblique: Win1250 "(001)" ExtendedRoman ROM
+*Font Wingdings-Regular: Special "(001)" Special ROM
+*Font ZapfChancery-MediumItalic: Standard "(001)" ExtendedRoman ROM
+*Font ZapfChanceryCE-MediumItalic: Win1250 "(001)" ExtendedRoman ROM
+*Font ZapfDingbats: Special "(001)" Standard ROM
+
+*?FontQuery: "save
+{count 1 gt
+  {exch dup 127 string cvs (/)print print (:)print
+   /Font resourcestatus
+   {pop pop (Yes)} {(No)} ifelse =
+  }
+  {exit}
+  ifelse
+} bind loop
+(*) = flush
+restore"
+*End
+
+*?FontList: "save
+ (*) {cvn ==} 128 string /Font resourceforall
+ (*) = flush
+restore"
+*End
+
+*% Printer Messages (verbatim from printer):
+*Message: "%%[ exitserver: permanent state may be changed ]%%"
+*Message: "%%[ Flushing: rest of job (to end-of-file) will be ignored ]%%"
+*Message: "\FontName\ not found, using Courier"
+
+*% Status (format: %%[ status: <one of these> ] %%)
+*Status: "initializing"
+*Status: "idle"
+*Status: "busy"
+*Status: "waiting"
+*Status: "online"
+
+*% Input Sources (format: %%[ status: <stat>; source: <one of these> ]%% )
+*Source: "Parallel"
+*Source: "EtherTalk"
+*Source: "TokenTalk"
+
+*%DeviceAdjustMatrix: "[1 0 0 1 0 0]"
+
+*% Color Separation Information =====================
+
+*DefaultColorSep: ProcessBlack.106lpi.600dpi/106 lpi / 600x600 dpi
+
+*%  For 106 lpi / 600 x 600 dpi  ===============================
+
+*ColorSepScreenAngle ProcessBlack.106lpi.600dpi/106 lpi / 600x600 dpi: "45"
+*ColorSepScreenAngle CustomColor.106lpi.600dpi/106 lpi / 600x600 dpi: "45"
+*ColorSepScreenAngle ProcessCyan.106lpi.600dpi/106 lpi / 600x600 dpi: "15"
+*ColorSepScreenAngle ProcessMagenta.106lpi.600dpi/106 lpi / 600x600 dpi: "75"
+*ColorSepScreenAngle ProcessYellow.106lpi.600dpi/106 lpi / 600x600 dpi: "0"
+
+*ColorSepScreenFreq ProcessBlack.106lpi.600dpi/106 lpi / 600x600 dpi: "60"
+*ColorSepScreenFreq CustomColor.106lpi.600dpi/106 lpi / 600x600 dpi: "60"
+*ColorSepScreenFreq ProcessCyan.106lpi.600dpi/106 lpi / 600x600 dpi: "60"
+*ColorSepScreenFreq ProcessMagenta.106lpi.600dpi/106 lpi / 600x600 dpi: "60"
+*ColorSepScreenFreq ProcessYellow.106lpi.600dpi/106 lpi / 600x600 dpi: "60"
+
+*% @(#)cnir85e1.ppd	2.1 10:00:00 03/24/2003
+*% Last Edit Date: March 24, 2003
+*% The byte count of this file should be exactly 88009 or greater
+*% depending on the filesystem it resides in.
+*% end of PPD file for Canon iR8500 Printer

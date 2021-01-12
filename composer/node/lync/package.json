@@ -1,0 +1,12 @@
+{
+  "name": "lync",
+  "main": "lync.js",
+  "private": true,
+  "version": "0.0.5",
+  "description": "Node.js lync service",
+  "author": "Jérémy PETIT",
+  "dependencies": {
+    "uuid": "*",
+    "ws": "*"
+  }
+}

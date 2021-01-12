@@ -1,0 +1,44 @@
+{
+  "name": "spawner-service",
+  "main": "spawner-service.js",
+  "private": true,
+  "version": "0.0.5",
+  "description": "Node.js spawner service",
+  "author": "Alexandre DEVELY",
+  "scripts": {
+    "test": "jest --bail",
+    "swagger-spec": "swagger-jsdoc -d swaggerDef.js -o swaggerSpec.json",
+    "docs": "npm run swagger-spec && widdershins -c swaggerSpec.json -o spawner-service.md"
+  },
+  "dependencies": {
+    "accept-language": "*",
+    "accept-language-parser": "*",
+    "diacritics": "*",
+    "dominant-color": "*",
+    "express": "*",
+    "express-async-handler": "^1.1.4",
+    "express-validator": "^6.2.0",
+    "geoip-lite": "*",
+    "helmet": "^3.20.0",
+    "hex-rgb": "*",
+    "imagemagick": "*",
+    "ini": "*",
+    "jest": "^26.3.0",
+    "mime-types": "*",
+    "mmmagic": "*",
+    "npid": "*",
+    "ps-list": "^7.2.0",
+    "which": "*",
+    "wmctrljs": "^1.2.8",
+    "ws": "^7.3.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.10.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-jest": "^24.1.0",
+    "supertest": "^4.0.2",
+    "swagger-jsdoc": "^4.2.3",
+    "widdershins": "^4.0.1"
+  }
+}

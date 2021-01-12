@@ -1,0 +1,10 @@
+{
+  "name": "common-libraries",
+  "version": "1.0.0",
+  "description": "Used by all deamons",
+  "author": "Kevin VOYER",
+  "license": "MIT",
+  "dependencies": {
+    "express-validator": "^6.6.0"
+  }
+}

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mime-type xmlns="http://www.freedesktop.org/standards/shared-mime-info" type="application/3mf">
+  <!--Created automatically by update-mime-database. DO NOT EDIT!-->
+  <comment xml:lang="en">3MF image</comment>
+  <glob pattern="*.3mf"/>
+  <icon name="3mf"/>
+</mime-type>

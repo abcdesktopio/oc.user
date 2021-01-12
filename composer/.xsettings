@@ -1,0 +1,28 @@
+Net/DoubleClickTime 400
+Net/DoubleClickDistance 5
+Net/DndDragThreshold 8
+Net/CursorBlink 1
+Net/ThemeName "Numix"
+Net/IconThemeName "Numix"
+Net/SoundThemeName "default"
+Net/EnableEventSounds 0
+Net/EnableInputFeedbackSounds 0
+Xft/Antialias 1
+Xft/HintStyle "hintslight"
+Xft/RGBA "rgb"
+Xft/DPI 98304
+Gtk/CanChangeAccels 0
+Gtk/ColorPalette "black:white:gray50:red:purple:blue:light blue:green:yellow:orange:lavender:brown:goldenrod4:dodger blue:pink:light green:gray10:gray30:gray75:gray90"
+Gtk/FontName "Droid Sans Regular 10"
+Gtk/IconSizes ""
+Gtk/KeyThemeName ""
+Gtk/ToolbarStyle "icons"
+Gtk/ToolbarIconSize 3
+Gtk/IMPreeditStyle ""
+Gtk/IMStatusStyle ""
+Gtk/MenuImages 1
+Gtk/ButtonImages 1
+Gtk/MenuBarAccel "F10"
+Gtk/CursorThemeName ""
+Gtk/CursorThemeSize 0
+Gtk/IMModule ""

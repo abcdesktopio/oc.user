@@ -1,0 +1,23 @@
+{
+  "name": "broadcast-service",
+  "main": "broadcast-service.js",
+  "private": true,
+  "version": "0.0.5",
+  "description": "Node.js broadcast service",
+  "author": "Alexandre DEVELY",
+  "scripts": {
+    "test": "jest --bail"
+  },
+  "dependencies": {
+    "http-proxy": "*",
+    "jest": "^26.3.0",
+    "supertest": "^4.0.2",
+    "ws": "*"
+  },
+  "devDependencies": {
+    "eslint": "^7.11.0",
+    "eslint-plugin-jest": "^24.1.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.1"
+  }
+}
