@@ -3,6 +3,8 @@ name: Test and update oc.user.18.04
 on:
   push:
     branches: [ main ]
+  repository_dispatch:
+    types: [dispatch-from-pulse, dispatch-from-cups]
 env:
   # TODO: Change variable to your image's name.
   IMAGE_USER: oc.user.18.04
