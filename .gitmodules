@@ -2,3 +2,7 @@
 	path = etc/cups
 	url = https://github.com/abcdesktopio/cups.git
 	branch = main
+[submodule "etc/pulse"]
+	path = etc/pulse
+	url = https://github.com/abcdesktopio/pulse
+	branch = main
