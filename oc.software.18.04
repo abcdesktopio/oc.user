@@ -107,11 +107,8 @@ RUN DEBIAN_FRONTEND=noninteractive  apt-get update &&  apt-get install -y --no-i
 	ncurses-term		\
     	&& apt-get clean
 
-# krb5 is set in etc no need to copy 
-# ADD krb5.conf  /etc
-
 # apt install iproute2 install ip command
-# iputils-ping and vin can be removed
+# iputils-ping and vim can be removed
 RUN DEBIAN_FRONTEND=noninteractive  apt-get update && apt-get install -y --no-install-recommends	\
 	iputils-ping								\
 	iproute2								\
