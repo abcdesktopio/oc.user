@@ -1,9 +1,5 @@
 FROM oc.ubuntu.18.04
 
-# RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends \
-#	git wget unzip vim ssh  \
-#        && rm -rf /var/lib/apt/lists/*
-
 # 
 # gpg-agent used to verify external deb source
 # gnupg for external trust
@@ -134,16 +130,3 @@ RUN DEBIAN_FRONTEND=noninteractive  apt-get update && apt-get install -y      \
         dbus                                                                  \
         dbus-x11                                                              \
         && apt-get clean
-
-# python-numpy use by websockify.py
-# RUN DEBIAN_FRONTEND=noninteractive  apt-get update && apt-get install -y                         \
-#         python-numpy                          \
-#         && rm -rf /var/lib/apt/lists/*
-
-# live sound service use ffmpeg
-# screen capture 
-# only if spawner use cature features
-# RUN DEBIAN_FRONTEND=noninteractive  apt-get update && apt-get install -y \
-#        handbrake-cli         	\
-#	 ffmpeg			\
-#        && rm -rf /var/lib/apt/lists/*
