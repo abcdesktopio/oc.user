@@ -34,27 +34,10 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_TOKEN }}
 
-    - name: Build image oc.ubuntu.18.04
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        file: ./oc.ubuntu.18.04
-        push: false
-        tags: oc.ubuntu.18.04
-
-    - name: Build image oc.software.18.04
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        file: ./oc.software.18.04
-        push: false
-        tags: oc.software.18.04
-
     - name: Build image oc.user.18.04
       uses: docker/build-push-action@v2
       with:
         context: .
-        file: ./oc.user.18.04
         push: false
         tags: oc.user.18.04
 
@@ -67,61 +50,9 @@ jobs:
         docker exec ${CONTAINER_ID} bash -e /composer/node/run-tests.sh
         docker stop -t 0 ${CONTAINER_ID}
 
-    - name: Build and push image oc.pulseaudio
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        file: ./oc.pulseaudio
-        push: true
-        tags: abcdesktopio/oc.pulseaudio:latest
-
-    - name: Build and push image oc.cupsd
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        file: ./oc.cupsd.18.04
-        push: true
-        tags: abcdesktopio/oc.cupsd.18.04:latest
-
     - name: Push image oc.user.18.04
       uses: docker/build-push-action@v2
       with:
         context: .
-        file: ./oc.user.18.04
         push: true
         tags: abcdesktopio/oc.user.18.04:latest
-
-  #  - name: Run and test docker image builded
-  #    run: |
-  #      CONTAINER_ID=$(docker run --rm --env TESTING_MODE='true' -d ${{ secrets.DOCKER_REPOSITORY }}:$IMAGE_USER)
-  #      echo "Waiting 30s for cupsd and puslaudio"
-  #      sleep 30
-
-  #      docker exec ${CONTAINER_ID} bash -e /composer/node/run-tests.sh
-  #      docker stop -t 0 ${CONTAINER_ID}
-
-  #  - name: Login on registry
-  #    run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-
-  #  - name: Push image oc.user.18.04
-  #    run: docker push ${{ secrets.DOCKER_REPOSITORY }}:$IMAGE_USER
-
-  #  - name: Push image oc.cupsd.18.04
-  #    run: docker push ${{ secrets.DOCKER_REPOSITORY }}:$IMAGE_PRINTER
-
-  #  - name: Push image oc.pulseaudio.18.04
-  #    run: docker push ${{ secrets.DOCKER_REPOSITORY }}:$IMAGE_AUDIO
-
-  #   - name: Repository Dispatch oc.template
-  #     uses: peter-evans/repository-dispatch@v1
-  #     with:
-  #       token: ${{ secrets.TOKEN_DISPATCH }}
-  #       repository: abcdesktopio/oc.template
-  #       event-type: dispatch-from-oc.user.18.04
-
-  #   - name: Repository Dispatch docs
-  #     uses: peter-evans/repository-dispatch@v1
-  #     with:
-  #       token: ${{ secrets.TOKEN_DISPATCH }}
-  #       repository: abcdesktopio/docs
-  #       event-type: dispatch-from-oc.user.18.04
