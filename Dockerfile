@@ -79,18 +79,8 @@ RUN echo "balloon:lmdpocpetit" | chpasswd $BUSER
 # hack: be shure to own the home dir 
 RUN chown -R $BUSER:$BUSER /home/$BUSER
 
-
-# # patch for spawner install process
-# RUN mkdir -p /composer/node/spawner-service/node_modules/wmctrljs/dist 
-# RUN mv /composer/node/spawner-service/wmctrljs.dist.index.js /composer/node/spawner-service/node_modules/wmctrljs/dist/index.js
-
-
-# copy bashrc
-# # # RUN cp /composer/.bashrc /home/$BUSER/.bashrc && chmod 664 /home/$BUSER/.bashrc && chown -R $BUSER:$BUSER /home/$BUSER/.bashrc
-
-
-COPY 	etc /etc
-RUN 	chown -R $BUSER:$BUSER /etc/pulse && \
+COPY etc /etc
+RUN chown -R $BUSER:$BUSER /etc/pulse && \
 	chown -R $BUSER:$BUSER /etc/cups
 
 # update /etc/services
