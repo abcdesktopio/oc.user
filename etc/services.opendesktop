@@ -1,8 +1,0 @@
-abcdesktop-pulseaudio          4714/tcp	# abcdesktop pulseaudio http
-abcdesktop-ws-tcp-bridge       6081/tcp	# abcdesktop websocket brigde
-abcdesktop-filemanager-bridge	29780/tcp	# abcdesktop filemanager nodejs
-abcdesktop-xterm		29781/tcp	# abcdesktop terminal nodejs
-abcdesktop-reserved		29782/tcp	# abcdesktop printer reserved
-abcdesktop-broadcast		29784/tcp	# abcdesktop broadcast nodejs
-abcdesktop-lync		29785/tcp	# abcdesktop lync proxy nodejs 
-abcdesktop-spawner		29786/tcp	# abcdesktop spawner nodejs 
