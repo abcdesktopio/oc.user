@@ -23,7 +23,6 @@
  */
 
 const fs = require('fs');
-const ini = require('ini');
 const { remove: removeaccent } = require('diacritics');
 const { spawn } = require('child_process');
 const mime = require('mime-types');
@@ -31,6 +30,7 @@ const { extname } = require('path');
 const { Magic, MAGIC_MIME_TYPE } = require('mmmagic');
 const asyncHandler = require('express-async-handler');
 const { promisify } = require('util');
+const ini = require('./ini');
 const middlewares = require('./middlewares');
 const { set, get } = require('./utils');
 const { roothomedir } = require('../global-values');

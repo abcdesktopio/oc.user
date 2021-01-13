@@ -45,10 +45,6 @@ RUN   	cd /composer/node/spawner-service           && yarn install
 RUN     cd /composer/node/lync             	    	                && yarn install
 RUN     cd /composer/node/xterm.js                  	            && yarn install
 
-# OpenDestkop Patches
-# AbcDesktop Patch ini.js
-RUN 	mv /composer/node/spawner-service/ini.js /composer/node/spawner-service/node_modules/ini/ini.js
-
 #
 # Remove dev package
 RUN DEBIAN_FRONTEND=noninteractive  apt-get remove -y	\
