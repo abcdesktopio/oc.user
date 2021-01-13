@@ -34,27 +34,35 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_TOKEN }}
 
-    - name: Build image oc.user.18.04
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        push: false
-        tags: |
-          oc.user.18.04
+    # - name: Build image oc.user.18.04
+    #   uses: docker/build-push-action@v2
+    #   with:
+    #     context: .
+    #     push: false
+    #     tags: |
+    #       oc.user.18.04
+
+    - name: Build image abcdesktopio/oc.user.18.04
+      run: |
+        make -B
 
     - name: Run and test docker image oc.user.18.04
       run: |
-        CONTAINER_ID=$(docker run --rm --env TESTING_MODE='true' -d oc.user.18.04)
+        CONTAINER_ID=$(docker run --rm --env TESTING_MODE='true' -d abcdesktopio/oc.user.18.04)
         echo "Waiting 30s for cupsd and puslaudio"
         sleep 30
 
         docker exec ${CONTAINER_ID} bash -e /composer/node/run-tests.sh
         docker stop -t 0 ${CONTAINER_ID}
 
-    - name: Push image oc.user.18.04
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        push: true
-        tags: |
-          abcdesktopio/oc.user.18.04:latest
+    - name: Push image abcdesktopio/oc.user.18.04
+      run: |
+        make -B push
+
+    # - name: Push image oc.user.18.04
+    #   uses: docker/build-push-action@v2
+    #   with:
+    #     context: .
+    #     push: true
+    #     tags: |
+    #       abcdesktopio/oc.user.18.04:latest
