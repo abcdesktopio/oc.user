@@ -33,7 +33,7 @@ async function* messageQueueTest() {
     ws.on('message', (msg) => {
       try {
         const data = JSON.parse(msg);
-        if (data.method !== 'broadcast keep_alive' && data.method !== 'connect.counter') {
+        if (!data.method.includes('keep_alive') && data.method !== 'connect.counter') {
           messages[1] = data;
           resolve(messages);
           ws.close();
