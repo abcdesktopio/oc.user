@@ -39,7 +39,8 @@ jobs:
       with:
         context: .
         push: false
-        tags: oc.user.18.04
+        tags: |
+          oc.user.18.04
 
     - name: Run and test docker image oc.user.18.04
       run: |
@@ -55,4 +56,5 @@ jobs:
       with:
         context: .
         push: true
-        tags: abcdesktopio/oc.user.18.04:latest
+        tags: |
+          abcdesktopio/oc.user.18.04:latest
