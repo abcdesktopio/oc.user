@@ -11,9 +11,4 @@ describe('Test audio endpoints', () => {
       .post('/spawner/setAudioQuality')
       .then(callBackExpect(expected, 422));
   });
-
-  it('Should has response with success on playAudioSample', () => request
-    .post('/spawner/playAudioSample')
-    .expect(200)
-    .then(() => {}));
 });
