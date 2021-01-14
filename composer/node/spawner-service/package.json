@@ -27,6 +27,8 @@
     "jest": "^26.3.0",
     "mime-types": "*",
     "mmmagic": "*",
+    "node-addon-api": "^3.1.0",
+    "node-gyp-build": "^4.2.3",
     "npid": "*",
     "ps-list": "^7.2.0",
     "which": "*",
