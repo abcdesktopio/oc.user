@@ -10,6 +10,7 @@
     "swagger-spec": "swagger-jsdoc -d swaggerDef.js -o swaggerSpec.json",
     "docs": "npm run swagger-spec && widdershins -c swaggerSpec.json -o spawner-service.md"
   },
+  "gypefile": true,
   "dependencies": {
     "accept-language": "*",
     "accept-language-parser": "*",
