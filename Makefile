@@ -10,8 +10,7 @@ version:
 	$(shell ./mkversion.sh)
 
 user:
-	docker build --no-cache=$(NOCACHE) -t oc.user.18.04 .
-	docker tag oc.user.18.04 abcdesktopio/oc.user.18.04
+	docker build --no-cache=$(NOCACHE) -t abcdesktopio/oc.user.18.04 .
 
 build:version  user
 	@echo "Build done."
