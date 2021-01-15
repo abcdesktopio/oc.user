@@ -25,9 +25,4 @@ jobs:
 
     - name: Run and test docker image oc.user.18.04
       run: |
-        CONTAINER_ID=$(docker run --rm --env TESTING_MODE='true' -d abcdesktopio/oc.user.18.04)
-        echo "Waiting 30s for cupsd and puslaudio"
-        sleep 30
-
-        docker exec ${CONTAINER_ID} bash -e /composer/node/run-tests.sh
-        docker stop -t 0 ${CONTAINER_ID}
+        ./make-test.sh
