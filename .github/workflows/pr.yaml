@@ -26,3 +26,8 @@ jobs:
     - name: Run and test docker image oc.user.18.04
       run: |
         ./make-test.sh
+
+    - name: Remove images builded
+      run: |
+        docker rmi abcdesktopio/oc.user.18.04
+        docker rmi abcdesktopio/oc.software.18.04
