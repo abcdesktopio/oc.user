@@ -29,59 +29,48 @@ const mime = require('mime-types');
 const { extname } = require('path');
 const { Magic, MAGIC_MIME_TYPE } = require('mmmagic');
 const asyncHandler = require('express-async-handler');
-const { promisify } = require('util');
 const ini = require('./ini');
 const middlewares = require('./middlewares');
 const { set, get } = require('./utils');
 const { roothomedir } = require('../global-values');
 
-const writeFile = promisify(fs.writeFile);
-const readDir = promisify(fs.readdir);
-const lstat = promisify(fs.lstat);
 const magic = new Magic(MAGIC_MIME_TYPE);
 
 /**
- *
- * @param {*} root
- * @param {*} options
- * @desc Search file in user directory
- * At each io we check if the request have been aborted and stop the function in that case,
- * thats prevent to to useless tasks
+ * 
+ * @param {string} root 
+ * @param {string} keywords 
  */
-async function filesearch(root = '', options = { maxfile: 64, keywords: '', files: [] }) {
-  if (options.req.aborted || options.files.length >= options.maxfile) {
-    return;
+async function* filesearch(root = '', keywords = '') {
+  const dirents = await fs.promises.readdir(root, { withFileTypes: true });
+  const files = [];
+  const directories = [];
+
+  for (const dirent of dirents) {
+    if (dirent.isSymbolicLink()) {
+      continue;
+    }
+
+    if (dirent.isDirectory()) {
+      directories.push(dirent.name);
+    } else if (
+        dirent.name[0] !== '.'
+        && dirent.name[0] !== '~'
+        && dirent.name !== 'jetty'
+        && dirent.name.search(keywords) !== -1) {
+        const filepath = `${root}/${dirent.name}`;
+        files.push({
+          file: filepath,
+          mime: mime.lookup(filepath),
+        });
+    }
   }
 
-  const names = (await readDir(root)).filter((n) => n[0] !== '.' && n[0] !== '~');
-  if (options.req.aborted) {
-    return;
+  yield* files;
+
+  for (const directory of directories) {
+    yield* filesearch(`${root}/${directory}`, keywords);
   }
-
-  const lstatPromises = names.filter((c) => c !== 'jetty').map((c) => lstat(`${root}/${c}`));
-  const lstats = await Promise.all(lstatPromises);
-  if (options.req.aborted) {
-    return;
-  }
-
-  const namesLstats = names.map((name, i) => ({ name, l: lstats[i] }))
-    .filter((nl) => !nl.l.isSymbolicLink());
-
-  const files = namesLstats.filter((nl) => nl.l.isFile()).map((nl) => removeaccent(nl.name));
-  const newFiles = files.filter((name) => name.search(options.keywords) !== -1)
-    .map((name) => ({
-      file: `${root}/${name}`,
-      mime: mime.lookup(`${root}/${name}`),
-    }));
-
-  options.files.push(...newFiles);
-  if (options.files.length >= options.maxfile) {
-    return;
-  }
-
-  const directories = namesLstats.filter((nl) => nl.l.isDirectory()).map((nl) => nl.name);
-  const promisesDirectories = directories.map((name) => filesearch(`${root}/${name}`, options));
-  await Promise.all(promisesDirectories);
 }
 
 /**
@@ -151,7 +140,7 @@ async function generateDesktopFiles(list = []) {
       contentdesktop.Icon = `/home/balloon/.local/share/icons/${icon}`;
       try {
         fs.symlink(ocrunpath, `/home/balloon/.local/share/applications/bin/${launch}`, () => { });
-        await writeFile(filepath, ini.stringify(contentdesktop, {
+        await fs.promises.writeFile(filepath, ini.stringify(contentdesktop, {
           section: 'Desktop Entry',
         }));
 
@@ -390,16 +379,21 @@ function routerInit(router) {
       data: [],
     };
 
-    const options = {
-      keywords,
-      maxfile,
-      req,
-      files: ret.data,
-    };
+    const files = [];
 
-    await filesearch(roothomedir, options);
-    ret.data = ret.data.slice(0, maxfile);
-    // Prevent in case when the received file list is bigger than expected (maxfile)
+    for await (const filename of filesearch(roothomedir, keywords)) {
+      if (req.aborted) {
+        break;
+      }
+
+      files.push(filename);
+
+      if (files.length === maxfile) {
+        break;
+      }
+    }
+
+    ret.data = files;
     res.status(ret.code).send(ret);
   }));
 

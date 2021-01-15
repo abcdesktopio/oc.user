@@ -153,7 +153,19 @@ describe('Test desktop endpoints', () => {
 
     it('Should provide file created', () => {
       fs.writeFileSync('/home/balloon/test', 'TEST');
-      const expected = { code: 200, data: [{ file: '/home/balloon/test', mime: false }] };
+      const expected = {
+        code: 200,
+        data: [
+          {
+            file: '/home/balloon/test',
+            mime: false,
+          },
+          {
+            file: '/home/balloon/.store/my_test_key',
+            mime: false,
+          },
+        ],
+      };
       return request
         .get('/spawner/filesearch')
         .query({ keywords: 'test' })
