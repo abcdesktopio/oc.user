@@ -12,11 +12,6 @@
 */
 
 const fs = require('fs');
-const { promisify } = require('util');
-
-const exists = promisify(fs.exists);
-const readFile = promisify(fs.readFile);
-const writeFile = promisify(fs.writeFile);
 
 /**
  *
@@ -27,9 +22,12 @@ async function get(key) {
   console.log(`get : ${fullpath}`);
 
   const ret = { code: 404, data: 'Not found' };
-  if (await exists(fullpath)) {
-    ret.data = await readFile(fullpath, 'utf8');
+  try {
+    await fs.promises.access(fullpath, fs.constants.R_OK);
+    ret.data = await fs.promises.readFile(fullpath, 'utf8');
     ret.code = 200;
+  } catch(e) {
+    console.error(e);
   }
 
   return ret;
@@ -43,12 +41,12 @@ async function get(key) {
 async function set(key, value) {
   const fullpath = `${process.env.HOME}/.store/${key}`;
   console.log(`set : ${fullpath}`);
-  await writeFile(fullpath, value);
+  await fs.promises.writeFile(fullpath, value);
 }
 
 /**
  *
- * @param {*} time in second
+ * @param {number} time in second
  * @desc Provide a promise which will be resolve after a given time
  */
 function delay(time = 1) {
