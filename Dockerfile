@@ -1,5 +1,6 @@
-
-FROM abcdesktopio/oc.software.18.04
+ARG TAG=dev
+ 
+FROM abcdesktopio/oc.software.18.04:$TAG
 # ARG  BUILD_BALLON_PASSWORD
 
 # 
