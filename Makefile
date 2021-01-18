@@ -10,13 +10,13 @@ version:
 	$(shell ./mkversion.sh)
 
 user:
-	docker build --no-cache=$(NOCACHE) -t abcdesktopio/oc.user.18.04:dev .
+	docker build --no-cache=$(NOCACHE) -t abcdesktopio/oc.user.18.04:dev . --build-arg TAG=dev
 
 build:version  user
 	@echo "Build done."
 
 clean:
-	docker rmi abcdesktopio/oc.user.18.04
+	docker rmi abcdesktopio/oc.user.18.04:dev
 
 docs:
 	cd composer/node/spawner-service && npm run docs
