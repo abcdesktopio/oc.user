@@ -10,7 +10,7 @@ version:
 	$(shell ./mkversion.sh)
 
 user:
-	docker build --no-cache=$(NOCACHE) -t abcdesktopio/oc.user.18.04 .
+	docker build --no-cache=$(NOCACHE) -t abcdesktopio/oc.user.18.04:dev .
 
 build:version  user
 	@echo "Build done."
@@ -23,4 +23,4 @@ docs:
 	cd composer/node/file-service && npm run docs
 
 push:
-	docker push abcdesktopio/oc.user.18.04
+	docker push abcdesktopio/oc.user.18.04:dev
