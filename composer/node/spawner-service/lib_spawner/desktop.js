@@ -54,21 +54,27 @@ async function* filesearch(root = '', keywords = '') {
     if (dirent.isDirectory()) {
       directories.push(dirent.name);
     } else if (
-        dirent.name[0] !== '.'
+        dirent.isFile()
+        && dirent.name[0] !== '.'
         && dirent.name[0] !== '~'
-        && dirent.name !== 'jetty'
-        && dirent.name.search(keywords) !== -1) {
-        const filepath = `${root}/${dirent.name}`;
-        files.push({
-          file: filepath,
-          mime: mime.lookup(filepath),
-        });
+        && dirent.name !== 'jetty' // Disable Eclipse
+        ) {
+        const filenameWithoutAccent = removeaccent(dirent.name);
+        if (filenameWithoutAccent.search(keywords) !== -1) {
+          const filepath = `${root}/${dirent.name}`;
+          files.push({
+            file: filepath,
+            mime: mime.lookup(filepath),
+          });
+        }
     }
   }
 
+  // Render files to caller function item by item
   yield* files;
 
   for (const directory of directories) {
+    // Catch n+1 filesearch rendering
     yield* filesearch(`${root}/${directory}`, keywords);
   }
 }
@@ -381,14 +387,14 @@ function routerInit(router) {
 
     const files = [];
 
-    for await (const filename of filesearch(roothomedir, keywords)) {
+    for await (const filename of filesearch(roothomedir, removeaccent(keywords))) {
       if (req.aborted) {
         break;
       }
 
       files.push(filename);
 
-      if (files.length === maxfile) {
+      if (files.length > maxfile) {
         break;
       }
     }
