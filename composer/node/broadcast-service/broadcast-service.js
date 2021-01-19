@@ -106,7 +106,9 @@ wss.on('connection', async (ws, req) => {
     }
   }
 
-  broadcastconnectionlist();
+  if (remoteAddress !== process.env.CONTAINER_IP_ADDR) {
+    broadcastconnectionlist();
+  }
 
   ws.on('message', async (message) => {
     console.log('received: %s', message);
@@ -144,7 +146,9 @@ wss.on('connection', async (ws, req) => {
 
   ws.on('close', () => {
     console.log('Closed');
-    broadcastconnectionlist();
+    if (remoteAddress !== process.env.CONTAINER_IP_ADDR) {
+      broadcastconnectionlist();
+    }
   });
 });
 
