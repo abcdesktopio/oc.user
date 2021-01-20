@@ -41,5 +41,5 @@ jobs:
 
     - name: Remove images builded
       run: |
-        docker rmi abcdesktopio/oc.user.18.04
-        docker rmi abcdesktopio/oc.software.18.04
+        docker rmi abcdesktopio/oc.user.18.04:dev
+        docker rmi abcdesktopio/oc.software.18.04:dev
