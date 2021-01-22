@@ -73,7 +73,7 @@ function broadcastevent(method = '', data) {
  */
 async function broadcastwindowslist(signal = '') {
   if (signal === 'SIGUSR2') {
-    await delay(1); // Wait one second to be sur that X11 already close the window (dirty)
+    await delay(1000); // Wait one second to be sur that X11 already close the window (dirty)
   }
   const windows = await wmctrljs.getWindowList();
   const frontWindows = windows.map((win) => ({

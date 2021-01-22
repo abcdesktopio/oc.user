@@ -49,9 +49,9 @@ async function set(key, value) {
  * @param {number} time in second
  * @desc Provide a promise which will be resolve after a given time
  */
-function delay(time = 1) {
+function delay(time = 1000) {
   return new Promise((resolve) => {
-    setTimeout(() => { resolve(); }, time * 1000);
+    setTimeout(() => { resolve(); }, time);
   });
 }
 
