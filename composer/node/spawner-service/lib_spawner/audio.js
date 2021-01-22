@@ -11,11 +11,15 @@
 * Software description: cloud native desktop service
 */
 
-const { spawn } = require('child_process');
+const fs = require('fs');
+const childProcess = require('child_process');
+const util = require('util');
 const asyncHandler = require('express-async-handler');
 const middlewares = require('./middlewares');
 const { spawnBroadwayProcess } = require('./process');
 const { get, set, delay } = require('./utils');
+const exec = util.promisify(childProcess.exec);
+const socketPulseaudioPath = '/tmp/.pulse.sock';
 
 /**
  *
@@ -98,17 +102,28 @@ function routerInit(router) {
   router.put('/configurePulse', asyncHandler(async (req, res) => {
     const { destinationIp, port } = req.body;
     const ret = await get('configurePulse');
+
     if (ret.code === 404) {
-      const pacmd = spawn('pacmd');
-      await delay(3);
-      pacmd.stdin.write('load-module module-null-sink sink_name=rtp format=alaw channels=1 rate=8000 sink_properties="device.description=\'RTP Multicast Sink\'"\n', 'utf-8');
-      await delay(3);
-      pacmd.stdin.write(`load-module module-rtp-send source=rtp.monitor destination_ip=${destinationIp}  port=${port} channels=1 format=alaw\n`, 'utf-8');
-      await delay(3);
-      pacmd.stdin.write('set-default-sink rtp\n', 'utf-8');
-      await delay(3);
-      pacmd.stdin.end();
-      pacmd.kill();
+      let socketIsUp = false;
+      const pactlCommand = `pactl -s ${socketPulseaudioPath}`;
+      do {
+        try {
+          await fs.promises.access(socketPulseaudioPath, fs.constants.F_OK);
+          socketIsUp = true;
+        } catch (e) {
+          console.error(`Socket ${socketPulseaudioPath} is not available yet`);
+          await delay(250);
+        } finally {
+          if (req.aborted) {
+            res.end();
+            return;
+          }
+        }
+      } while (!socketIsUp);
+
+      await exec(`${pactlCommand} load-module module-rtp-send source=rtp.monitor destination_ip=${destinationIp} port=${port} channels=1 format=alaw`);
+      await delay(3000);
+      await exec(`${pactlCommand} set-default-sink rtp`);
       await set('configurePulse', 'done');
     }
 
