@@ -101,30 +101,35 @@ function routerInit(router) {
    */
   router.put('/configurePulse', asyncHandler(async (req, res) => {
     const { destinationIp, port } = req.body;
-    const ret = await get('configurePulse');
 
-    if (ret.code === 404) {
-      let socketIsUp = false;
-      const pactlCommand = `pactl -s ${socketPulseaudioPath}`;
-      do {
-        try {
-          await fs.promises.access(socketPulseaudioPath, fs.constants.F_OK);
-          socketIsUp = true;
-        } catch (e) {
-          console.error(`Socket ${socketPulseaudioPath} is not available yet`);
-          await delay(250);
-        } finally {
-          if (req.aborted) {
-            res.end();
-            return;
-          }
+    let pulseaudioSocketIsUp = false;
+    const pactlCommand = `pactl -s ${socketPulseaudioPath}`;
+    do {
+      try {
+        await fs.promises.access(socketPulseaudioPath, fs.constants.F_OK);
+        pulseaudioSocketIsUp = true;
+      } catch (e) {
+        console.error(`Socket ${socketPulseaudioPath} is not available yet`);
+        await delay(250);
+      } finally {
+        if (req.aborted) {
+          res.end();
+          return;
         }
-      } while (!socketIsUp);
+      }
+    } while (!pulseaudioSocketIsUp);
 
+    // Check if pulseaudio already load the module-rtp-send
+    const listsourceOutputsCommand = `${pactlCommand} list short source-outputs | awk '{print $4}'`;
+    const { stdout: stdoutSources } = await exec(listsourceOutputsCommand);
+    if (stdoutSources.replace('\n', '') !== 'module-rtp-send.c') {
       await exec(`${pactlCommand} load-module module-rtp-send source=rtp.monitor destination_ip=${destinationIp} port=${port} channels=1 format=alaw`);
-      await delay(3000);
+    }
+
+    // Check if pulseaudio use rtp as default sink
+    const { stdout: stdoutInfo } = await exec(`${pactlCommand} info`);
+    if (!stdoutInfo.includes('Default Sink: rtp')) {
       await exec(`${pactlCommand} set-default-sink rtp`);
-      await set('configurePulse', 'done');
     }
 
     res.status(200).send({ code: 200, data: 'ok' });
