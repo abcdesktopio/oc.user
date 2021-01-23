@@ -119,20 +119,26 @@ function routerInit(router) {
       }
     } while (!pulseaudioSocketIsUp);
 
-    // Check if pulseaudio already load the module-rtp-send
-    const listsourceOutputsCommand = `${pactlCommand} list short source-outputs | awk '{print $4}'`;
-    const { stdout: stdoutSources } = await exec(listsourceOutputsCommand);
-    if (stdoutSources.replace('\n', '') !== 'module-rtp-send.c') {
-      await exec(`${pactlCommand} load-module module-rtp-send source=rtp.monitor destination_ip=${destinationIp} port=${port} channels=1 format=alaw`);
-    }
-
+    const messages = [];
     // Check if pulseaudio use rtp as default sink
     const { stdout: stdoutInfo } = await exec(`${pactlCommand} info`);
-    if (!stdoutInfo.includes('Default Sink: rtp')) {
+    if (stdoutInfo.includes('Default Sink: rtp')) {
+      messages.push('Default sink is already rtp');
+    } else {
       await exec(`${pactlCommand} set-default-sink rtp`);
     }
 
-    res.status(200).send({ code: 200, data: 'ok' });
+    // Check if pulseaudio already load the module-rtp-send
+    const listModules = `${pactlCommand} list short modules | awk '{print $2}'`;
+    const { stdout: stdoutModules } = await exec(listModules);
+    console.log('stdoutModules', stdoutModules);
+    if (stdoutModules.split('\n').includes('module-rtp-send')) {
+      messages.push('The module-rtp-send has already been configured');
+    } else {
+      await exec(`${pactlCommand} load-module module-rtp-send source=rtp.monitor destination_ip=${destinationIp} port=${port} channels=1 format=alaw`);
+    }
+
+    res.status(200).send({ code: 200, data: messages });
   }));
 }
 
