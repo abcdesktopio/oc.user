@@ -43,3 +43,10 @@ jobs:
       run: |
         docker rmi abcdesktopio/oc.user.18.04:dev
         docker rmi abcdesktopio/oc.software.18.04:dev
+
+    - name: Dispatch repository oc.user.18.04.debuger
+      uses: peter-evans/repository-dispatch@v1
+      with:
+        token: ${{ secrets.TOKEN_DISPATCH }}
+        repository: abcdesktopio/oc.user.18.04.debuger
+        event-type: dispatch-from-oc.user.18.04
