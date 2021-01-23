@@ -50,3 +50,10 @@ jobs:
         token: ${{ secrets.TOKEN_DISPATCH }}
         repository: abcdesktopio/oc.user.18.04.debuger
         event-type: dispatch-from-oc.user.18.04
+
+    - name: Dispatch repository oc.template
+      uses: peter-evans/repository-dispatch@v1
+      with:
+        token: ${{ secrets.TOKEN_DISPATCH }}
+        repository: abcdesktopio/oc.template
+        event-type: dispatch-from-oc.user.18.04
