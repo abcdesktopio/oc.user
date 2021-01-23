@@ -259,7 +259,7 @@ function setCultureInfo(httpHeaderAcceptLanguage) {
     for (const pl of parserlanguage) {
       const { code, region } = pl;
       if (code && region) {
-        for (const suportedLanguage of globalValues.supportedlanguagearray) {
+        for (const suportedLanguage of globalValues.supportedLanguages) {
           if (suportedLanguage === code) {
             globalValues.language = `${code}_${region}`;
             console.log(`setCultureInfo${globalValues.language}`);
