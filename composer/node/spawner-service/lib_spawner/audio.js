@@ -120,14 +120,6 @@ function routerInit(router) {
     } while (!pulseaudioSocketIsUp);
 
     const messages = [];
-    // Check if pulseaudio use rtp as default sink
-    const { stdout: stdoutInfo } = await exec(`${pactlCommand} info`);
-    if (stdoutInfo.includes('Default Sink: rtp')) {
-      messages.push('Default sink is already rtp');
-    } else {
-      await exec(`${pactlCommand} set-default-sink rtp`);
-    }
-
     // Check if pulseaudio already load the module-rtp-send
     const listModules = `${pactlCommand} list short modules | awk '{print $2}'`;
     const { stdout: stdoutModules } = await exec(listModules);
@@ -136,6 +128,7 @@ function routerInit(router) {
       messages.push('The module-rtp-send has already been configured');
     } else {
       await exec(`${pactlCommand} load-module module-rtp-send source=rtp.monitor destination_ip=${destinationIp} port=${port} channels=1 format=alaw`);
+      await exec(`${pactlCommand} set-default-sink rtp`);
     }
 
     res.status(200).send({ code: 200, data: messages });
