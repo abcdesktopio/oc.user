@@ -47,7 +47,7 @@ async function* filesearch(root = '', keywords = '') {
   const directories = [];
 
   for (const dirent of dirents) {
-    if (dirent.isSymbolicLink()) {
+    if (dirent.isSymbolicLink() || dirent.name[0] === '.') {
       continue;
     }
 
@@ -55,7 +55,6 @@ async function* filesearch(root = '', keywords = '') {
       directories.push(dirent.name);
     } else if (
         dirent.isFile()
-        && dirent.name[0] !== '.'
         && dirent.name[0] !== '~'
         && dirent.name !== 'jetty' // Disable Eclipse
         ) {
