@@ -11,4 +11,28 @@ describe('Test audio endpoints', () => {
       .post('/spawner/setAudioQuality')
       .then(callBackExpect(expected, 422));
   });
+
+
+  describe('Test configurePulse endpoint', () => {
+    it('Should has response with forbidden because of no parameters provided', () => {
+      const expected = {
+        errors: [
+          {
+            msg: 'No destinationIp provided',
+            param: 'destinationIp',
+            location: 'body'
+          },
+          {
+            msg: 'No port provided',
+            param: 'port',
+            location: 'body'
+          },
+        ],
+      };
+
+      return request
+        .put('/spawner/configurePulse')
+        .then(callBackExpect(expected, 422));
+    });
+  });
 });
