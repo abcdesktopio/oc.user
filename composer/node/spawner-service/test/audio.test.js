@@ -34,5 +34,22 @@ describe('Test audio endpoints', () => {
         .put('/spawner/configurePulse')
         .then(callBackExpect(expected, 422));
     });
+
+    it('Should has response with forbidden because of no port provided', () => {
+      const expected = {
+        errors: [
+          {
+            msg: 'No port provided',
+            param: 'port',
+            location: 'body'
+          },
+        ],
+      };
+
+      return request
+        .put('/spawner/configurePulse')
+        .send({ destinationIp: '8.8.8.8' })
+        .then(callBackExpect(expected, 422));
+    });
   });
 });
