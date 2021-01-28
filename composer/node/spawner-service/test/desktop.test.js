@@ -160,10 +160,6 @@ describe('Test desktop endpoints', () => {
             file: '/home/balloon/test',
             mime: false,
           },
-          {
-            file: '/home/balloon/.store/my_test_key',
-            mime: false,
-          },
         ],
       };
       return request
