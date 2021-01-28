@@ -99,7 +99,7 @@ function routerInit(router) {
    *         schema:
    *           $ref: '#/definitions/Success'
    */
-  router.put('/configurePulse', asyncHandler(async (req, res) => {
+  router.put('/configurePulse', middlewares.get('configurePulse'), asyncHandler(async (req, res) => {
     const { destinationIp, port } = req.body;
 
     let pulseaudioSocketIsUp = false;

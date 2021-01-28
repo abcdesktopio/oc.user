@@ -240,6 +240,25 @@ const middlewareArgs = body('args')
   })
   .bail();
 
+const destinationIp = body('destinationIp')
+  .exists({ checkNull: true })
+  .withMessage('No destinationIp provided')
+  .bail()
+  .isString()
+  .withMessage('destinationIp must be a string')
+  .bail()
+  .isIP(4)
+  .withMessage('destinationIp must be an ipV4 address')
+  .bail();
+
+const port = body('port')
+  .exists({ checkNull: true })
+  .withMessage('No port provided')
+  .bail()
+  .isNumeric()
+  .withMessage('port must be a number')
+  .bail();
+
 /**
  * @type {Map<string, Array<Function>>} middlewares
  */
@@ -247,6 +266,7 @@ const dicoMiddlewares = new Map();
 
 // -----AUDIO MODULE
 dicoMiddlewares.set('setAudioQuality', getFinalMiddlewares(middlewareSink));
+dicoMiddlewares.set('configurePulse', getFinalMiddlewares([destinationIp, port]));
 
 // -----APP MODULE
 dicoMiddlewares.set('launch', getFinalMiddlewares([middlewareCommand, middlewareArgs.optional()]));
