@@ -51,5 +51,22 @@ describe('Test audio endpoints', () => {
         .send({ destinationIp: '8.8.8.8' })
         .then(callBackExpect(expected, 422));
     });
+
+    it('Should has response with forbidden because of no destinationIp provided', () => {
+      const expected = {
+        errors: [
+          {
+            msg: 'No destinationIp provided',
+            param: 'destinationIp',
+            location: 'body'
+          },
+        ],
+      };
+
+      return request
+        .put('/spawner/configurePulse')
+        .send({ port: 5100 })
+        .then(callBackExpect(expected, 422));
+    });
   });
 });
