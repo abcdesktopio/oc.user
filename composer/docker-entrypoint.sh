@@ -231,29 +231,26 @@ fi
 
 
 ## KERBEROS SECTION
-if [ -f /var/secrets/desktop/kerberos/keytab ]; then
-	export KRB5_CLIENT_KTNAME=/var/secrets/desktop/kerberos/keytab
+if [ -f /var/secrets/abcdesktop/kerberos/keytab ]; then
+	export KRB5_CLIENT_KTNAME=/var/secrets/abcdesktop/kerberos/keytab
 fi
 
-if [ -f /var/secrets/desktop/kerberos/krb5.conf ]; then
-        export KRB5_CONFIG=/var/secrets/desktop/kerberos/krb5.conf
+if [ -f /var/secrets/abcdesktop/kerberos/krb5.conf ]; then
+        export KRB5_CONFIG=/var/secrets/abcdesktop/kerberos/krb5.conf
 fi
 
-if [ -f /var/secrets/desktop/kerberos/PRINCIPAL ]; then
-	export USERPRINCIPALNAME=$(cat /var/secrets/desktop/kerberos/PRINCIPAL)
+if [ -f /var/secrets/abcdesktop/kerberos/PRINCIPAL ]; then
+	export USERPRINCIPALNAME=$(cat /var/secrets/abcdesktop/kerberos/PRINCIPAL)
 fi
 
-if [ -f /var/secrets/desktop/kerberos/REALM ]; then
-        export REALM=$(cat /var/secrets/desktop/kerberos/REALM)
+if [ -f /var/secrets/abcdesktop/kerberos/REALM ]; then
+        export REALM=$(cat /var/secrets/abcdesktop/kerberos/REALM)
 fi
 
+# Now run kinit if all vars are set 
 if [ ! -z "$USERPRINCIPALNAME" ] && [ ! -z "$REALM" ] && [ ! -z "$KRB5_CONFIG" ] && [ ! -z "$KRB5_CLIENT_KTNAME" ]; then
 	kinit "$USERPRINCIPALNAME@$REALM" -k -t $KRB5_CLIENT_KTNAME &
 fi 
-
-
-# run kinit USERPRINCIPAL@REALM -k -t $KRB5_CLIENT_KTNAME
- 
 
 ## END OF KERBEROS
 
