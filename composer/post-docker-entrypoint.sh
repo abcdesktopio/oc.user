@@ -1,11 +1,7 @@
 #!/bin/bash
-
 DEFAULT_TIMEOUT=5
 COUNTER=0
-# Start janus before starting pulseaudio
-# pulseadio connect to janus server for rtp
-POSTPONE_SERVICE="janus cupsd pulseaudio"
-sleep $DEFAULT_TIMEOUT
+POSTPONE_SERVICE="cupsd pulseaudio"
 while [  $COUNTER -lt 10 ]; do
         sleep $DEFAULT_TIMEOUT
         echo "Starting supervisor post pone service $COUNTER/10" >> /var/log/desktop/postpone.services.log
