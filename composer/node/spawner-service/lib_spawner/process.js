@@ -41,10 +41,9 @@ function getProcessEnv() {
   const envList = [
     'POD_NAMESPACE',
     'POD_NAME',
-    'NODE_NAME',
-    'POD_IP',
-    'KUBERNETES_SERVICE_HOST',
+    'NODE_NAME'
   ];
+  
   envList.forEach((env) => {
     obj[env] = process.env[env] ? process.env[env] : '';
   });
