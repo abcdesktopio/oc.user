@@ -124,6 +124,11 @@ RUN mkdir -p /home/$BUSER/.local/share/applications 	&& \
     mkdir -p /home/$BUSER/.config			&& \
     mkdir -p /home/$BUSER/.config/qterminal.org
 
+# 
+# create a fake ntlm_auth.desktop file
+# just to hidden missing link dest
+RUN touch /usr/bin/ntlm_auth.desktop
+
 # created by move
 #    mkdir -p /home/$BUSER/.local/share/icons        	&& \
 #    mkdir -p /home/$BUSER/.local/share/mime	    	&& \
