@@ -41,7 +41,6 @@
 */
 
 const fs = require('fs');
-const utils = require('util');
 const express = require('express');
 const asyncHandler = require('express-async-handler');
 const screen = require('./screen-mode');
@@ -55,9 +54,6 @@ const broadcast = require('./broadcast');
 const { pathVersion } = require('../global-values');
 
 const router = express.Router();
-
-const exists = utils.promisify(fs.exists);
-const readFile = utils.promisify(fs.readFile);
 
 router.use((_, res, next) => {
   res.type('application/json');
@@ -98,11 +94,20 @@ router.use(express.json({ limit: '500mb' }));
  */
 router.get('/version', asyncHandler(async (_, res) => {
   const ret = { code: 404, data: 'Can not found version file' };
-  if (await exists(pathVersion)) {
-    const version = await readFile(pathVersion, 'utf8');
+  let fileExist = false;
+  try {
+    await fs.promises.access(pathVersion, fs.constants.F_OK);
+    fileExist = true;
+  } catch (e) {
+    console.error(e);
+  }
+
+  if (fileExist) {
+    const version = await fs.promises.readFile(pathVersion, 'utf8');
     ret.data = JSON.parse(version);
     ret.code = 200;
   }
+
   res.status(ret.code).send(ret);
 }));
 
