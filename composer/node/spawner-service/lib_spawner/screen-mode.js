@@ -20,10 +20,6 @@ const broadcast = require('./broadcast');
 const { set } = require('./utils');
 const middlewares = require('./middlewares');
 const { roothomedir } = require('../global-values');
-
-const exists = util.promisify(fs.exists);
-const unlink = util.promisify(fs.unlink);
-const link = util.promisify(fs.link);
 const exec = util.promisify(childProcess.exec);
 
 const currentWallpaper = `${roothomedir}/.config/current_wallpaper`;
@@ -126,9 +122,14 @@ function routerInit(router) {
   router.post('/setBackgroundColor', middlewares.get('setBackgroundColor'), asyncHandler(async (req, res) => {
     const { color = '' } = req.body;
     const ret = { code: 500, data: '' };
+    let currentWallPaperExist = false;
+    try {
+      await fs.promises.access(currentWallpaper, fs.constants.F_OK);
+      currentWallPaperExist = true;
+    } catch(e) {}
 
-    if (await exists(currentWallpaper)) {
-      await unlink(currentWallpaper);
+    if (currentWallPaperExist) {
+      await fs.promises.unlink(currentWallpaper);
     }
 
     const { code, data } = await xsetroot(color);
@@ -187,15 +188,26 @@ function routerInit(router) {
     const { imgName = '' } = req.body;
     const imgFullpath = `${roothomedir}/.wallpapers/${imgName}`;
     const ret = { code: 500, data: '' };
-
-    if (!await exists(imgFullpath)) {
+    let imageExist = false;
+    try {
+      await fs.promises.access(imgFullpath, fs.constants.F_OK);
+      imageExist = true;
+    } catch(e) {}
+    
+    if (!imageExist) {
       ret.code = 404;
       ret.data = `Unknow image ${imgName}`;
     } else {
-      if (await exists(currentWallpaper)) {
-        await unlink(currentWallpaper);
+      let currentWallPaperExist = false;
+      try {
+        await fs.promises.access(currentWallpaper, fs.constants.F_OK);
+        currentWallPaperExist = true;
+      } catch(e) {}
+
+      if (currentWallPaperExist) {
+        await fs.promises.unlink(currentWallpaper);
       }
-      await link(imgFullpath, currentWallpaper);
+      await fs.promises.link(imgFullpath, currentWallpaper);
       const { code, data } = await changeBgImage(imgFullpath);
       ret.code = code;
       ret.data = data;
@@ -233,7 +245,13 @@ function routerInit(router) {
    */
   router.post('/setDefaultImage', asyncHandler(async (_, res) => {
     const ret = { code: 404, data: 'file not found' };
-    if (await exists(currentWallpaper)) {
+    let currentWallPaperExist = false;
+    try {
+      await fs.promises.access(currentWallpaper, fs.constants.F_OK);
+      currentWallPaperExist = true;
+    } catch(e) {}
+
+    if (currentWallPaperExist) {
       const { code, data } = await changeBgImage(currentWallpaper);
       ret.code = code;
       ret.data = data;
