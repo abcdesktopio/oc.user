@@ -21,8 +21,6 @@ describe('Test process endpoints', () => {
       POD_NAMESPACE: '',
       POD_NAME: '',
       NODE_NAME: '',
-      POD_IP: '',
-      KUBERNETES_SERVICE_HOST: '',
     };
 
     return request
