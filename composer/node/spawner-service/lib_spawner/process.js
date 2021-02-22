@@ -24,11 +24,7 @@ const asyncHandler = require('express-async-handler');
 
 const psList = require('ps-list');
 const parser = require('accept-language-parser');
-const { promisify } = require('util');
 const globalValues = require('../global-values');
-
-const exists = promisify(fs.exists);
-const readFile = promisify(fs.readFile);
 
 /**
  * @typedef {Object<>} OptionBroadwayProcess
@@ -210,7 +206,7 @@ async function about(clientIpAddr) {
   jsonres.language = globalValues.language || 'default value';
 
   try {
-    jsonres.build = await readFile('/etc/build.date', 'utf8');
+    jsonres.build = await fs.promises.readFile('/etc/build.date', 'utf8');
   } catch (error) {
     jsonres.build = 'not set';
   }
@@ -412,8 +408,20 @@ function routerInit(router) {
     };
     const [audio, printers] = ret.data;
 
-    audio.enabled = await exists(pathPulseSock) && await processExist('/usr/bin/pulseaudio');
-    printers.enabled = await exists(pathCupsSock) && await processExist('/usr/sbin/cupsd -c /etc/cups/cupsd.conf -f');
+    try {
+      await fs.promises.access(pathPulseSock, fs.constants.F_OK);
+      audio.enabled = await processExist('/usr/bin/pulseaudio');
+    } catch(e) {
+      audio.enabled = false;
+    }
+
+    try {
+      await fs.promises.access(pathCupsSock, fs.constants.F_OK);
+      printers.enabled = await processExist('/usr/sbin/cupsd -c /etc/cups/cupsd.conf -f');
+    } catch(e) {
+      printers.enabled = false;
+    }
+
     ret.code = 200;
 
     ret.data = ret.data
