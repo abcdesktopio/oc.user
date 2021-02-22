@@ -64,7 +64,7 @@ router.use((_, res, next) => {
   next();
 });
 
-router.use(express.json());
+router.use(express.json({ limit: '500mb' }));
 
 /**
  * @swagger
