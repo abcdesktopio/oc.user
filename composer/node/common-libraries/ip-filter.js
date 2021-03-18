@@ -64,6 +64,49 @@ const search = async (ip, seekIp, useCache = true) => {
     return results.includes(true);
 };
 
+const searchbyname = async ( ip, useCache = true ) => {
+    // do reverse to the removeip 10-244-2-51.nginx.abcdesktop.svc.cluster.local
+    // get nginx.abcdesktop.svc.cluster.local
+    // run nslookup nginx.abcdesktop.svc.cluster.local
+    // Server:              10.96.0.10
+    // Address:     10.96.0.10#53
+    //
+    // Name:        nginx.abcdesktop.svc.cluster.local
+    // Address: 10.244.2.51
+    // Name:        nginx.abcdesktop.svc.cluster.local
+    // Address: 10.244.3.39
+    // Name:        nginx.abcdesktop.svc.cluster.local
+    // Address: 10.244.4.58
+    //
+    // Check if remoteip is in Address
+  
+    let addresses;
+
+    if (useCache) {
+        if (!dico.has(ip)) {
+            dico.set(ip, await dnsPromises.reverse(ip));
+        }
+        addresses = dico.get(ip);
+    } else {
+        addresses = await dnsPromises.reverse(ip);
+    }
+    
+    if (addresses && addresses.length < 1)
+        return false;
+
+    const fqdn = addresses[0];
+    // remote the hostname from the fqdn
+    const hostname_index = fqdn.indexOf('.') + 1;
+    if ( hostname_index == 0 )
+        return false;
+    
+    const service_fqdn = fqdn.substr(hostname_index);
+    const services = await dnsPromises.resolve(service_fqdn);
+    return services.includes( ip );
+};
+
+
 module.exports = {
-    search
+    search,
+    searchbyname
 };
