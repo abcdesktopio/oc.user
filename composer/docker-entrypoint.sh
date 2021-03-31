@@ -99,6 +99,10 @@ if [ ! -d ~/.config ]; then
         cp -r /composer/.config ~/.config
 fi
 
+if [ ! -d ~/.config/autostart ]; then
+        mkdir -p ~/.config/autostart
+fi
+
 if [ ! -d ~/.config/gtk-3.0 ]; then
         mkdir -p ~/.config/gtk-3.0
         cp -r /composer/.config/gtk-3.0 ~/.config/gtk-3.0
