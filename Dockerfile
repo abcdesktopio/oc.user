@@ -7,7 +7,7 @@ FROM abcdesktopio/oc.software.18.04:$TAG
 #  Add dev package to node install
 ## You may also need development tools to build native addons:
 ##     sudo apt-get install gcc g++ make
-RUN DEBIAN_FRONTEND=noninteractive  apt-get update && apt-get install -y  --no-install-recommends      \
+RUN apt-get update && apt-get install -y  --no-install-recommends      \
         gcc                                                                     \
         g++                                                                     \
         make                                                                    \
@@ -15,7 +15,7 @@ RUN DEBIAN_FRONTEND=noninteractive  apt-get update && apt-get install -y  --no-i
 
 # to make install wmctrljs nodejs components
 # add build dev package 
-RUN DEBIAN_FRONTEND=noninteractive  apt-get update && apt-get install -y  --no-install-recommends      \
+RUN apt-get update && apt-get install -y  --no-install-recommends      \
         libx11-dev                                                              \
         libxmu-dev                                                              \
         && apt-get clean
@@ -48,12 +48,12 @@ RUN     cd /composer/node/xterm.js                  	            && yarn install
 
 #
 # Remove dev package
-RUN DEBIAN_FRONTEND=noninteractive  apt-get remove -y	\
-        libx11-dev                                      \
-	libxmu-dev					\
-        make                				\
-        gcc						\
-	g++	
+RUN apt-get remove -y	\
+        libx11-dev		\
+		libxmu-dev		\
+        make			\
+        gcc				\
+		g++				
 
 
 # Add 
