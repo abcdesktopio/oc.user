@@ -11,10 +11,40 @@
 * Software description: cloud native desktop service
 */
 
+const fs = require('fs');
 const WebSocketClient = require('ws');
 const wmctrljs = require('wmctrljs');
 const asyncHandler = require('express-async-handler');
 const { delay } = require('./utils');
+
+const pathSocketAudio = '/tmp/.pulse.sock';
+
+fs.watch('/tmp', watchHandler);
+
+/**
+ *
+ * @param {string} eventType 
+ * @param {string} filename
+ * @desc Handle /tmp directory watching
+ */
+async function watchHandler(eventType, filename) {
+  console.log(`Event: ${eventType} on file /tmp/${filename}`);
+  if (filename === '.pulse.sock') {
+    try {
+      let audioSocketExists = false;
+      try {
+        await fs.promises.access(pathSocketAudio, fs.constants.F_OK);
+        audioSocketExists = true;
+      } catch(e) {
+        console.error(e);
+      } finally {
+        await broadcastevent('speaker.available', audioSocketExists);
+      }
+    } catch(e) {
+      console.error(e);
+    }
+  }
+}
 
 /**
  *
