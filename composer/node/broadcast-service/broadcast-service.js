@@ -127,7 +127,8 @@ wss.on('connection', async (ws, req) => {
       || json.method === 'proc.started'
       || json.method === 'window.list'
       || json.method === 'printer.new'
-      || json.method === 'display.setBackgroundBorderColor') {
+      || json.method === 'display.setBackgroundBorderColor'
+      || json.method === 'speaker.available') {
       console.log('sending: %s', message);
       wss.broadcast(message);
     }
