@@ -2,8 +2,8 @@
 DEFAULT_TIMEOUT=5
 COUNTER=0
 POSTPONE_SERVICE="cupsd pulseaudio"
-while [  $COUNTER -lt 10 ]; do
-        sleep $DEFAULT_TIMEOUT
+while [  $COUNTER -lt 5 ]; do
+        # sleep $DEFAULT_TIMEOUT
         echo "Starting supervisor post pone service $COUNTER/10" >> /var/log/desktop/postpone.services.log
         COUNTER=$((COUNTER+1))
         /usr/bin/supervisorctl status >> /var/log/desktop/postpone.services.log

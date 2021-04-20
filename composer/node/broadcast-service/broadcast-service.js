@@ -122,7 +122,8 @@ wss.on('connection', async (ws, req) => {
     }
 
     // filter method
-    if (json.method === 'hello'
+    // broadcast send
+    if ( json.method === 'hello'
       || json.method === 'proc.killed'
       || json.method === 'proc.started'
       || json.method === 'window.list'
@@ -137,8 +138,10 @@ wss.on('connection', async (ws, req) => {
       broadcastconnectionlist();
     }
 
-    if (json.method === 'ocrun'
+    // unicast send
+    if ( json.method === 'ocrun'
       || json.method === 'logout'
+      || json.method === 'container'
       || json.method === 'download') {
       console.log('Unicast send msg: %s', message);
       wss.unicast(message);
