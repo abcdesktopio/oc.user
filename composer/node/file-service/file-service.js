@@ -37,12 +37,6 @@ const {
 const upload = multer({ storage: multer.memoryStorage() });
 
 const exists = util.promisify(fs.exists);
-const lstat = util.promisify(fs.lstat);
-const readdir = util.promisify(fs.readdir);
-const stat = util.promisify(fs.stat);
-const unlink = util.promisify(fs.unlink);
-const readFile = util.promisify(fs.readFile);
-const writeFile = util.promisify(fs.writeFile);
 
 // trust no one
 // Hard code the home dir
@@ -68,12 +62,12 @@ function checkSafePath(currentPath) {
 }
 
 async function getNameTimeFile(file, dir) {
-  const s = await stat(`${dir}/${file}`);
+  const s = await fs.promises.stat(`${dir}/${file}`);
   return { name: file, time: s.mtime.getTime() };
 }
 
 async function getFilesSort(dir) {
-  const files = await readdir(dir);
+  const files = await fs.promises.readdir(dir);
   const times = await Promise.all(
     files.map((file) => getNameTimeFile(file, dir)),
   );
@@ -82,7 +76,7 @@ async function getFilesSort(dir) {
 
 async function dirExists(d) {
   try {
-    const ls = await lstat(d);
+    const ls = await fs.promises.lstat(d);
     return ls.isDirectory();
   } catch (e) {
     console.error(e);
@@ -98,18 +92,18 @@ async function dirExists(d) {
  */
 async function generateZipTree(file, zip) {
   try {
-    const ls = await lstat(file);
+    const ls = await fs.promises.lstat(file);
     const parts = file.split('/');
     const filename = parts[parts.length - 1];
     if (ls.isDirectory()) {
       const folder = zip.folder(filename);
-      const filesDirectory = await readdir(file);
+      const filesDirectory = await fs.promises.readdir(file);
 
       await Promise.all(
         filesDirectory.map((f) => generateZipTree(`${file}/${f}`, folder)),
       );
     } else {
-      const buffer = await readFile(file, { encoding: 'binary' });
+      const buffer = await fs.promises.readFile(file, { encoding: 'binary' });
       zip.file(filename, buffer, { encoding: 'binary' });
     }
   } catch (e) {
@@ -176,7 +170,7 @@ router.get('/',
       return;
     }
 
-    const ls = await lstat(file);
+    const ls = await fs.promises.lstat(file);
     if (!ls.isDirectory()) {
       pipeline(
         fs.createReadStream(file),
@@ -242,7 +236,7 @@ router.get('/directory/list',
     } else if (!(await exists(directory))) {
       res.status(404).send({ code: 404, data: 'Not found' });
     } else {
-      const ls = await lstat(directory);
+      const ls = await fs.promises.lstat(directory);
       if (ls.isDirectory()) {
         res.status(200).send(await getFilesSort(directory));
       } else {
@@ -309,7 +303,7 @@ router.post('/', [upload.single('file'), middlewareCheckFile],
 
       console.log(originalname, 'want to be save in', saveTo);
       console.log(`writing file ${saveTo}`);
-      await writeFile(saveTo, buffer);
+      await fs.promises.writeFile(saveTo, buffer);
       console.log('Write done');
       ret.code = 200;
       ret.data = 'ok';
@@ -391,7 +385,7 @@ router.delete('/',
     // Check if the path is correct
     if (checkSafePath(file)) {
       if (await exists(file)) {
-        await unlink(file);
+        await fs.promises.unlink(file);
         ret.code = 200;
         ret.data = 'ok';
       } else {
