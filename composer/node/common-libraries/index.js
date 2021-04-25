@@ -121,6 +121,12 @@ const listenDaemonOnContainerIpAddrUsingFastify = async (fastify, PORT, messageO
         containerIpAddress = '0.0.0.0';
     }
 
+    fastify.setErrorHandler((error, _, reply) => {
+        if (error.validation) {
+          reply.status(422).send(error);
+        }
+    });
+
     try {
         await fastify.listen(PORT, containerIpAddress);
         console.log(messageOnListening);
