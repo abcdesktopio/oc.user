@@ -77,14 +77,40 @@ const listenDaemonOnContainerIpAddr = (app, PORT, messageOnListening = '') => {
 
 /**
  * 
- * @param {*} server 
+ * @param {*} request 
+ */
+const hookFastifyIpFilter = async (request) => {
+    const remoteIp = request.connection.remoteAddress.replace('::ffff:', '');
+    console.log(request.path);
+    console.log("NGINX_SERVICE_HOST: " + process.env.NGINX_SERVICE_HOST);
+    console.log('remoteIp: ' + remoteIp);
+
+    try {
+        await assertIp(remoteIp);
+    } catch(e) {
+        console.error(e);
+        console.log('Forbiden ip: ' + remoteIp);
+        const err = new Error()
+        err.statusCode = 403;
+        err.message = 'Ip forbiden';
+        throw err;
+    }
+};
+
+/**
+ * 
+ * @param {*} fastify 
  * @param {string} PORT 
  * @param {string} messageOnListening 
  */
-const listenDaemonOnContainerIpAddrUsingFastify = async (server, PORT, messageOnListening = '')  => {
+const listenDaemonOnContainerIpAddrUsingFastify = async (fastify, PORT, messageOnListening = '')  => {
     if (isNaN(PORT)) {
         console.error(`The Port number wasn't correctly provided, a number is expected but [${PORT}] was provided`);
         process.exit(1);
+    }
+
+    if (process.env.TESTING_MODE !== 'true') {
+        fastify.addHook('onRequest', hookFastifyIpFilter);
     }
 
     let containerIpAddress;
@@ -96,11 +122,11 @@ const listenDaemonOnContainerIpAddrUsingFastify = async (server, PORT, messageOn
     }
 
     try {
-        await server.listen(PORT, containerIpAddress);
+        await fastify.listen(PORT, containerIpAddress);
         console.log(messageOnListening);
     }
     catch (err) {
-        server.log.error(err);
+        fastify.log.error(err);
         process.exit(1);
     }
 };
