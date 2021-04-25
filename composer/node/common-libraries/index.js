@@ -75,8 +75,39 @@ const listenDaemonOnContainerIpAddr = (app, PORT, messageOnListening = '') => {
     }
 };
 
+/**
+ * 
+ * @param {*} server 
+ * @param {string} PORT 
+ * @param {string} messageOnListening 
+ */
+const listenDaemonOnContainerIpAddrUsingFastify = async (server, PORT, messageOnListening = '')  => {
+    if (isNaN(PORT)) {
+        console.error(`The Port number wasn't correctly provided, a number is expected but [${PORT}] was provided`);
+        process.exit(1);
+    }
+
+    let containerIpAddress;
+    if ('CONTAINER_IP_ADDR' in process.env) {
+        containerIpAddress = process.env.CONTAINER_IP_ADDR;
+    } else {
+        console.warn('Be careful [CONTAINER_IP_ADDR] is not provided then listen on 0.0.0.0');
+        containerIpAddress = '0.0.0.0';
+    }
+
+    try {
+        await server.listen(PORT, containerIpAddress);
+        console.log(messageOnListening);
+    }
+    catch (err) {
+        server.log.error(err);
+        process.exit(1);
+    }
+};
+
 module.exports = {
     assertIp,
     middleWareExpressIpFiler,
-    listenDaemonOnContainerIpAddr
+    listenDaemonOnContainerIpAddr,
+    listenDaemonOnContainerIpAddrUsingFastify,
 };
