@@ -1,6 +1,7 @@
 ARG TAG=dev
- 
-FROM abcdesktopio/oc.software.18.04:$TAG
+
+# --- BEGIN node_modules_builder ---
+FROM abcdesktopio/oc.software.18.04:$TAG as node_modules_builder
 # ARG  BUILD_BALLON_PASSWORD
 
 # 
@@ -8,17 +9,17 @@ FROM abcdesktopio/oc.software.18.04:$TAG
 ## You may also need development tools to build native addons:
 ##     sudo apt-get install gcc g++ make
 RUN apt-get update && apt-get install -y  --no-install-recommends      \
-        gcc                                                                     \
-        g++                                                                     \
-        make                                                                    \
-        && apt-get clean
+	gcc                                                                     \
+	g++                                                                     \
+	make                                                                    \
+	&& apt-get clean
 
 # to make install wmctrljs nodejs components
 # add build dev package 
 RUN apt-get update && apt-get install -y  --no-install-recommends      \
-        libx11-dev                                                              \
-        libxmu-dev                                                              \
-        && apt-get clean
+	libx11-dev                                                              \
+	libxmu-dev                                                              \
+	&& apt-get clean
 
 COPY composer /composer
 
@@ -32,29 +33,24 @@ RUN apt update && apt install yarn && apt-get clean
 
 # Add nodejs service
 RUN 	yarn global add wait-port
-RUN 	cd /composer/node/common-libraries          && yarn install
-RUN 	cd /composer/node/ws-tcp-bridge             && yarn install	
-RUN     cd /composer/node/broadcast-service         && yarn install 
-RUN 	cd /composer/node/ocrun 	            && yarn install 
-RUN     cd /composer/node/ocdownload                && yarn install
-RUN     cd /composer/node/occall                    && yarn install
-RUN 	cd /composer/node/file-service              && yarn install 
-RUN   	cd /composer/node/printer-service           && yarn install
-RUN   	cd /composer/node/spawner-service           && yarn install 
+RUN 	cd /composer/node/common-libraries  && yarn install
+RUN 	cd /composer/node/ws-tcp-bridge     && yarn install	
+RUN   cd /composer/node/broadcast-service && yarn install 
+RUN 	cd /composer/node/ocrun 	          && yarn install 
+RUN   cd /composer/node/ocdownload        && yarn install
+RUN   cd /composer/node/occall            && yarn install
+RUN 	cd /composer/node/file-service      && yarn install 
+RUN   cd /composer/node/printer-service   && yarn install
+RUN   cd /composer/node/spawner-service   && yarn install 
+RUN   cd /composer/node/lync    	        && yarn install
+RUN   cd /composer/node/xterm.js     	    && yarn install
 
-# RUN	cd /composer/node/spawner-service/node_modules/geoip-lite 	&& npm run-script updatedb 
-RUN     cd /composer/node/lync             	    	                && yarn install
-RUN     cd /composer/node/xterm.js                  	            && yarn install
+# --- END node_modules_builder ---
 
-#
-# Remove dev package
-RUN apt-get remove -y	\
-        libx11-dev		\
-		libxmu-dev		\
-        make			\
-        gcc				\
-		g++				
+FROM abcdesktopio/oc.software.18.04:$TAG
+# ARG  BUILD_BALLON_PASSWORD
 
+COPY --from=node_modules_builder /composer  /composer
 
 # Add 
 RUN adduser root lpadmin 
