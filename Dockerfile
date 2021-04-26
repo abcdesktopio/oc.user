@@ -11,20 +11,15 @@ FROM abcdesktopio/oc.software.18.04:$TAG as node_modules_builder
 RUN apt-get update && apt-get install -y  --no-install-recommends      \
 	gcc                                                                     \
 	g++                                                                     \
-	make                                                                    \
-	&& apt-get clean
+	make
 
 # to make install wmctrljs nodejs components
 # add build dev package 
-RUN apt-get update && apt-get install -y  --no-install-recommends      \
-	libx11-dev                                                              \
-	libxmu-dev                                                              \
-	&& apt-get clean
+RUN apt-get install -y  --no-install-recommends \
+	libx11-dev \
+	libxmu-dev 
 
 COPY composer /composer
-
-# build do out of memory crash test 
-# RUN cd /composer/bin && gcc do-oom.c -o do-oom
 
 #Install yarn
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
@@ -44,7 +39,6 @@ RUN   cd /composer/node/printer-service   && yarn install
 RUN   cd /composer/node/spawner-service   && yarn install 
 RUN   cd /composer/node/lync    	        && yarn install
 RUN   cd /composer/node/xterm.js     	    && yarn install
-
 # --- END node_modules_builder ---
 
 FROM abcdesktopio/oc.software.18.04:$TAG
@@ -62,17 +56,8 @@ ENV BUSER balloon
 RUN groupadd --gid 4096 $BUSER
 RUN useradd --create-home --shell /bin/bash --uid 4096 -g $BUSER --groups lpadmin,sudo $BUSER
 # create an ubuntu user
-# PASS=`pwgen -c -n -1 10`
-# PASS=ballon
-# Change password for user balloon
-
-# if --build-arg BUILD_BALLON_PASSWORD=1, set NODE_ENV to 'development' or set to null otherwise.
-#ENV BALLOON_PASSWORD=${BUILD_BALLOON_PASSWORD:+development}
-# if BUILD_BALLOON_PASSWORD is null, set it to 'desktop' (or leave as is otherwise).
-#ENV BALLOON_PASSWORD=${BUILD_BALLOON_PASSWORD:-desktop}
-
 RUN echo "balloon:lmdpocpetit" | chpasswd $BUSER
-#
+
 # hack: be shure to own the home dir 
 RUN chown -R $BUSER:$BUSER /home/$BUSER
 
@@ -80,29 +65,7 @@ COPY etc /etc
 RUN chown -R $BUSER:$BUSER /etc/pulse && \
 	chown -R $BUSER:$BUSER /etc/cups
 
-# update /etc/services
-# add desktop tcp port list to /etc/services
-#RUN cat /etc/services.desktop >> /etc/services && rm /etc/services.desktop
- 
-# change acces right for printer support
-# Change access
-# check here not shure to add $BUSER to group
-#RUN 	mkdir -p /var/run/cups 				&& \
-#	mkdir -p /var/spool/cups-pdf/SPOOL 		&& \
-#	mkdir -p /var/spool/cups-pdf/ANONYMOUS		&& \
-#	mkdir -p /var/spool/cups			&& \
-#	mkdir -p /var/spool/cups/tmp
-	
-#RUN 	chown -R $BUSER:$BUSER /var/spool/* 		&& \
-#	chown -R $BUSER:$BUSER /var/log/cups		&& \
-#	chown -R $BUSER:$BUSER /var/cache/cups          && \
-#	chown -R $BUSER:$BUSER /var/run/cups/		&& \
-#	chgrp -R lpadmin /etc/cups			&& \
-#	chmod -R g+w /etc/cups/* 			&& \
-#        chmod -R g+r /etc/cups/*                         
-
 RUN echo `date` > /etc/build.date
-
 
 # Add here commands need to run as sudo user
 # cupsd must be run as root
@@ -110,7 +73,6 @@ RUN echo `date` > /etc/build.date
 RUN echo "$BUSER ALL=(root) NOPASSWD: /usr/sbin/cupsd" >> /etc/sudoers.d/cupsd
 RUN echo "$BUSER ALL=(root) NOPASSWD: /composer/changehomeowner.sh" >> /etc/sudoers.d/changehomeowner
 
-#
 # create use default directory
 RUN mkdir -p /home/$BUSER/.local/share/applications 	&& \
     mkdir -p /home/$BUSER/.local/share/applications/bin && \
@@ -125,12 +87,6 @@ RUN mkdir -p /home/$BUSER/.local/share/applications 	&& \
 # just to hidden missing link dest
 RUN touch /usr/bin/ntlm_auth.desktop
 
-# created by move
-#    mkdir -p /home/$BUSER/.local/share/icons        	&& \
-#    mkdir -p /home/$BUSER/.local/share/mime	    	&& \
-#    mkdir -p /home/$BUSER/.local/share/mime/packages	
-
-
 RUN cp -p /composer/wallpapers/* /home/$BUSER/.wallpapers   
 RUN cp -rp /composer/mime /home/$BUSER/.local/share
 RUN cp -rp /composer/icons /home/$BUSER/.local/share
@@ -138,10 +94,9 @@ RUN update-mime-database /home/$BUSER/.local/share/mime
 
 
 # LOG AND PID SECTION
-RUN mkdir -p 	/var/log/desktop                            \
-        	/var/run/desktop                            \
-        	/composer/run					
-
+RUN mkdir -p 	/var/log/desktop \ 
+        	/var/run/desktop \
+        	/composer/run
 
 ## DBUS SECTION
 RUN mkdir -p    /var/run/dbus      
