@@ -44,9 +44,10 @@ describe("Test xterm.js endpoint", () => {
         
         it ("Should get forbiden because of no cols provided", () => {
             const expected = { 
-                statusCode: 422,
-                error: 'Unprocessable Entity',
-                message: "querystring should have required property 'cols'",
+                errors: [ 
+                    { location:'query', param:'cols', msg:'No cols provided' },
+                    { location:'query', param:'rows', msg:'No rows provided' } 
+                ]
             };
 
             return request
@@ -57,9 +58,10 @@ describe("Test xterm.js endpoint", () => {
 
         it ("Should get forbiden because of invalid cols provided", () => {
             const expected = { 
-                statusCode: 422,
-                error: 'Unprocessable Entity',
-                message: "querystring.cols should be number",
+                errors: [ 
+                    { location:'query', msg:'Cols must be a number', param:'cols', value:'test',},
+                    { location:'query', msg:'No rows provided', param:'rows' }
+                ]
             };
 
             return request
@@ -70,11 +72,7 @@ describe("Test xterm.js endpoint", () => {
         });
 
         it ("Should get forbiden because of no rows provided", () => {
-            const expected = { 
-                statusCode: 422,
-                error: 'Unprocessable Entity',
-                message: "querystring should have required property 'rows'",
-            };
+            const expected = { errors:[ { location:'query', param:'rows', msg:'No rows provided' } ] }
             return request
                 .post("/terminals")
                 .query({ cols:100 })
@@ -83,11 +81,7 @@ describe("Test xterm.js endpoint", () => {
         });
 
         it ("Should get forbiden because of invalid rows provided", () => {
-            const expected = { 
-                statusCode: 422,
-                error: 'Unprocessable Entity',
-                message: "querystring.rows should be number",
-            };
+            const expected = { errors:[ { location:'query', param:'rows', msg:'Rows must be a number', value:'test', } ] }
             return request
                 .post("/terminals")
                 .query({ cols:100, rows:'test' })

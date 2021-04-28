@@ -11,36 +11,44 @@
 * Software description: cloud native desktop service
 */
 
-const fastify = require('fastify')({ logger: true });
-fastify.register(require('fastify-websocket'));
-
-const Terminal = require('./terminal') ;
+const express             = require("express");
+const expressWs           = require('express-ws');
+const helmet              = require('helmet');
+const Terminal            = require('./terminal') ;
+const { dicoMiddlewares } = require('./middlewares');
 const {
   assertIp,
-  listenDaemonOnContainerIpAddrUsingFastify,
+  listenDaemonOnContainerIpAddr 
 } = require('../common-libraries/index.js');
 
-const {
-  getTerminalsByPidOpts,
-  postTerminalsOpts,
-  postTerminalsSizeByPid,
-} = require('./schemas');
+process.on('uncaughtException', err => {
+  console.error(err.stack);
+});
+
+const appBase    = express();
+const wsInstance = expressWs(appBase);
+const { app }    = wsInstance;
 
 const PORT = parseInt(process.env.PORT) || 29781;
 
-fastify.post('/terminals', postTerminalsOpts, (req, reply) => {
+app.use(helmet());
+
+app.use((req, res, next) => {
+  res.type('application/json');
+  console.log(req.path);
+  next();
+});
+
+app.use(express.json());
+
+app.post('/terminals', dicoMiddlewares.get('terminals'), (req, res) => {
   const cols = parseInt(req.query.cols);
   const rows = parseInt(req.query.rows);
   const term = new Terminal(cols, rows);
-  const terminalPid = term.pid.toString();
-  console.log(`Terminal created with pid: ${terminalPid}`);
-  reply
-    .code(200)
-    .type('application/json; charset=utf-8')
-    .send(terminalPid);
+  res.send(term.pid.toString());
 });
 
-fastify.post('/terminals/:pid/size', postTerminalsSizeByPid, (req, reply) => {
+app.post('/terminals/:pid/size', dicoMiddlewares.get('terminals/:pid/size'), (req, res) => {
   const pid  = parseInt(req.params.pid);
   const cols = parseInt(req.query.cols);
   const rows = parseInt(req.query.rows);
@@ -54,34 +62,36 @@ fastify.post('/terminals/:pid/size', postTerminalsSizeByPid, (req, reply) => {
     ret.data = 'ok';
   }
 
-  reply
-    .code(ret.code)
-    .type('application/json; charset=utf-8')
-    .send(ret);
+  res.status(ret.code).send(ret);
 });
 
-fastify.get('/terminals/:pid', getTerminalsByPidOpts, async (connection, req) => {
-  const { remoteAddress:requestIp } = req.socket;
+app.ws('/terminals/:pid', async (ws, req) => {
+  const { remoteAddress:socketIp } = ws._socket;
+  const { remoteAddress:requestIp } = req.connection;
   const pid = parseInt(req.params.pid);
   const term = Terminal.terminals.get(pid);
 
+  console.log("Connection with client socketIp :" + socketIp);
   console.log("Connection with client requestIp :" + requestIp);
   try {
     if (process.env.TESTING_MODE !== 'true') {
+      await assertIp(socketIp);
       await assertIp(requestIp.replace('::ffff:', ''));
     }
   } catch (e) {
     console.error(e);
-    connection.socket.close();
+    ws.close();
     return;
   }
 
   console.log('Connected to terminal ' + term.pid);
-  term.regiterSocket(connection.socket);
+  term.regiterSocket(ws);
 });
 
-listenDaemonOnContainerIpAddrUsingFastify(fastify, PORT, `Abcdesktop.io's xterm is up on port: ${PORT}`);
-
-process.on('uncaughtException', err => {
+app.use((err, req, res, _) => {
+  console.error(req.path);
   console.error(err.stack);
+  res.status(500).send({ code:500, data:'Internal server error' });
 });
+
+listenDaemonOnContainerIpAddr(app, PORT, `Abcdesktop xterm is up on port: ${PORT}`);
