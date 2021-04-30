@@ -27,14 +27,14 @@ RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/so
 RUN apt update && apt install yarn && apt-get clean
 
 # Add nodejs service
-RUN 	yarn global add wait-port
-RUN 	cd /composer/node/common-libraries  && yarn install
-RUN 	cd /composer/node/ws-tcp-bridge     && yarn install	
+RUN   yarn global add wait-port
+RUN   cd /composer/node/common-libraries  && yarn install
+RUN   cd /composer/node/ws-tcp-bridge     && yarn install	
 RUN   cd /composer/node/broadcast-service && yarn install 
-RUN 	cd /composer/node/ocrun 	          && yarn install 
+RUN   cd /composer/node/ocrun 	          && yarn install 
 RUN   cd /composer/node/ocdownload        && yarn install
 RUN   cd /composer/node/occall            && yarn install
-RUN 	cd /composer/node/file-service      && yarn install 
+RUN   cd /composer/node/file-service      && yarn install 
 RUN   cd /composer/node/printer-service   && yarn install
 RUN   cd /composer/node/spawner-service   && yarn install 
 RUN   cd /composer/node/lync    	        && yarn install
@@ -45,6 +45,7 @@ FROM abcdesktopio/oc.software.18.04:$TAG
 # ARG  BUILD_BALLON_PASSWORD
 
 COPY --from=node_modules_builder /composer  /composer
+COPY --from=node_modules_builder /usr/local/bin/wait-port /usr/local/bin/wait-port
 
 # Add 
 RUN adduser root lpadmin 
