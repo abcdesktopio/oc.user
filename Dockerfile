@@ -47,7 +47,7 @@ FROM abcdesktopio/oc.software.18.04:$TAG
 # ARG  BUILD_BALLON_PASSWORD
 
 COPY --from=node_modules_builder /composer  /composer
-COPY --from=node_modules_builder /usr/local/bin/wait-port /usr/local/bin/wait-port
+
 
 # Add 
 RUN adduser root lpadmin 
