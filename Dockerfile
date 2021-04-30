@@ -22,12 +22,14 @@ RUN apt-get install -y  --no-install-recommends \
 COPY composer /composer
 
 #Install yarn
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 RUN apt update && apt install yarn && apt-get clean
 
+# add wait-port
+RUN mkdir -p /composer/node/wait-port && cd /composer/node/wait-port && yarn add wait-port
+
 # Add nodejs service
-RUN   yarn global add wait-port
 RUN   cd /composer/node/common-libraries  && yarn install
 RUN   cd /composer/node/ws-tcp-bridge     && yarn install	
 RUN   cd /composer/node/broadcast-service && yarn install 
