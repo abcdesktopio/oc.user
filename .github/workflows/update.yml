@@ -29,12 +29,23 @@ jobs:
         password: ${{ secrets.DOCKER_TOKEN }}
 
     - name: Build image abcdesktopio/oc.user.18.04
-      run: |
-        make -B
+      run: docker build . --file Dockerfile --tag BASE_IMAGE_RELEASE:18.04 --tag BASE_IMAGE=abcdesktopio/oc.sofware.18.04 --tag TAG:dev
 
     - name: Run and test docker image oc.user.18.04
       run: |
-        ./make-test.sh
+        ./make-test.sh 18.04
+
+    - name: Push image abcdesktopio/oc.user.18.04
+      run: |
+        make -B push
+
+    - name: Run and test docker image oc.user.20.04
+      run: |
+        ./make-test.sh 20.04
+
+    - name: Run and test docker image oc.user.21.04
+      run: |
+        ./make-test.sh 21.04
 
     - name: Push image abcdesktopio/oc.user.18.04
       run: |
