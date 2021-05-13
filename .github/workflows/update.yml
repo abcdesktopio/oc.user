@@ -48,15 +48,6 @@ jobs:
       run: |
         docker push abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
 
-    # - name: Remove images builded
-    #   run: |
-    #     docker rmi abcdesktopio/oc.user.18.04:dev || true
-    #     docker rmi abcdesktopio/oc.user.20.04:dev || true
-    #     docker rmi abcdesktopio/oc.user.21.04:dev || true
-    #     docker rmi abcdesktopio/oc.software.18.04:dev || true
-    #     docker rmi abcdesktopio/oc.software.20.04:dev || true
-    #     docker rmi abcdesktopio/oc.software.21.04:dev || true
-
     - name: Dispatch repository oc.user.18.04.debuger
       uses: peter-evans/repository-dispatch@v1
       with:
