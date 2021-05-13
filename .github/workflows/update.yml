@@ -6,7 +6,7 @@ on:
   repository_dispatch:
     types: [dispatch-from-pulse, dispatch-from-cups, dispatch-from-oc.software.18.04]
 jobs:
-  update_images:
+  update_image:
     runs-on: ubuntu-latest
     strategy:
       matrix:
