@@ -30,9 +30,15 @@ jobs:
 
     - name: Build image abcdesktopio/oc.user.18.04
       env:
+          # set the release to build
           BASE_IMAGE_RELEASE: 18.04
       run: |
+        echo "Building image oc.user.$BASE_IMAGE_RELEASE"
+        # build oc.user
         docker build . -t abcdesktopio/oc.user.$BASE_IMAGE_RELEASE:dev  --file Dockerfile --build-arg BASE_IMAGE_RELEASE:$BASE_IMAGE_RELEASE --build-arg BASE_IMAGE=abcdesktopio/oc.software.$BASE_IMAGE_RELEASE --build-arg TAG:dev
+        # build oc.user.self.test 
+        #   add yarn for js
+        echo "Building image oc.user.self.test.$BASE_IMAGE_RELEASE"
         docker build . -t abcdesktopio/oc.user.self.test.$BASE_IMAGE_RELEASE:dev  --file Dockerfile.self.test --build-arg BASE_IMAGE_RELEASE:$BASE_IMAGE_RELEASE --build-arg BASE_IMAGE=abcdesktopio/oc.user.$BASE_IMAGE_RELEASE --build-arg TAG:dev
     
     - name: Run and test docker image oc.user.18.04
