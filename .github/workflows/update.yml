@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
   repository_dispatch:
-    types: [dispatch-from-pulse, dispatch-from-cups, dispatch-from-oc.software.18.04]
+    types: [dispatch-from-pulse, dispatch-from-cups, dispatch-from-oc.software]
 jobs:
   update_image:
     runs-on: ubuntu-latest
