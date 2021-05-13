@@ -43,6 +43,7 @@ jobs:
         docker push abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
   dispatch_oc_user_debuger:
     runs-on: ubuntu-latest
+    needs: update_image
     steps:
       - name: Dispatch repository oc.user.debuger
         uses: peter-evans/repository-dispatch@v1
