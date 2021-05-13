@@ -37,7 +37,7 @@ jobs:
 
     - name: Push image abcdesktopio/oc.user.18.04
       run: |
-        make -B push
+        docker push abcdesktopio/oc.user.18.04:dev
 
     - name: Build image abcdesktopio/oc.user.20.04
       run: docker build . --file Dockerfile --build-arg BASE_IMAGE_RELEASE:20.04 --build-arg BASE_IMAGE=abcdesktopio/oc.software.20.04 --build-arg TAG:dev
@@ -45,6 +45,10 @@ jobs:
     - name: Run and test docker image oc.user.20.04
       run: |
         ./make-test.sh 20.04
+        
+    - name: Push image abcdesktopio/oc.user.20.04
+      run: |
+        docker push abcdesktopio/oc.user.20.04:dev
 
     - name: Build image abcdesktopio/oc.user.21.04
       run: docker build . --file Dockerfile --build-arg BASE_IMAGE_RELEASE:21.04 --build-arg BASE_IMAGE=abcdesktopio/oc.software.21.04 --build-arg TAG:dev
@@ -53,9 +57,9 @@ jobs:
       run: |
         ./make-test.sh 21.04
 
-    - name: Push image abcdesktopio/oc.user.18.04
+    - name: Push image abcdesktopio/oc.user.21.04
       run: |
-        make -B push
+        docker push abcdesktopio/oc.user.21.04:dev
 
     - name: Remove images builded
       run: |
