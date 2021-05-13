@@ -17,7 +17,18 @@ jobs:
         git clone "https://${{ secrets.USER_NAME }}:${{ secrets.TOKEN }}@github.com/abcdesktopio/oc.user.18.04.git" .
         git -c http.extraheader="Authorization: basic ${{ secrets.TOKEN }}" submodule update --init --recursive --remote
 
-    - uses: setup/docker@v1
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_TOKEN }}
+
     - name: Build image abcdesktopio/oc.user.18.04
       run: |
         echo "Building image oc.user.$BASE_IMAGE_RELEASE"
@@ -62,7 +73,18 @@ jobs:
         git clone "https://${{ secrets.USER_NAME }}:${{ secrets.TOKEN }}@github.com/abcdesktopio/oc.user.18.04.git" .
         git -c http.extraheader="Authorization: basic ${{ secrets.TOKEN }}" submodule update --init --recursive --remote
 
-    - uses: setup/docker@v1
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_TOKEN }}
+
     - name: Build image abcdesktopio/oc.user.20.04
       run: |
         echo "Building image oc.user.$BASE_IMAGE_RELEASE"
@@ -90,7 +112,18 @@ jobs:
         git clone "https://${{ secrets.USER_NAME }}:${{ secrets.TOKEN }}@github.com/abcdesktopio/oc.user.18.04.git" .
         git -c http.extraheader="Authorization: basic ${{ secrets.TOKEN }}" submodule update --init --recursive --remote
 
-    - uses: setup/docker@v1
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_TOKEN }}
+
     - name: Build image abcdesktopio/oc.user.21.04
       run: |
         echo "Building image oc.user.$BASE_IMAGE_RELEASE"
