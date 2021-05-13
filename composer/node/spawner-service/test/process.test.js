@@ -31,7 +31,7 @@ describe('Test process endpoints', () => {
   it('Shoud has response with hope key code equals to 200 and key data equals to empty array', () => {
     const expected = {
       code: 200,
-      data: ['audio', 'printers'],
+      data: [],
     };
 
     return request
