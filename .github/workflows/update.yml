@@ -5,10 +5,11 @@ on:
     branches: [ main ]
   repository_dispatch:
     types: [dispatch-from-pulse, dispatch-from-cups, dispatch-from-oc.software.18.04]
+  strategy:
+    matrix:
+      BASE_IMAGE_RELEASE: [18.04, 20.04, 21.04]
 jobs:
-  update_18_04:
-    env:
-      BASE_IMAGE_RELEASE: 18.04
+  update_images:
     runs-on: ubuntu-latest
     steps: 
     - name: Clone repository
@@ -29,23 +30,23 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_TOKEN }}
 
-    - name: Build image abcdesktopio/oc.user.18.04
+    - name: Build image abcdesktopio/${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
-        echo "Building image oc.user.$BASE_IMAGE_RELEASE"
+        echo "Building image oc.user.${{ matrix.BASE_IMAGE_RELEASE }}"
         # build oc.user
-        docker build . -t abcdesktopio/oc.user.$BASE_IMAGE_RELEASE:dev  --file Dockerfile --build-arg BASE_IMAGE_RELEASE:$BASE_IMAGE_RELEASE --build-arg BASE_IMAGE=abcdesktopio/oc.software.$BASE_IMAGE_RELEASE --build-arg TAG:dev
+        docker build . -t abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev  --file Dockerfile --build-arg BASE_IMAGE_RELEASE:${{ matrix.BASE_IMAGE_RELEASE }} --build-arg BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }} --build-arg TAG:dev
         # build oc.user.self.test 
         #   add yarn for js
-        echo "Building image oc.user.self.test.$BASE_IMAGE_RELEASE"
-        docker build . -t abcdesktopio/oc.user.self.test.$BASE_IMAGE_RELEASE:dev  --file Dockerfile.self.test --build-arg BASE_IMAGE_RELEASE:$BASE_IMAGE_RELEASE --build-arg BASE_IMAGE=abcdesktopio/oc.user.$BASE_IMAGE_RELEASE --build-arg TAG:dev
+        echo "Building image oc.user.self.test.${{ matrix.BASE_IMAGE_RELEASE }}"
+        docker build . -t abcdesktopio/oc.user.self.test.${{ matrix.BASE_IMAGE_RELEASE }}:dev  --file Dockerfile.self.test --build-arg BASE_IMAGE_RELEASE:${{ matrix.BASE_IMAGE_RELEASE }} --build-arg BASE_IMAGE=abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }} --build-arg TAG:dev
 
-    - name: Run and test docker image oc.user.18.04
+    - name: Run and test docker image ${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
-        ./make-test.sh $BASE_IMAGE_RELEASE
+        ./make-test.sh ${{ matrix.BASE_IMAGE_RELEASE }}
 
-    - name: Push image abcdesktopio/oc.user.18.04
+    - name: Push image abcdesktopio/${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
-        docker push abcdesktopio/oc.user.$BASE_IMAGE_RELEASE:dev
+        docker push abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
 
     # - name: Remove images builded
     #   run: |
@@ -62,81 +63,3 @@ jobs:
         token: ${{ secrets.TOKEN_DISPATCH }}
         repository: abcdesktopio/oc.user.18.04.debuger
         event-type: dispatch-from-oc.user.18.04
-  update_20_04:
-    env:
-      BASE_IMAGE_RELEASE: 20.04
-    runs-on: ubuntu-latest
-    steps: 
-    - name: Clone repository
-      run: |
-        rm -rf ..?* .[!.]* *
-        git clone "https://${{ secrets.USER_NAME }}:${{ secrets.TOKEN }}@github.com/abcdesktopio/oc.user.18.04.git" .
-        git -c http.extraheader="Authorization: basic ${{ secrets.TOKEN }}" submodule update --init --recursive --remote
-
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v1
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
-
-    - name: Login to DockerHub
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_TOKEN }}
-
-    - name: Build image abcdesktopio/oc.user.20.04
-      run: |
-        echo "Building image oc.user.$BASE_IMAGE_RELEASE"
-        # build oc.user
-        docker build . -t abcdesktopio/oc.user.$BASE_IMAGE_RELEASE:dev  --file Dockerfile --build-arg BASE_IMAGE_RELEASE:$BASE_IMAGE_RELEASE --build-arg BASE_IMAGE=abcdesktopio/oc.software.$BASE_IMAGE_RELEASE --build-arg TAG:dev
-        # build oc.user.self.test 
-        echo "Building image oc.user.self.test.$BASE_IMAGE_RELEASE"
-        docker build . -t abcdesktopio/oc.user.self.test.$BASE_IMAGE_RELEASE:dev  --file Dockerfile.self.test --build-arg BASE_IMAGE_RELEASE:$BASE_IMAGE_RELEASE --build-arg BASE_IMAGE=abcdesktopio/oc.user.$BASE_IMAGE_RELEASE --build-arg TAG:dev
-
-    - name: Run and test docker image oc.user.20.04
-      run: |
-        ./make-test.sh $BASE_IMAGE_RELEASE
-
-    - name: Push image abcdesktopio/oc.user.20.04
-      run: |
-        docker push abcdesktopio/oc.user.$BASE_IMAGE_RELEASE:dev
-  update_21_04:
-    env:
-      BASE_IMAGE_RELEASE: 21.04
-    runs-on: ubuntu-latest
-    steps: 
-    - name: Clone repository
-      run: |
-        rm -rf ..?* .[!.]* *
-        git clone "https://${{ secrets.USER_NAME }}:${{ secrets.TOKEN }}@github.com/abcdesktopio/oc.user.18.04.git" .
-        git -c http.extraheader="Authorization: basic ${{ secrets.TOKEN }}" submodule update --init --recursive --remote
-
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v1
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
-
-    - name: Login to DockerHub
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_TOKEN }}
-
-    - name: Build image abcdesktopio/oc.user.21.04
-      run: |
-        echo "Building image oc.user.$BASE_IMAGE_RELEASE"
-        # build oc.user
-        docker build . -t abcdesktopio/oc.user.$BASE_IMAGE_RELEASE:dev  --file Dockerfile --build-arg BASE_IMAGE_RELEASE:$BASE_IMAGE_RELEASE --build-arg BASE_IMAGE=abcdesktopio/oc.software.$BASE_IMAGE_RELEASE --build-arg TAG:dev
-        # build oc.user.self.test 
-        echo "Building image oc.user.self.test.$BASE_IMAGE_RELEASE"
-        docker build . -t abcdesktopio/oc.user.self.test.$BASE_IMAGE_RELEASE:dev  --file Dockerfile.self.test --build-arg BASE_IMAGE_RELEASE:$BASE_IMAGE_RELEASE --build-arg BASE_IMAGE=abcdesktopio/oc.user.$BASE_IMAGE_RELEASE --build-arg TAG:dev
-
-    - name: Run and test docker image oc.user.21.04
-      run: |
-        ./make-test.sh $BASE_IMAGE_RELEASE
-
-    - name: Push image abcdesktopio/oc.user.21.04
-      run: |
-        docker push abcdesktopio/oc.user.$BASE_IMAGE_RELEASE:dev
