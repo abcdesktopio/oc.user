@@ -23,12 +23,12 @@ RUN apt-get install -y  --no-install-recommends \
 	libx11-dev \
 	libxmu-dev 
 
-COPY composer /composer
-
 #Install yarn
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 RUN apt update && apt install yarn && apt-get clean
+
+COPY composer /composer
 
 # add wait-port
 RUN mkdir -p /composer/node/wait-port && cd /composer/node/wait-port && yarn add wait-port
@@ -50,6 +50,11 @@ RUN   cd /composer/node/xterm.js     	    && yarn install
 
 # --- START Build image ---
 FROM $BASE_IMAGE:$TAG
+
+#Install yarn
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt update && apt install yarn && apt-get clean
 
 COPY --from=node_modules_builder /composer  /composer
 
