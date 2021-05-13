@@ -27,15 +27,4 @@ describe('Test process endpoints', () => {
       .get('/spawner/about')
       .then(callBackExpect(expected));
   });
-
-  it('Shoud has response with hope key code equals to 200 and key data equals to empty array', () => {
-    const expected = {
-      code: 200,
-      data: [],
-    };
-
-    return request
-      .get('/spawner/getSettings')
-      .then(callBackExpect(expected));
-  });
 });
