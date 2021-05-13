@@ -54,34 +54,52 @@ jobs:
         docker push abcdesktopio/oc.user.$BASE_IMAGE_RELEASE:dev
 
     - name: Build image abcdesktopio/oc.user.20.04
+      env:
+          # set the release to build
+          BASE_IMAGE_RELEASE: 20.04
       run: |
-        docker build . -t abcdesktopio/oc.user.20.04:dev --file Dockerfile --build-arg BASE_IMAGE_RELEASE:20.04 --build-arg BASE_IMAGE=abcdesktopio/oc.software.20.04 --build-arg TAG:dev
-        docker build . -t abcdesktopio/oc.user.self.test.20.04:dev --file Dockerfile.self.test --build-arg BASE_IMAGE_RELEASE:20.04 --build-arg BASE_IMAGE=abcdesktopio/oc.user.20.04 --build-arg TAG:dev
-
+        echo "Building image oc.user.$BASE_IMAGE_RELEASE"
+        # build oc.user
+        docker build . -t abcdesktopio/oc.user.$BASE_IMAGE_RELEASE:dev  --file Dockerfile --build-arg BASE_IMAGE_RELEASE:$BASE_IMAGE_RELEASE --build-arg BASE_IMAGE=abcdesktopio/oc.software.$BASE_IMAGE_RELEASE --build-arg TAG:dev
+        # build oc.user.self.test 
+        echo "Building image oc.user.self.test.$BASE_IMAGE_RELEASE"
+        docker build . -t abcdesktopio/oc.user.self.test.$BASE_IMAGE_RELEASE:dev  --file Dockerfile.self.test --build-arg BASE_IMAGE_RELEASE:$BASE_IMAGE_RELEASE --build-arg BASE_IMAGE=abcdesktopio/oc.user.$BASE_IMAGE_RELEASE --build-arg TAG:dev
+    
     - name: Run and test docker image oc.user.20.04
+      env:
+          BASE_IMAGE_RELEASE: 20.04
       run: |
-        ./make-test.sh 20.04
+        ./make-test.sh $BASE_IMAGE_RELEASE
         
     - name: Push image abcdesktopio/oc.user.20.04
+      env:
+          BASE_IMAGE_RELEASE: 20.04
       run: |
-        docker push abcdesktopio/oc.user.20.04:dev
-
-    - name: list images
-      run: |
-        docker images
+        docker push abcdesktopio/oc.user.$BASE_IMAGE_RELEASE:dev
 
     - name: Build image abcdesktopio/oc.user.21.04
+      env:
+          # set the release to build
+          BASE_IMAGE_RELEASE: 21.04
       run: |
-        docker build . -t abcdesktopio/oc.user.21.04:dev --file Dockerfile --build-arg BASE_IMAGE_RELEASE:21.04 --build-arg BASE_IMAGE=abcdesktopio/oc.software.21.04 --build-arg TAG:dev
-        docker build . -t abcdesktopio/oc.user.self.test.21.04:dev --file Dockerfile.self.test --build-arg BASE_IMAGE_RELEASE:21.04 --build-arg BASE_IMAGE=abcdesktopio/oc.user.21.04 --build-arg TAG:dev
-
+        echo "Building image oc.user.$BASE_IMAGE_RELEASE"
+        # build oc.user
+        docker build . -t abcdesktopio/oc.user.$BASE_IMAGE_RELEASE:dev  --file Dockerfile --build-arg BASE_IMAGE_RELEASE:$BASE_IMAGE_RELEASE --build-arg BASE_IMAGE=abcdesktopio/oc.software.$BASE_IMAGE_RELEASE --build-arg TAG:dev
+        # build oc.user.self.test 
+        echo "Building image oc.user.self.test.$BASE_IMAGE_RELEASE"
+        docker build . -t abcdesktopio/oc.user.self.test.$BASE_IMAGE_RELEASE:dev  --file Dockerfile.self.test --build-arg BASE_IMAGE_RELEASE:$BASE_IMAGE_RELEASE --build-arg BASE_IMAGE=abcdesktopio/oc.user.$BASE_IMAGE_RELEASE --build-arg TAG:dev
+ 
     - name: Run and test docker image oc.user.21.04
+      env:
+          BASE_IMAGE_RELEASE: 21.04
       run: |
-        ./make-test.sh 21.04
+        ./make-test.sh $BASE_IMAGE_RELEASE
 
     - name: Push image abcdesktopio/oc.user.21.04
+      env:
+          BASE_IMAGE_RELEASE: 21.04
       run: |
-        docker push abcdesktopio/oc.user.21.04:dev
+        docker push abcdesktopio/oc.user.$BASE_IMAGE_RELEASE:dev
 
     - name: Remove images builded
       run: |
