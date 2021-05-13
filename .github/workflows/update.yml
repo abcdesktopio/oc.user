@@ -33,12 +33,7 @@ jobs:
     - name: Build image abcdesktopio/${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
         echo "Building image oc.user.${{ matrix.BASE_IMAGE_RELEASE }}"
-        # build oc.user
         docker build . -t abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev --build-arg BASE_IMAGE_RELEASE:${{ matrix.BASE_IMAGE_RELEASE }} --build-arg BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }} --build-arg TAG:dev
-        # build oc.user.self.test 
-        #   add yarn for js
-        echo "Building image oc.user.${{ matrix.BASE_IMAGE_RELEASE }}"
-        docker build . -t abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev --build-arg BASE_IMAGE_RELEASE:${{ matrix.BASE_IMAGE_RELEASE }} --build-arg BASE_IMAGE=abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }} --build-arg TAG:dev
 
     - name: Run and test docker image ${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
