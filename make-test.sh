@@ -2,7 +2,7 @@
 
 RELEASE=$1
 echo "Run oc.user test for $RELEASE"
-CONTAINER_ID=$(docker run --rm --env TESTING_MODE='true' -d abcdesktopio/oc.user.$RELEASE:dev)
+CONTAINER_ID=$(docker run --rm --env TESTING_MODE='true' -d abcdesktopio/oc.user.self.test.$RELEASE:dev)
 
 echo "Container ID: ${CONTAINER_ID}"
 
