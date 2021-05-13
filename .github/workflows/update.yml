@@ -42,9 +42,11 @@ jobs:
       run: |
         docker push abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
   dispatch_oc_user_debuger:
-    - name: Dispatch repository oc.user.debuger
-      uses: peter-evans/repository-dispatch@v1
-      with:
-        token: ${{ secrets.TOKEN_DISPATCH }}
-        repository: abcdesktopio/oc.user.debuger
-        event-type: dispatch-from-oc.user
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch repository oc.user.debuger
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.TOKEN_DISPATCH }}
+          repository: abcdesktopio/oc.user.debuger
+          event-type: dispatch-from-oc.user
