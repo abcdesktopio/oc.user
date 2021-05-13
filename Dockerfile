@@ -13,8 +13,8 @@ FROM $BASE_IMAGE:$TAG as node_modules_builder
 ## You may also need development tools to build native addons:
 ##     sudo apt-get install gcc g++ make
 RUN apt-get update && apt-get install -y  --no-install-recommends      \
-	gcc                                                                     \
-	g++                                                                     \
+	gcc                                                            \
+	g++                                                            \
 	make
 
 # to make install wmctrljs nodejs components
@@ -84,7 +84,6 @@ RUN echo "$BUSER ALL=(root) NOPASSWD: /composer/changehomeowner.sh" >> /etc/sudo
 # create use default directory
 RUN mkdir -p /home/$BUSER/.local/share/applications 	&& \
     mkdir -p /home/$BUSER/.local/share/applications/bin && \
-    mkdir -p /home/$BUSER/.wallpapers			&& \
     mkdir -p /home/$BUSER/.local/share/Trash/		&& \
     mkdir -p /home/$BUSER/Desktop			&& \
     mkdir -p /home/$BUSER/.config			&& \
@@ -123,7 +122,6 @@ RUN chown -R $BUSER:$BUSER 				\
 RUN chown -R $BUSER:$BUSER 				\
         /home/$BUSER/.config                            \
 	/home/$BUSER/.local 				\
-	/home/$BUSER/.wallpapers			\
 	/home/$BUSER/.local/share/Trash			\
 	/home/$BUSER/Desktop				\
 	/etc/X11/openbox				\
@@ -132,7 +130,6 @@ RUN chown -R $BUSER:$BUSER 				\
 	/composer/run					\
 	/composer/mime					\
 	/composer/icons					\
-	/composer/wallpapers				\
 	/composer/.themes				\
 	/composer/.gtkrc-2.0				\
 	/composer/.xsettings				\
