@@ -50,6 +50,7 @@ RUN   cd /composer/node/xterm.js     	    && yarn install
 
 COPY Makefile /
 COPY mkversion.sh /
+COPY .git /
 
 RUN cd / && make version
 
