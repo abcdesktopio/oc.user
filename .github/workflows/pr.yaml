@@ -1,11 +1,14 @@
-name: Test oc.user.18.04
+name: Test oc.user images
 
 on:
   pull_request:
     branches: [ main ]
 jobs:
-  main:
+  build_and_test_images:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        BASE_IMAGE_RELEASE: [18.04, 20.04, 21.04]
     steps: 
     - name: Clone repository
       run: |
@@ -19,15 +22,10 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
-    - name: Build image abcdesktopio/oc.user.18.04
+    - name: Build image oc.user.${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
-        make -B
+        docker build . -t abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev --build-arg BASE_IMAGE_RELEASE:${{ matrix.BASE_IMAGE_RELEASE }} --build-arg BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }} --build-arg TAG:dev
 
-    - name: Run and test docker image oc.user.18.04
+    - name: Run and test docker image oc.user.${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
-        ./make-test.sh
-
-    - name: Remove images builded
-      run: |
-        docker rmi abcdesktopio/oc.user.18.04
-        docker rmi abcdesktopio/oc.software.18.04
+        ./make-test.sh ${{ matrix.BASE_IMAGE_RELEASE }}
