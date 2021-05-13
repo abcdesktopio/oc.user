@@ -1,0 +1,16 @@
+# defaul TAG is dev
+ARG TAG=dev
+# Default release is 18.04
+ARG BASE_IMAGE_RELEASE=18.04
+# Default base image 
+ARG BASE_IMAGE=abcdesktopio/oc.user.18.04
+
+# --- START Build image ---
+FROM $BASE_IMAGE:$TAG
+
+USER 0
+#Install yarn
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt update && apt install yarn && apt-get clean
+USER $BUSER
