@@ -1,4 +1,4 @@
-name: Test and update oc.user.18.04
+name: Test and update oc.user images
 
 on:
   push:
