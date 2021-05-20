@@ -13,22 +13,29 @@ FROM $BASE_IMAGE:$TAG as node_modules_builder
 ## You may also need development tools to build native addons:
 ##     sudo apt-get install gcc g++ make
 RUN apt-get update && apt-get install -y  --no-install-recommends      \
-	gcc                                                            \
-	g++                                                            \
-	make
+	gcc                             \
+	g++                             \
+	make    			\
+    && apt-get clean                    \
+    && rm -rf /var/lib/apt/lists/*
 
 # to make install wmctrljs nodejs components
 # add build dev package 
 RUN apt-get install -y  --no-install-recommends \
 	libx11-dev \
-	libxmu-dev 
+	libxmu-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get install -y git
 
 #Install yarn
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-RUN apt update && apt install yarn && apt-get clean
+RUN apt update && apt install -y --no-install-recommends \
+	yarn \
+    && apt-get clean                    \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY composer /composer
 
@@ -45,8 +52,8 @@ RUN   cd /composer/node/occall            && yarn install
 RUN   cd /composer/node/file-service      && yarn install 
 RUN   cd /composer/node/printer-service   && yarn install
 RUN   cd /composer/node/spawner-service   && yarn install 
-RUN   cd /composer/node/lync    	        && yarn install
-RUN   cd /composer/node/xterm.js     	    && yarn install
+RUN   cd /composer/node/lync		  && yarn install
+RUN   cd /composer/node/xterm.js     	  && yarn install
 
 COPY Makefile /
 COPY mkversion.sh /
@@ -63,7 +70,10 @@ FROM $BASE_IMAGE:$TAG
 #Install yarn
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-RUN apt update && apt install yarn && apt-get clean
+RUN apt update && apt install -y --no-install-recommends \ 
+	yarn	\ 
+    && apt-get clean                    \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=node_modules_builder /composer  /composer
 
@@ -85,7 +95,7 @@ RUN chown -R $BUSER:$BUSER /home/$BUSER
 
 COPY etc /etc
 RUN chown -R $BUSER:$BUSER /etc/pulse && \
-	chown -R $BUSER:$BUSER /etc/cups
+    chown -R $BUSER:$BUSER /etc/cups
 
 RUN echo `date` > /etc/build.date
 
@@ -159,7 +169,7 @@ RUN apt-get autoremove --purge -y
 # VOLUME /home/$BUSER
 WORKDIR /home/$BUSER
 USER $BUSER
-CMD /composer/docker-entrypoint.sh
+CMD [ "/composer/docker-entrypoint.sh" ]
 
 ####################################################
 # SERVICE			    #   TCP PORT   #
