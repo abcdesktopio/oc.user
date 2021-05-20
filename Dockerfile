@@ -21,18 +21,17 @@ RUN apt-get update && apt-get install -y  --no-install-recommends      \
 
 # to make install wmctrljs nodejs components
 # add build dev package 
-RUN apt-get install -y  --no-install-recommends \
+RUN apt-get update && apt-get install -y  --no-install-recommends \
 	libx11-dev \
 	libxmu-dev \
+	git	   \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
-RUN apt-get install -y git
 
 #Install yarn
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-RUN apt update && apt install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
 	yarn \
     && apt-get clean                    \
     && rm -rf /var/lib/apt/lists/*
@@ -43,23 +42,45 @@ COPY composer /composer
 RUN mkdir -p /composer/node/wait-port && cd /composer/node/wait-port && yarn add wait-port
 
 # Add nodejs service
-RUN   cd /composer/node/common-libraries  && yarn install
-RUN   cd /composer/node/ws-tcp-bridge     && yarn install	
-RUN   cd /composer/node/broadcast-service && yarn install 
-RUN   cd /composer/node/ocrun 	          && yarn install 
-RUN   cd /composer/node/ocdownload        && yarn install
-RUN   cd /composer/node/occall            && yarn install
-RUN   cd /composer/node/file-service      && yarn install 
-RUN   cd /composer/node/printer-service   && yarn install
-RUN   cd /composer/node/spawner-service   && yarn install 
-RUN   cd /composer/node/lync		  && yarn install
-RUN   cd /composer/node/xterm.js     	  && yarn install
+WORKDIR /composer/node/common-libraries
+RUN   yarn install
+
+WORKDIR /composer/node/ws-tcp-bridge
+RUN yarn install	
+
+WORKDIR /composer/node/broadcast-service
+RUN yarn install 
+
+WORKDIR /composer/node/ocrun
+RUN yarn install 
+
+WORKDIR /composer/node/ocdownload
+RUN yarn install
+
+WORKDIR /composer/node/occall
+RUN yarn install
+
+WORKDIR /composer/node/file-service
+RUN yarn install 
+
+WORKDIR /composer/node/printer-service
+RUN yarn install
+
+WORKDIR /composer/node/spawner-service
+RUN yarn install 
+
+WORKDIR /composer/node/lync 
+RUN yarn install
+
+WORKDIR /composer/node/xterm.js
+RUN yarn install
 
 COPY Makefile /
 COPY mkversion.sh /
 COPY .git /
 
-RUN cd / && make version
+WORKDIR /
+RUN make version
 
 # --- END node_modules_builder ---
 
@@ -68,9 +89,10 @@ RUN cd / && make version
 FROM $BASE_IMAGE:$TAG
 
 #Install yarn
+# yarn is use for the test mode 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-RUN apt update && apt install -y --no-install-recommends \ 
+RUN apt-get update && apt-get install -y --no-install-recommends \ 
 	yarn	\ 
     && apt-get clean                    \
     && rm -rf /var/lib/apt/lists/*
@@ -97,7 +119,7 @@ COPY etc /etc
 RUN chown -R $BUSER:$BUSER /etc/pulse && \
     chown -R $BUSER:$BUSER /etc/cups
 
-RUN echo `date` > /etc/build.date
+RUN date > /etc/build.date
 
 # Add here commands need to run as sudo user
 # cupsd must be run as root
@@ -106,12 +128,12 @@ RUN echo "$BUSER ALL=(root) NOPASSWD: /usr/sbin/cupsd" >> /etc/sudoers.d/cupsd
 RUN echo "$BUSER ALL=(root) NOPASSWD: /composer/changehomeowner.sh" >> /etc/sudoers.d/changehomeowner
 
 # create use default directory
-RUN mkdir -p /home/$BUSER/.local/share/applications 	&& \
-    mkdir -p /home/$BUSER/.local/share/applications/bin && \
-    mkdir -p /home/$BUSER/.local/share/Trash/		&& \
-    mkdir -p /home/$BUSER/Desktop			&& \
-    mkdir -p /home/$BUSER/.config			&& \
-    mkdir -p /home/$BUSER/.config/qterminal.org
+# RUN mkdir -p /home/$BUSER/.local/share/applications 	&& \
+#    mkdir -p /home/$BUSER/.local/share/applications/bin && \
+#    mkdir -p /home/$BUSER/.local/share/Trash/		&& \
+#    mkdir -p /home/$BUSER/Desktop			&& \
+#    mkdir -p /home/$BUSER/.config			&& \
+#    mkdir -p /home/$BUSER/.config/qterminal.org
 
 # 
 # create a fake ntlm_auth.desktop file
@@ -144,10 +166,6 @@ RUN chown -R $BUSER:$BUSER 				\
 
 # change access rights
 RUN chown -R $BUSER:$BUSER 				\
-        /home/$BUSER/.config                            \
-	/home/$BUSER/.local 				\
-	/home/$BUSER/.local/share/Trash			\
-	/home/$BUSER/Desktop				\
 	/etc/X11/openbox				\
 	/var/log/desktop				\
 	/var/run/desktop				\
@@ -164,7 +182,6 @@ RUN chown -R $BUSER:$BUSER 				\
 
 # Clean unecessary package
 RUN rm -rf /tmp/*
-RUN apt-get autoremove --purge -y
 
 # VOLUME /home/$BUSER
 WORKDIR /home/$BUSER
