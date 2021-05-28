@@ -1,5 +1,5 @@
 #!/bin/bash
-DEFAULT_TIMEOUT=5
+DEFAULT_TIMEOUT=2
 COUNTER=0
 # get ubuntu release
 RELEASE=$(lsb_release --release | cut -f2)
@@ -7,8 +7,8 @@ RELEASE=$(lsb_release --release | cut -f2)
 POSTPONE_SERVICE="cupsd pulseaudio"
 # log info
 echo "RELEASE=$RELEASE"
-# check if ubuntu release is 18.04 
-if [ $RELEASE == "18.04" ]; then
+# check if ubuntu release is 18.04 or 20.04
+if [[ $RELEASE == "18.04" || $RELEASE == "20.04" ]]; then
         # Add xsettingsd to POSTPONE_SERVICE
         POSTPONE_SERVICE="xsettingsd $POSTPONE_SERVICE"
 fi
