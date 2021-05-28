@@ -1,12 +1,18 @@
 #!/bin/bash
 DEFAULT_TIMEOUT=5
 COUNTER=0
+# get ubuntu release
 RELEASE=$(lsb_release --release | cut -f2)
+# based services
 POSTPONE_SERVICE="cupsd pulseaudio"
+# log info
 echo "RELEASE=$RELEASE"
+# check if ubuntu release is 18.04 
 if [ $RELEASE == "18.04" ]; then
-        POSTPONE_SERVICE="xsettingsd cupsd pulseaudio"
+        # Add xsettingsd to POSTPONE_SERVICE
+        POSTPONE_SERVICE="xsettingsd $POSTPONE_SERVICE"
 fi
+# loop
 while [  $COUNTER -lt 5 ]; do
         sleep $DEFAULT_TIMEOUT
         echo "Starting supervisor post pone service $COUNTER/10" >> /var/log/desktop/postpone.services.log
