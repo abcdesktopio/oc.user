@@ -15,7 +15,7 @@ jobs:
     - name: Clone repository
       run: |
         rm -rf ..?* .[!.]* *
-        git clone "https://${{ secrets.USER_NAME }}:${{ secrets.TOKEN }}@github.com/abcdesktopio/oc.user.18.04.git" .
+        git -c http.extraheader="Authorization: basic ${{ secrets.TOKEN }}" clone github.com/abcdesktopio/oc.user.18.04.git" .
         git -c http.extraheader="Authorization: basic ${{ secrets.TOKEN }}" submodule update --init --recursive --remote
 
     - name: Set up QEMU
