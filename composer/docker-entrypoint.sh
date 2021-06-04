@@ -294,5 +294,9 @@ if [ ! -z "$DISABLE_REMOTEIP_FILTERING"  ]; then
 fi
 
 # start supervisord
-/usr/bin/supervisord --pidfile /var/run/desktop/supervisord.pid --nodaemon --configuration /etc/supervisord.conf
+if [ ! -z "$CI"  ]; then
+        /usr/bin/supervisord --pidfile /var/run/desktop/supervisord.pid --configuration /etc/supervisord.conf
+else
+        /usr/bin/supervisord --pidfile /var/run/desktop/supervisord.pid --nodaemon --configuration /etc/supervisord.conf
+fi
 
