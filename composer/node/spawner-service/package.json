@@ -33,7 +33,7 @@
     "ps-list": "^7.2.0",
     "which": "*",
     "wmctrljs": "^1.2.8",
-    "ws": "^7.3.1"
+    "ws": "^7.4.6"
   },
   "devDependencies": {
     "eslint": "^7.10.0",
