@@ -13,3 +13,4 @@
 [submodule "composer/node/printer-service"]
 	path = composer/node/printer-service
 	url = https://github.com/abcdesktopio/printer-service
+	branch = main
