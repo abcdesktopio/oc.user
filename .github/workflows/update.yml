@@ -4,7 +4,13 @@ on:
   push:
     branches: [ main ]
   repository_dispatch:
-    types: [dispatch-from-pulse, dispatch-from-cups, dispatch-from-oc.software, dispatch-from-file-service]
+    types: [
+      dispatch-from-pulse,
+      dispatch-from-cups,
+      dispatch-from-oc.software,
+      dispatch-from-file-service,
+      dispatch-from-printer-service
+    ]
 jobs:
   update_image:
     runs-on: ubuntu-latest
