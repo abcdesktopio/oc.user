@@ -6,3 +6,7 @@
 	path = etc/pulse
 	url = https://github.com/abcdesktopio/pulse
 	branch = main
+[submodule "composer/node/file-service"]
+	path = composer/node/file-service
+	url = https://github.com/abcdesktopio/file-service
+	branch = main
