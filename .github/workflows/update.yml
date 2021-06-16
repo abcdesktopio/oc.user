@@ -20,10 +20,9 @@ jobs:
     steps: 
     - name: Checkout repository
       uses: actions/checkout@v2
+
     - name: Checkout submodules
-      uses: textbook/git-checkout-submodule-action@master
-      with:
-        remote: true
+      run: git submodule update --init --recursive --remote
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v1
