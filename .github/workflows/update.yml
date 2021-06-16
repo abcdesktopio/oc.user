@@ -51,6 +51,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: update_image
     steps:
+      - name: Dispatch repository oc.user
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.TOKEN_DISPATCH }}
+          repository: abcdesktopio/oc.user.tunnel
+          event-type: dispatch-from-oc.user
       - name: Dispatch repository oc.user.debuger
         uses: peter-evans/repository-dispatch@v1
         with:
