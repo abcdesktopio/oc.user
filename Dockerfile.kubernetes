@@ -1,0 +1,174 @@
+# defaul TAG is dev
+ARG TAG=dev
+# Default release is 18.04
+ARG BASE_IMAGE_RELEASE=18.04
+# Default base image 
+ARG BASE_IMAGE=abcdesktopio/oc.software.18.04
+
+# --- BEGIN node_modules_builder ---
+FROM $BASE_IMAGE:$TAG as node_modules_builder
+
+# 
+#  Add dev package to node install
+## You may also need development tools to build native addons:
+##     sudo apt-get install gcc g++ make
+RUN apt-get update && apt-get install -y  --no-install-recommends      \
+      gcc                             \
+      g++                             \
+      make    			\
+    && apt-get clean                    \
+    && rm -rf /var/lib/apt/lists/*
+
+# to make install wmctrljs nodejs components
+# add build dev package 
+RUN apt-get update && apt-get install -y  --no-install-recommends \
+        libx11-dev \
+        libxmu-dev \
+        git	   \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+#Install yarn
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	      yarn \
+    && apt-get clean                    \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY composer /composer
+
+# add wait-port
+RUN mkdir -p /composer/node/wait-port && cd /composer/node/wait-port && yarn add wait-port
+
+# Add nodejs service
+WORKDIR /composer/node/common-libraries
+RUN   yarn install
+
+WORKDIR /composer/node/ws-tcp-bridge
+RUN yarn install	
+
+WORKDIR /composer/node/broadcast-service
+RUN yarn install 
+
+WORKDIR /composer/node/ocrun
+RUN yarn install 
+
+WORKDIR /composer/node/occall
+RUN yarn install
+
+WORKDIR /composer/node/spawner-service
+RUN yarn install 
+
+WORKDIR /composer/node/xterm.js
+RUN yarn install
+
+# copy Makefile to run version data 
+COPY Makefile /
+# copy mkversion.sh to get version data 
+COPY mkversion.sh /
+# copy .git to get version data 
+COPY .git /
+
+WORKDIR /
+# run legacy Makefile
+RUN make version
+
+# --- END node_modules_builder ---
+
+
+# --- START Build image ---
+FROM $BASE_IMAGE:$TAG
+
+# Install yarn
+# yarn is use for the test mode 
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt-get update && apt-get install -y --no-install-recommends \ 
+	     yarn	\ 
+    && apt-get clean                    \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=node_modules_builder /composer/node/wait-port         /composer/node/wait-port
+COPY --from=node_modules_builder /composer/node/common-libraries  /composer/node/common-libraries
+COPY --from=node_modules_builder /composer/node/ws-tcp-bridge     /composer/node/ws-tcp-bridge
+COPY --from=node_modules_builder /composer/node/broadcast-service /composer/node/broadcast-service
+COPY --from=node_modules_builder /composer/node/ocrun             /composer/node/ocrun
+COPY --from=node_modules_builder /composer/node/occall            /composer/node/occall
+COPY --from=node_modules_builder /composer/node/spawner-service   /composer/node/spawner-service 
+COPY --from=node_modules_builder /composer/node/xterm.js
+
+# Next command use $BUSER context
+ENV BUSER balloon
+# RUN adduser --disabled-password --gecos '' $BUSER
+# RUN id -u $BUSER &>/dev/null || 
+RUN groupadd --gid 4096 $BUSER
+RUN useradd --create-home --shell /bin/bash --uid 4096 -g $BUSER --groups lpadmin,sudo $BUSER
+# create an ubuntu user
+RUN echo "balloon:lmdpocpetit" | chpasswd $BUSER
+
+# hack: be shure to own the home dir 
+RUN chown -R $BUSER:$BUSER /home/$BUSER
+RUN date > /etc/build.date
+
+# 
+# create a fake ntlm_auth.desktop file
+# just to hidden missing link dest
+RUN touch /usr/bin/ntlm_auth.desktop
+
+
+
+# LOG AND PID SECTION
+RUN mkdir -p  /var/log/desktop \
+              /var/run/desktop \
+              /composer/run
+
+## DBUS SECTION
+RUN mkdir -p    /var/run/dbus      
+RUN touch /var/lib/dbus/machine-id
+RUN chown -R $BUSER:$BUSER 				\
+		/var/run/dbus    			\
+		/var/lib/dbus				\
+		/var/lib/dbus/machine-id                   
+# DO NOT CHANGE
+# COPY usr/share/dbus-1/session.conf /usr/share/dbus-1/session.conf
+# COPY usr/share/dbus-1/system.conf  /usr/share/dbus-1/system.conf
+
+
+# change access rights
+RUN chown -R $BUSER:$BUSER 	  \
+      /etc/X11/openbox				\
+      /var/log/desktop				\
+      /var/run/desktop				\
+      /composer/run					  \
+      /composer/mime					\
+      /composer/icons					\
+      /composer/.themes				\
+      /composer/.gtkrc-2.0		\
+      /composer/.xsettings		\
+      /composer/.gconf				\
+      /composer/.Xressources	\
+      /composer/.bashrc				\
+      /composer/.cache				
+
+# Clean unecessary package
+RUN rm -rf /tmp/*
+
+# VOLUME /home/$BUSER
+WORKDIR /home/$BUSER
+USER $BUSER
+CMD [ "/composer/docker-entrypoint.sh" ]
+
+####################################################
+# SERVICE			    #   TCP PORT   #
+####################################################
+# XTERM_TCP_PORT 			            29781
+# BROADCAST_SERVICE_TCP_PORT 		  29784
+# SPAWNER_SERVICE_TCP_PORT 		    29786
+# WS_TCP_BRIDGE_SERVICE_TCP_PORT 	6081
+# DBUS_SESSION_TCP_PORT			      55556
+# DBUS_SYSTEM_TCP_PORT			      55557
+####################################################
+
+
+EXPOSE 6081 29781 29784 29786 55556 55557
