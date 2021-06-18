@@ -96,7 +96,7 @@ COPY --from=node_modules_builder /composer/node/broadcast-service /composer/node
 COPY --from=node_modules_builder /composer/node/ocrun             /composer/node/ocrun
 COPY --from=node_modules_builder /composer/node/occall            /composer/node/occall
 COPY --from=node_modules_builder /composer/node/spawner-service   /composer/node/spawner-service 
-COPY --from=node_modules_builder /composer/node/xterm.js
+COPY --from=node_modules_builder /composer/node/xterm.js	  /composer/node/xterm.js
 
 # Next command use $BUSER context
 ENV BUSER balloon
