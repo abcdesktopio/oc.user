@@ -40,6 +40,10 @@ jobs:
       run: |
         docker build . -t abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev --build-arg BASE_IMAGE_RELEASE:${{ matrix.BASE_IMAGE_RELEASE }} --build-arg BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }} --build-arg TAG:dev
 
+   - name: Build image abcdesktopio/${{ matrix.BASE_IMAGE_RELEASE }}
+      run: |
+        docker build . -f Dockerfile.kubernetes -t abcdesktopio/oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}:dev --build-arg BASE_IMAGE_RELEASE:${{ matrix.BASE_IMAGE_RELEASE }} --build-arg BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }} --build-arg TAG:dev
+
     - name: Run and test docker image ${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
         ./make-test.sh ${{ matrix.BASE_IMAGE_RELEASE }}
@@ -47,6 +51,7 @@ jobs:
     - name: Push image abcdesktopio/${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
         docker push abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
+        docker push abcdesktopio/oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}:dev
 
   dispatch_oc_user_debuger:
     runs-on: ubuntu-latest
