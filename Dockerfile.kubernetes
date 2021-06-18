@@ -97,6 +97,15 @@ COPY --from=node_modules_builder /composer/node/ocrun             /composer/node
 COPY --from=node_modules_builder /composer/node/occall            /composer/node/occall
 COPY --from=node_modules_builder /composer/node/spawner-service   /composer/node/spawner-service 
 COPY --from=node_modules_builder /composer/node/xterm.js	  /composer/node/xterm.js
+COPY /composer/mime		/composer/mime
+COPY /composer/icons		/composer/icons
+COPY /composer/.themes		/composer/.themes
+COPY /composer/.gtkrc-2.0	/composer/.gtkrc-2.0
+COPY /composer/.xsettings	/composer/.xsettings
+COPY /composer/.gconf		/composer/.gconf
+COPY /composer/.Xressources	/composer/.Xressources
+COPY /composer/.bashrc		/composer/.bashrc
+COPY /composer/docker-entrypoint.sh	/composer/docker-entrypoint.sh
 
 # Next command use $BUSER context
 ENV BUSER balloon
@@ -136,20 +145,19 @@ RUN chown -R $BUSER:$BUSER 				\
 
 
 # change access rights
-RUN chown -R $BUSER:$BUSER 	  \
-      /etc/X11/openbox				\
-      /var/log/desktop				\
-      /var/run/desktop				\
-      /composer/run					  \
-      /composer/mime					\
-      /composer/icons					\
-      /composer/.themes				\
+RUN chown -R $BUSER:$BUSER	 	\
+      /etc/X11/openbox			\
+      /var/log/desktop			\
+      /var/run/desktop			\
+      /composer/run			\
+      /composer/mime			\
+      /composer/icons			\
+      /composer/.themes			\
       /composer/.gtkrc-2.0		\
       /composer/.xsettings		\
-      /composer/.gconf				\
-      /composer/.Xressources	\
-      /composer/.bashrc				\
-      /composer/.cache				
+      /composer/.gconf			\
+      /composer/.Xressources		\
+      /composer/.bashrc				
 
 # Clean unecessary package
 RUN rm -rf /tmp/*
