@@ -88,6 +88,26 @@ RUN make version
 # --- START Build image ---
 FROM $BASE_IMAGE:$TAG
 
+
+# cups-pdf: pdf printer support
+# scrot: screenshot tools
+# smbclient need to install smb printer
+# cups: printer support
+RUN  apt-get update && apt-get install -y --no-install-recommends \
+        smbclient	\
+	cups-pdf 	\
+	scrot  		\
+        cups		\
+    && apt-get clean	\
+    && rm -rf /var/lib/apt/lists/*
+    
+# add pulseaudio server
+RUN apt-get update && apt-get install -y --no-install-recommends\
+	pulseaudio 			\
+    && apt-get clean  			\
+    && rm -rf /var/lib/apt/lists/*
+
+
 #Install yarn
 # yarn is use for the test mode 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
