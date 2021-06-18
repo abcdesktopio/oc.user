@@ -97,15 +97,20 @@ COPY --from=node_modules_builder /composer/node/ocrun             /composer/node
 COPY --from=node_modules_builder /composer/node/occall            /composer/node/occall
 COPY --from=node_modules_builder /composer/node/spawner-service   /composer/node/spawner-service 
 COPY --from=node_modules_builder /composer/node/xterm.js	  /composer/node/xterm.js
+
+# import /composer directory
+COPY /composer/wallpapers	/composer/wallpapers
+COPY /composer/openbox		/composer/openbox
 COPY /composer/mime		/composer/mime
 COPY /composer/icons		/composer/icons
 COPY /composer/.themes		/composer/.themes
-COPY /composer/.gtkrc-2.0	/composer/.gtkrc-2.0
-COPY /composer/.xsettings	/composer/.xsettings
 COPY /composer/.gconf		/composer/.gconf
-COPY /composer/.Xressources	/composer/.Xressources
-COPY /composer/.bashrc		/composer/.bashrc
-COPY /composer/docker-entrypoint.sh	/composer/docker-entrypoint.sh
+COPY /composer/.local		/composer/.local
+COPY /composer/.config		/composer/.config
+
+# import /composer files
+COPY /composer/*		/composer
+COPY /etc			/etc
 
 # Next command use $BUSER context
 ENV BUSER balloon
@@ -124,8 +129,6 @@ RUN date > /etc/build.date
 # create a fake ntlm_auth.desktop file
 # just to hidden missing link dest
 RUN touch /usr/bin/ntlm_auth.desktop
-
-
 
 # LOG AND PID SECTION
 RUN mkdir -p  /var/log/desktop \
@@ -150,33 +153,29 @@ RUN chown -R $BUSER:$BUSER	 	\
       /var/log/desktop			\
       /var/run/desktop			\
       /composer/run			\
-      /composer/mime			\
-      /composer/icons			\
-      /composer/.themes			\
-      /composer/.gtkrc-2.0		\
-      /composer/.xsettings		\
-      /composer/.gconf			\
-      /composer/.Xressources		\
-      /composer/.bashrc				
+			
 
 # Clean unecessary package
 RUN rm -rf /tmp/*
 
 # VOLUME /home/$BUSER
 WORKDIR /home/$BUSER
+
 USER $BUSER
 CMD [ "/composer/docker-entrypoint.sh" ]
 
 ####################################################
 # SERVICE			    #   TCP PORT   #
 ####################################################
-# XTERM_TCP_PORT 			            29781
-# BROADCAST_SERVICE_TCP_PORT 		  29784
-# SPAWNER_SERVICE_TCP_PORT 		    29786
-# WS_TCP_BRIDGE_SERVICE_TCP_PORT 	6081
+# XTERM_TCP_PORT 			      29781
+# BROADCAST_SERVICE_TCP_PORT 		      29784
+# SPAWNER_SERVICE_TCP_PORT 		      29786
+# WS_TCP_BRIDGE_SERVICE_TCP_PORT 	      b6081
+####################################################
+# Not defined
 # DBUS_SESSION_TCP_PORT			      55556
 # DBUS_SYSTEM_TCP_PORT			      55557
 ####################################################
 
 
-EXPOSE 6081 29781 29784 29786 55556 55557
+EXPOSE 6081 29781 29784 29786
