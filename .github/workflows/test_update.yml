@@ -40,7 +40,7 @@ jobs:
       run: |
         docker build . -t abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev --build-arg BASE_IMAGE_RELEASE:${{ matrix.BASE_IMAGE_RELEASE }} --build-arg BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }} --build-arg TAG:dev
 
-   - name: Build image abcdesktopio/${{ matrix.BASE_IMAGE_RELEASE }}
+    - name: Build image abcdesktopio/${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
         docker build . -f Dockerfile.kubernetes -t abcdesktopio/oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}:dev --build-arg BASE_IMAGE_RELEASE:${{ matrix.BASE_IMAGE_RELEASE }} --build-arg BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }} --build-arg TAG:dev
 
