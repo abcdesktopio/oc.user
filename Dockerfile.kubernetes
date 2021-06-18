@@ -107,10 +107,15 @@ COPY /composer/.themes		/composer/.themes
 COPY /composer/.gconf		/composer/.gconf
 COPY /composer/.local		/composer/.local
 COPY /composer/.config		/composer/.config
-
 # import /composer files
 COPY /composer/*		/composer
+
+# import etc
 COPY /etc			/etc
+
+# remove cupsd.conf and pulseaudio.conf
+# use as container in pod
+RUN rm etc/supervisor/conf.d/cupsd.conf etc/supervisor/conf.d/pulseaudio.conf
 
 # Next command use $BUSER context
 ENV BUSER balloon
