@@ -81,13 +81,14 @@ RUN make version
 FROM $BASE_IMAGE:$TAG
 
 # Install yarn
+# Not need to test docker tests are passed
 # yarn is use for the test mode 
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-RUN apt-get update && apt-get install -y --no-install-recommends \ 
-	     yarn	\ 
-    && apt-get clean                    \
-    && rm -rf /var/lib/apt/lists/*
+# RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+# RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+# RUN apt-get update && apt-get install -y --no-install-recommends \ 
+#	     yarn	\ 
+#    && apt-get clean                    \
+#    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=node_modules_builder /composer/node/wait-port         /composer/node/wait-port
 COPY --from=node_modules_builder /composer/node/common-libraries  /composer/node/common-libraries
@@ -112,6 +113,7 @@ COPY /composer/.config		/composer/.config
 COPY /composer/*		/composer/
 
 # import etc
+# then remove unused files
 COPY /etc			/etc
 
 #
