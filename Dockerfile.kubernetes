@@ -108,7 +108,8 @@ COPY /composer/.gconf		/composer/.gconf
 COPY /composer/.local		/composer/.local
 COPY /composer/.config		/composer/.config
 # import /composer files
-COPY /composer/*		/composer
+# When using COPY with more than one source file, the destination must be a directory and end with a /
+COPY /composer/*		/composer/
 
 # import etc
 COPY /etc			/etc
