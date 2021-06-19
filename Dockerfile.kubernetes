@@ -139,9 +139,14 @@ RUN date > /etc/build.date
 RUN touch /usr/bin/ntlm_auth.desktop
 
 # LOG AND PID SECTION
-RUN mkdir -p  /var/log/desktop \
-              /var/run/desktop \
-              /composer/run
+RUN mkdir -p  	/var/log/desktop 	\
+              	/var/run/desktop 	\
+              	/composer/run	     && \
+    chown -R $BUSER:$BUSER              \
+      		/etc/X11/openbox        \
+      		/var/log/desktop        \
+      		/var/run/desktop        \
+      		/composer/run
 
 ## DBUS SECTION
 RUN mkdir -p    /var/run/dbus      
@@ -150,20 +155,14 @@ RUN chown -R $BUSER:$BUSER 				\
 		/var/run/dbus    			\
 		/var/lib/dbus				\
 		/var/lib/dbus/machine-id                   
+
 # DO NOT CHANGE
 # COPY usr/share/dbus-1/session.conf /usr/share/dbus-1/session.conf
 # COPY usr/share/dbus-1/system.conf  /usr/share/dbus-1/system.conf
 
 
-# change access rights
-RUN chown -R $BUSER:$BUSER	 	\
-      /etc/X11/openbox			\
-      /var/log/desktop			\
-      /var/run/desktop			\
-      /composer/run			\
-			
-
 # Clean unecessary package
+# dummy command 
 RUN rm -rf /tmp/*
 
 # VOLUME /home/$BUSER
