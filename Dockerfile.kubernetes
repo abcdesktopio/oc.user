@@ -81,13 +81,14 @@ RUN make version
 FROM $BASE_IMAGE:$TAG
 
 # Install yarn
+# Not need to test docker tests are passed
 # yarn is use for the test mode 
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-RUN apt-get update && apt-get install -y --no-install-recommends \ 
-	     yarn	\ 
-    && apt-get clean                    \
-    && rm -rf /var/lib/apt/lists/*
+# RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+# RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+# RUN apt-get update && apt-get install -y --no-install-recommends \ 
+#	     yarn	\ 
+#    && apt-get clean                    \
+#    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=node_modules_builder /composer/node/wait-port         /composer/node/wait-port
 COPY --from=node_modules_builder /composer/node/common-libraries  /composer/node/common-libraries
@@ -112,15 +113,20 @@ COPY /composer/.config		/composer/.config
 COPY /composer/*		/composer/
 
 # import etc
+# then remove unused files
 COPY /etc			/etc
 
 #
 # remove cupsd.conf pulseaudio.conf file-service.conf printer-service.conf
 # use as container in pod
-RUN rm 	/etc/supervisor/conf.d/cupsd.conf 		\
-	/etc/supervisor/conf.d/pulseaudio.conf 		\
-	/etc/supervisor/conf.d/file-service.conf 	\
-	/etc/supervisor/conf.d/printer-service.conf
+# remove etc entries for cups
+# remove etc entries for pulse
+RUN rm 	-rf 	/etc/supervisor/conf.d/cupsd.conf 		\
+		/etc/supervisor/conf.d/pulseaudio.conf 		\
+		/etc/supervisor/conf.d/file-service.conf 	\
+		/etc/supervisor/conf.d/printer-service.conf	\
+		/etc/pulse					\
+		/etc/cups	
 
 # Next command use $BUSER context
 ENV BUSER balloon
