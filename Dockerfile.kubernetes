@@ -117,10 +117,14 @@ COPY /etc			/etc
 #
 # remove cupsd.conf pulseaudio.conf file-service.conf printer-service.conf
 # use as container in pod
-RUN rm 	/etc/supervisor/conf.d/cupsd.conf 		\
-	/etc/supervisor/conf.d/pulseaudio.conf 		\
-	/etc/supervisor/conf.d/file-service.conf 	\
-	/etc/supervisor/conf.d/printer-service.conf
+# remove etc entries for cups
+# remove etc entries for pulse
+RUN rm 	-rf 	/etc/supervisor/conf.d/cupsd.conf 		\
+		/etc/supervisor/conf.d/pulseaudio.conf 		\
+		/etc/supervisor/conf.d/file-service.conf 	\
+		/etc/supervisor/conf.d/printer-service.conf	\
+		/etc/pulse					\
+		/etc/cups	
 
 # Next command use $BUSER context
 ENV BUSER balloon
