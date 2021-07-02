@@ -112,6 +112,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends\
 # add websockify as ws to tcp proxy 
 RUN apt-get update && apt-get install -y --no-install-recommends \
 	python3-pip			\
+	python3-wheel  			\
+	python3-setuptools		\
     && apt-get clean                    \
     && rm -rf /var/lib/apt/lists/*	\
     && pip3 install websockify
