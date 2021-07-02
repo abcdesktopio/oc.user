@@ -6,5 +6,5 @@ while [ ! -S $X11VNCSOCKET ]; do
 	sleep  0.1
 done
 
-/composer/websockify.py --unix-target $X11VNCSOCKET 6081
+/composer/wsproxy.py --unix-target $X11VNCSOCKET 6081
 
