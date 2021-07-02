@@ -209,6 +209,15 @@ if [ ! -d /var/run/dbus ]; then
 	mkdir -p /var/run/dbus
 fi
 
+# check if user bind local interface
+# mode bridge
+if [ ! -z "$USE_CERTBOT_CERTONLY" ]; then
+	FQDN="$EXTERNAL_CONTAINER_HOSTNAME.$EXTERNAL_DESKTOP_DOMAIN"
+	echo "FQDN=$FQDN"
+	echo 'Y' | sudo /usr/bin/certbot certonly --standalone -d $FQDN -m ssl@$EXTERNAL_DESKTOP_DOMAIN --agree-tos
+fi
+
+
 # Check if need to start dbus session
 if [ ! -z "$OD_DBUS_SESSION_BUS" ]; then
    echo "starting OD_DBUS_SESSION_BUS is set $OD_DBUS_SESSION_BUS" >> /var/log/desktop/dbus.log
