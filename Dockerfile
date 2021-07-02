@@ -108,6 +108,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends\
     && rm -rf /var/lib/apt/lists/*
 
 
+# add websockify as ws to tcp proxy 
+RUN apt-get update && apt-get install -y --no-install-recommends 
+	python3-pip
+    && apt-get clean                    \
+    && rm -rf /var/lib/apt/lists/*	\
+    && pip3 install websockify
+
+
 #Install yarn
 # yarn is use for the test mode 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
