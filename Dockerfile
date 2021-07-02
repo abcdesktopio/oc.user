@@ -45,8 +45,9 @@ RUN mkdir -p /composer/node/wait-port && cd /composer/node/wait-port && yarn add
 WORKDIR /composer/node/common-libraries
 RUN   yarn install
 
-WORKDIR /composer/node/ws-tcp-bridge
-RUN yarn install	
+# replace by websockify
+# WORKDIR /composer/node/ws-tcp-bridge
+# RUN yarn install	
 
 WORKDIR /composer/node/broadcast-service
 RUN yarn install 
@@ -109,8 +110,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends\
 
 
 # add websockify as ws to tcp proxy 
-RUN apt-get update && apt-get install -y --no-install-recommends 
-	python3-pip
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	python3-pip			\
     && apt-get clean                    \
     && rm -rf /var/lib/apt/lists/*	\
     && pip3 install websockify
