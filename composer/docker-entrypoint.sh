@@ -215,7 +215,7 @@ if [ ! -z "$USE_CERTBOT_CERTONLY" ]; then
 	FQDN="$EXTERNAL_CONTAINER_HOSTNAME.$EXTERNAL_DESKTOP_DOMAIN"
 	echo "FQDN=$FQDN"
 	# call letsencrypt to build a new X509 certificat
-	echo 'Y' | /usr/bin/certbot certonly --standalone -d $FQDN -m ssl@$EXTERNAL_DESKTOP_DOMAIN --agree-tos
+	echo 'Y' | /usr/bin/certbot certonly --standalone -d $FQDN -m ssl@$EXTERNAL_DESKTOP_DOMAIN --agree-tos --non-interactive
 fi
 
 
