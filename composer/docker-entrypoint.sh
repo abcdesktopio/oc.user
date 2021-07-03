@@ -210,11 +210,11 @@ if [ ! -d /var/run/dbus ]; then
 fi
 
 # check if user bind local interface
-# mode bridge
+# mode bridge and need to build a new x509 certificat USE_CERTBOT_CERTONLY
 if [ ! -z "$USE_CERTBOT_CERTONLY" ]; then
-	FQDN="$EXTERNAL_CONTAINER_HOSTNAME.$EXTERNAL_DESKTOP_DOMAIN"
+	FQDN="$EXTERNAL_DESKTOP_HOSTNAME.$EXTERNAL_DESKTOP_DOMAIN"
 	echo "FQDN=$FQDN"
-	echo 'Y' | sudo /usr/bin/certbot certonly --standalone -d $FQDN -m ssl@$EXTERNAL_DESKTOP_DOMAIN --agree-tos
+	echo 'Y' | sudo /usr/bin/certbot certonly --standalone -d $FQDN -m ssl@$EXTERNAL_DESKTOP_DOMAIN --agree-tos --non-interactive
 fi
 
 
