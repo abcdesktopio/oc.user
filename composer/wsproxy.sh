@@ -7,7 +7,7 @@ while [ ! -S $X11VNCSOCKET ]; do
 done
 
 
-if [ ! -z "$USE_CERTBOT_CERTONLY" ]; then
+if [ "$USE_CERTBOT_CERTONLY" == "enabled" ]; then
 	FQDN="$EXTERNAL_DESKTOP_HOSTNAME.$EXTERNAL_DESKTOP_DOMAIN"
 	# certificats files are located in /etc/letsencrypt/live/
 	CERT="/etc/letsencrypt/live/$FQDN/fullchain.pem"
