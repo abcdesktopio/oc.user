@@ -214,7 +214,24 @@ fi
 if [ ! -z "$USE_CERTBOT_CERTONLY" ]; then
 	FQDN="$EXTERNAL_DESKTOP_HOSTNAME.$EXTERNAL_DESKTOP_DOMAIN"
 	echo "FQDN=$FQDN"
-	echo 'Y' | sudo /usr/bin/certbot certonly --standalone -d $FQDN -m ssl@$EXTERNAL_DESKTOP_DOMAIN --agree-tos --non-interactive
+	# call letsencrypt to build a new X509 certificat
+	# try 5 call to certbot
+	
+	counter=0
+	max_counter=5
+	until [ $counter -gt $max_counter ]
+	do
+		echo "/usr/bin/certbot certonly --standalone -d $FQDN -m ssl@$EXTERNAL_DESKTOP_DOMAIN --agree-tos --non-interactive"
+		/usr/bin/certbot certonly --standalone -d $FQDN -m ssl@$EXTERNAL_DESKTOP_DOMAIN --agree-tos --non-interactive
+        	if [ $? -eq 0 ]; then
+			echo "command certbot success'
+			break
+		fi
+  		echo retrying: $counter/$max_counter
+ 	 	((counter++))
+		# wait one second for dns zone update
+		sleep 1
+	done
 fi
 
 
