@@ -211,7 +211,7 @@ fi
 
 # check if user bind local interface
 # mode bridge and need to build a new x509 certificat USE_CERTBOT_CERTONLY
-if [ ! -z "$USE_CERTBOT_CERTONLY" ]; then
+if [ "$USE_CERTBOT_CERTONLY" == "enabled" ]; then
 	FQDN="$EXTERNAL_DESKTOP_HOSTNAME.$EXTERNAL_DESKTOP_DOMAIN"
 	echo "FQDN=$FQDN"
 	# call letsencrypt to build a new X509 certificat
@@ -224,7 +224,7 @@ if [ ! -z "$USE_CERTBOT_CERTONLY" ]; then
 		echo "/usr/bin/certbot certonly --standalone -d $FQDN -m ssl@$EXTERNAL_DESKTOP_DOMAIN --agree-tos --non-interactive"
 		/usr/bin/certbot certonly --standalone -d $FQDN -m ssl@$EXTERNAL_DESKTOP_DOMAIN --agree-tos --non-interactive
         	if [ $? -eq 0 ]; then
-			echo "command certbot success'
+			echo "command certbot success"
 			break
 		fi
   		echo retrying: $counter/$max_counter
@@ -232,7 +232,18 @@ if [ ! -z "$USE_CERTBOT_CERTONLY" ]; then
 		# wait one second for dns zone update
 		sleep 1
 	done
+else
+	# make sure that vars exist
+	# for supervisor configuration ENV expand process
+        export USE_CERTBOT_CERTONLY=disabled
+	export EXTERNAL_DESKTOP_HOSTNAME=''
+	export EXTERNAL_DESKTOP_DOMAIN=''
 fi
+
+export USE_CERTBOT_CERTONLY
+export EXTERNAL_DESKTOP_HOSTNAME
+export EXTERNAL_DESKTOP_DOMAIN
+
 
 
 # Check if need to start dbus session
