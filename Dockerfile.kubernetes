@@ -13,18 +13,18 @@ FROM $BASE_IMAGE:$TAG as node_modules_builder
 ## You may also need development tools to build native addons:
 ##     sudo apt-get install gcc g++ make
 RUN apt-get update && apt-get install -y  --no-install-recommends      \
-      gcc                             \
-      g++                             \
-      make    			\
+	gcc                             \
+	g++                             \
+	make    			\
     && apt-get clean                    \
     && rm -rf /var/lib/apt/lists/*
 
 # to make install wmctrljs nodejs components
 # add build dev package 
 RUN apt-get update && apt-get install -y  --no-install-recommends \
-        libx11-dev \
-        libxmu-dev \
-        git	   \
+	libx11-dev \
+	libxmu-dev \
+	git	   \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -32,7 +32,7 @@ RUN apt-get update && apt-get install -y  --no-install-recommends \
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 RUN apt-get update && apt-get install -y --no-install-recommends \
-	      yarn \
+	yarn \
     && apt-get clean                    \
     && rm -rf /var/lib/apt/lists/*
 
@@ -45,14 +45,14 @@ RUN mkdir -p /composer/node/wait-port && cd /composer/node/wait-port && yarn add
 WORKDIR /composer/node/common-libraries
 RUN   yarn install
 
-WORKDIR /composer/node/ws-tcp-bridge
-RUN yarn install	
-
 WORKDIR /composer/node/broadcast-service
 RUN yarn install 
 
 WORKDIR /composer/node/ocrun
 RUN yarn install 
+
+WORKDIR /composer/node/ocdownload
+RUN yarn install
 
 WORKDIR /composer/node/occall
 RUN yarn install
@@ -63,15 +63,11 @@ RUN yarn install
 WORKDIR /composer/node/xterm.js
 RUN yarn install
 
-# copy Makefile to run version data 
 COPY Makefile /
-# copy mkversion.sh to get version data 
 COPY mkversion.sh /
-# copy .git to get version data 
 COPY .git /
 
 WORKDIR /
-# run legacy Makefile
 RUN make version
 
 # --- END node_modules_builder ---
@@ -80,81 +76,65 @@ RUN make version
 # --- START Build image ---
 FROM $BASE_IMAGE:$TAG
 
-# Install yarn
-# Not need to test docker tests are passed
+# add websockify as ws to tcp proxy 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	python3-pip			\
+	python3-wheel  			\
+	python3-setuptools		\
+    && pip3 install websockify		\
+    && apt-get remove -y python3-pip python3-wheel python3-setuptools \
+    && apt-get clean                    \
+    && rm -rf /var/lib/apt/lists/*
+
+#Install yarn
 # yarn is use for the test mode 
-# RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-# RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-# RUN apt-get update && apt-get install -y --no-install-recommends \ 
-#	     yarn	\ 
-#    && apt-get clean                    \
-#    && rm -rf /var/lib/apt/lists/*
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt-get update && apt-get install -y --no-install-recommends \ 
+	yarn				\ 
+    && apt-get clean                    \
+    && rm -rf /var/lib/apt/lists/*
+    
+# only for dev 
+RUN apt-get update && apt-get install -y --no-install-recommends \ 
+	vim				\ 
+	file				\
+    && apt-get clean                    \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY --from=node_modules_builder /composer/node/wait-port         /composer/node/wait-port
-COPY --from=node_modules_builder /composer/node/common-libraries  /composer/node/common-libraries
-COPY --from=node_modules_builder /composer/node/ws-tcp-bridge     /composer/node/ws-tcp-bridge
-COPY --from=node_modules_builder /composer/node/broadcast-service /composer/node/broadcast-service
-COPY --from=node_modules_builder /composer/node/ocrun             /composer/node/ocrun
-COPY --from=node_modules_builder /composer/node/occall            /composer/node/occall
-COPY --from=node_modules_builder /composer/node/spawner-service   /composer/node/spawner-service 
-COPY --from=node_modules_builder /composer/node/xterm.js	  /composer/node/xterm.js
+COPY --from=node_modules_builder /composer  /composer
 
-# import /composer directory
-COPY /composer/wallpapers	/composer/wallpapers
-COPY /composer/openbox		/composer/openbox
-COPY /composer/mime		/composer/mime
-COPY /composer/icons		/composer/icons
-COPY /composer/.themes		/composer/.themes
-COPY /composer/.gconf		/composer/.gconf
-COPY /composer/.local		/composer/.local
-COPY /composer/.config		/composer/.config
-# import /composer files
-# When using COPY with more than one source file, the destination must be a directory and end with a /
-COPY /composer/*		/composer/
-
-# import etc
-# then remove unused files
-COPY /etc			/etc
-
-#
-# remove cupsd.conf pulseaudio.conf file-service.conf printer-service.conf
-# use as container in pod
-# remove etc entries for cups
-# remove etc entries for pulse
-RUN rm 	-rf 	/etc/supervisor/conf.d/cupsd.conf 		\
-		/etc/supervisor/conf.d/pulseaudio.conf 		\
-		/etc/supervisor/conf.d/file-service.conf 	\
-		/etc/supervisor/conf.d/printer-service.conf	\
-		/etc/pulse					\
-		/etc/cups	
 
 # Next command use $BUSER context
 ENV BUSER balloon
 # RUN adduser --disabled-password --gecos '' $BUSER
 # RUN id -u $BUSER &>/dev/null || 
 RUN groupadd --gid 4096 $BUSER
-RUN useradd --create-home --shell /bin/bash --uid 4096 -g $BUSER --groups lpadmin,sudo $BUSER
+RUN useradd --create-home --shell /bin/bash --uid 4096 -g $BUSER --groups sudo $BUSER
 # create an ubuntu user
 RUN echo "balloon:lmdpocpetit" | chpasswd $BUSER
 
 # hack: be shure to own the home dir 
 RUN chown -R $BUSER:$BUSER /home/$BUSER
+
+COPY etc /etc
+RUN rm -rf /etc/supervisor/conf.d/pulseaudio.conf /etc/supervisor/conf.d/printer-service.conf /etc/supervisor/conf.d/file-service.conf /etc/supervisor/conf.d/cupsd.conf
 RUN date > /etc/build.date
 
-# 
+# Add here commands need to run as sudo user
+# cupsd must be run as root
+# changehomeowner 
+RUN echo "$BUSER ALL=(root) NOPASSWD: /composer/changehomeowner.sh" >> /etc/sudoers.d/changehomeowner
+
 # create a fake ntlm_auth.desktop file
 # just to hidden missing link dest
 RUN touch /usr/bin/ntlm_auth.desktop
 
+
 # LOG AND PID SECTION
-RUN mkdir -p  	/var/log/desktop 	\
-              	/var/run/desktop 	\
-              	/composer/run	     && \
-    chown -R $BUSER:$BUSER              \
-      		/etc/X11/openbox        \
-      		/var/log/desktop        \
-      		/var/run/desktop        \
-      		/composer/run
+RUN mkdir -p 	/var/log/desktop \ 
+        	/var/run/desktop \
+        	/composer/run
 
 ## DBUS SECTION
 RUN mkdir -p    /var/run/dbus      
@@ -163,34 +143,52 @@ RUN chown -R $BUSER:$BUSER 				\
 		/var/run/dbus    			\
 		/var/lib/dbus				\
 		/var/lib/dbus/machine-id                   
-
 # DO NOT CHANGE
 # COPY usr/share/dbus-1/session.conf /usr/share/dbus-1/session.conf
 # COPY usr/share/dbus-1/system.conf  /usr/share/dbus-1/system.conf
 
 
+# change access rights
+RUN chown -R $BUSER:$BUSER 				\
+	/etc/X11/openbox				\
+	/var/log/desktop				\
+	/var/run/desktop				\
+	/composer/run					\
+	/composer/mime					\
+	/composer/icons					\
+	/composer/.themes				\
+	/composer/.gtkrc-2.0				\
+	/composer/.xsettings				\
+	/composer/.gconf				\
+	/composer/.Xressources				\
+	/composer/.bashrc				\
+	/composer/.cache				
+
 # Clean unecessary package
-# dummy command 
 RUN rm -rf /tmp/*
 
 # VOLUME /home/$BUSER
 WORKDIR /home/$BUSER
-
 USER $BUSER
 CMD [ "/composer/docker-entrypoint.sh" ]
 
 ####################################################
 # SERVICE			    #   TCP PORT   #
 ####################################################
-# XTERM_TCP_PORT 			      29781
-# BROADCAST_SERVICE_TCP_PORT 		      29784
-# SPAWNER_SERVICE_TCP_PORT 		      29786
-# WS_TCP_BRIDGE_SERVICE_TCP_PORT 	      b6081
-####################################################
-# Not defined
-# DBUS_SESSION_TCP_PORT			      55556
-# DBUS_SYSTEM_TCP_PORT			      55557
+# FILEMANAGER_BRIDGE_TCP_PORT 		29780
+# XTERM_TCP_PORT 			29781
+# PULSEAUDIO_HTTP_PORT 			4714
+# FILE_SERVICE_TCP_PORT 		29783
+# BROADCAST_SERVICE_TCP_PORT 		29784
+# RESERVED FOR CUPSD 			29785
+# SPAWNER_SERVICE_TCP_PORT 		29786
+# WS_TCP_BRIDGE_SERVICE_TCP_PORT 	 6081
+# DBUS_SESSION_TCP_PORT			55556
+# DBUS_SYSTEM_TCP_PORT			55557
 ####################################################
 
+## RESERVED TCP PORT 29782 for pulseaudio
+## RESERVED TCP PORT 29785 for cupsd
 
-EXPOSE 6081 29781 29784 29786
+EXPOSE 4714 6081 29780 29781 29783 29784 29786 55556 55557
+
