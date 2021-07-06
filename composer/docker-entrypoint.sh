@@ -223,10 +223,12 @@ if [ "$USE_CERTBOT_CERTONLY" == "enabled" ]; then
 	do
 		echo "/usr/bin/certbot certonly --standalone -d $FQDN -m ssl@$EXTERNAL_DESKTOP_DOMAIN --agree-tos --non-interactive"
 		/usr/bin/certbot certonly --standalone -d $FQDN -m ssl@$EXTERNAL_DESKTOP_DOMAIN --agree-tos --non-interactive
-        	if [ $? -eq 0 ]; then
-			echo "command certbot success"
+		certbot_return_code=$?
+        	if [ $certbot_return_code -eq 0 ]; then
+			echo "command certbot success $certbot_return_code"
 			break
 		fi
+		echo certbot_return_code=$certbot_return_code
   		echo retrying: $counter/$max_counter
  	 	((counter++))
 		# wait one second for dns zone update
