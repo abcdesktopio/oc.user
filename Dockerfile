@@ -127,6 +127,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	yarn	\ 
     && apt-get clean                    \
     && rm -rf /var/lib/apt/lists/*
+    
+# only for dev 
+RUN apt-get update && apt-get install -y --no-install-recommends \ 
+	vim	\ 
+	file	\
+    && apt-get clean                    \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=node_modules_builder /composer  /composer
 
