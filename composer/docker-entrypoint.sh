@@ -344,9 +344,12 @@ fi
 # export VAR to running procces
 export KUBERNETES_SERVICE_HOST
 
-if [ ! -z "$DISABLE_REMOTEIP_FILTERING"  ]; then
+if [ "$DISABLE_REMOTEIP_FILTERING"=="enabled" ]; then
 	echo "DISABLE_REMOTEIP_FILTERING=$DISABLE_REMOTEIP_FILTERING" >> /var/log/desktop/config.log
+else
+	DISABLE_REMOTEIP_FILTERING=disabled
 fi
+export DISABLE_REMOTEIP_FILTERING
 
 # start supervisord
 /usr/bin/supervisord --pidfile /var/run/desktop/supervisord.pid --nodaemon --configuration /etc/supervisord.conf
