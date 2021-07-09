@@ -12,38 +12,56 @@
 */
 
 const fs = require('fs');
+const path = require('path');
 const WebSocketClient = require('ws');
 const wmctrljs = require('wmctrljs');
 const asyncHandler = require('express-async-handler');
 const { delay } = require('./utils');
 
-const pathSocketAudio = '/tmp/.pulse.sock';
-
-fs.watch('/tmp', watchHandler);
+const pathSocketCups = path.join('/', 'tmp', '.cups.sock');
+const pathPulseSocket = path.join('/', 'tmp', '.pulse.sock');
 
 /**
- *
- * @param {string} eventType 
- * @param {string} filename
- * @desc Handle /tmp directory watching
+ * @param {string} pathSoket
+ * @param {Function} onSocketCreated
+ * @param {Function} onSocketDeleted
+ * @desc Watch for the existence of a given socket.
+ * When the file is created/removed the appropriate function is called.
  */
-async function watchHandler(eventType, filename) {
-  console.log(`Event: ${eventType} on file /tmp/${filename}`);
-  if (filename === '.pulse.sock') {
-    try {
-      let audioSocketExists = false;
-      try {
-        await fs.promises.access(pathSocketAudio, fs.constants.F_OK);
-        audioSocketExists = true;
-      } catch(e) {
-        console.error(e);
-      } finally {
-        await broadcastevent('speaker.available', audioSocketExists);
-      }
-    } catch(e) {
-      console.error(e);
+async function watchForASocket(pathSoket, onSocketCreated, onSocketDeleted) {
+  let socketExist = false;
+
+  const options = {
+    persistent: true,
+  };
+
+  try {
+    await fs.promises.access(pathSoket, fs.constants.F_OK);
+    console.log(`Socket ${pathSoket} was up before the running of spawner`);
+    socketExist = true;
+    if (typeof onSocketCreated === 'function') {
+      onSocketCreated();
     }
+  } catch(e) {
+    console.error(e);
   }
+
+  console.log(`Listenning for event on socket ${pathSoket}`);
+  fs.watchFile(pathSoket, options, (currentStat) => {
+    if (socketExist && !currentStat.isSocket()) { //The socket has been removed
+      socketExist = false;
+      console.log(`Socket ${pathSoket} has been removed`);
+      if (typeof onSocketDeleted === 'function') {
+        onSocketDeleted();
+      }
+    } else if (!socketExist && currentStat.isSocket()) { //The socket has been created
+      socketExist = true;
+      console.log(`Socket ${pathSoket} has been created`);
+      if (typeof onSocketCreated === 'function') {
+        onSocketCreated();
+      }
+    }
+  });
 }
 
 /**
@@ -139,5 +157,37 @@ function routerInit(router) {
     res.status(ret.code).send(ret);
   }));
 }
+
+watchForASocket(pathPulseSocket, async function handlerForPulseaudioSocket () {
+  //Name the callback to be able of identify the caller of [configureWebRTCStream] function
+  global.audioConf.pulseAudioSocketIsUp = true;
+  try {
+    await global.audioConf.configureWebRTCStream('handlerForPulseaudioSocket');
+  } catch(e) {
+    console.error(e);
+  }
+}, async () => {
+  global.audioConf.pulseAudioSocketIsUp = false;
+  try {
+    await broadcastevent('speaker.available', false);
+  } catch(e) {
+    console.error(e);
+  }
+});
+
+watchForASocket(pathSocketCups, async () => {
+  try {
+    await broadcastevent('printer.available', true);
+  } catch(e) {
+    console.error(e);
+  }
+  
+}, async () => {
+  try {
+    await broadcastevent('printer.available', false);
+  } catch(e) {
+    console.error(e);
+  }
+});
 
 module.exports = { routerInit, broadcastevent, broadcastwindowslist };

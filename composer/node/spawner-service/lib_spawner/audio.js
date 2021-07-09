@@ -11,15 +11,97 @@
 * Software description: cloud native desktop service
 */
 
-const fs = require('fs');
 const childProcess = require('child_process');
 const util = require('util');
+const path = require('path');
 const asyncHandler = require('express-async-handler');
 const middlewares = require('./middlewares');
 const { spawnBroadwayProcess } = require('./process');
-const { get, set, delay } = require('./utils');
+const { broadcastevent } = require('./broadcast');
+
 const exec = util.promisify(childProcess.exec);
-const socketPulseaudioPath = '/tmp/.pulse.sock';
+const pathPulseSocket = path.join('/', 'tmp', '.pulse.sock');
+
+global.audioConf = {
+  pulseAudioSocketIsUp: false,
+  webRTCConfigurationReceived: false,
+  webRTCConfigurationIsPending: false,
+  webRTCConfigured: false,
+  webRTCConfiguration: {
+    destinationIp: '',
+    port: '',
+  },
+
+  /**
+   * @desc Configure pulse audio for emitting rtp stream to the Janus gateway
+   * /!\ must be executed only if the webRTC configuration is received
+   */
+  async configureWebRTCStream(callerName = '[global]') {
+    const { destinationIp, port } = this.webRTCConfiguration;
+    const pactlCommand = `pactl -s ${pathPulseSocket}`;
+    const functionCallerName = `[${callerName}]`;
+
+    if (!this.webRTCConfigurationReceived) {
+      console.log('The webRTC configuration has not been received yet', functionCallerName);
+      return;
+    }
+
+    if (!this.pulseAudioSocketIsUp) {
+      console.log('Pulseaudio socket is not up yet', functionCallerName);
+      return;
+    }
+
+    if (this.webRTCConfigurationIsPending) {
+      console.log('WebRTC configuration is actually in pending state', functionCallerName);
+      return;
+    }
+
+    if (this.webRTCConfigured) {
+      console.log('Pulseadio is already configured in webRTC mode', functionCallerName);
+      return;
+    }
+
+    try {
+      //If ever spawner as restarted the attribute 'webRTCConfigured' is at false then we need to make a double check
+      const listModules = `${pactlCommand} list short modules | awk '{print $2}'`;
+      const { stdout: stdoutModules } = await exec(listModules);
+      console.log('stdoutModules', stdoutModules);
+      if (stdoutModules.split('\n').includes('module-rtp-send')) {
+        this.webRTCConfigured = true;
+        console.log('Pulseaudio was configured in webRTC mode before the running of this spawner instance', functionCallerName);
+        return;
+      }
+    } catch(e) {
+      console.error('An error occured when attempting to communicate with Pulseaudio', functionCallerName);
+      // In this case we just go a head and for configuring Pulseadio beacause it is possible that Pulseaudio is not configured yet
+    }
+
+    this.webRTCConfigurationIsPending = true;
+
+    try { // Configuration steps
+      await exec(`${pactlCommand} load-module module-rtp-send source=rtp.monitor destination_ip=${destinationIp} port=${port} channels=1 format=alaw`);
+      await exec(`${pactlCommand} set-default-sink rtp`);
+      this.webRTCConfigured = true;
+    } catch(e) {
+      this.webRTCConfigurationIsPending = false;
+      console.error('An error occured when attempting to configure Pulseaudio', functionCallerName);
+      throw e;
+    }
+
+    if (this.webRTCConfigured) {
+      //If the Pulseaudio has been configured with the webRTC options so we notify the client side
+      try {
+        await broadcastevent('speaker.available', true);
+      } catch(e) {
+        console.error('Error when emitting broadcast event', functionCallerName);
+        throw e;
+      }
+    }
+
+    this.webRTCConfigurationIsPending = false;
+    console.log('Pulseaudio was configured by', functionCallerName);
+  },
+};
 
 /**
  *
@@ -99,39 +181,28 @@ function routerInit(router) {
    *         schema:
    *           $ref: '#/definitions/Success'
    */
-  router.put('/configurePulse', middlewares.get('configurePulse'), asyncHandler(async (req, res) => {
+  router.put('/configurePulse', middlewares.get('configurePulse'), asyncHandler(async function handlerForConfigurePulseEndpoint (req, res) {
     const { destinationIp, port } = req.body;
 
-    let pulseaudioSocketIsUp = false;
-    const pactlCommand = `pactl -s ${socketPulseaudioPath}`;
-    do {
-      try {
-        await fs.promises.access(socketPulseaudioPath, fs.constants.F_OK);
-        pulseaudioSocketIsUp = true;
-      } catch (e) {
-        console.error(`Socket ${socketPulseaudioPath} is not available yet`);
-        await delay(250);
-      } finally {
-        if (req.aborted) {
-          res.end();
-          return;
-        }
-      }
-    } while (!pulseaudioSocketIsUp);
+    global.audioConf.webRTCConfigurationReceived = true;
+    global.audioConf.webRTCConfiguration = {
+      destinationIp,
+      port
+    };
 
-    const messages = [];
-    // Check if pulseaudio already load the module-rtp-send
-    const listModules = `${pactlCommand} list short modules | awk '{print $2}'`;
-    const { stdout: stdoutModules } = await exec(listModules);
-    console.log('stdoutModules', stdoutModules);
-    if (stdoutModules.split('\n').includes('module-rtp-send')) {
-      messages.push('The module-rtp-send has already been configured');
-    } else {
-      await exec(`${pactlCommand} load-module module-rtp-send source=rtp.monitor destination_ip=${destinationIp} port=${port} channels=1 format=alaw`);
-      await exec(`${pactlCommand} set-default-sink rtp`);
+    if (!global.audioConf.webRTCConfigured) {
+      await global.audioConf.configureWebRTCStream('handlerForConfigurePulseEndpoint');
     }
 
-    res.status(200).send({ code: 200, data: messages });
+    const response = {
+      code: 200,
+      data: {
+        pulseAudioIsConfigured: global.audioConf.webRTCConfigured,
+        pulseAudioIsAvailable: global.audioConf.pulseAudioSocketIsUp,
+      }
+    };
+
+    res.status(200).send(response);
   }));
 }
 
