@@ -4,7 +4,8 @@ COUNTER=0
 # get ubuntu release
 RELEASE=$(lsb_release --release | cut -f2)
 # based services
-POSTPONE_SERVICE="cupsd pulseaudio"
+# POSTPONE_SERVICE="cupsd pulseaudio"
+POSTPONE_SERVICE=""
 # log info
 echo "RELEASE=$RELEASE"
 # check if ubuntu release is 18.04 or 20.04

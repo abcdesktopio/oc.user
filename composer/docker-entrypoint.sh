@@ -71,63 +71,74 @@ done
 rm -rf /tmp/.X0-lock
 chown balloon:balloon /home/balloon
 
-mkdir ${ABCDESKTOP_RUN_DIR}/.vnc
+mkdir -p ${ABCDESKTOP_RUN_DIR}/.vnc
 echo "${DEFAULT_VNC_PASSWD}" | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
 
+
+# Create a lot of directories and files in homedir 
+# 
 if [ ! -d ~/.cache ]; then
+	echo "create ~/.cache directory"
         mkdir ~/.cache
 fi
 
 if [ ! -f ~/.Xauthority ]; then
+	echo "touch ~/.Xauthority file"
 	touch ~/.Xauthority
 fi
 
-if [ ! -d ~/.printer-queue ]; then
-	mkdir ~/.printer-queue
+if [ -z "$KUBERNETES_SERVICE_HOST" ]; then
+	echo "not a KUBERNETES_SERVICE_HOST node"
+	echo "create ~/.printer-queue directory"
+	if [ ! -d ~/.printer-queue ]; then
+		mkdir ~/.printer-queue
+	fi
 fi
 
 if [ ! -d ~/.store ]; then  
+	echo "create ~/.store directory"
 	mkdir ~/.store
 fi
 
 if [ ! -d ~/Desktop ]; then
+	echo "create ~/Desktop directory"
         mkdir ~/Desktop
 fi
 
 if [ ! -d ~/.config ]; then
+	echo "create  ~/.config  directory"
         mkdir -p ~/.config
         cp -r /composer/.config ~/.config
 fi
 
 if [ ! -d ~/.config/autostart ]; then
+	echo "create  ~/.config/autostart directory"
         mkdir -p ~/.config/autostart
 fi
 
 if [ ! -d ~/.config/gtk-3.0 ]; then
+	echo "create  ~/.config/gtk-3.0 directory"
         mkdir -p ~/.config/gtk-3.0
         cp -r /composer/.config/gtk-3.0 ~/.config/gtk-3.0
 fi
 
 if [ ! -f ~/.config/gtk-3.0/settings.ini ]; then
+	echo "copy ~/.config/gtk-3.0/settings.ini file"
         cp /composer/.config/gtk-3.0/settings.ini ~/.config/gtk-3.0
 fi
 
 if [ ! -d ~/.config/nautilus ]; then
+	echo "create ~/.config/nautilus directory"
         mkdir -p ~/.config/nautilus
 fi
 
-
-if [ ! -f ~/.local/share/nautilus-python/extensions/ ]; then
-	mkdir -p   ~/.local/share/nautilus-python/extensions
-	cp /composer/.local/share/nautilus-python/extensions/desktop_download.py ~/.local/share/nautilus-python/extensions/desktop_download.py
-	chmod 755 ~/.local/share/nautilus-python/extensions/desktop_download.py
-fi
-
 if [ ! -d ~/.themes ]; then
+	echo "create ~/.themes directory"
 	cp -rp /composer/.themes ~
 fi
 
 if [ ! -f ~/.gtkrc-2.0 ]; then
+	echo "create ~/.gtkrc-2.0 file"
 	cp -rp /composer/.gtkrc-2.0 ~
 fi 
 
@@ -149,17 +160,19 @@ if [ ! -f ~/.Xressources ];  then
 fi
 
 if [ ! -f ~/.bashrc ];  then
+	# we can't run a link if home dir is configured as a dedicated volume
         cp -r /composer/.bashrc ~
 fi
 
 if [ ! -d ~/.wallpapers ]; then
-  # add default wallpapers 
-  mkdir ~/.wallpapers
-  cp -rp /composer/wallpapers/* ~/.wallpapers
+  	# add default wallpapers 
+  	# we can't run a link if home dir is configured as a dedicated volume
+  	mkdir ~/.wallpapers
+  	cp -rp /composer/wallpapers/* ~/.wallpapers
 fi
 
 if [ ! -f ~/.config/user-dirs.dirs ]; then
-  xdg-user-dirs-update &
+  	xdg-user-dirs-update &
 fi 
 
 
@@ -168,22 +181,13 @@ mkdir -p ~/.local/share/applications
 mkdir -p ~/.local/share/applications/bin
 
 if [ ! -d ~/.local/share/icons ]; then
-  cp -rp /composer/icons ~/.local/share
+  	cp -rp /composer/icons ~/.local/share
 fi
 
 if [ ! -d ~/.local/share/mime ]; then
-  cp -rp /composer/mime ~/.local/share
-  update-mime-database ~/.local/share/mime > /var/log/desktop/update-mime-database.log &
+  	cp -rp /composer/mime ~/.local/share
+  	update-mime-database ~/.local/share/mime > /var/log/desktop/update-mime-database.log &
 fi
-
-
-INITFILES=/composer/init.d/*.sh
-for f in $INITFILES
-do
-  echo "Processing $f file...";
-  # take action on each file. $f store current file name
-  source $f 2>> /var/log/desktop/composer.init.d.log
-done
 
 # before starting pulseaudio
 # check if the owner of $HOME belongs to $USER
@@ -204,6 +208,45 @@ fi
 if [ ! -d /var/run/dbus ]; then 
 	mkdir -p /var/run/dbus
 fi
+
+# check if user bind local interface
+# mode bridge and need to build a new x509 certificat USE_CERTBOT_CERTONLY
+if [ "$USE_CERTBOT_CERTONLY" == "enabled" ]; then
+	FQDN="$EXTERNAL_DESKTOP_HOSTNAME.$EXTERNAL_DESKTOP_DOMAIN"
+	echo "FQDN=$FQDN"
+	# call letsencrypt to build a new X509 certificat
+	# try 5 call to certbot
+	
+	counter=0
+	max_counter=5
+	until [ $counter -gt $max_counter ]
+	do
+		echo "/usr/bin/certbot certonly --standalone -d $FQDN -m ssl@$EXTERNAL_DESKTOP_DOMAIN --agree-tos --non-interactive"
+		/usr/bin/certbot certonly --standalone -d $FQDN -m ssl@$EXTERNAL_DESKTOP_DOMAIN --agree-tos --non-interactive
+		certbot_return_code=$?
+        	if [ $certbot_return_code -eq 0 ]; then
+			echo "command certbot success $certbot_return_code"
+			break
+		fi
+		echo certbot_return_code=$certbot_return_code
+  		echo retrying: $counter/$max_counter
+ 	 	((counter++))
+		# wait one second for dns zone update
+		sleep 1
+	done
+else
+	# make sure that vars exist
+	# for supervisor configuration ENV expand process
+        export USE_CERTBOT_CERTONLY=disabled
+	export EXTERNAL_DESKTOP_HOSTNAME=''
+	export EXTERNAL_DESKTOP_DOMAIN=''
+fi
+
+export USE_CERTBOT_CERTONLY
+export EXTERNAL_DESKTOP_HOSTNAME
+export EXTERNAL_DESKTOP_DOMAIN
+
+
 
 # Check if need to start dbus session
 if [ ! -z "$OD_DBUS_SESSION_BUS" ]; then
@@ -259,16 +302,28 @@ fi
 ## END OF KERBEROS
 
 
-
+# add file date data
 echo `date` > ${ABCDESKTOP_RUN_DIR}/start.txt
+
+# Read first ip add
 CONTAINER_IP_ADDR=$(hostname -i)
 echo "Container local ip addr is $CONTAINER_IP_ADDR"
 export CONTAINER_IP_ADDR
 
+# update pulseaudio conf
+if [ -f /etc/pulse/default.pa ]; then
+	# replace CONTAINER_IP_ADDR in listen for pulseaudio
+	# NEVER listening to 127.0.0.1:x for ws hack security 
+	sed -i "s/module-http-protocol-tcp/module-http-protocol-tcp listen=$CONTAINER_IP_ADDR/g" /etc/pulse/default.pa 
+fi 
 
-# replace CONTAINER_IP_ADDR in listen for pulseaudio
-sed -i "s/module-http-protocol-tcp/module-http-protocol-tcp listen=$CONTAINER_IP_ADDR/g" /etc/pulse/default.pa 
-sed -i "s/localhost:631/$CONTAINER_IP_ADDR:631/g" /etc/cups/cupsd.conf 
+ 
+# update cupds conf
+if [ -f /etc/cups/cupsd.conf  ]; then
+	# replace CONTAINER_IP_ADDR in listen for cupsd
+	# NEVER listening to 127.0.0.1:x for ws hack security 
+	sed -i "s/localhost:631/$CONTAINER_IP_ADDR:631/g" /etc/cups/cupsd.conf 
+fi
 
 if [ ! -z "$KUBERNETES_SERVICE_HOST" ]; then
    echo "starting in kubernetes mode " >> /var/log/desktop/config.log
@@ -289,9 +344,12 @@ fi
 # export VAR to running procces
 export KUBERNETES_SERVICE_HOST
 
-if [ ! -z "$DISABLE_REMOTEIP_FILTERING"  ]; then
+if [ "$DISABLE_REMOTEIP_FILTERING"=="enabled" ]; then
 	echo "DISABLE_REMOTEIP_FILTERING=$DISABLE_REMOTEIP_FILTERING" >> /var/log/desktop/config.log
+else
+	DISABLE_REMOTEIP_FILTERING=disabled
 fi
+export DISABLE_REMOTEIP_FILTERING
 
 # start supervisord
 /usr/bin/supervisord --pidfile /var/run/desktop/supervisord.pid --nodaemon --configuration /etc/supervisord.conf

@@ -57,17 +57,8 @@ RUN yarn install
 WORKDIR /composer/node/occall
 RUN yarn install
 
-WORKDIR /composer/node/file-service
-RUN yarn install 
-
-WORKDIR /composer/node/printer-service
-RUN yarn install
-
 WORKDIR /composer/node/spawner-service
 RUN yarn install 
-
-WORKDIR /composer/node/lync 
-RUN yarn install
 
 WORKDIR /composer/node/xterm.js
 RUN yarn install
@@ -85,31 +76,12 @@ RUN make version
 # --- START Build image ---
 FROM $BASE_IMAGE:$TAG
 
-
-# cups-pdf: pdf printer support
-# scrot: screenshot tools
-# smbclient need to install smb printer
-# cups: printer support
-RUN  apt-get update && apt-get install -y --no-install-recommends \
-        smbclient	\
-	cups-pdf 	\
-	scrot  		\
-        cups		\
-    && apt-get clean	\
-    && rm -rf /var/lib/apt/lists/*
-    
-# add pulseaudio server
-RUN apt-get update && apt-get install -y --no-install-recommends\
-	pulseaudio 			\
-    && apt-get clean  			\
-    && rm -rf /var/lib/apt/lists/*
-
 # add websockify as ws to tcp proxy 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        python3-pip                     \
-        python3-wheel                   \
-        python3-setuptools              \
-    && pip3 install websockify          \
+	python3-pip			\
+	python3-wheel  			\
+	python3-setuptools		\
+    && pip3 install websockify		\
     && apt-get remove -y python3-pip python3-wheel python3-setuptools \
     && apt-get clean                    \
     && rm -rf /var/lib/apt/lists/*
@@ -119,29 +91,26 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 RUN apt-get update && apt-get install -y --no-install-recommends \ 
-	yarn	\ 
+	yarn				\ 
     && apt-get clean                    \
     && rm -rf /var/lib/apt/lists/*
     
 # only for dev 
 RUN apt-get update && apt-get install -y --no-install-recommends \ 
-	vim	\ 
-	file	\
+	vim				\ 
+	file				\
     && apt-get clean                    \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=node_modules_builder /composer  /composer
 
 
-# Add 
-RUN adduser root lpadmin 
-
 # Next command use $BUSER context
 ENV BUSER balloon
 # RUN adduser --disabled-password --gecos '' $BUSER
 # RUN id -u $BUSER &>/dev/null || 
 RUN groupadd --gid 4096 $BUSER
-RUN useradd --create-home --shell /bin/bash --uid 4096 -g $BUSER --groups lpadmin,sudo $BUSER
+RUN useradd --create-home --shell /bin/bash --uid 4096 -g $BUSER --groups sudo $BUSER
 # create an ubuntu user
 RUN echo "balloon:lmdpocpetit" | chpasswd $BUSER
 
@@ -149,35 +118,17 @@ RUN echo "balloon:lmdpocpetit" | chpasswd $BUSER
 RUN chown -R $BUSER:$BUSER /home/$BUSER
 
 COPY etc /etc
-RUN chown -R $BUSER:$BUSER /etc/pulse && \
-    chown -R $BUSER:$BUSER /etc/cups
-
+RUN rm -rf /etc/supervisor/conf.d/pulseaudio.conf /etc/supervisor/conf.d/printer-service.conf /etc/supervisor/conf.d/file-service.conf /etc/supervisor/conf.d/cupsd.conf
 RUN date > /etc/build.date
 
 # Add here commands need to run as sudo user
 # cupsd must be run as root
 # changehomeowner 
-RUN echo "$BUSER ALL=(root) NOPASSWD: /usr/sbin/cupsd" >> /etc/sudoers.d/cupsd
 RUN echo "$BUSER ALL=(root) NOPASSWD: /composer/changehomeowner.sh" >> /etc/sudoers.d/changehomeowner
 
-# create use default directory
-# RUN mkdir -p /home/$BUSER/.local/share/applications 	&& \
-#    mkdir -p /home/$BUSER/.local/share/applications/bin && \
-#    mkdir -p /home/$BUSER/.local/share/Trash/		&& \
-#    mkdir -p /home/$BUSER/Desktop			&& \
-#    mkdir -p /home/$BUSER/.config			&& \
-#    mkdir -p /home/$BUSER/.config/qterminal.org
-
-# 
 # create a fake ntlm_auth.desktop file
 # just to hidden missing link dest
 RUN touch /usr/bin/ntlm_auth.desktop
-
-# no need to run twice 
-# RUN cp -p /composer/wallpapers/* /home/$BUSER/.wallpapers   
-# RUN cp -rp /composer/mime /home/$BUSER/.local/share
-# RUN cp -rp /composer/icons /home/$BUSER/.local/share
-# RUN update-mime-database /home/$BUSER/.local/share/mime
 
 
 # LOG AND PID SECTION
