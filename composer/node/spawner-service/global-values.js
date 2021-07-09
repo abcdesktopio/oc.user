@@ -5,6 +5,10 @@ const pathVersion = '/composer/version.json';
 
 const applist = [
   {
+    key: 'xeyes.XEyes',
+    path: '/usr/bin/xeyes',
+  },
+  {
     key: 'nautilus.Nautilus',
     path: '/usr/bin/nautilus',
   },
