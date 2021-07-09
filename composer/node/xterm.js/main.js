@@ -74,10 +74,8 @@ app.ws('/terminals/:pid', async (ws, req) => {
   console.log("Connection with client socketIp :" + socketIp);
   console.log("Connection with client requestIp :" + requestIp);
   try {
-    if (process.env.TESTING_MODE !== 'true') {
       await assertIp(socketIp);
       await assertIp(requestIp.replace('::ffff:', ''));
-    }
   } catch (e) {
     console.error(e);
     ws.close();
@@ -94,4 +92,4 @@ app.use((err, req, res, _) => {
   res.status(500).send({ code:500, data:'Internal server error' });
 });
 
-listenDaemonOnContainerIpAddr(app, PORT, `Abcdesktop xterm is up on port: ${PORT}`);
+listenDaemonOnContainerIpAddr(app, PORT, `abcdesktop xterm is up on port: ${PORT}`);
