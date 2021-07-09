@@ -14,10 +14,10 @@
 const fs = require('fs');
 const {
   spawn,
-  spawnSync,
-  exec,
-  execSync,
+  spawnSync
 } = require('child_process');
+const process = require('process');
+
 const os = require('os');
 const geoip = require('geoip-lite');
 const asyncHandler = require('express-async-handler');
@@ -347,21 +347,12 @@ function routerInit(router) {
     res.send(jsonres);
   }));
 
-  if (process.env.TESTING_MODE === 'true') {
-    router.post('/kill', (req, res) => {
-      const { pid } = req.body;
-      execSync(`kill -9 ${pid}`);
-      const ret = { code: 200, data: 'ok' };
-      res.status(ret.code).send(ret);
-    });
-
-    router.post('/exec', (req, res) => {
-      const { cmd } = req.body;
-      exec(`${cmd}`, () => { });
-      const ret = { code: 200, data: 'ok' };
-      res.status(ret.code).send(ret);
-    });
-  }
+  router.post('/kill', (req, res) => {
+    const { pid } = req.body;
+    process.kill(pid, 9);
+    const ret = { code: 200, data: 'ok' };
+    res.status(ret.code).send(ret);
+  });
 
   /**
    * @swagger
