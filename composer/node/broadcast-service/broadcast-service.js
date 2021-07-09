@@ -93,8 +93,7 @@ wss.on('connection', async (ws, req) => {
   console.log('connection');
   const { remoteAddress } = req.connection;
 
-  if (process.env.TESTING_MODE !== 'true') {
-    if (remoteAddress !== process.env.CONTAINER_IP_ADDR) {
+  if (remoteAddress !== process.env.CONTAINER_IP_ADDR) {
       try {
         await assertIp(remoteAddress);
       } catch (e) {
@@ -103,7 +102,6 @@ wss.on('connection', async (ws, req) => {
         ws.close();
         return;
       }
-    }
   }
 
   if (remoteAddress !== process.env.CONTAINER_IP_ADDR) {
