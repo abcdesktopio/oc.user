@@ -329,10 +329,10 @@ if [ ! -z "$KUBERNETES_SERVICE_HOST" ]; then
    echo "starting in kubernetes mode " >> /var/log/desktop/config.log
    echo "starting KUBERNETES_SERVICE_HOST is set to $KUBERNETES_SERVICE_HOST" >> /var/log/desktop/config.log
 else
+   echo "starting in docker mode" >> /var/log/desktop/config.log
    # KUBERNETES_SERVICE_HOST must exist 
    # else supervisord return an error  
    KUBERNETES_SERVICE_HOST=''
-   echo "starting in docker mode" >> /var/log/desktop/config.log
    # Add NGINX_SERVICE_HOST ip addr
    NGINX_SERVICE_HOST=$(getent hosts nginx | awk '{ print $1 }')
    export NGINX_SERVICE_HOST
@@ -344,6 +344,9 @@ fi
 # export VAR to running procces
 export KUBERNETES_SERVICE_HOST
 
+if [ -z "$DISABLE_REMOTEIP_FILTERING" ]; then
+        DISABLE_REMOTEIP_FILTERING=disabled
+fi  
 if [ "$DISABLE_REMOTEIP_FILTERING"=="enabled" ]; then
 	echo "DISABLE_REMOTEIP_FILTERING=$DISABLE_REMOTEIP_FILTERING" >> /var/log/desktop/config.log
 else
