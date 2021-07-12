@@ -13,7 +13,7 @@
 
 const ChildProcess = require('child_process');
 const { Server: WebSocketServer } = require('ws');
-const { assertIp } = require('/composer/node/common-libraries/index.js');
+const { assertIp } = require('oc.user.libraries');
 
 const PORT = process.env.BROADCAST_SERVICE_TCP_PORT || 29784;
 const KEEPALIVE_TIMEOUT = 30000;

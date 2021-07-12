@@ -14,8 +14,8 @@
 const { query, param }        = require('express-validator');
 const { 
     getFinalMiddlewares,
-    numberStrNumberValidor,
-} = require('../common-libraries/middlewares');
+    numberStrNumberValidor
+} = require('oc.user.libraries/middlewares');
 
 const checkQuery = (req, res, next) => {
     if (!req.query || typeof req.query !== "object") {

@@ -77,9 +77,8 @@ describe('Test window endpoints', () => {
       const asyncIterator = waitForBroadcastWindowList(1);
       await asyncIterator.next();
       await request
-        .post('/spawner/exec')
-        .send({ cmd: 'xeyes' })
-        .then(callbackExpectOk);
+        .post('/spawner/launch')
+        .send({ command: 'xeyes.XEyes' });
 
       const { value } = await asyncIterator.next();
       frontWindows = value;
@@ -87,14 +86,12 @@ describe('Test window endpoints', () => {
 
     it('Should activatewindow', () => request
       .post('/spawner/activatewindows')
-      .send({ windowsid: frontWindows.map((w) => w.id) })
-      .then(callbackExpectOk));
+      .send({ windowsid: frontWindows.map((w) => w.id) }));
 
     afterAll(async () => {
       await request
         .post('/spawner/closewindows')
-        .send({ windowsid: frontWindows.map((w) => w.id) })
-        .then(callbackExpectOk);
+        .send({ windowsid: frontWindows.map((w) => w.id) });
     });
   });
 
@@ -105,9 +102,8 @@ describe('Test window endpoints', () => {
       const asyncIterator = waitForBroadcastWindowList(1);
       await asyncIterator.next(); // Wait for connection on broadcast
       await request
-        .post('/spawner/exec')
-        .send({ cmd: 'xeyes' })
-        .then(callbackExpectOk);
+        .post('/spawner/launch')
+        .send({ command: 'xeyes.XEyes' });
 
       const { value } = await asyncIterator.next(); // Wait for broadcast event and get windows
       frontWindows = value;
@@ -115,25 +111,22 @@ describe('Test window endpoints', () => {
 
     it('Should closewindow', () => request
       .post('/spawner/closewindows')
-      .send({ windowsid: frontWindows.map((w) => w.id) })
-      .then(callbackExpectOk), 20000);
+      .send({ windowsid: frontWindows.map((w) => w.id) }), 20000);
 
     it('Should open and close lot of windows', async () => {
       const asyncIterator = waitForBroadcastWindowList(nbrWindow);
       await asyncIterator.next(); // Wait for connection on broadcast
       for (let i = 0; i < nbrWindow; i++) {
         await request
-          .post('/spawner/exec')
-          .send({ cmd: 'xeyes' })
-          .then(callbackExpectOk);
+          .post('/spawner/launch')
+          .send({ command: 'xeyes.XEyes' });
       }
       const { value } = await asyncIterator.next(); // Wait for broadcast event and get windows
       const windowsid = value.map((w) => w.id);
 
       return request
         .post('/spawner/closewindows')
-        .send({ windowsid })
-        .then(callbackExpectOk);
+        .send({ windowsid });
     }, 30000);
   });
 
@@ -145,9 +138,8 @@ describe('Test window endpoints', () => {
       await asyncIterator.next(); // Wait for connection on broadcast
       for (let i = 0; i < nbrWindow; i++) {
         await request
-          .post('/spawner/exec')
-          .send({ cmd: 'xeyes' })
-          .then(callbackExpectOk);
+          .post('/spawner/launch')
+          .send({ command: 'xeyes.XEyes' });
       }
       const { value } = await asyncIterator.next(); // Wait for broadcast event and get windows
       if (value) {
@@ -157,14 +149,13 @@ describe('Test window endpoints', () => {
 
     it('Should place all windows', () => request
       .post('/spawner/placeAllWindows')
-      .then(callbackExpectOk));
+    );
 
     afterAll(async () => {
       const windows = frontWindows || await wmctrljs.getWindowList();
       await request
         .post('/spawner/closewindows')
-        .send({ windowsid: windows.map((w) => w.id) })
-        .then(callbackExpectOk);
+        .send({ windowsid: windows.map((w) => w.id) });
     });
   });
 });

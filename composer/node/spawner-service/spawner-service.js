@@ -19,7 +19,7 @@ const router = require('./lib_spawner/router');
 const { broadcastwindowslist } = require('./lib_spawner/broadcast');
 const {
   listenDaemonOnContainerIpAddr,
-} = require('../common-libraries/index.js');
+} = require('oc.user.libraries');
 
 const PORT = process.env.SPAWNER_SERVICE_TCP_PORT || 29786;
 const app = express();

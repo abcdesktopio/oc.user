@@ -19,7 +19,7 @@ const { dicoMiddlewares } = require('./middlewares');
 const {
   assertIp,
   listenDaemonOnContainerIpAddr 
-} = require('../common-libraries/index.js');
+} = require('oc.user.libraries');
 
 process.on('uncaughtException', err => {
   console.error(err.stack);

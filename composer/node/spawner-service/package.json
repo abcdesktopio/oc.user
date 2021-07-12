@@ -30,6 +30,7 @@
     "node-addon-api": "^3.1.0",
     "node-gyp-build": "^4.2.3",
     "npid": "*",
+    "oc.user.libraries": "^1.0.1",
     "ps-list": "^7.2.0",
     "which": "*",
     "wmctrljs": "^1.2.8",

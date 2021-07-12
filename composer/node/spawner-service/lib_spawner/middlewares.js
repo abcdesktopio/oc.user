@@ -13,7 +13,7 @@
 
 const { body, query } = require('express-validator');
 const wmctrljs = require('wmctrljs');
-const { getFinalMiddlewares } = require('../../common-libraries/middlewares');
+const { getFinalMiddlewares } = require('oc.user.libraries/middlewares');
 const { applist } = require('../global-values');
 
 const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
