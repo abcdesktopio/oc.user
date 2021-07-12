@@ -181,7 +181,6 @@ watchForASocket(pathSocketCups, async () => {
   } catch(e) {
     console.error(e);
   }
-  
 }, async () => {
   try {
     await broadcastevent('printer.available', false);
