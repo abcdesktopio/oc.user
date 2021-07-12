@@ -4,7 +4,8 @@ COUNTER=0
 # get ubuntu release
 RELEASE=$(lsb_release --release | cut -f2)
 # based services
-# POSTPONE_SERVICE="cupsd pulseaudio"
+# POSTPONE_SERVICE="cupsd pulseaudio printerfile-service"
+
 POSTPONE_SERVICE=""
 # log info
 echo "RELEASE=$RELEASE"
