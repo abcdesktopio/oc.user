@@ -22,7 +22,6 @@ const os = require('os');
 const geoip = require('geoip-lite');
 const asyncHandler = require('express-async-handler');
 
-const psList = require('ps-list');
 const parser = require('accept-language-parser');
 const globalValues = require('../global-values');
 
@@ -268,20 +267,6 @@ function setCultureInfo(httpHeaderAcceptLanguage) {
 
 /**
  *
- * @param {*} cmdline
- */
-async function processExist(cmdline = '') {
-  return new Promise((resolve, reject) => {
-    psList()
-      .then((results) => {
-        resolve(results.some((p) => p.cmd === cmdline));
-      })
-      .catch(reject);
-  });
-}
-
-/**
- *
  * @param {*} router
  */
 function routerInit(router) {
@@ -401,16 +386,22 @@ function routerInit(router) {
 
     try {
       await fs.promises.access(pathPulseSock, fs.constants.F_OK);
-      audio.enabled = await processExist('/usr/bin/pulseaudio');
+      const statPulseSock = await fs.promises.lstat(pathPulseSock);
+      if (statPulseSock.isSocket()) {
+        audio.enabled = true;
+      }
     } catch(e) {
-      audio.enabled = false;
+      console.error(e);
     }
 
     try {
       await fs.promises.access(pathCupsSock, fs.constants.F_OK);
-      printers.enabled = await processExist('/usr/sbin/cupsd -c /etc/cups/cupsd.conf -f');
+      const statCupsSock = await fs.promises.lstat(pathCupsSock);
+      if (statCupsSock.isSocket()) {
+        printers.enabled = true;
+      }
     } catch(e) {
-      printers.enabled = false;
+      console.error(e);
     }
 
     ret.code = 200;
