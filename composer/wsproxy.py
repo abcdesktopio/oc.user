@@ -1,6 +1,6 @@
 #!/usr/bin/python3.6
 # EASY-INSTALL-ENTRY-SCRIPT: 'websockify>=0.9.0','console_scripts','websockify'
-__requires__ = 'websockify==0.9.0'
+__requires__ = 'websockify>=0.9.0'
 import re
 import sys
 from pkg_resources import load_entry_point
