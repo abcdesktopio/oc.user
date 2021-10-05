@@ -36,14 +36,31 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_TOKEN }}
 
-    - name: Build image abcdesktopio/${{ matrix.BASE_IMAGE_RELEASE }}
-      run: |
-        docker build . -t abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev --build-arg BASE_IMAGE_RELEASE:${{ matrix.BASE_IMAGE_RELEASE }} --build-arg BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }} --build-arg TAG:dev
 
-    - name: Build image abcdesktopio/${{ matrix.BASE_IMAGE_RELEASE }}
-      run: |
-        docker build . -f Dockerfile.kubernetes -t abcdesktopio/oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}:dev --build-arg BASE_IMAGE_RELEASE:${{ matrix.BASE_IMAGE_RELEASE }} --build-arg BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }} --build-arg TAG:dev
-
+    - name: Run Buildx openbox.${{ matrix.BASE_IMAGE_RELEASE }}
+        run: |
+          docker buildx build \
+            --build-arg BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }} \
+            --build-arg BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }} \
+            --build-arg TAG:dev \
+            --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
+            --platform linux/amd64,linux/arm/v7,linux/arm64 \
+            --output "type=image,push=true" \
+            --tag abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev \
+            --file ./Dockerfile .
+            
+   - name: Run Buildx openbox.${{ matrix.BASE_IMAGE_RELEASE }}
+        run: |
+          docker buildx build \
+            --build-arg BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }} \
+            --build-arg BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }} \
+            --build-arg TAG:dev \
+            --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
+            --platform linux/amd64,linux/arm/v7,linux/arm64 \
+            --output "type=image,push=true" \
+            --tag abcdesktopio/oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}:dev \
+            --file ./Dockerfile.kubernetes .
+            
     - name: Run and test docker image ${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
         ./make-test.sh ${{ matrix.BASE_IMAGE_RELEASE }}
