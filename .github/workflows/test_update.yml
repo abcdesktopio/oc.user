@@ -37,7 +37,7 @@ jobs:
         password: ${{ secrets.DOCKER_TOKEN }}
 
 
-    - name: Run Buildx openbox.${{ matrix.BASE_IMAGE_RELEASE }}
+    - name: Run Buildx oc.user.${{ matrix.BASE_IMAGE_RELEASE }}
         run: |
           docker buildx build \
             --build-arg BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }} \
@@ -49,7 +49,7 @@ jobs:
             --tag abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev \
             --file ./Dockerfile .
             
-   - name: Run Buildx openbox.${{ matrix.BASE_IMAGE_RELEASE }}
+   - name: Run Buildx oc.user.${{ matrix.BASE_IMAGE_RELEASE }}
         run: |
           docker buildx build \
             --build-arg BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }} \
@@ -63,7 +63,7 @@ jobs:
             
     - name: Run and test docker image ${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
-        ./make-test.sh ${{ matrix.BASE_IMAGE_RELEASE }}
+        ./make-test.sh ${{ matrix.BASE_IMAGE_RELEASE }}:dev
 
     - name: Push image abcdesktopio/${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
