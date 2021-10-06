@@ -1,4 +1,4 @@
-name: Test and update oc.user images
+name: Build and test oc.user images
 
 on:
   push:
