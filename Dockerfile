@@ -104,19 +104,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends\
     && apt-get clean  			\
     && rm -rf /var/lib/apt/lists/*
 
+# splitted for debug
 # update replace by default websockify package
 # add websockify as ws to tcp proxy 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         python3-pip                     \
         python3-wheel                   \
         python3-setuptools              \
-	python3-pkg-resources		\
-    && pip3 install 'websockify>=0.9.0' \
+	python3-pkg-resources
+	
+# splitted for debug
+RUN pip3 install 'websockify>=0.9.0' \
     && apt-get remove -y python3-pip python3-wheel python3-setuptools \
     && apt-get clean                    \
     && rm -rf /var/lib/apt/lists/*
 
-#Install yarn
+# Install yarn
 # yarn is use for the test mode 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
@@ -180,7 +183,6 @@ RUN touch /usr/bin/ntlm_auth.desktop
 # RUN cp -rp /composer/mime /home/$BUSER/.local/share
 # RUN cp -rp /composer/icons /home/$BUSER/.local/share
 # RUN update-mime-database /home/$BUSER/.local/share/mime
-
 
 # LOG AND PID SECTION
 RUN mkdir -p 	/var/log/desktop \ 
