@@ -1,12 +1,13 @@
 #!/bin/bash
 
+# Local vars
 #Set Script Name variable
 SCRIPT=`basename ${BASH_SOURCE[0]}`
-
 #Initialize variables to default values.
 # init.sh "  width + " " + height + " "
 # Set default mode to Full HD 
 OPT_LOCAL=""
+WALLPAPER_PATH = "~/.wallpapers"
 
 
 ## Export Var
@@ -18,6 +19,7 @@ export LOGNAME=balloon
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:$HOME/.local/share/applications/bin/"
 export USER=balloon
 export ABCDESKTOP_RUN_DIR='/composer/run'
+
 
 # export DBUS_SESSION_BUS_ADDRESS=tcp:host=localhost,bind=*,port=55556,family=ipv4
 
@@ -164,11 +166,11 @@ if [ ! -f ~/.bashrc ];  then
         cp -r /composer/.bashrc ~
 fi
 
-if [ ! -d ~/.wallpapers ]; then
+if [ ! -d "$WALLPAPER_PATH" ]; then
   	# add default wallpapers 
   	# we can't run a link if home dir is configured as a dedicated volume
-  	mkdir ~/.wallpapers
-  	cp -rp /composer/wallpapers/* ~/.wallpapers
+  	mkdir "$WALLPAPER_PATH" 
+  	cp -rp /composer/wallpapers/* "$WALLPAPER_PATH" 
 fi
 
 if [ ! -f ~/.config/user-dirs.dirs ]; then
@@ -356,12 +358,26 @@ export DISABLE_REMOTEIP_FILTERING
 
 
 # set wallpaper default
-if [ -z "$SET_DEFAULT_WALLPAPER" ]; then
-	DEFAULT_WALLPAPER_FILE = "$HOME/.config/current_wallpaper"
-        if [ ! -f DEFAULT_WALLPAPER_FILE ]
-		# if .config/current_wallpaper does not exist
-	fi
-fi  
+# if $SET_DEFAULT_WALLPAPER is defined
+if [ ! -z "$SET_DEFAULT_WALLPAPER" ]; then
+        WALLPAPER_PATH = "~/.wallpapers"
+        # if $SET_DEFAULT_WALLPAPER file exists
+        if [ -f "$WALLPAPER_PATH/$SET_DEFAULT_WALLPAPER" ]; then
+                CURRENT_WALLPAPER_FILE = "~/.config/current_wallpaper"
+                # if a wall_paper as not already been set
+                if [ ! -f "$CURRENT_WALLPAPER_FILE" ]; then
+                        # if .config/current_wallpaper does not exist
+			echo "Define wallpaper as $SET_DEFAULT_WALLPAPER to $CURRENT_WALLPAPER_FILE"
+                        cp "$WALLPAPER_PATH/$SET_DEFAULT_WALLPAPER" "$CURRENT_WALLPAPER_FILE"
+		else
+			echo "$CURRENT_WALLPAPER_FILE exists skipping value $SET_DEFAULT_WALLPAPER"
+                fi
+	else
+			echo "File $WALLPAPER_PATH/$SET_DEFAULT_WALLPAPER does not exist skipping wallpaper"
+        fi
+else
+	echo "SET_DEFAULT_WALLPAPER is not defined, keep default wallpapers config"
+fi 
 
 
 
