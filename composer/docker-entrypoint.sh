@@ -354,5 +354,16 @@ else
 fi
 export DISABLE_REMOTEIP_FILTERING
 
+
+# set wallpaper default
+if [ -z "$SET_DEFAULT_WALLPAPER" ]; then
+	DEFAULT_WALLPAPER_FILE = "$HOME/.config/current_wallpaper"
+        if [ ! -f DEFAULT_WALLPAPER_FILE ]
+		# if .config/current_wallpaper does not exist
+	fi
+fi  
+
+
+
 # start supervisord
 /usr/bin/supervisord --pidfile /var/run/desktop/supervisord.pid --nodaemon --configuration /etc/supervisord.conf
