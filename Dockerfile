@@ -107,11 +107,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends\
 # splitted for debug
 # update replace by default websockify package
 # add websockify as ws to tcp proxy 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y  \
         python3-pip                     \
         python3-wheel                   \
         python3-setuptools              \
-	python3-pkg-resources
+	python3-pkg-resources		\
+	gfortran-8
 	
 # splitted for debug
 RUN pip3 install 'Cython>=0.29.21'
