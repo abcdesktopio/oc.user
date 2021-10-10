@@ -112,12 +112,13 @@ RUN apt-get update && apt-get install -y  \
         python3-wheel                   \
         python3-setuptools              \
 	python3-pkg-resources		\
-	gfortran-8
-	
-# splitted for debug
-RUN pip3 install 'Cython>=0.29.21'
-RUN pip3 install 'websockify>=0.9.0' 
-RUN apt-get remove -y python3-pip python3-wheel python3-setuptools \
+	gfortran-8			&& \
+    pip3 install 'Cython>=0.29.21'	&& \
+    pip3 install 'websockify>=0.9.0' 	&& \
+    apt-get remove -y 		\
+    	python3-pip 		\
+	python3-wheel 		\
+	python3-setuptools 	\
     && apt-get clean                    \
     && rm -rf /var/lib/apt/lists/*
 
@@ -138,7 +139,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=node_modules_builder /composer  /composer
-
 
 # Add 
 RUN adduser root lpadmin 
