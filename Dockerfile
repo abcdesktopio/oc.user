@@ -111,10 +111,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         python3-pip                     \
         python3-wheel                   \
         python3-setuptools              \
-	python3-pkg-resources		\
-	cython3
+	python3-pkg-resources
 	
 # splitted for debug
+RUN pip3 install 'Cython>=0.29.21'
 RUN pip3 install 'websockify>=0.9.0' 
 RUN apt-get remove -y python3-pip python3-wheel python3-setuptools \
     && apt-get clean                    \
