@@ -157,7 +157,13 @@ RUN echo "balloon:lmdpocpetit" | chpasswd $BUSER
 # hack: be shure to own the home dir 
 RUN chown -R $BUSER:$BUSER /home/$BUSER
 
+# remove symlink in /etc/X11
+# openbox -> ../xdg/openbox
+# xdg does not exist
+RUN rm -rf /etc/X11/openbox
+
 COPY etc /etc
+
 RUN chown -R $BUSER:$BUSER /etc/pulse && \
     chown -R $BUSER:$BUSER /etc/cups
 
