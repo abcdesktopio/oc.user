@@ -141,9 +141,8 @@ RUN apt-get update && apt-get install -y  \
 # yarn is used by test mode
 # test is supported only in docker mode
 RUN if [ "${TARGET_MODE}" = "docker" ]; then \
-      curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null && \
-      echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | tee /etc/apt/sources.list.d/yarn.list
- && \
+      curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null &&  \
+      echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | tee /etc/apt/sources.list.d/yarn.list && \
       apt-get update && apt-get install -y --no-install-recommends yarn && apt-get clean && rm -rf /var/lib/apt/lists/*; \
     fi 
 
