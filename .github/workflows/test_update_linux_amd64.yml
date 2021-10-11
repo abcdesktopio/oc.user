@@ -45,9 +45,10 @@ jobs:
             --build-arg TAG=dev \
             --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
             --platform linux/amd64 \
-            --output "type=image,push=false" \
+            --output "type=image,push=true" \
             --tag abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev \
             --file ./Dockerfile .
+          
             
     - name: Run and test docker image abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
       run: |
@@ -61,7 +62,7 @@ jobs:
             --build-arg TAG=dev \
             --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
             --platform linux/amd64 \
-            --output "type=image,push=false" \
+            --output "type=image,push=true" \
             --tag abcdesktopio/oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}:dev \
             --file ./Dockerfile.kubernetes .
 
