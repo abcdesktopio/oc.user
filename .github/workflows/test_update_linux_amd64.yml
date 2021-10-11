@@ -49,6 +49,10 @@ jobs:
             --tag abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev \
             --file ./Dockerfile .
             
+    - name: Run and test docker image abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
+      run: |
+        ./make-test.sh abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
+        
     - name: Run Buildx oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
           docker buildx build \
@@ -60,10 +64,6 @@ jobs:
             --output "type=image,push=false" \
             --tag abcdesktopio/oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}:dev \
             --file ./Dockerfile.kubernetes .
-            
-    - name: Run and test docker image abcdesktopio/oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}:dev
-      run: |
-        ./make-test.sh abcdesktopio/oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}:dev
 
     - name: Push image abcdesktopio/${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
