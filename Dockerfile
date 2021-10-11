@@ -4,6 +4,7 @@ ARG TAG=dev
 ARG BASE_IMAGE_RELEASE=18.04
 # Default base image 
 ARG BASE_IMAGE=abcdesktopio/oc.software.18.04
+ARG TARGET_MODE=docker
 
 # --- BEGIN node_modules_builder ---
 FROM $BASE_IMAGE:$TAG as node_modules_builder
@@ -87,23 +88,27 @@ RUN make version
 FROM $BASE_IMAGE:$TAG
 
 
+# if TARGET_MODE is docker
+# no pod is ready to provide
+# sound and printer
+# add sound and printer service
 # cups-pdf: pdf printer support
 # scrot: screenshot tools
 # smbclient need to install smb printer
 # cups: printer support
-RUN  apt-get update && apt-get install -y --no-install-recommends \
-        smbclient	\
-	cups-pdf 	\
-	scrot  		\
-        cups		\
-    && apt-get clean	\
-    && rm -rf /var/lib/apt/lists/*
-    
 # add pulseaudio server
-RUN apt-get update && apt-get install -y --no-install-recommends\
-	pulseaudio 			\
-    && apt-get clean  			\
-    && rm -rf /var/lib/apt/lists/*
+
+
+RUN if [ "${TARGET_MODE}" = "docker" ]; then \
+	apt-get update && apt-get install -y --no-install-recommends \
+		pulseaudio 	\
+        	smbclient	\
+		cups-pdf 	\
+		scrot  		\
+        	cups		\
+    	&& apt-get clean	\
+    	&& rm -rf /var/lib/apt/lists/* \
+    fi
 
 # splitted for debug
 # update replace by default websockify package
@@ -172,10 +177,7 @@ RUN echo "$BUSER ALL=(root) NOPASSWD: /composer/changehomeowner.sh" >> /etc/sudo
 # create a fake ntlm_auth.desktop file
 # just to hidden missing link dest
 RUN touch /usr/bin/ntlm_auth.desktop
-
-# create directory for test mode
-RUN mkdir /home/balloon/.wallpapers
-RUN cp -p /composer/wallpapers/* /home/$BUSER/.wallpapers   
+  
 # RUN cp -rp /composer/mime /home/$BUSER/.local/share
 # RUN cp -rp /composer/icons /home/$BUSER/.local/share
 # RUN update-mime-database /home/$BUSER/.local/share/mime
