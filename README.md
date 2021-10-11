@@ -19,3 +19,10 @@ git clone https://github.com/abcdesktopio/oc.user.git
 cd oc.user
 git submodule update --init --recursive --remote
 ```
+
+## Build command
+
+```
+cd oc.user
+docker buildx build             --build-arg BASE_IMAGE_RELEASE=18.04             --build-arg BASE_IMAGE=abcdesktopio/oc.software.18.04             --build-arg TAG=dev             --platform linux/amd64             --output "type=image,push=false"             --tag abcdesktopio/oc.user.18.04:dev             --file ./Dockerfile .
+```
