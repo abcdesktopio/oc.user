@@ -356,28 +356,51 @@ else
 fi
 export DISABLE_REMOTEIP_FILTERING
 
-
 # set wallpaper default
 # if $SET_DEFAULT_WALLPAPER is defined
 if [ ! -z "$SET_DEFAULT_WALLPAPER" ]; then
         WALLPAPER_PATH = "~/.wallpapers"
+        CONFIGSTORE_PATH = "~/.store"
         # if $SET_DEFAULT_WALLPAPER file exists
         if [ -f "$WALLPAPER_PATH/$SET_DEFAULT_WALLPAPER" ]; then
                 CURRENT_WALLPAPER_FILE = "~/.config/current_wallpaper"
                 # if a wall_paper as not already been set
                 if [ ! -f "$CURRENT_WALLPAPER_FILE" ]; then
                         # if .config/current_wallpaper does not exist
-			echo "Define wallpaper as $SET_DEFAULT_WALLPAPER to $CURRENT_WALLPAPER_FILE"
+                        echo "Define wallpaper as $SET_DEFAULT_WALLPAPER to $CURRENT_WALLPAPER_FILE"
                         cp "$WALLPAPER_PATH/$SET_DEFAULT_WALLPAPER" "$CURRENT_WALLPAPER_FILE"
-		else
-			echo "$CURRENT_WALLPAPER_FILE exists skipping value $SET_DEFAULT_WALLPAPER"
+                        echo "$SET_DEFAULT_WALLPAPER" > "$CONFIGSTORE_PATH"/currentImg
+                else
+                        echo "$CURRENT_WALLPAPER_FILE exists skipping value $SET_DEFAULT_WALLPAPER"
                 fi
-	else
-			echo "File $WALLPAPER_PATH/$SET_DEFAULT_WALLPAPER does not exist skipping wallpaper"
+        else
+                        echo "File $WALLPAPER_PATH/$SET_DEFAULT_WALLPAPER does not exist skipping wallpaper"
         fi
 else
-	echo "SET_DEFAULT_WALLPAPER is not defined, keep default wallpapers config"
-fi 
+        echo "SET_DEFAULT_WALLPAPER is not defined, keep default wallpapers config"
+fi
+
+
+# set colord default
+if [ ! -z "$SET_DEFAULT_COLOR" ]; then
+        CONFIGSTORE_PATH = "~/.store"
+        # if $SET_DEFAULT_WALLPAPER file exists 
+        if [ ! -f "$CONFIGSTORE_PATH"/currentColor ]; then
+                echo "$SET_DEFAULT_COLOR" > "$CONFIGSTORE_PATH"/currentColor
+        else
+                echo "File $CONFIGSTORE_PATH/currentColor already exist skipping update value"
+        fi
+        if [ ! -f "$CONFIGSTORE_PATH/currentColor" ]; then
+                echo "$SET_DEFAULT_COLOR" > "$CONFIGSTORE_PATH"/currentImgColor
+        else
+                echo "File $CONFIGSTORE_PATH/currentImgColor already exist skipping update value"
+        fi
+else
+        echo "SET_DEFAULT_COLOR is not defined, keep default value"
+fi
+
+# end of config setup 
+
 
 
 
