@@ -173,8 +173,9 @@ RUN echo "$BUSER ALL=(root) NOPASSWD: /composer/changehomeowner.sh" >> /etc/sudo
 # just to hidden missing link dest
 RUN touch /usr/bin/ntlm_auth.desktop
 
-# no need to run twice 
-# RUN cp -p /composer/wallpapers/* /home/$BUSER/.wallpapers   
+# create directory for test mode
+RUN mkdir /home/balloon/.wallpapers
+RUN cp -p /composer/wallpapers/* /home/$BUSER/.wallpapers   
 # RUN cp -rp /composer/mime /home/$BUSER/.local/share
 # RUN cp -rp /composer/icons /home/$BUSER/.local/share
 # RUN update-mime-database /home/$BUSER/.local/share/mime
