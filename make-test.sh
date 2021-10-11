@@ -6,7 +6,7 @@ CONTAINER_ID=$(docker run --rm --env TESTING_MODE='true' --env DISABLE_REMOTEIP_
 
 echo "Container ID: ${CONTAINER_ID}"
 
-echo "Waiting 30s for cupsd and puslaudio"
+echo "Waiting 30s for cupsd and pusleaudio"
 sleep 30
 
 echo "Run tests..."
