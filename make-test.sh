@@ -1,8 +1,8 @@
 #/bin/bash
 
-RELEASE=$1
+IMAGE_RELEASE=$1
 echo "Run oc.user test for $RELEASE"
-CONTAINER_ID=$(docker run --rm --env TESTING_MODE='true' --env DISABLE_REMOTEIP_FILTERING='enabled' -d abcdesktopio/oc.user.$RELEASE:dev)
+CONTAINER_ID=$(docker run --rm --env TESTING_MODE='true' --env DISABLE_REMOTEIP_FILTERING='enabled' -d $IMAGE_RELEASE )
 
 echo "Container ID: ${CONTAINER_ID}"
 
