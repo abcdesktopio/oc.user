@@ -133,13 +133,6 @@ RUN apt-get update && apt-get install -y  dpkg && \
     && rm -rf /var/lib/apt/lists/*    
     
     
-# only for debug 
-RUN apt-get update && apt-get install -y --no-install-recommends \ 
-	vim	\ 
-	file	\
-    && apt-get clean                    \
-    && rm -rf /var/lib/apt/lists/*
-
 COPY --from=node_modules_builder /composer  /composer
 
 # Add 
