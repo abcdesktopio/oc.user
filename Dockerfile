@@ -111,7 +111,7 @@ RUN if [ "${TARGET_MODE}" = "docker" ]; then \
 # sound and printer 
 # remove supervisor file
 RUN if [ "${TARGET_MODE}" = "kubernetes" ]; then \
-	rm -rf /etc/supervisor/conf.d/pulseaudio.conf /etc/supervisor/conf.d/printer-service.conf /etc/supervisor/conf.d/file-service.conf /etc/supervisor/conf.d/cupsd.conf \
+	rm -rf /etc/supervisor/conf.d/pulseaudio.conf /etc/supervisor/conf.d/printer-service.conf /etc/supervisor/conf.d/file-service.conf /etc/supervisor/conf.d/cupsd.conf;\
     fi
 
 
@@ -135,14 +135,13 @@ RUN apt-get update && apt-get install -y  \
     
 # Install yarn
 # yarn is used by test mode
-RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null && \
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | tee /etc/apt/sources.list.d/yarn.list && \
-    apt-get update && apt-get install -y --no-install-recommends \
-	yarn \
-    && apt-get clean                    \
-    && rm -rf /var/lib/apt/lists/*    
-    
-    
+# test exist in docker mode
+RUN if [ "${TARGET_MODE}" = "docker" ]; then \
+      curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null && \
+      echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | tee /etc/apt/sources.list.d/yarn.list && \
+      apt-get update && apt-get install -y --no-install-recommends yarn && apt-get clean && rm -rf /var/lib/apt/lists/*; \
+    fi 
+
 COPY --from=node_modules_builder /composer  /composer
 
 # Add 
