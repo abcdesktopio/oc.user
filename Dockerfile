@@ -86,7 +86,9 @@ RUN make version
 
 # --- START Build image ---
 FROM $BASE_IMAGE:$TAG
-
+# get build arg TARGET_MODE 
+# and set as env TARGET_MODE
+ENV TARGET_MODE=$TARGET_MODE
 
 # if TARGET_MODE is docker
 # no pod is ready to provide
