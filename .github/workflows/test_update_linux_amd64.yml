@@ -49,7 +49,7 @@ jobs:
             --tag abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev \
             --file ./Dockerfile .
             
-    - name: Run Buildx oc.user.${{ matrix.BASE_IMAGE_RELEASE }}
+    - name: Run Buildx oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
           docker buildx build \
             --build-arg BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }} \
