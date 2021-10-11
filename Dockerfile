@@ -104,9 +104,7 @@ RUN if [ "${TARGET_MODE}" = "docker" ]; then \
 		cups-pdf 	\
 		scrot  		\
         	cups		\
-    	&& apt-get clean	\
-    	&& rm -rf /var/lib/apt/lists/* \
-    fi
+    	&& apt-get clean && rm -rf /var/lib/apt/lists/*; fi
 
 # if TARGET_MODE is kubernest
 # pod is ready to provide
