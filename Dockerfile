@@ -123,9 +123,9 @@ RUN apt-get update && apt-get install -y  \
     && apt-get clean                    \
     && rm -rf /var/lib/apt/lists/*
     
-#Install yarn
-RUN apt-get update && apt-get install -y  dpkg && \
-    curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null && \
+# Install yarn
+# yarn is used by test mode
+RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | tee /etc/apt/sources.list.d/yarn.list && \
     apt-get update && apt-get install -y --no-install-recommends \
 	yarn \
@@ -167,14 +167,6 @@ RUN date > /etc/build.date
 # changehomeowner 
 RUN echo "$BUSER ALL=(root) NOPASSWD: /usr/sbin/cupsd" >> /etc/sudoers.d/cupsd
 RUN echo "$BUSER ALL=(root) NOPASSWD: /composer/changehomeowner.sh" >> /etc/sudoers.d/changehomeowner
-
-# create use default directory
-# RUN mkdir -p /home/$BUSER/.local/share/applications 	&& \
-#    mkdir -p /home/$BUSER/.local/share/applications/bin && \
-#    mkdir -p /home/$BUSER/.local/share/Trash/		&& \
-#    mkdir -p /home/$BUSER/Desktop			&& \
-#    mkdir -p /home/$BUSER/.config			&& \
-#    mkdir -p /home/$BUSER/.config/qterminal.org
 
 # 
 # create a fake ntlm_auth.desktop file
