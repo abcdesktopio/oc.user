@@ -8,6 +8,7 @@ ARG TARGET_MODE=docker
 
 # --- BEGIN node_modules_builder ---
 FROM $BASE_IMAGE:$TAG as node_modules_builder
+ENV TARGET_MODE=$TARGET_MODE
 
 # 
 #  Add dev package to node install
@@ -88,7 +89,8 @@ RUN make version
 FROM $BASE_IMAGE:$TAG
 # get build arg TARGET_MODE 
 # and set as env TARGET_MODE
-ENV TARGET_MODE=$TARGET_MODE
+
+RUN echo "${TARGET_MODE}" > /build_target_mode
 
 # if TARGET_MODE is docker
 # no pod is ready to provide
@@ -137,10 +139,11 @@ RUN apt-get update && apt-get install -y  \
     
 # Install yarn
 # yarn is used by test mode
-# test exist in docker mode
+# test is supported only in docker mode
 RUN if [ "${TARGET_MODE}" = "docker" ]; then \
       curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null && \
-      echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | tee /etc/apt/sources.list.d/yarn.list && \
+      echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | tee /etc/apt/sources.list.d/yarn.list
+ && \
       apt-get update && apt-get install -y --no-install-recommends yarn && apt-get clean && rm -rf /var/lib/apt/lists/*; \
     fi 
 
@@ -173,11 +176,20 @@ RUN chown -R $BUSER:$BUSER /etc/pulse && \
 
 RUN date > /etc/build.date
 
+
+# Only in docker mode 
 # Add here commands need to run as sudo user
 # cupsd must be run as root
-# changehomeowner 
-RUN echo "$BUSER ALL=(root) NOPASSWD: /usr/sbin/cupsd" >> /etc/sudoers.d/cupsd
-RUN echo "$BUSER ALL=(root) NOPASSWD: /composer/changehomeowner.sh" >> /etc/sudoers.d/changehomeowner
+# changehomeowner  
+RUN if [ "${TARGET_MODE}" = "docker" ]; then \
+	echo "$BUSER ALL=(root) NOPASSWD: /usr/sbin/cupsd" >> /etc/sudoers.d/cupsd  && \
+	echo "$BUSER ALL=(root) NOPASSWD: /composer/changehomeowner.sh" >> /etc/sudoers.d/changehomeowner; \
+    fi
+
+RUN if [ "${TARGET_MODE}" = "kubernetes" ]; then \
+	rm /composer/changehomeowner.sh; \
+    fi
+
 
 # 
 # create a fake ntlm_auth.desktop file
@@ -222,6 +234,7 @@ RUN chown -R $BUSER:$BUSER 				\
 	/composer/.cache				
 
 # Clean unecessary package
+# but it's too late
 RUN rm -rf /tmp/*
 
 # VOLUME /home/$BUSER
@@ -248,4 +261,3 @@ CMD [ "/composer/docker-entrypoint.sh" ]
 ## RESERVED TCP PORT 29785 for cupsd
 
 EXPOSE 4714 6081 29780 29781 29783 29784 29786 55556 55557
-
