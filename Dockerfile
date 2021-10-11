@@ -110,7 +110,7 @@ RUN if [ "${TARGET_MODE}" = "docker" ]; then \
         	cups		\
     	&& apt-get clean && rm -rf /var/lib/apt/lists/*; fi
 
-# if TARGET_MODE is kubernest
+# if TARGET_MODE is kubernetes
 # pod is ready to provide
 # sound and printer 
 # remove supervisor file
@@ -136,15 +136,6 @@ RUN apt-get update && apt-get install -y  \
 	python3-setuptools 	\
     && apt-get clean                    \
     && rm -rf /var/lib/apt/lists/*
-    
-# Install yarn
-# yarn is used by test mode
-# test is supported only in docker mode
-RUN if [ "${TARGET_MODE}" = "docker" ]; then \
-      curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null &&  \
-      echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | tee /etc/apt/sources.list.d/yarn.list && \
-      apt-get update && apt-get install -y --no-install-recommends yarn && apt-get clean && rm -rf /var/lib/apt/lists/*; \
-    fi 
 
 COPY --from=node_modules_builder /composer  /composer
 
@@ -194,10 +185,6 @@ RUN if [ "${TARGET_MODE}" = "kubernetes" ]; then \
 # create a fake ntlm_auth.desktop file
 # just to hidden missing link dest
 RUN touch /usr/bin/ntlm_auth.desktop
-  
-# RUN cp -rp /composer/mime /home/$BUSER/.local/share
-# RUN cp -rp /composer/icons /home/$BUSER/.local/share
-# RUN update-mime-database /home/$BUSER/.local/share/mime
 
 # LOG AND PID SECTION
 RUN mkdir -p 	/var/log/desktop \ 
