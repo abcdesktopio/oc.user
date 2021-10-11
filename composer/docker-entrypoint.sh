@@ -7,7 +7,7 @@ SCRIPT=`basename ${BASH_SOURCE[0]}`
 # init.sh "  width + " " + height + " "
 # Set default mode to Full HD 
 OPT_LOCAL=""
-WALLPAPER_PATH = "~/.wallpapers"
+WALLPAPER_PATH="~/.wallpapers"
 
 
 ## Export Var
@@ -359,7 +359,6 @@ export DISABLE_REMOTEIP_FILTERING
 # set wallpaper default
 # if $SET_DEFAULT_WALLPAPER is defined
 if [ ! -z "$SET_DEFAULT_WALLPAPER" ]; then
-        WALLPAPER_PATH = "~/.wallpapers"
         CONFIGSTORE_PATH = "~/.store"
         # if $SET_DEFAULT_WALLPAPER file exists
         if [ -f "$WALLPAPER_PATH/$SET_DEFAULT_WALLPAPER" ]; then
