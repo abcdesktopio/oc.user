@@ -7,7 +7,7 @@ SCRIPT=`basename ${BASH_SOURCE[0]}`
 # init.sh "  width + " " + height + " "
 # Set default mode to Full HD 
 OPT_LOCAL=""
-WALLPAPER_PATH="~/.wallpapers"
+WALLPAPER_PATH=~/.wallpapers
 
 
 ## Export Var
@@ -166,11 +166,11 @@ if [ ! -f ~/.bashrc ];  then
         cp -r /composer/.bashrc ~
 fi
 
-if [ ! -d "$WALLPAPER_PATH" ]; then
+if [ ! -d ~/.wallpapers ]; then
   	# add default wallpapers 
   	# we can't run a link if home dir is configured as a dedicated volume
-  	mkdir "$WALLPAPER_PATH" 
-  	cp -rp /composer/wallpapers/* "$WALLPAPER_PATH" 
+  	mkdir ~/.wallpapers
+  	cp -rp /composer/wallpapers/* ~/.wallpapers
 fi
 
 if [ ! -f ~/.config/user-dirs.dirs ]; then
