@@ -97,8 +97,6 @@ FROM $BASE_IMAGE:$TAG
 # smbclient need to install smb printer
 # cups: printer support
 # add pulseaudio server
-
-
 RUN if [ "${TARGET_MODE}" = "docker" ]; then \
 	apt-get update && apt-get install -y --no-install-recommends \
 		pulseaudio 	\
@@ -109,6 +107,15 @@ RUN if [ "${TARGET_MODE}" = "docker" ]; then \
     	&& apt-get clean	\
     	&& rm -rf /var/lib/apt/lists/* \
     fi
+
+# if TARGET_MODE is kubernest
+# pod is ready to provide
+# sound and printer 
+# remove supervisor file
+RUN if [ "${TARGET_MODE}" = "kubernetes" ]; then \
+	rm -rf /etc/supervisor/conf.d/pulseaudio.conf /etc/supervisor/conf.d/printer-service.conf /etc/supervisor/conf.d/file-service.conf /etc/supervisor/conf.d/cupsd.conf \
+    fi
+
 
 # splitted for debug
 # update replace by default websockify package
