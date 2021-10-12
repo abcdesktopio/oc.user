@@ -4,11 +4,9 @@ ARG TAG=dev
 ARG BASE_IMAGE_RELEASE=18.04
 # Default base image 
 ARG BASE_IMAGE=abcdesktopio/oc.software.18.04
-ARG TARGET_MODE=docker
 
 # --- BEGIN node_modules_builder ---
 FROM $BASE_IMAGE:$TAG as node_modules_builder
-ENV TARGET_MODE=$TARGET_MODE
 
 # 
 #  Add dev package to node install
@@ -87,10 +85,7 @@ RUN make version
 
 # --- START Build image ---
 FROM $BASE_IMAGE:$TAG
-# get build arg TARGET_MODE 
-# and set as env TARGET_MODE
-
-RUN echo "${TARGET_MODE}" > /build_target_mode
+COPY TARGET_MODE /TARGET_MODE
 
 # if TARGET_MODE is docker
 # no pod is ready to provide
@@ -101,7 +96,7 @@ RUN echo "${TARGET_MODE}" > /build_target_mode
 # smbclient need to install smb printer
 # cups: printer support
 # add pulseaudio server
-RUN if [ "${TARGET_MODE}" = "docker" ]; then \
+RUN if [ $(cat /TARGET_MODE) = docker ]; then \
 	apt-get update && apt-get install -y --no-install-recommends \
 		pulseaudio 	\
         	smbclient	\
@@ -113,7 +108,7 @@ RUN if [ "${TARGET_MODE}" = "docker" ]; then \
 # if TARGET_MODE is kubernetes
 # cupsd, pulseaudo printer-service file-service are dedicated container inside the user pod
 # remove supervisor files
-RUN if [ "${TARGET_MODE}" = "kubernetes" ]; then \
+RUN if [ $(cat /TARGET_MODE) = kubernetes ]; then \
 	rm -rf /etc/supervisor/conf.d/pulseaudio.conf /etc/supervisor/conf.d/printer-service.conf /etc/supervisor/conf.d/file-service.conf /etc/supervisor/conf.d/cupsd.conf;\
     fi
 
@@ -169,7 +164,7 @@ RUN date > /etc/build.date
 # Add here commands need to run as sudo user
 # cupsd must be run as root
 # changehomeowner  
-RUN if [ "${TARGET_MODE}" = "docker" ]; then \
+RUN if [ $(cat /TARGET_MODE) = docker ]; then \
 	echo "$BUSER ALL=(root) NOPASSWD: /usr/sbin/cupsd" >> /etc/sudoers.d/cupsd  && \
 	echo "$BUSER ALL=(root) NOPASSWD: /composer/changehomeowner.sh" >> /etc/sudoers.d/changehomeowner; \
     fi
@@ -177,7 +172,7 @@ RUN if [ "${TARGET_MODE}" = "docker" ]; then \
 # if TARGET_MODE is kubernetes
 # kubernetes use a -n init container command, 
 # no need the bash script /composer/changehomeowner.sh
-RUN if [ "${TARGET_MODE}" = "kubernetes" ]; then \
+RUN if [ $(cat /TARGET_MODE) = kubernetes ]; then \
 	rm /composer/changehomeowner.sh; \
     fi
 
