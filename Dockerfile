@@ -111,13 +111,11 @@ RUN if [ "${TARGET_MODE}" = "docker" ]; then \
     	&& apt-get clean && rm -rf /var/lib/apt/lists/*; fi
 
 # if TARGET_MODE is kubernetes
-# pod is ready to provide
-# sound and printer 
-# remove supervisor file
+# cupsd, pulseaudo printer-service file-service are dedicated container inside the user pod
+# remove supervisor files
 RUN if [ "${TARGET_MODE}" = "kubernetes" ]; then \
 	rm -rf /etc/supervisor/conf.d/pulseaudio.conf /etc/supervisor/conf.d/printer-service.conf /etc/supervisor/conf.d/file-service.conf /etc/supervisor/conf.d/cupsd.conf;\
     fi
-
 
 # splitted for debug
 # update replace by default websockify package
@@ -167,7 +165,7 @@ RUN chown -R $BUSER:$BUSER /etc/pulse && \
 RUN date > /etc/build.date
 
 
-# Only in docker mode 
+# if TARGET_MODE is docker
 # Add here commands need to run as sudo user
 # cupsd must be run as root
 # changehomeowner  
@@ -176,6 +174,9 @@ RUN if [ "${TARGET_MODE}" = "docker" ]; then \
 	echo "$BUSER ALL=(root) NOPASSWD: /composer/changehomeowner.sh" >> /etc/sudoers.d/changehomeowner; \
     fi
 
+# if TARGET_MODE is kubernetes
+# kubernetes use a -n init container command, 
+# no need the bash script /composer/changehomeowner.sh
 RUN if [ "${TARGET_MODE}" = "kubernetes" ]; then \
 	rm /composer/changehomeowner.sh; \
     fi
@@ -197,7 +198,8 @@ RUN touch /var/lib/dbus/machine-id
 RUN chown -R $BUSER:$BUSER 				\
 		/var/run/dbus    			\
 		/var/lib/dbus				\
-		/var/lib/dbus/machine-id                   
+		/var/lib/dbus/machine-id  
+		
 # DO NOT CHANGE
 # COPY usr/share/dbus-1/session.conf /usr/share/dbus-1/session.conf
 # COPY usr/share/dbus-1/system.conf  /usr/share/dbus-1/system.conf
