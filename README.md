@@ -37,7 +37,7 @@ git submodule update --init --recursive --remote
 docker buildx build                                     \
   --build-arg TARGET_MODE=docker                        \
   --build-arg BASE_IMAGE_RELEASE=18.04                  \
-  --build-arg BASE_IMAGE=abcdesktopio/oc.software.18.04 \             
+  --build-arg BASE_IMAGE=abcdesktopio/oc.software.18.04 \
   --build-arg TAG=dev                                   \
   --platform linux/amd64                                \
   --output "type=docker"                                \
@@ -61,7 +61,7 @@ git submodule update --init --recursive --remote
 docker buildx build                                     \
   --build-arg TARGET_MODE=kubernetes                    \
   --build-arg BASE_IMAGE_RELEASE=18.04                  \
-  --build-arg BASE_IMAGE=abcdesktopio/oc.software.18.04 \             
+  --build-arg BASE_IMAGE=abcdesktopio/oc.software.18.04 \
   --build-arg TAG=dev                                   \
   --platform linux/amd64                                \
   --output "type=docker"                                \
