@@ -22,8 +22,14 @@ git submodule update --init --recursive --remote
 
 ## Build command
 
+### Build command for docker mode
+
+
+To build the oc.user image in docker mode, set the build arguemnt value `TARGET_MODE` to `docker`
+
 ```
 docker buildx build                                     \
+  --build-arg TARGET_MODE=docker                        \
   --build-arg BASE_IMAGE_RELEASE=18.04                  \
   --build-arg BASE_IMAGE=abcdesktopio/oc.software.18.04 \             
   --build-arg TAG=dev                                   \
@@ -33,9 +39,29 @@ docker buildx build                                     \
   --file ./Dockerfile .                                 \
 ```
 
+
+### Build command for kubernetes mode
+
+
+To build the oc.user image in kubernetes mode, set the build arguemnt value `TARGET_MODE` to `kubernetes`
+
+```
+docker buildx build                                     \
+  --build-arg TARGET_MODE=kubernetes                    \
+  --build-arg BASE_IMAGE_RELEASE=18.04                  \
+  --build-arg BASE_IMAGE=abcdesktopio/oc.software.18.04 \             
+  --build-arg TAG=dev                                   \
+  --platform linux/amd64                                \
+  --output "type=docker"                                \
+  --tag abcdesktopio/oc.user.18.04:dev                  \
+  --file ./Dockerfile .                                 \
+```
+
+
 ## Test command
 
-To test the new image `abcdesktopio/oc.user.18.04:dev`, run the `make-test.sh` command :
+Only docker image format is supported by the `make-test.sh` script.
+To test the new image `abcdesktopio/oc.user.18.04:dev`, run the `make-test.sh` script :
 
 ```
 ./make-test.sh abcdesktopio/oc.user.18.04:dev
