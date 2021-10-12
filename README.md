@@ -28,6 +28,12 @@ git submodule update --init --recursive --remote
 To build the oc.user image in docker mode, set the build arguemnt value `TARGET_MODE` to `docker`
 
 ```
+# clone repos
+git clone https://github.com/abcdesktopio/oc.user.git
+cd oc.user
+git submodule update --init --recursive --remote
+
+# docker build
 docker buildx build                                     \
   --build-arg TARGET_MODE=docker                        \
   --build-arg BASE_IMAGE_RELEASE=18.04                  \
@@ -36,7 +42,7 @@ docker buildx build                                     \
   --platform linux/amd64                                \
   --output "type=docker"                                \
   --tag abcdesktopio/oc.user.18.04:dev                  \
-  --file ./Dockerfile .                                 \
+  --file ./Dockerfile   .
 ```
 
 
@@ -46,6 +52,12 @@ docker buildx build                                     \
 To build the oc.user image in kubernetes mode, set the build arguemnt value `TARGET_MODE` to `kubernetes`
 
 ```
+# clone repos
+git clone https://github.com/abcdesktopio/oc.user.git
+cd oc.user
+git submodule update --init --recursive --remote
+
+# docker build
 docker buildx build                                     \
   --build-arg TARGET_MODE=kubernetes                    \
   --build-arg BASE_IMAGE_RELEASE=18.04                  \
@@ -54,7 +66,7 @@ docker buildx build                                     \
   --platform linux/amd64                                \
   --output "type=docker"                                \
   --tag abcdesktopio/oc.user.18.04:dev                  \
-  --file ./Dockerfile .                                 \
+  --file ./Dockerfile .                                 
 ```
 
 
