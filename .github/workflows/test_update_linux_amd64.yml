@@ -40,10 +40,10 @@ jobs:
     - name: Run Buildx oc.user.${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
           docker buildx build \
+            --build-arg TAGET_MODE=docker \
             --build-arg BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }} \
             --build-arg BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }} \
             --build-arg TAG=dev \
-            --build-arg TAGET_MODE=docker \
             --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
             --platform linux/amd64 \
             --output "type=docker" \
@@ -55,22 +55,25 @@ jobs:
       run: |
         ./make-test.sh abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
         
+    - name: Push image abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
+      run: |
+        docker push abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
+        
     - name: Run Buildx oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
            docker buildx build \
+            --build-arg TAGET_MODE=kubernetes \
             --build-arg BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }} \
             --build-arg BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }} \
             --build-arg TAG=dev \
-            --build-arg TAGET_MODE=kubernetes \
             --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
             --platform linux/amd64 \
             --output "type=docker" \
             --tag abcdesktopio/oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}:dev \
             --file ./Dockerfile .
-
-    - name: Push image abcdesktopio/${{ matrix.BASE_IMAGE_RELEASE }}
+        
+    - name: Push image abcdesktopio/oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}:dev
       run: |
-        docker push abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
         docker push abcdesktopio/oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}:dev
 
   dispatch_oc_user_debuger:
