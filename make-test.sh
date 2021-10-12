@@ -49,6 +49,20 @@ if [ $? -ne 0 ]; then
         exit 1
 fi
 
+MAX_SERVICE_COUNT=9
+echo "Waiting for supervisor status"
+while true
+do
+    SERVICE_COUNT=$(docker exec ${CONTAINER_ID} supervisorctl status | grep RUNNING | wc -l)
+    echo "SERVICE_COUNT=$SERVICE_COUNT/$MAX_SERVICE_COUNT"
+    if [ "$SERVICE_COUNT" -ge "$MAX_SERVICE_COUNT" ]; then
+	    break;
+    fi
+    sleep 1;
+done
+
+
+
 echo "Container services are started"
 echo "Run tests..."
 docker exec ${CONTAINER_ID} bash -e /composer/node/run-tests.sh
