@@ -46,7 +46,7 @@ jobs:
             --build-arg TAGET_MODE=docker \
             --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
             --platform linux/amd64 \
-            --output "type=image,push=true" \
+            --output "type=docker" \
             --tag abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev \
             --file ./Dockerfile .
           
@@ -64,7 +64,7 @@ jobs:
             --build-arg TAGET_MODE=kubernetes \
             --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
             --platform linux/amd64 \
-            --output "type=image,push=true" \
+            --output "type=docker" \
             --tag abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev \
             --file ./Dockerfile .
 
