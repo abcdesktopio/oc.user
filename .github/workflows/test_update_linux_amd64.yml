@@ -65,7 +65,7 @@ jobs:
             --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
             --platform linux/amd64 \
             --output "type=docker" \
-            --tag abcdesktopio/oc.user.kubernetes:${{ matrix.BASE_IMAGE_RELEASE }}:dev \
+            --tag abcdesktopio/oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}:dev \
             --file ./Dockerfile .
 
     - name: Push image abcdesktopio/${{ matrix.BASE_IMAGE_RELEASE }}
