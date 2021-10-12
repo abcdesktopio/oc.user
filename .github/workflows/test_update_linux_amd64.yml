@@ -39,8 +39,8 @@ jobs:
 
     - name: Run Buildx oc.user.${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
+          echo docker > TARGET_MODE
           docker buildx build \
-            --build-arg TAGET_MODE=docker \
             --build-arg BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }} \
             --build-arg BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }} \
             --build-arg TAG=dev \
@@ -61,8 +61,8 @@ jobs:
         
     - name: Run Buildx oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
+           echo kubernetes > TARGET_MODE
            docker buildx build \
-            --build-arg TAGET_MODE=kubernetes \
             --build-arg BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }} \
             --build-arg BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }} \
             --build-arg TAG=dev \
