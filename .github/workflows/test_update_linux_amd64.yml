@@ -46,7 +46,7 @@ jobs:
             --build-arg BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }} \
             --build-arg BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }} \
             --build-arg TAG=dev \
-            --platform linux/amd64,linux/arm/v7,linux/arm64 \
+            --platform linux/amd64 \
             --output "type=docker" \
             --tag abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev \
             --file ./Dockerfile .       
