@@ -47,7 +47,8 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64, linux/arm64
           push: true
-          output: type=docker
+          outputs: |
+            type=docker
           build-args: |
             TAG=dev
             BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }}
