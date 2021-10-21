@@ -363,10 +363,10 @@ export DISABLE_REMOTEIP_FILTERING
 # current_wallpaper
 # if $SET_DEFAULT_WALLPAPER is defined
 if [ ! -z "$SET_DEFAULT_WALLPAPER" ]; then
-        CONFIGSTORE_PATH = "~/.store"
+        CONFIGSTORE_PATH="~/.store"
         # if $SET_DEFAULT_WALLPAPER file exists
         if [ -f "$WALLPAPER_PATH/$SET_DEFAULT_WALLPAPER" ]; then
-                CURRENT_WALLPAPER_FILE = "~/.config/current_wallpaper"
+                CURRENT_WALLPAPER_FILE="~/.config/current_wallpaper"
                 # if a wall_paper as not already been set
                 if [ ! -f "$CURRENT_WALLPAPER_FILE" ]; then
                         # if .config/current_wallpaper does not exist
@@ -389,7 +389,7 @@ fi
 # currentColor
 # currentImgColor
 if [ ! -z "$SET_DEFAULT_COLOR" ]; then
-        CONFIGSTORE_PATH = "~/.store"
+        CONFIGSTORE_PATH="~/.store"
         # if $SET_DEFAULT_WALLPAPER file exists 
         if [ ! -f "$CONFIGSTORE_PATH"/currentColor ]; then
                 echo "$SET_DEFAULT_COLOR" > "$CONFIGSTORE_PATH"/currentColor
