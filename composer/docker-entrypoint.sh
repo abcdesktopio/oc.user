@@ -372,7 +372,7 @@ if [ ! -z "$SET_DEFAULT_WALLPAPER" ]; then
                         # if .config/current_wallpaper does not exist
                         echo "Define wallpaper as $SET_DEFAULT_WALLPAPER to $CURRENT_WALLPAPER_FILE"
                         cp "$WALLPAPER_PATH/$SET_DEFAULT_WALLPAPER" "$CURRENT_WALLPAPER_FILE"
-                        echo "$SET_DEFAULT_WALLPAPER" > "$CONFIGSTORE_PATH"/currentImg
+                        echo -n "$SET_DEFAULT_WALLPAPER" > "$CONFIGSTORE_PATH"/currentImg
                 else
                         echo "$CURRENT_WALLPAPER_FILE exists skipping value $SET_DEFAULT_WALLPAPER"
                 fi
@@ -392,12 +392,12 @@ if [ ! -z "$SET_DEFAULT_COLOR" ]; then
         CONFIGSTORE_PATH=~/.store
         # if $SET_DEFAULT_WALLPAPER file exists 
         if [ ! -f "$CONFIGSTORE_PATH"/currentColor ]; then
-                echo "$SET_DEFAULT_COLOR" > "$CONFIGSTORE_PATH"/currentColor
+                echo -n "$SET_DEFAULT_COLOR" > "$CONFIGSTORE_PATH"/currentColor
         else
                 echo "File $CONFIGSTORE_PATH/currentColor already exist skipping update value"
         fi
         if [ ! -f "$CONFIGSTORE_PATH/currentImgColor" ]; then
-                echo "$SET_DEFAULT_COLOR" > "$CONFIGSTORE_PATH"/currentImgColor
+                echo -n "$SET_DEFAULT_COLOR" > "$CONFIGSTORE_PATH"/currentImgColor
         else
                 echo "File $CONFIGSTORE_PATH/currentImgColor already exist skipping update value"
         fi
