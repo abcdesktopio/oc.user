@@ -21,7 +21,7 @@
     "express-validator": "^6.9.2",
     "geoip-lite": "*",
     "helmet": "^3.20.0",
-    "hex-rgb": "*",
+    "hex-rgb": "^4.3.0",
     "imagemagick": "*",
     "ini": "*",
     "jest": "^26.3.0",
