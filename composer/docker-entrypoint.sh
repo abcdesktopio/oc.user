@@ -13,7 +13,8 @@ WALLPAPER_PATH=~/.wallpapers
 ## Export Var
 export LIBOVERLAY_SCROLLBAR=0
 export UBUNTU_MENUPROXY=
-export DISPLAY=:0
+export DISPLAY=${DISPLAY:-':0.0'}
+export X11LISTEN=${X11LISTEN:-'udp'}
 export HOME=/home/balloon
 export LOGNAME=balloon
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:$HOME/.local/share/applications/bin/"
