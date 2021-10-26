@@ -122,12 +122,12 @@ fi
 if [ ! -d ~/.config/gtk-3.0 ]; then
 	echo "create  ~/.config/gtk-3.0 directory"
         mkdir -p ~/.config/gtk-3.0
-        cp -r /composer/.config/gtk-3.0 ~/.config/gtk-3.0
+        cp -r /composer/.config/gtk-3.0 ~/.config/gtk-3.0 &
 fi
 
 if [ ! -f ~/.config/gtk-3.0/settings.ini ]; then
 	echo "copy ~/.config/gtk-3.0/settings.ini file"
-        cp /composer/.config/gtk-3.0/settings.ini ~/.config/gtk-3.0
+        cp /composer/.config/gtk-3.0/settings.ini ~/.config/gtk-3.0 &
 fi
 
 if [ ! -d ~/.config/nautilus ]; then
@@ -137,16 +137,16 @@ fi
 
 if [ ! -d ~/.themes ]; then
 	echo "create ~/.themes directory"
-	cp -rp /composer/.themes ~
+	cp -rp /composer/.themes ~ &
 fi
 
 if [ ! -f ~/.gtkrc-2.0 ]; then
 	echo "create ~/.gtkrc-2.0 file"
-	cp -rp /composer/.gtkrc-2.0 ~
+	cp -rp /composer/.gtkrc-2.0 ~ &
 fi 
 
 if [ ! -f ~/.xsettings ]; then
-	cp -rp /composer/.xsettings ~
+	cp -rp /composer/.xsettings ~ &
 fi
 
 if [ ! -d ~/.gconf ]; then
@@ -154,12 +154,12 @@ if [ ! -d ~/.gconf ]; then
 fi
 
 if [ ! -d ~/.gconf/apps ]; then
-        cp -rp /composer/.gconf/apps ~/.gconf
-        chmod -R 700 ~/.gconf/apps
+       	cp -rp /composer/.gconf/apps ~/.gconf
+       	chmod -R 700 ~/.gconf/apps
 fi
 
 if [ ! -f ~/.Xressources ];  then
-	cp -p /composer/.Xressources ~ 
+	cp -p /composer/.Xressources ~ &
 fi
 
 if [ ! -f ~/.bashrc ];  then
@@ -178,7 +178,7 @@ if [ ! -f ~/.config/user-dirs.dirs ]; then
   	xdg-user-dirs-update &
 fi 
 
-
+# create .local entries
 mkdir -p ~/.local/share
 mkdir -p ~/.local/share/applications           
 mkdir -p ~/.local/share/applications/bin
@@ -194,7 +194,7 @@ fi
 
 # before starting pulseaudio
 # check if the owner of $HOME belongs to $USER
-# pulseaudio may failed if the owner is not the owner of his dir
+# pulseaudio crash if the home does not belong to user
 if [ -f /composer/checkhomeowner.sh ]; then
   echo "Processing /composer/checkhomeowner.sh file...";
   source /composer/checkhomeowner.sh
@@ -350,7 +350,7 @@ export KUBERNETES_SERVICE_HOST
 if [ -z "$DISABLE_REMOTEIP_FILTERING" ]; then
         DISABLE_REMOTEIP_FILTERING=disabled
 fi  
-if [ "$DISABLE_REMOTEIP_FILTERING"=="enabled" ]; then
+if [ "$DISABLE_REMOTEIP_FILTERING" == "enabled" ]; then
 	echo "DISABLE_REMOTEIP_FILTERING=$DISABLE_REMOTEIP_FILTERING" >> /var/log/desktop/config.log
 else
 	DISABLE_REMOTEIP_FILTERING=disabled
@@ -407,9 +407,6 @@ else
 fi
 
 # end of config setup 
-
-
-
 
 # start supervisord
 /usr/bin/supervisord --pidfile /var/run/desktop/supervisord.pid --nodaemon --configuration /etc/supervisord.conf
