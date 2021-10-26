@@ -4,11 +4,11 @@ COUNTER=0
 # get ubuntu release
 RELEASE=$(lsb_release --release | cut -f2)
 # based services
-# POSTPONE_SERVICE="cupsd pulseaudio printerfile-service"
+POSTPONE_SERVICE="cupsd pulseaudio printerfile-service"
 
-POSTPONE_SERVICE=""
+# POSTPONE_SERVICE=""
 # log info
-echo "RELEASE=$RELEASE"
+echo "RELEASE=$RELEASE" >> /var/log/desktop/postpone.services.log
 # check if ubuntu release is 18.04 or 20.04
 if [[ $RELEASE == "18.04" || $RELEASE == "20.04" ]]; then
         # Add xsettingsd to POSTPONE_SERVICE
