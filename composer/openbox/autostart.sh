@@ -22,6 +22,14 @@ export DISPLAY=:0.0
 #    true $((i=i+1))
 # done
 
+echo "X11LISTEN=$X11LISTEN" > $LOG_FILE
+if [ "$X11LISTEN" == "tcp" ]; then
+	echo "running xhost + command" > $LOG_FILE
+	xhost + > $LOG_FILE
+else
+	echo "Not running xhost command" > $LOG_FILE
+fi
+
 # set fonts for Qt applications
 # Used by Dropbox for exemple 
 xrdb -merge $HOME/.Xressources 2>>$LOG_FILE
@@ -30,4 +38,3 @@ xrdb -merge $HOME/.Xressources 2>>$LOG_FILE
 xsetroot -solid '#6ec6f0' 2>>$LOG_FILE
 
 echo 'End autostart' >> $LOG_FILE
-
