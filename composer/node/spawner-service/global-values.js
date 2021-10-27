@@ -9,10 +9,6 @@ const applist = [
     path: '/usr/bin/xeyes',
   },
   {
-    key: 'nautilus.Nautilus',
-    path: '/usr/bin/nautilus',
-  },
-  {
     key: 'qterminal.qterminal',
     path: '/usr/bin/qterminal',
   },
