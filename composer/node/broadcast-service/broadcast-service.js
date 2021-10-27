@@ -24,6 +24,7 @@ const wss = new WebSocketServer({
 });
 
 function broadcastconnectionlist() {
+  //console.log('start broadcastconnectionlist');
   try {
     const command = '/composer/connectcount.sh';
     ChildProcess.exec(command, (err, stdout, stderr) => {
@@ -40,7 +41,7 @@ function broadcastconnectionlist() {
       }
     });
   } catch (e) {
-    console.log('broadcastconnectionlist failed');
+    console.log('broadcastconnectionlist send message connect.counter failed');
     console.error(e);
   }
 }
@@ -55,6 +56,7 @@ function getstrJSONstatus() {
 }
 
 wss.broadcast = (data) => {
+  console.log(`broadcast: ${data}`);
   wss.clients.forEach((client) => {
     try {
       client.send(data);
@@ -104,8 +106,16 @@ wss.on('connection', async (ws, req) => {
       }
   }
 
+  // first connection
+  // send a broadcast connection list 
+  // to notify connected session of a new session
+  // do not notify local client
   if (remoteAddress !== process.env.CONTAINER_IP_ADDR) {
+    console.log(`calling broadcastconnectionlist for ip ${remoteAddress}`);
     broadcastconnectionlist();
+  }
+  else {
+    console.log(`no call to broadcastconnectionlist for ip ${remoteAddress}`);
   }
 
   ws.on('message', async (message) => {
