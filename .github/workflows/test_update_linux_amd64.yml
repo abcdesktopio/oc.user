@@ -78,8 +78,8 @@ jobs:
       run: |
         docker push abcdesktopio/oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}:dev
         
-    - name: update platform
-      run: curl -X POST -u "${{ secrets.WEBHOOK_USERNAME }}:${{ secrets.WEBHOOK_PASSWORD }}" -d "oc.user.18.04:dev"  ${{ secrets.WEBHOOK_URL }}/image-pull
+    - name: Update platform webhook pull
+      run: curl -X POST -u "${{ secrets.WEBHOOK_USERNAME }}:${{ secrets.WEBHOOK_PASSWORD }}" -d "abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev"  ${{ secrets.WEBHOOK_URL }}/pull
       
 
   dispatch_oc_user_debuger:
