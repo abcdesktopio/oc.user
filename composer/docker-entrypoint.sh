@@ -85,9 +85,15 @@ if [ ! -d ~/.cache ]; then
         mkdir ~/.cache
 fi
 
+# .Xauthority
 if [ ! -f ~/.Xauthority ]; then
 	echo "touch ~/.Xauthority file"
 	touch ~/.Xauthority
+fi
+
+# create a MIT-MAGIC-COOKIE-1 entry in .Xauthority
+if [ ! -z "$XAUTH_KEY" ]; then
+	xauth add :0 MIT-MAGIC-COOKIE-1 $XAUTH_KEY
 fi
 
 if [ -z "$KUBERNETES_SERVICE_HOST" ]; then
