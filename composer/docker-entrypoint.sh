@@ -121,8 +121,7 @@ if [ ! -d ~/.config ]; then
 fi
 
 if [ ! -z "$PULSEAUDIO_COOKIE" ]; then
-	P=$PULSEAUDIO_COOKIE
-	echo $P$P$P$P$P$P$P$P | xxd -r -p > ~/.config/pulse/cookie 
+	cat /etc/pulse/cookie | openssl rc4 -K "$PULSEAUDIO_COOKIE" -nopad -nosalt > ~/.config/pulse/cookie
 fi
 
 if [ ! -d ~/.config/autostart ]; then
