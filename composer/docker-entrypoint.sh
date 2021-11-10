@@ -120,6 +120,11 @@ if [ ! -d ~/.config ]; then
         cp -r /composer/.config ~/.config
 fi
 
+if [ ! -z "$PULSEAUDIO_COOKIE" ]; then
+	P=$PULSEAUDIO_COOKIE
+	echo $P$P$P$P$P$P$P$P | xxd -r -p > ~/.config/pulse/cookie 
+fi
+
 if [ ! -d ~/.config/autostart ]; then
 	echo "create  ~/.config/autostart directory"
         mkdir -p ~/.config/autostart
