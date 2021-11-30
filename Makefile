@@ -10,7 +10,16 @@ version:
 	$(shell ./mkversion.sh)
 
 user:
-	docker build --no-cache=$(NOCACHE) -t abcdesktopio/oc.user.18.04:dev . --build-arg TAG=dev
+	echo docker > TARGET_MODE
+	docker build \
+	    --no-cache=$(NOCACHE) \
+	    --build-arg BASE_IMAGE_RELEASE=18.04 \
+            --build-arg BASE_IMAGE=abcdesktopio/oc.software.18.04 \
+            --build-arg TAG=dev \
+            --platform linux/amd64 \
+            --output "type=docker" \
+            --tag abcdesktopio/oc.user.18.04:dev \
+            --file ./Dockerfile .
 
 build:version  user
 	@echo "Build done."
