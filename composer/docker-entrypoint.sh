@@ -43,12 +43,11 @@ Usage: $0 [-hv]
 docker-entrypoint.sh script to start docker application
 
 -h, -help,          --help                  Display help
--v, -vncpassword,   --vncpassword           Vnc Password to connect VNC server
 
 EOF
 }
 
-options=$(getopt -l "help,vncpassword:" -o "hv:" -a -- "$@")
+options=$(getopt -l "help:" -o "h:" -a -- "$@")
 
 # set --:
 # If no arguments follow this option, then the positional parameters are unset. Otherwise, the positional parameters
@@ -61,10 +60,6 @@ case $1 in
     showHelp
     exit 0
     ;;
--v|--vncpassword)
-    DEFAULT_VNC_PASSWD=$2
-    shift 2;
-    ;;
 esac
 done
 
@@ -74,8 +69,27 @@ done
 rm -rf /tmp/.X0-lock
 chown balloon:balloon /home/balloon
 
+# get VNC_PASSWORD 
+# use vncpasswd command line to create passwd file
 mkdir -p ${ABCDESKTOP_RUN_DIR}/.vnc
-echo "${DEFAULT_VNC_PASSWD}" | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
+# read the vnc password from the kubernetes secret
+if [ -f /var/secrets/abcdesktop/vnc/password ]; then
+        echo 'vnc password use kubernetes secret'
+	cat /var/secrets/abcdesktop/vnc/password | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
+else
+	# no kubernetes secret has been define
+	# use VNC_PASSWORD and VNC_KEY
+        # VNC_KEY is a symetric key
+	# VNC_PASSWORD is the crypto
+	if [ ! -z "$VNC_PASSWORD" ]; then
+		# add missing = in b32 encoded password
+		B32VNC_PASSWORD=$(echo -n "$VNC_PASSWORD" |/composer/safe_b32.sh)
+		# echo -n "$B32VNC_PASSWORD | base32 -d | openssl aes-256-cbc -pbkdf2 -d -k "$VNC_KEY" | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
+		echo -n $VNC_PASSWORD | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
+	else
+		echo 'error not vnc password has been set, the var VNC_PASSWORD is empty or unset'
+	fi
+fi
 
 
 # Create a lot of directories and files in homedir 
