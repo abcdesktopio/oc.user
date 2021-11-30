@@ -127,6 +127,7 @@ RUN apt-get update && apt-get install -y  \
     	python3-pip 		\
 	python3-wheel 		\
 	python3-setuptools 	\
+    && apt autoremove -y        \
     && apt-get clean                    \
     && rm -rf /var/lib/apt/lists/*
 
