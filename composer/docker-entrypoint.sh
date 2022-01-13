@@ -8,19 +8,22 @@ SCRIPT=`basename ${BASH_SOURCE[0]}`
 # Set default mode to Full HD 
 OPT_LOCAL=""
 WALLPAPER_PATH=~/.wallpapers
-
+# ABCDESKTOP_SESSION is a random value 
+# unique for each desktop
+((ABCDESKTOP_SESSION=((RANDOM<<15|RANDOM)<<15|RANDOM)<<15|RANDOM))
 
 ## Export Var
 export LIBOVERLAY_SCROLLBAR=0
 export UBUNTU_MENUPROXY=
 export DISPLAY=${DISPLAY:-':0.0'}
 export X11LISTEN=${X11LISTEN:-'udp'}
-export HOME=/home/balloon
-export LOGNAME=balloon
+export USER=${USER:-'balloon'}
+export HOME=${HOME:-'/home/balloon'}
+export LOGNAME=${LOGNAME:-'balloon'}
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:$HOME/.local/share/applications/bin/"
-export USER=balloon
 export ABCDESKTOP_RUN_DIR='/composer/run'
-
+export DISABLE_REMOTEIP_FILTERING=${DISABLE_REMOTEIP_FILTERING:-'disabled'}
+export BROADCAST_COOKIE=${BROADCAST_COOKIE:-$ABCDESKTOP_SESSION}
 
 # export DBUS_SESSION_BUS_ADDRESS=tcp:host=localhost,bind=*,port=55556,family=ipv4
 
@@ -371,15 +374,6 @@ fi
 # export VAR to running procces
 export KUBERNETES_SERVICE_HOST
 
-if [ -z "$DISABLE_REMOTEIP_FILTERING" ]; then
-        DISABLE_REMOTEIP_FILTERING=disabled
-fi  
-if [ "$DISABLE_REMOTEIP_FILTERING" == "enabled" ]; then
-	echo "DISABLE_REMOTEIP_FILTERING=$DISABLE_REMOTEIP_FILTERING" >> /var/log/desktop/config.log
-else
-	DISABLE_REMOTEIP_FILTERING=disabled
-fi
-export DISABLE_REMOTEIP_FILTERING
 
 # set wallpaper default
 # file in .store
@@ -431,6 +425,11 @@ else
 fi
 
 # end of config setup 
+
+# run dump to log
+echo "KUBERNETES_SERVICE_HOST=$KUBERNETES_SERVICE_HOST" >> /var/log/desktop/config.log
+echo "DISABLE_REMOTEIP_FILTERING=$DISABLE_REMOTEIP_FILTERING" >> /var/log/desktop/config.log
+echo "BROADCAST_COOKIE=$BROADCAST_COOKIE" >> /var/log/desktop/config.log
 
 # start supervisord
 /usr/bin/supervisord --pidfile /var/run/desktop/supervisord.pid --nodaemon --configuration /etc/supervisord.conf
