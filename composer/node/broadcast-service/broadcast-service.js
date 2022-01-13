@@ -92,11 +92,20 @@ wss.unicast = (data) => {
 };
 
 wss.on('connection', async (ws, req) => {
-  console.log('connection');
-  const { remoteAddress } = req.connection;
 
-  if (remoteAddress !== process.env.CONTAINER_IP_ADDR) {
+  console.log('connection');
+  const { remoteAddress }    = req.connection;
+  const { broadcast_cookie } = req.headers;
+  console.log( "remoteAddress=" + remoteAddress );
+  console.log( "broadcast_cookie=" + broadcast_cookie );
+  console.log( "process.env.CONTAINER_IP_ADDR=" + process.env.CONTAINER_IP_ADDR );
+  console.log( "process.env.BROADCAST_COOKIE=" + process.env.BROADCAST_COOKIE );
+  console.log( "dump req.headers" ); 
+  console.log( JSON.stringify(req.headers, null, 4) ); 
+
+  if ( remoteAddress !== process.env.CONTAINER_IP_ADDR && broadcast_cookie !== process.env.BROADCAST_COOKIE ) {
       try {
+	console.log( 'call assertIp(' + remoteAddress + ')' );
         await assertIp(remoteAddress);
       } catch (e) {
         console.log(e);
@@ -104,20 +113,19 @@ wss.on('connection', async (ws, req) => {
         ws.close();
         return;
       }
-  }
+      console.log(`assertIp:connection permit for ip ${remoteAddress}`);
 
-  // first connection
-  // send a broadcast connection list 
-  // to notify connected session of a new session
-  // do not notify local client
-  if (remoteAddress !== process.env.CONTAINER_IP_ADDR) {
-    console.log(`calling broadcastconnectionlist for ip ${remoteAddress}`);
-    broadcastconnectionlist();
+      // first connection
+      // send a broadcast connection list 
+      // to notify connected session of a new session
+      // do not notify local client
+      console.log(`calling broadcastconnectionlist for ip ${remoteAddress}`);
+      broadcastconnectionlist();
   }
   else {
-    console.log(`no call to broadcastconnectionlist for ip ${remoteAddress}`);
+      console.log(`connection permit for ip ${remoteAddress} and broadcast_cookie ${broadcast_cookie}`);	 
   }
-
+  
   ws.on('message', async (message) => {
     console.log('received: %s', message);
     let json;
@@ -159,7 +167,7 @@ wss.on('connection', async (ws, req) => {
 
   ws.on('close', () => {
     console.log('Closed');
-    if (remoteAddress !== process.env.CONTAINER_IP_ADDR) {
+    if (remoteAddress !== process.env.CONTAINER_IP_ADDR && broadcast_cookie !== process.env.BROADCAST_COOKIE ) {
       broadcastconnectionlist();
     }
   });
