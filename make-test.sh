@@ -14,15 +14,6 @@ until [ "`docker inspect -f {{.State.Running}} $CONTAINER_ID`"=="true" ]; do
     sleep 0.1;
 done;
 
-echo "Waiting for X11 service"
-# desktopservicestcpport = { 'x11server': 6081, 'spawner': 29786, 'broadcast': 29784 }"
-# wait for X11 
-docker exec ${CONTAINER_ID} /composer/node/wait-port/node_modules/.bin/wait-port -t $TIMEOUT 6081
-if [ $? -ne 0 ]; then
-	echo "docker exec ${CONTAINER_ID} /composer/node/wait-port/node_modules/.bin/wait-port -t $TIMEOUT 6081 command failed"
-	exit 1
-fi
-
 # get the ip addr of the container
 CONTAINER_IP=$(docker exec ${CONTAINER_ID} hostname -i)
 if [ $? -ne 0 ]; then
@@ -30,6 +21,17 @@ if [ $? -ne 0 ]; then
         docker logs ${CONTAINER_ID}
         exit 1
 fi
+
+
+echo "Waiting for X11 service"
+# desktopservicestcpport = { 'x11server': 6081, 'spawner': 29786, 'broadcast': 29784 }"
+# wait for X11 
+docker exec ${CONTAINER_ID} /composer/node/wait-port/node_modules/.bin/wait-port -t $TIMEOUT $CONTAINER_IP:6081
+if [ $? -ne 0 ]; then
+	echo "docker exec ${CONTAINER_ID} /composer/node/wait-port/node_modules/.bin/wait-port -t $TIMEOUT $CONTAINER_IP:6081 command failed"
+	exit 1
+fi
+
 
 # check if port 29784 is ready
 echo "Waiting for broadcast service"
