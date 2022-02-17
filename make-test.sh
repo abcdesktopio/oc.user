@@ -5,7 +5,7 @@ IMAGE_RELEASE="${1:-$DEFAULT_IMAGE}"
 echo "Run oc.user test for $IMAGE_RELEASE"
 CONTAINER_ID=$(docker run --rm --env TESTING_MODE='true' --env DISABLE_REMOTEIP_FILTERING='enabled' -d $IMAGE_RELEASE )
 # TIMEOUT in milliseconds
-TIMEOUT=30000 
+TIMEOUT=120000 
 
 echo "Container ID: ${CONTAINER_ID}"
 echo "Waiting for ${CONTAINER_ID}.State.Running..."
