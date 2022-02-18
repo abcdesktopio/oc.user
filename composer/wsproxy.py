@@ -1,4 +1,4 @@
-#!/usr/bin/python3.6
+#!/usr/bin/python3
 # EASY-INSTALL-ENTRY-SCRIPT: 'websockify>=0.9.0','console_scripts','websockify'
 __requires__ = 'websockify>=0.9.0'
 import re
