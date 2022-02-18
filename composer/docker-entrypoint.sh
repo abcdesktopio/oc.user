@@ -199,7 +199,11 @@ if [ ! -d ~/.wallpapers ]; then
   	# add default wallpapers 
   	# we can't run a link if home dir is configured as a dedicated volume
   	mkdir ~/.wallpapers
-  	cp -rp /composer/wallpapers/* ~/.wallpapers
+  	cp -rp /composer/wallpapers/* ~/.wallpapers &
+	# if we are in testing mode wait for cp command finnish
+	if [ ! -z "$TESTING_MODE" ]; then
+		wait
+	fi
 fi
 
 if [ ! -f ~/.config/user-dirs.dirs ]; then
@@ -233,7 +237,7 @@ fi
 # source https://stackoverflow.com/questions/10158684/connecting-to-dbus-over-tcp
 if [ ! -f /var/lib/dbus/machine-id ]; then
   echo 'starting dbus-uuidgen > /var/lib/dbus/machine-id' >> /var/log/desktop/dbus.log
-  dbus-uuidgen > /var/lib/dbus/machine-id
+  dbus-uuidgen > /var/lib/dbus/machine-id &
 fi
 
 if [ ! -d /var/run/dbus ]; then 
