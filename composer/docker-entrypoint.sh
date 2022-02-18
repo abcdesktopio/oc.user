@@ -70,7 +70,8 @@ done
 # First start
 # Clean lock 
 rm -rf /tmp/.X0-lock
-chown balloon:balloon /home/balloon
+BALLOON_UID=4096
+chown $BALLOON_UID:$BALLOON_UID /home/balloon
 
 # get VNC_PASSWORD 
 # use vncpasswd command line to create passwd file
@@ -99,7 +100,7 @@ fi
 # 
 if [ ! -d ~/.cache ]; then
 	echo "create ~/.cache directory"
-        mkdir ~/.cache
+        mkdir -p ~/.cache &
 fi
 
 # .Xauthority
@@ -123,12 +124,12 @@ fi
 
 if [ ! -d ~/.store ]; then  
 	echo "create ~/.store directory"
-	mkdir ~/.store
+	mkdir -p ~/.store &
 fi
 
 if [ ! -d ~/Desktop ]; then
 	echo "create ~/Desktop directory"
-        mkdir ~/Desktop
+        mkdir -p ~/Desktop &
 fi
 
 if [ ! -d ~/.config ]; then
@@ -211,13 +212,13 @@ mkdir -p ~/.local/share/applications
 mkdir -p ~/.local/share/applications/bin
 
 if [ ! -d ~/.local/share/icons ]; then
-  	cp -rp /composer/icons ~/.local/share
+  	cp -rp /composer/icons ~/.local/share &
 fi
 
-if [ ! -d ~/.local/share/mime ]; then
-  	cp -rp /composer/mime ~/.local/share
-  	update-mime-database ~/.local/share/mime > /var/log/desktop/update-mime-database.log &
-fi
+# if [ ! -d ~/.local/share/mime ]; then
+  	# cp -rp /composer/mime ~/.local/share
+  	# update-mime-database ~/.local/share/mime > /var/log/desktop/update-mime-database.log &
+# fi
 
 # before starting pulseaudio
 # check if the owner of $HOME belongs to $USER
@@ -354,6 +355,19 @@ if [ -f /etc/cups/cupsd.conf  ]; then
 	# NEVER listening to 127.0.0.1:x for ws hack security 
 	sed -i "s/localhost:631/$CONTAINER_IP_ADDR:631/g" /etc/cups/cupsd.conf 
 fi
+
+# start sshd on demand
+if [ ! -z "$SSHD_ENABLE" ]; then
+	if [ ! -z "$SSHD_NETWORK_INTERFACE" ]; then
+		# only v4  grep 'inet '
+		SSHD_BIND_IPADDR=$(ifconfig $SSHD_NETWORK_INTERFACE | grep 'inet ' |  awk '{ print $2 }')
+	else
+		SSHD_BIND_IPADDR="0.0.0.0"
+	fi
+	SSHD_PORT=${SSHD_PORT:-22}
+	/usr/sbin/sshd -p $SSHD_PORT -o ListenAddress=$SSHD_BIND_IPADDR
+fi
+
 
 if [ ! -z "$KUBERNETES_SERVICE_HOST" ]; then
    echo "starting in kubernetes mode " >> /var/log/desktop/config.log
