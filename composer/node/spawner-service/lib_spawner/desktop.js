@@ -124,6 +124,8 @@ async function generateDesktopFiles(list = []) {
     path,
     executablefilename,
     icon,
+    icon_data,
+    icon_url,
     name,
     launch,
     desktopfile,
@@ -159,6 +161,23 @@ async function generateDesktopFiles(list = []) {
       } catch (e) {
         console.log(e);
       }
+      
+      // check if the icon file exists
+      fs.access(contentdesktop.Icon, fs.F_OK, (err) => {
+	// console.log(err);
+	// file does not exists
+	// decode base64 data it
+	if (icon_data) {
+		console.log( 'writting new icon file ' + contentdesktop.Icon );
+		fs.writeFile( contentdesktop.Icon, icon_data, 'base64', function(err) {
+  			console.log(err);
+		});
+	}
+	else
+	      console.log( 'Icon data is null for file ' + contentdesktop.Icon );
+    	return;
+      });
+
     }
   }
 
