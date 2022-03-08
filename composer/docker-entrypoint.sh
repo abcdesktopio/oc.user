@@ -200,9 +200,14 @@ if [ ! -d ~/.wallpapers ]; then
   	# we can't run a link if home dir is configured as a dedicated volume
   	mkdir ~/.wallpapers
   	cp -rp /composer/wallpapers/* ~/.wallpapers &
+	cp_pid=$!
+	echo "TESTING_MODE=$TESTING_MODE"
 	# if we are in testing mode wait for cp command finnish
 	if [ ! -z "$TESTING_MODE" ]; then
-		wait
+		echo "We are in testing mode, waiting for cp command complete"
+		wait $cp_pid
+		echo "~/.wallpapers dump"
+		ls -la ~/.wallpapers
 	fi
 fi
 
@@ -211,8 +216,8 @@ if [ ! -f ~/.config/user-dirs.dirs ]; then
 fi 
 
 # create .local entries
-mkdir -p ~/.local/share
-mkdir -p ~/.local/share/applications           
+mkdir -p ~/.local/share/icons   
+mkdir -p ~/.local/share/mime
 mkdir -p ~/.local/share/applications/bin
 
 if [ ! -d ~/.local/share/icons ]; then

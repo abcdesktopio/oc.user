@@ -36,12 +36,9 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_TOKEN }}
 
-    - name: Set TARGET_MODE to docker
-      run: |
-          echo docker > TARGET_MODE
-
     - name: Run Buildx oc.user.${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
+          echo docker > TARGET_MODE
           docker buildx build \
             --build-arg BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }} \
             --build-arg BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }} \
@@ -59,12 +56,9 @@ jobs:
       run: |
         docker push abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
  
-    - name: Set TARGET_MODE to kubernetes
-      run: |
-          echo kubernetes > TARGET_MODE
- 
     - name: Run Buildx oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
+         echo kubernetes > TARGET_MODE
          docker buildx build \
           --build-arg BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }} \
           --build-arg BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }} \
