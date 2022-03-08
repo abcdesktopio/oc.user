@@ -170,11 +170,11 @@ fi
 
 if [ ! -f ~/.gtkrc-2.0 ]; then
 	echo "create ~/.gtkrc-2.0 file"
-	cp -rp /composer/.gtkrc-2.0 ~ &
+	cp -rp /composer/.gtkrc-2.0 ~
 fi 
 
-if [ ! -f ~/.xsettings ]; then
-	cp -rp /composer/.xsettings ~ &
+if [ ! -f ~/.xsettingsd ]; then
+	cp -rp /composer/.xsettingsd ~
 fi
 
 if [ ! -d ~/.gconf ]; then
@@ -186,8 +186,8 @@ if [ ! -d ~/.gconf/apps ]; then
        	chmod -R 700 ~/.gconf/apps
 fi
 
-if [ ! -f ~/.Xressources ];  then
-	cp -p /composer/.Xressources ~ &
+if [ ! -f ~/.Xresources ];  then
+	cp -p /composer/.Xresources ~
 fi
 
 if [ ! -f ~/.bashrc ];  then
