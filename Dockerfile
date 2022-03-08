@@ -6,8 +6,9 @@ ARG BASE_IMAGE_RELEASE=18.04
 ARG BASE_IMAGE=abcdesktopio/oc.software.18.04
 
 # --- BEGIN node_modules_builder ---
-FROM $BASE_IMAGE:$TAG as node_modules_builder
+FROM ${BASE_IMAGE}:${TAG} as node_modules_builder
 
+RUN cat /etc/lsb-release
 # 
 #  Add dev package to node install
 ## You may also need development tools to build native addons:
@@ -67,24 +68,20 @@ RUN yarn install
 WORKDIR /composer/node/spawner-service
 RUN yarn install 
 
-WORKDIR /composer/node/lync 
-RUN yarn install
+# WORKDIR /composer/node/lync 
+# RUN yarn install
 
 WORKDIR /composer/node/xterm.js
 RUN yarn install
 
-COPY Makefile /
-COPY mkversion.sh /
-COPY .git /
-
-WORKDIR /
-RUN make version
+# version.json must be created by mkversion.sh nbash script
+COPY composer/version.json /composer/version.json
 
 # --- END node_modules_builder ---
 
 
 # --- START Build image ---
-FROM $BASE_IMAGE:$TAG
+FROM ${BASE_IMAGE}:${TAG}
 COPY TARGET_MODE /TARGET_MODE
 
 # if TARGET_MODE is docker
@@ -211,9 +208,9 @@ RUN chown -R $BUSER:$BUSER 				\
 	/composer/icons					\
 	/composer/.themes				\
 	/composer/.gtkrc-2.0				\
-	/composer/.xsettings				\
+	/composer/.xsettingsd				\
 	/composer/.gconf				\
-	/composer/.Xressources				\
+	/composer/.Xresources				\
 	/composer/.bashrc				\
 	/composer/.cache				
 
