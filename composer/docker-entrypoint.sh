@@ -212,7 +212,7 @@ if [ ! -d ~/.wallpapers ]; then
 fi
 
 if [ ! -f ~/.config/user-dirs.dirs ]; then
-	xdg-user-dirs-update --force
+	xdg-user-dirs-update --force &
 fi 
 
 # create .local entries
