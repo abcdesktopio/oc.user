@@ -152,12 +152,12 @@ async function generateDesktopFiles(list = []) {
         }));
 
         // Add a quick file name based on the seconde part of the launch key
-        const binaryFilename = launch.split('.');
-        if (Array.isArray(binaryFilename) && binaryFilename.length > 1) {
-          const binf = binaryFilename[1].toLowerCase();
-          // a char or more must exists
-          if (binf.length > 0) { fs.symlink(ocrunpath, `/home/balloon/.local/share/applications/bin/${binf}`, () => { }); }
-        }
+        // const binaryFilename = launch.split('.');
+        // if (Array.isArray(binaryFilename) && binaryFilename.length > 1) {
+        //  const binf = binaryFilename[1].toLowerCase();
+        //  // a char or more must exists
+        //  if (binf.length > 0) { fs.symlink(ocrunpath, `/home/balloon/.local/share/applications/bin/${binf}`, () => { }); }
+        // }
       } catch (e) {
         console.log(e);
       }
