@@ -171,7 +171,12 @@ fi
 if [ ! -f ~/.gtkrc-2.0 ]; then
 	echo "create ~/.gtkrc-2.0 file"
 	cp -rp /composer/.gtkrc-2.0 ~
-fi 
+fi
+
+
+if [ ! -f ~/.gtk-bookmarks]; then
+        touch ~/.gtk-bookmarks
+fi
 
 if [ ! -f ~/.xsettingsd ]; then
 	cp -rp /composer/.xsettingsd ~
@@ -214,7 +219,7 @@ fi
 if [ ! -f ~/.config/user-dirs.dirs ]; then
 	echo "run xdg-user-dirs-update"
 	xdg-user-dirs-update --force
-	xdg-user-dirs-update
+	xdg-user-dirs-update &
 fi 
 
 # create .local entries
@@ -344,7 +349,7 @@ fi
 ## END OF KERBEROS
 
 
-# add file date data
+# add file start info timedate data
 echo `date` > ${ABCDESKTOP_RUN_DIR}/start.txt
 
 # Read first ip add
