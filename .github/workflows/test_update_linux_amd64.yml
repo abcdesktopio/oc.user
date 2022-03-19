@@ -38,7 +38,7 @@ jobs:
 
     - name: Run Buildx oc.user.${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
-          echo docker > TARGET_MODE
+          echo "docker" > TARGET_MODE
           make version
           docker buildx build \
             --build-arg BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }} \
@@ -59,7 +59,7 @@ jobs:
  
     - name: Run Buildx oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
-         echo kubernetes > TARGET_MODE
+         echo "kubernetes" > TARGET_MODE
          make version
          docker buildx build \
           --build-arg BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }} \
