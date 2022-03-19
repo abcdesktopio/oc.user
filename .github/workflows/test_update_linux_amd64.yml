@@ -64,7 +64,7 @@ jobs:
       run: |
         docker push abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
  
-     - name: Run Buildx oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}
+    - name: Run Buildx oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
          echo "kubernetes" > TARGET_MODE
          make version
