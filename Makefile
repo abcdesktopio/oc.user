@@ -7,8 +7,7 @@ ifdef $$NOCACHE
 endif
 
 version:
-	$(shell ./mkversion.sh) 
-	cat composer/version.json
+	$(shell ./mkversion.sh)
 
 userdocker1804:
 	echo docker > TARGET_MODE
