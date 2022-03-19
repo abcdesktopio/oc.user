@@ -47,7 +47,7 @@ jobs:
         context: .
         file: ./Dockerfile
         platforms: linux/amd64, linux/arm64
-        push: true
+        push: false
         build-args: |
           TAG=dev
           BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }}
@@ -82,10 +82,6 @@ jobs:
           BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }}
         tags: |
           abcdesktopio/oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}:dev
-        
-    - name: Push image abcdesktopio/oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}:dev
-      run: |
-        docker push abcdesktopio/oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}:dev
         
     # - name: Update platform webhook pull
     #  run: curl -X POST -u "${{ secrets.WEBHOOK_USERNAME }}:${{ secrets.WEBHOOK_PASSWORD }}" -d "abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev"  "${{ secrets.WEBHOOK_URL }}/kubernetes/pull"
