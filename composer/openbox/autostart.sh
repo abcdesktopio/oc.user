@@ -32,7 +32,7 @@ fi
 
 # set fonts for Qt applications
 # Used by Dropbox for exemple 
-xrdb -merge $HOME/.Xressources 2>>$LOG_FILE
+xrdb -merge $HOME/.Xresources 2>>$LOG_FILE
 
 # Change default backgroup color in X11
 xsetroot -solid '#6ec6f0' 2>>$LOG_FILE
