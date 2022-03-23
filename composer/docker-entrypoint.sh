@@ -98,9 +98,10 @@ fi
 
 # Create a lot of directories and files in homedir 
 # 
-if [ ! -d ~/.cache ]; then
-	echo "create ~/.cache directory"
-        mkdir -p ~/.cache &
+if [ ! -L ~/.cache ]; then
+	echo "~/.cache is not a link"
+        rm -rf ~/.cache
+	ln -s ~/.cache /container/.cache
 fi
 
 # .Xauthority
@@ -135,7 +136,7 @@ fi
 if [ ! -d ~/.config ]; then
 	echo "create  ~/.config  directory"
         mkdir -p ~/.config
-        cp -r /composer/.config ~/.config
+        cp -r /composer/.config ~
 fi
 
 if [ ! -z "$PULSEAUDIO_COOKIE" ]; then
@@ -150,7 +151,7 @@ fi
 if [ ! -d ~/.config/gtk-3.0 ]; then
 	echo "create  ~/.config/gtk-3.0 directory"
         mkdir -p ~/.config/gtk-3.0
-        cp -r /composer/.config/gtk-3.0 ~/.config/gtk-3.0 &
+        cp -r /composer/.config/gtk-3.0 ~/.config &
 fi
 
 if [ ! -f ~/.config/gtk-3.0/settings.ini ]; then
@@ -219,6 +220,8 @@ fi
 if [ ! -f ~/.config/user-dirs.dirs ]; then
 	echo "run xdg-user-dirs-update"
 	xdg-user-dirs-update --force
+	export $(grep -v '^#' user-dirs.dirs | xargs -0)
+
 	xdg-user-dirs-update &
 fi 
 
