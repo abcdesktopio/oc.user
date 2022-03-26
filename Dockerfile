@@ -45,34 +45,34 @@ RUN mkdir -p /composer/node/wait-port && cd /composer/node/wait-port && yarn add
 
 # Add nodejs service
 WORKDIR /composer/node/common-libraries
-RUN   yarn install
+RUN   yarn install --production=true
 
 WORKDIR /composer/node/broadcast-service
-RUN yarn install 
+RUN yarn install --production=true
 
 WORKDIR /composer/node/ocrun
-RUN yarn install 
+RUN yarn install --production=true
 
 WORKDIR /composer/node/ocdownload
-RUN yarn install
+RUN yarn install --production=true
 
 WORKDIR /composer/node/occall
-RUN yarn install
+RUN yarn install --production=true
 
 WORKDIR /composer/node/file-service
-RUN yarn install 
+RUN yarn install --production=true
 
 WORKDIR /composer/node/printer-service
-RUN yarn install
+RUN yarn install --production=true
 
 WORKDIR /composer/node/spawner-service
-RUN yarn install 
+RUN yarn install --production=true
 
 # WORKDIR /composer/node/lync 
 # RUN yarn install
 
 WORKDIR /composer/node/xterm.js
-RUN yarn install
+RUN yarn install --production=true
 
 # version.json must be created by mkversion.sh nbash script
 COPY composer/version.json /composer/version.json
