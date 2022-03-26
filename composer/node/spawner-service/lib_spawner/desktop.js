@@ -162,20 +162,25 @@ async function generateDesktopFiles(list = []) {
         console.log(e);
       }
       
-      // check if the icon file exists
       fs.access(contentdesktop.Icon, fs.F_OK, (err) => {
-	// console.log(err);
-	// file does not exists
-	// decode base64 data it
-	if (icon_data) {
-		console.log( 'writting new icon file ' + contentdesktop.Icon );
-		fs.writeFile( contentdesktop.Icon, icon_data, 'base64', function(err) {
-  			console.log(err);
-		});
-	}
-	else
-	      console.log( 'Icon data is null for file ' + contentdesktop.Icon );
-    	return;
+        // console.log(err);
+        // file does not exists
+        // decode base64 data it
+        if (err) {
+        if (icon_data) {
+            console.log( 'writing new icon file ' + contentdesktop.Icon );
+            fs.writeFile(   contentdesktop.Icon, 
+                            icon_data,
+                            'base64',
+                            (err) => {
+                                if (err)
+                                    console.log('error in write icon file ' + contentdesktop.Icon + ' ' + err);
+                            } 
+            );
+        }
+        else
+            console.log( 'Icon data is null for file ' + contentdesktop.Icon );
+        }
       });
 
     }
