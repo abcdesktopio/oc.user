@@ -38,16 +38,23 @@ jobs:
 
     - name: Run Buildx oc.user.${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
-          echo docker > TARGET_MODE
+          echo "docker" > TARGET_MODE
           make version
-          docker buildx build \
-            --build-arg BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }} \
-            --build-arg BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }} \
-            --build-arg TAG=dev \
-            --platform linux/amd64 \
-            --output "type=docker" \
-            --tag abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev \
-            --file ./Dockerfile .       
+     
+    - name: Build and push docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ./Dockerfile
+        platforms: linux/amd64, linux/arm64
+        push: false
+        build-args: |
+          TAG=dev
+          BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }}
+          BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }}
+        tags: |
+          abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
+
             
     - name: Run and test docker image abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
       run: |
@@ -59,20 +66,22 @@ jobs:
  
     - name: Run Buildx oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
-         echo kubernetes > TARGET_MODE
+         echo "kubernetes" > TARGET_MODE
          make version
-         docker buildx build \
-          --build-arg BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }} \
-          --build-arg BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }} \
-          --build-arg TAG=dev \
-          --platform linux/amd64 \
-          --output "type=docker" \
-          --tag abcdesktopio/oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}:dev \
-          --file ./Dockerfile .
-        
-    - name: Push image abcdesktopio/oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}:dev
-      run: |
-        docker push abcdesktopio/oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}:dev
+         
+    - name: Build and push kubernetes image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ./Dockerfile
+        platforms: linux/amd64, linux/arm64
+        push: true
+        build-args: |
+          TAG=dev
+          BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }}
+          BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }}
+        tags: |
+          abcdesktopio/oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}:dev
         
     # - name: Update platform webhook pull
     #  run: curl -X POST -u "${{ secrets.WEBHOOK_USERNAME }}:${{ secrets.WEBHOOK_PASSWORD }}" -d "abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev"  "${{ secrets.WEBHOOK_URL }}/kubernetes/pull"
