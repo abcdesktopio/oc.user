@@ -175,7 +175,7 @@ if [ ! -f ~/.gtkrc-2.0 ]; then
 fi
 
 
-if [ ! -f ~/.gtk-bookmarks]; then
+if [ ! -f ~/.gtk-bookmarks ]; then
         touch ~/.gtk-bookmarks
 fi
 
