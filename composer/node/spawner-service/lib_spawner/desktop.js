@@ -130,8 +130,7 @@ async function generateDesktopFiles(list = []) {
     launch,
     desktopfile,
   } of list) {
-    if (mimetype
-      && path
+    if ( path
       && executablefilename
       && icon
       && name
@@ -142,7 +141,8 @@ async function generateDesktopFiles(list = []) {
       const contentdesktop = {};
       contentdesktop.Name = name;
       contentdesktop.Exec = `/home/balloon/.local/share/applications/bin/${launch} %U`;
-      contentdesktop.MimeType = `${mimetype.join(';')};`;
+      if (mimetype && mimetype.length > 0)
+        contentdesktop.MimeType = `${mimetype.join(';')};`;
       contentdesktop.Type = 'Application';
       contentdesktop.Icon = `/home/balloon/.local/share/icons/${icon}`;
       try {
