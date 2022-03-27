@@ -31,11 +31,13 @@ const pathPulseSocket = path.join('/', 'tmp', '.pulse.sock');
 async function watchForASocket(pathSoket, onSocketCreated, onSocketDeleted) {
   let socketExist = false;
 
+  console.log(`watchForASocket ${pathSoket} is starting`);
   const options = {
     persistent: true,
   };
 
   try {
+    console.log(`fs.promises.access ${pathSoket} is checking for F_OK`);
     await fs.promises.access(pathSoket, fs.constants.F_OK);
     console.log(`Socket ${pathSoket} was up before the running of spawner`);
     socketExist = true;
@@ -160,6 +162,7 @@ function routerInit(router) {
 
 watchForASocket(pathPulseSocket, async function handlerForPulseaudioSocket () {
   //Name the callback to be able of identify the caller of [configureWebRTCStream] function
+  console.log( 'handlerForPulseaudioSocket is starting' );
   global.audioConf.pulseAudioSocketIsUp = true;
   try {
     await global.audioConf.configureWebRTCStream('handlerForPulseaudioSocket');
@@ -176,6 +179,7 @@ watchForASocket(pathPulseSocket, async function handlerForPulseaudioSocket () {
 });
 
 watchForASocket(pathSocketCups, async () => {
+  console.log( 'handlerForCupsSocket is starting' );
   try {
     await broadcastevent('printer.available', true);
   } catch(e) {
