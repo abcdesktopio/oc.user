@@ -228,24 +228,18 @@ RUN chown -R $BUSER:$BUSER 				\
 	/composer/.gtkrc-2.0				\
 	/composer/.xsettingsd				\
 	/composer/.gconf				\
-	/composer/.Xresources				\
-	/composer/.bashrc				
-
-
+	/composer/.Xresources
 
 # install the abcdesktop openbox package
 COPY --from=mutter *.deb  /tmp/
 WORKDIR /tmp
 RUN apt-get update && \
     apt-get install -y --no-install-recommends  \
-	libcanberra-gtk3-0 	\
-	$(apt-cache search libgnome-desktop | awk '{print $1 }' | grep -v dev) \
-	libupower-glib3 	\
-	libxcb-res0		&& \  
-    apt-get install -y  --no-install-recommends ./mutter-common*.deb          && \
-    apt-get install -y  --no-install-recommends ./libmutter-?-0*.deb        && \
-    apt-get install -y  --no-install-recommends ./gir1.2-mutter-*.deb           && \
-    apt-get install -y  --no-install-recommends ./mutter_3.*.deb        	&& \   
+	mutter				&& \
+    apt-get install -y --no-install-recommends ./mutter-common*.deb          && \
+    apt-get install -y --no-install-recommends ./libmutter-?-0*.deb          && \
+    apt-get install -y --no-install-recommends ./gir1.2-mutter-*.deb         && \
+    apt-get install -y --no-install-recommends ./mutter_3.*.deb        	&& \   
     rm -rf /tmp/*.deb			&& \
     apt-get clean  			&& \
     rm -rf /var/lib/apt/lists/*
