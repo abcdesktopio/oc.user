@@ -196,11 +196,6 @@ if [ ! -f ~/.Xresources ];  then
 	cp -p /composer/.Xresources ~
 fi
 
-if [ ! -f ~/.bashrc ];  then
-	# we can't run a link if home dir is configured as a dedicated volume
-        cp -r /composer/.bashrc ~
-fi
-
 if [ ! -d ~/.wallpapers ]; then
   	# add default wallpapers 
   	# we can't run a link if home dir is configured as a dedicated volume
