@@ -9,7 +9,6 @@
     "test": "jest --bail"
   },
   "dependencies": {
-    "http-proxy": "*",
     "jest": "^27.5.1",
     "oc.user.libraries": "^1.0.1",
     "supertest": "^4.0.2",

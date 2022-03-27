@@ -39,7 +39,7 @@ jobs:
     - name: Run Buildx oc.user.${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
           echo "docker" > TARGET_MODE
-          make version
+          ./mkversion.sh
      
     - name: Build and push docker image
       uses: docker/build-push-action@v2
