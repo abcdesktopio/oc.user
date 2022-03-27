@@ -5,6 +5,9 @@ ARG BASE_IMAGE_RELEASE=18.04
 # Default base image 
 ARG BASE_IMAGE=abcdesktopio/oc.software.18.04
 
+
+FROM abcdesktopio/mutter:${BASE_IMAGE_RELEASE} AS mutter
+
 # --- BEGIN node_modules_builder ---
 FROM ${BASE_IMAGE}:${TAG} as node_modules_builder
 
@@ -45,34 +48,34 @@ RUN mkdir -p /composer/node/wait-port && cd /composer/node/wait-port && yarn add
 
 # Add nodejs service
 WORKDIR /composer/node/common-libraries
-RUN   yarn install
+RUN   yarn install --production=true
 
 WORKDIR /composer/node/broadcast-service
-RUN yarn install 
+RUN yarn install  --production=true
 
 WORKDIR /composer/node/ocrun
-RUN yarn install 
+RUN yarn install  --production=true
 
 WORKDIR /composer/node/ocdownload
-RUN yarn install
+RUN yarn install --production=true
 
 WORKDIR /composer/node/occall
-RUN yarn install
+RUN yarn install --production=true
 
 WORKDIR /composer/node/file-service
-RUN yarn install 
+RUN yarn install --production=true
 
 WORKDIR /composer/node/printer-service
-RUN yarn install
+RUN yarn install --production=true
 
 WORKDIR /composer/node/spawner-service
-RUN yarn install 
+RUN yarn install --production=true
 
 # WORKDIR /composer/node/lync 
 # RUN yarn install
 
 WORKDIR /composer/node/xterm.js
-RUN yarn install
+RUN yarn install --production=true
 
 # version.json must be created by mkversion.sh nbash script
 COPY composer/version.json /composer/version.json
@@ -106,7 +109,10 @@ RUN if [ $(cat /TARGET_MODE) = docker ]; then \
 # cupsd, pulseaudo printer-service file-service are dedicated container inside the user pod
 # remove supervisor files
 RUN if [ $(cat /TARGET_MODE) = kubernetes ]; then \
-	rm -rf /etc/supervisor/conf.d/pulseaudio.conf /etc/supervisor/conf.d/printer-service.conf /etc/supervisor/conf.d/file-service.conf /etc/supervisor/conf.d/cupsd.conf;\
+	rm -rf 	/etc/supervisor/conf.d/pulseaudio.conf \
+		/etc/supervisor/conf.d/printer-service.conf \
+		/etc/supervisor/conf.d/file-service.conf \
+		/etc/supervisor/conf.d/cupsd.conf;\
     fi
 
 # splitted for debug
@@ -128,7 +134,10 @@ RUN apt-get update && apt-get install -y  \
     && apt-get clean                    \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=node_modules_builder /composer  /composer
+COPY --from=node_modules_builder 	/composer  		/composer
+COPY --from=abcdesktopio/oc.themes 	/usr/share/icons  	/usr/share/icons
+COPY --from=abcdesktopio/oc.themes 	/usr/share/themes 	/usr/share/themes
+
 
 # Add 
 RUN adduser root lpadmin 
@@ -183,7 +192,14 @@ RUN touch /usr/bin/ntlm_auth.desktop
 # LOG AND PID SECTION
 RUN mkdir -p 	/var/log/desktop \ 
         	/var/run/desktop \
-        	/composer/run
+        	/composer/run	 \
+		/container/.cache 	 
+
+# XDG
+RUN mkdir -p  	/run/user/4096	&& \
+    chown $BUSER:$BUSER /run/user/4096 && \
+    chmod 700 /run/user/4096 
+    
 
 ## DBUS SECTION
 RUN mkdir -p    /var/run/dbus      
@@ -200,6 +216,8 @@ RUN chown -R $BUSER:$BUSER 				\
 
 # change access rights
 RUN chown -R $BUSER:$BUSER 				\
+	/container					\
+	/container/.cache                               \  
 	/etc/X11/openbox				\
 	/var/log/desktop				\
 	/var/run/desktop				\
@@ -211,8 +229,33 @@ RUN chown -R $BUSER:$BUSER 				\
 	/composer/.xsettingsd				\
 	/composer/.gconf				\
 	/composer/.Xresources				\
-	/composer/.bashrc				\
-	/composer/.cache				
+	/composer/.bashrc				
+
+
+
+# install the abcdesktop openbox package
+COPY --from=mutter *.deb  /tmp/
+WORKDIR /tmp
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends  \
+	libcanberra-gtk3-0 	\
+	$(apt-cache search libgnome-desktop | awk '{print $1 }' | grep -v dev) \
+	libupower-glib3 	\
+	libxcb-res0		&& \  
+    apt-get install -y  --no-install-recommends ./mutter-common*.deb          && \
+    apt-get install -y  --no-install-recommends ./libmutter-?-0*.deb        && \
+    apt-get install -y  --no-install-recommends ./gir1.2-mutter-*.deb           && \
+    apt-get install -y  --no-install-recommends ./mutter_3.*.deb        	&& \   
+    rm -rf /tmp/*.deb			&& \
+    apt-get clean  			&& \
+    rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends  \
+	libglib2.0-bin				\
+    && \
+    apt-get clean                       && \
+    rm -rf /var/lib/apt/lists/*
 
 # Clean unecessary package
 # but it's too late
