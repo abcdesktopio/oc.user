@@ -2,7 +2,7 @@
   "name": "spawner-service",
   "main": "spawner-service.js",
   "private": true,
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Node.js spawner service",
   "author": "Alexandre DEVELY",
   "scripts": {
@@ -17,14 +17,14 @@
     "diacritics": "*",
     "dominant-color": "*",
     "express": "*",
-    "express-async-handler": "^1.1.4",
-    "express-validator": "^6.9.2",
+    "express-async-handler": "^1.2.0",
+    "express-validator": "^6.14.0",
     "geoip-lite": "*",
-    "helmet": "^3.20.0",
+    "helmet": "^5.0.2",
     "hex-rgb": "^4.3.0",
     "imagemagick": "*",
     "ini": "*",
-    "jest": "^26.3.0",
+    "jest": "^27.5.1",
     "mime-types": "*",
     "mmmagic": "*",
     "node-addon-api": "^3.1.0",
@@ -40,8 +40,8 @@
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.21.2",
     "eslint-plugin-jest": "^24.1.0",
-    "supertest": "^4.0.2",
-    "swagger-jsdoc": "^4.2.3",
+    "supertest": "^6.2.2",
+    "swagger-jsdoc": "^6.1.0",
     "widdershins": "^4.0.1"
   }
 }
