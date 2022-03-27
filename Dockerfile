@@ -51,10 +51,10 @@ WORKDIR /composer/node/common-libraries
 RUN   yarn install --production=true
 
 WORKDIR /composer/node/broadcast-service
-RUN yarn install  --production=true
+RUN yarn install --production=true
 
 WORKDIR /composer/node/ocrun
-RUN yarn install  --production=true
+RUN yarn install --production=true
 
 WORKDIR /composer/node/ocdownload
 RUN yarn install --production=true
