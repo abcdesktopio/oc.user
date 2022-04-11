@@ -136,17 +136,17 @@ async function generateDesktopFiles(list = []) {
       && name
       && launch
       && desktopfile) {
-      const filepath = `/home/balloon/.local/share/applications/${desktopfile}`;
+      const filepath = `${roothomedir}/.local/share/applications/${desktopfile}`;
 
       const contentdesktop = {};
       contentdesktop.Name = name;
-      contentdesktop.Exec = `/home/balloon/.local/share/applications/bin/${launch} %U`;
+      contentdesktop.Exec = `${roothomedir}/.local/share/applications/bin/${launch} %U`;
       if (mimetype && mimetype.length > 0)
         contentdesktop.MimeType = `${mimetype.join(';')};`;
       contentdesktop.Type = 'Application';
-      contentdesktop.Icon = `/home/balloon/.local/share/icons/${icon}`;
+      contentdesktop.Icon = `${roothomedir}/.local/share/icons/${icon}`;
       try {
-        fs.symlink(ocrunpath, `/home/balloon/.local/share/applications/bin/${launch}`, () => { });
+        fs.symlink(ocrunpath, `${roothomedir}/.local/share/applications/bin/${launch}`, () => { });
         await fs.promises.writeFile(filepath, ini.stringify(contentdesktop, {
           section: 'Desktop Entry',
         }));
