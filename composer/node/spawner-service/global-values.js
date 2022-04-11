@@ -1,6 +1,6 @@
 const which = require('which');
-
-const roothomedir = '/home/balloon';
+const process = require('process');
+const roothomedir = `${process.env.HOME}`;
 const pathVersion = '/composer/version.json';
 
 const applist = [
