@@ -164,10 +164,10 @@ if [ ! -d ~/.config/nautilus ]; then
         mkdir -p ~/.config/nautilus
 fi
 
-if [ ! -d ~/.themes ]; then
-	echo "create ~/.themes directory"
-	cp -rp /composer/.themes ~ &
-fi
+# if [ ! -d ~/.themes ]; then
+#	echo "create ~/.themes directory"
+#	cp -rp /composer/.themes ~ &
+# fi
 
 if [ ! -f ~/.gtkrc-2.0 ]; then
 	echo "create ~/.gtkrc-2.0 file"
