@@ -1,6 +1,7 @@
 const fs = require('fs');
 const supertest = require('supertest');
 const WebSocketClient = require('ws');
+const { roothomedir } = require('../global-values');
 
 const {
   callbackExpectOk,
@@ -17,7 +18,7 @@ const request = supertest(`http://${process.env.CONTAINER_IP}:29786`);
 const buri = `ws://${process.env.CONTAINER_IP}:29784`;
 
 describe('Test screen-mode endpoints', () => {
-  const wallpapers = fs.readdirSync('/home/balloon/.wallpapers');
+  const wallpapers = fs.readdirSync(`${roothomedir}/.wallpapers`);
 
   describe('Tests for setBackgroundColor', () => {
     it('Should forbidden because of no color provided', () => {
@@ -120,10 +121,10 @@ describe('Test screen-mode endpoints', () => {
 
     for (const imgName of wallpapers) {
       it(`Should change background image and check the expected color for img [${imgName}]`, async () => {
-        const color = await covercolor(`/home/balloon/.wallpapers/${imgName}`);
+        const color = await covercolor(`${roothomedir}/.wallpapers/${imgName}`);
         const col = colortohashstring(color);
         const expected = { code: 200, data: { color: col, subData: 'ok' } };
-	console.log( `using wallpaper file /home/balloon/.wallpapers/${imgName}` );
+	console.log( `using wallpaper file ${roothomedir}/.wallpapers/${imgName}` );
         return request
           .post('/spawner/setBackgroundImage')
           .send({ imgName })
@@ -136,7 +137,7 @@ describe('Test screen-mode endpoints', () => {
         const ws = new WebSocketClient(buri);
         return new Promise(async (resolve, reject) => {
           try {
-            const color = await covercolor(`/home/balloon/.wallpapers/${imgName}`);
+            const color = await covercolor(`${roothomedir}/.wallpapers/${imgName}`);
             const col = colortohashstring(color);
             const expected = { code: 200, data: { color: col, subData: 'ok' } };
             ws.on('message', (msg) => {
@@ -162,7 +163,7 @@ describe('Test screen-mode endpoints', () => {
 
   describe('Tests for setDefaultImage', () => {
     beforeAll(() => { // Remove the current wallpaper builded by the previous setBackgroundImage
-      fs.unlinkSync('/home/balloon/.config/current_wallpaper');
+      fs.unlinkSync(`${roothomedir}/.config/current_wallpaper`);
     });
 
     it('Should get a not found', () => {
@@ -174,7 +175,7 @@ describe('Test screen-mode endpoints', () => {
 
     for (const imgName of wallpapers) {
       it(`Should setDefaultImage for img [${imgName}]`, async () => {
-        const color = await covercolor(`/home/balloon/.wallpapers/${imgName}`);
+        const color = await covercolor(`${roothomedir}/.wallpapers/${imgName}`);
         const col = colortohashstring(color);
         const expected = { code: 200, data: { color: col, subData: 'ok' } };
 
@@ -197,7 +198,7 @@ describe('Test screen-mode endpoints', () => {
 
         return new Promise(async (resolve, reject) => {
           try {
-            const color = await covercolor(`/home/balloon/.wallpapers/${imgName}`);
+            const color = await covercolor(`${roothomedir}/.wallpapers/${imgName}`);
             const col = colortohashstring(color);
             const expected = { code: 200, data: { color: col, subData: 'ok' } };
 
