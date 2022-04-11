@@ -224,32 +224,31 @@ RUN chown -R $BUSER:$BUSER 				\
 	/composer/run					\
 	/composer/mime					\
 	/composer/icons					\
-	/composer/.themes				\
 	/composer/.gtkrc-2.0				\
 	/composer/.xsettingsd				\
 	/composer/.gconf				\
 	/composer/.Xresources
 
 # install the abcdesktop openbox package
-COPY --from=mutter *.deb  /tmp/
-WORKDIR /tmp
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends  \
-	mutter				&& \
-    apt-get install -y --no-install-recommends ./mutter-common*.deb          && \
-    apt-get install -y --no-install-recommends ./libmutter-?-0*.deb          && \
-    apt-get install -y --no-install-recommends ./gir1.2-mutter-*.deb         && \
-    apt-get install -y --no-install-recommends ./mutter_3.*.deb        	&& \   
-    rm -rf /tmp/*.deb			&& \
-    apt-get clean  			&& \
-    rm -rf /var/lib/apt/lists/*
+# COPY --from=mutter *.deb  /tmp/
+# WORKDIR /tmp
+#RUN apt-get update && \
+#    apt-get install -y --no-install-recommends  \
+#	mutter				&& \
+#    apt-get install -y --no-install-recommends ./mutter-common*.deb          && \
+#    apt-get install -y --no-install-recommends ./libmutter-?-0*.deb          && \
+#    apt-get install -y --no-install-recommends ./gir1.2-mutter-*.deb         && \
+#    apt-get install -y --no-install-recommends ./mutter_3.*.deb        	&& \   
+#    rm -rf /tmp/*.deb			&& \
+#    apt-get clean  			&& \
+#    rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends  \
-	libglib2.0-bin				\
-    && \
-    apt-get clean                       && \
-    rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && \
+#    apt-get install -y --no-install-recommends  \
+#	libglib2.0-bin				\
+#    && \
+#    apt-get clean                       && \
+#    rm -rf /var/lib/apt/lists/*
 
 # Clean unecessary package
 # but it's too late
