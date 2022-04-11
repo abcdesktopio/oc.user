@@ -1,6 +1,6 @@
 const supertest = require('supertest');
 const fs = require('fs');
-
+const { roothomedir } = require('../global-values');
 const request = supertest(`http://${process.env.CONTAINER_IP}:29786`);
 
 const {
@@ -152,12 +152,12 @@ describe('Test desktop endpoints', () => {
     });
 
     it('Should provide file created', () => {
-      fs.writeFileSync('/home/balloon/test', 'TEST');
+      fs.writeFileSync(`${roothomedir}/test`, 'TEST');
       const expected = {
         code: 200,
         data: [
           {
-            file: '/home/balloon/test',
+            file: `${roothomedir}/test`,
             mime: false,
           },
         ],
@@ -168,11 +168,11 @@ describe('Test desktop endpoints', () => {
         .then(callBackExpect(expected));
     });
 
-    const walpapersPath = '/home/balloon/.wallpapers';
+    const walpapersPath = `${roothomedir}/.wallpapers`;
     for (const [index, file] of fs.readdirSync(walpapersPath).entries()) {
       const newFilename = `${index}.jpg`;
       const filePath = `${walpapersPath}/${file}`;
-      const newPath = `/home/balloon/${newFilename}`;
+      const newPath = `${roothomedir}/${newFilename}`;
       fs.copyFileSync(filePath, newPath);
       it(`Should get path and mime for file [${file}]`, () => {
         const expected = { code: 200, data: [{ file: newPath, mime: 'image/jpeg' }] };
