@@ -73,11 +73,8 @@ function getEnvDefault() {
     DISPLAY: ':0',
     UBUNTU_MENUPROXY: '0',
     LIBOVERLAY_SCROLLBAR: '0',
-    HOME: '/home/balloon',
-    LOGNAME: 'balloon',
-    USER: 'balloon',
     SHELL: '/bin/bash',
-    PATH: '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/balloon/.local/share/applications/bin',
+    PATH: `/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:${roothomedir}/.local/share/applications/bin`,
     UID: 4096,
     EUID: 4096,
     LANGUAGE: l,
@@ -134,7 +131,7 @@ function spawnBroadwayProcess(
     let cmd;
     const cmdOptions = {
       env: myprocess.env,
-      cwd: '/home/balloon',
+      cwd: roothomedir,
     };
 
     if (options.sync) {
