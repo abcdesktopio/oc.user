@@ -45,7 +45,7 @@
 	<filenamepid>/var/run/desktop/spawner.pid</filenamepid>
   </notify>
   <theme>
-    <name>Numix</name>
+    <name>Arc_OSX</name>
     <titleLayout>NLIMC</titleLayout>
     <!--
       available characters are NDSLIMC, each can occur at most once.
