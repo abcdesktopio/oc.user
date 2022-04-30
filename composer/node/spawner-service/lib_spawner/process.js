@@ -67,6 +67,7 @@ function getEnvDefault() {
   const lUtf8 = `${l}.UTF-8`;
 
   console.log(`getEnvDefault: language is: ${globalValues.language}`);
+  const roothomedir=globalValues.roothomedir;
 
   // override env
   const env = {
@@ -125,6 +126,7 @@ function spawnBroadwayProcess(
   // Convert list of arguments into a simple array
   // used by nodejs spawn call
   const aargs = [...args];
+  const roothomedir=globalValues.roothomedir;
 
   console.log('spawn command: %s %s', command, aargs.toString());
   try {
