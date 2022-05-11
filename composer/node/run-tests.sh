@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 # set vars for test mode
 export DISPLAY=:0.0

@@ -6,10 +6,6 @@ apt-get update && apt-get install -y libxmu-dev
 
 echo "install /composer/node/spawner-service"
 cd /composer/node/spawner-service
-/composer/node/spawner-service/node_modules/yarn/bin/yarn install
-
-echo "install /composer/node/spawner-service"
-cd /composer/node/spawner-service
 yarn install
 
 echo "install /composer/node/file-service"
@@ -25,4 +21,3 @@ cd /composer/node/xterm.js
 yarn install
 
 echo "full install yarn done"
-~                                                
