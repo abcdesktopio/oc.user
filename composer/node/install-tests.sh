@@ -21,4 +21,3 @@ cd /composer/node/xterm.js
 yarn install
 
 echo "full install yarn done"
-~                                                
