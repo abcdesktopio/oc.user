@@ -75,10 +75,10 @@ const callBackExpect = (expected, expectedStatus = 200) => (res) => {
   const { body } = res;
 
   if (res.status === 500) {
-    if (body)
-	console.warn( body );
-    if (body)
+    if (body) {
+	console.log( body );
     	expect(body).toEqual({ code: 500, data: 'Internal server error' });
+    }
     console.warn('Internal server error but it was handled');
   } else {
     expect(expectedStatus).toBe(res.status);
