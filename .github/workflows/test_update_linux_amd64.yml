@@ -11,6 +11,10 @@ on:
       dispatch-from-file-service,
       dispatch-from-printer-service
     ]
+    
+env:
+  TEST_TAG: abcdesktopio/oc.user:test
+  
 jobs:
   update_image:
     runs-on: ubuntu-latest
@@ -41,29 +45,36 @@ jobs:
           echo "docker" > TARGET_MODE
           ./mkversion.sh
      
-    - name: Build and push docker image
+    - name: Build test image
       uses: docker/build-push-action@v3
       with:
         context: .
         file: ./Dockerfile
         platforms: linux/amd64
-        push: false
         load: true
         build-args: |
           TAG=dev
           BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }}
           BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }}
-        tags: |
-          abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
+        tags: ${{ env.TEST_TAG }}
 
-            
-    - name: Run and test docker image abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
+    - name: Run and test docker image ${{ env.TEST_TAG }}
       run: |
-        ./make-test.sh abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
-        
-    - name: Push image abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
-      run: |
-        docker push abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
+        ./make-test.sh ${{ env.TEST_TAG }}
+    
+    - name: Build and push docker image
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        file: ./Dockerfile
+        platforms: linux/amd64, linux/arm64
+        push: true
+        build-args: |
+          TAG=dev
+          BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }}
+          BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }}
+        tags: abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
+  
  
     - name: Run Buildx oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
