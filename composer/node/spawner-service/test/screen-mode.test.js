@@ -124,7 +124,7 @@ describe('Test screen-mode endpoints', () => {
         const color = await covercolor(`${roothomedir}/.wallpapers/${imgName}`);
         const col = colortohashstring(color);
         const expected = { code: 200, data: { color: col, subData: 'ok' } };
-	console.log( `using wallpaper file ${roothomedir}/.wallpapers/${imgName}` );
+	// console.log( `using wallpaper file ${roothomedir}/.wallpapers/${imgName}` );
         return request
           .post('/spawner/setBackgroundImage')
           .send({ imgName })
