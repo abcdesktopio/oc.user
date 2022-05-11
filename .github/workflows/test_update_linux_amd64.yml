@@ -45,7 +45,7 @@ jobs:
           echo "docker" > TARGET_MODE
           ./mkversion.sh
      
-    - name: Build test image
+    - name: Build test image ${{ env.TEST_TAG }}
       uses: docker/build-push-action@v3
       with:
         context: .
@@ -62,7 +62,7 @@ jobs:
       run: |
         ./make-test.sh ${{ env.TEST_TAG }}
     
-    - name: Build and push docker image
+    - name: Build and push image oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
       uses: docker/build-push-action@v3
       with:
         context: .
@@ -81,7 +81,7 @@ jobs:
          echo "kubernetes" > TARGET_MODE
          ./mkversion.sh
          
-    - name: Build and push kubernetes image
+    - name: Build and push image oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}:dev
       uses: docker/build-push-action@v3
       with:
         context: .
