@@ -64,7 +64,12 @@ do
 done
 echo "Container services are started"
 
+
+docker exec --user root ${CONTAINER_ID} ls -la /composer/node
+
 # install package before running tests
+# list files
+docker exec ${CONTAINER_ID} ls -la /composer/node
 echo "Install tests missing dev packages as user root"
 docker exec --user root ${CONTAINER_ID} bash -e /composer/node/install-tests.sh
 
