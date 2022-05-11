@@ -67,7 +67,7 @@ jobs:
     - name: Run Buildx oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
          echo "kubernetes" > TARGET_MODE
-         make version
+         ./mkversion.sh
          
     - name: Build and push kubernetes image
       uses: docker/build-push-action@v2
