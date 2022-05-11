@@ -62,10 +62,13 @@ do
     fi
     sleep 1;
 done
-
-
-
 echo "Container services are started"
+
+# install package before running tests
+echo "Install tests missing dev packages"
+docker exec ${CONTAINER_ID} --user root bash -e /composer/node/install-tests.sh
+
+# run tests
 echo "Run tests..."
 docker exec ${CONTAINER_ID} bash -e /composer/node/run-tests.sh
 
