@@ -47,6 +47,9 @@ COPY composer /composer
 RUN mkdir -p /composer/node/wait-port && cd /composer/node/wait-port && yarn add wait-port
 
 # Add nodejs service
+# yarn install --production[=true|false]
+# yarn will not install any package listed in devDependencies if the NODE_ENV environment variable is set to production. 
+# Use this flag to instruct Yarn to ignore NODE_ENV and take its production-or-not status from this flag instead.
 WORKDIR /composer/node/common-libraries
 RUN   yarn install --production=true
 
@@ -134,9 +137,34 @@ RUN apt-get update && apt-get install -y  \
     && apt-get clean                    \
     && rm -rf /var/lib/apt/lists/*
 
+
 COPY --from=node_modules_builder 	/composer  		/composer
+
+#
+# themes section
+# copy themes from abcdesktopio/oc.themes
 COPY --from=abcdesktopio/oc.themes 	/usr/share/icons  	/usr/share/icons
 COPY --from=abcdesktopio/oc.themes 	/usr/share/themes 	/usr/share/themes
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	adwaita-icon-theme-full 	\
+	gnome-themes-standard		\
+	gnome-themes-extra		\
+    && apt autoremove -y        	\
+    && apt-get clean                    \
+    && rm -rf /var/lib/apt/lists/*
+
+#
+# Note: this is a workaround
+#
+# there is a bug with (openbox or Xvnc) and noVNC, the cursor size is always bigger
+# -> change in file .Xresources and set Xcursor.size: 24 does not work
+# -> can't find a cursor theme with default size
+RUN rm -rf 	/usr/share/icons/Adwaita/cursors \
+		/usr/share/icons/Adwaita/cursor.theme \
+		/usr/share/icons/McMojave-cursors
+# end of themes section
+
+
 
 
 # Add 
