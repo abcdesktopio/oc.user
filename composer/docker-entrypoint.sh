@@ -70,8 +70,8 @@ done
 # First start
 # Clean lock 
 rm -rf /tmp/.X0-lock
-BALLOON_UID=4096
-chown $BALLOON_UID:$BALLOON_UID /home/balloon
+# BALLOON_UID=4096
+# chown $BALLOON_UID:$BALLOON_UID /home/balloon
 
 # get VNC_PASSWORD 
 # use vncpasswd command line to create passwd file
@@ -104,14 +104,15 @@ if [ ! -L ~/.cache ]; then
 	ln -s ~/.cache /container/.cache
 fi
 
-# .Xauthority
-if [ ! -f ~/.Xauthority ]; then
-	echo "touch ~/.Xauthority file"
-	touch ~/.Xauthority
-fi
 
 # create a MIT-MAGIC-COOKIE-1 entry in .Xauthority
 if [ ! -z "$XAUTH_KEY" ]; then
+	# remove previous file
+	# add * prevent lock file
+	echo "remove ~/.Xauthority file"
+	rm -rf ~/.Xauthority*
+	echo "create ~/.Xauthority file"
+	touch  ~/.Xauthority
 	xauth add :0 MIT-MAGIC-COOKIE-1 $XAUTH_KEY
 fi
 
@@ -169,6 +170,9 @@ fi
 #	cp -rp /composer/.themes ~ &
 # fi
 
+
+#
+# read https://wiki.archlinux.org/title/GTK#:~:text=Depending%20on%20GTK%20version%2C%20these,etc%2Fgtk%2D2.0%2Fgtkrc
 if [ ! -f ~/.gtkrc-2.0 ]; then
 	echo "create ~/.gtkrc-2.0 file"
 	cp -rp /composer/.gtkrc-2.0 ~
@@ -398,6 +402,12 @@ else
    echo "starting /composer/post-docker-entrypoint.sh in background" >> /var/log/desktop/config.log
    /composer/post-docker-entrypoint.sh &
 fi
+
+if  [ ! -z "$ABCDESKTOP_DEMO_ENABLE" ]; then
+   sleep 530 && zenity --info --text="Your session will expire in few seconds"
+fi
+
+
 
 # export VAR to running procces
 export KUBERNETES_SERVICE_HOST
