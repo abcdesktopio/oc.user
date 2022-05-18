@@ -404,7 +404,7 @@ else
 fi
 
 if  [ ! -z "$ABCDESKTOP_DEMO_ENABLE" ]; then
-   sleep 530 && zenity --info --text="Your session will expire in few seconds" &
+   sleep 530 && zenity --info --ellipsize --text="Your session will expire in few seconds" &
 fi
 
 
