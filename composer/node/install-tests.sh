@@ -1,16 +1,19 @@
 #!/bin/bash
 # yarn install set --production=true
 # this script install missing package without --production=true option
-npm install -g yarn
-apt-get update && apt-get install -y 	\
-	libxmu-dev			\
-	gcc                             \
-	g++                             \
-	make    			\
-	libx11-dev 			\
-	libxmu-dev 			\
+apt-get update 
+apt-get install -y npm
+apt-get install -y 	\
+	libxmu-dev	\
+	gcc             \
+	g++             \
+	make    	\
+	libx11-dev 	\
+	libxmu-dev 	\
 	git
-
+# install yarn with npm install
+npm install -g yarn
+# install full options without production
 echo "install /composer/node/spawner-service"
 cd /composer/node/spawner-service
 yarn install
