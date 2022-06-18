@@ -1,7 +1,9 @@
 #!/bin/bash
 # yarn install set --production=true
 # this script install missing package without --production=true option
-apt-get update 
+curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/yarnkey.gpg >/dev/null
+echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+apt-get update && apt-get install yarn
 # apt-get install -y npm
 apt-get install -y 	\
 	libxmu-dev	\
@@ -12,7 +14,7 @@ apt-get install -y 	\
 	libxmu-dev 	\
 	git
 # install yarn with npm install
-npm install -g yarn
+# npm install -g yarn
 # install full options without production
 echo "install /composer/node/spawner-service"
 cd /composer/node/spawner-service
