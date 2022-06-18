@@ -2,7 +2,7 @@
 # yarn install set --production=true
 # this script install missing package without --production=true option
 apt-get update 
-apt-get install -y npm
+# apt-get install -y npm
 apt-get install -y 	\
 	libxmu-dev	\
 	gcc             \
