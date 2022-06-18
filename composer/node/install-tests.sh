@@ -1,10 +1,12 @@
 #!/bin/bash
 # yarn install set --production=true
 # this script install missing package without --production=true option
-curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/yarnkey.gpg >/dev/null
-echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-apt-get update && apt-get install yarn
-# apt-get install -y npm
+
+#curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/yarnkey.gpg >/dev/null
+#echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+#apt-get update && apt-get install yarn
+#apt-get install -y npm
+
 apt-get install -y 	\
 	libxmu-dev	\
 	gcc             \
