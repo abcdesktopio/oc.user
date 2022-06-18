@@ -126,7 +126,7 @@ RUN apt-get update && apt-get install -y  \
         python3-wheel                   \
         python3-setuptools              \
 	python3-pkg-resources		\
-	gfortran-8			&& \
+	gfortran			&& \
     pip3 install 'Cython>=0.29.21'	&& \
     pip3 install 'websockify>=0.9.0' 	&& \
     apt-get remove -y 		\
