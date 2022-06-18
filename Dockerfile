@@ -72,6 +72,8 @@ WORKDIR /composer/node/printer-service
 RUN yarn install --production=true
 
 WORKDIR /composer/node/spawner-service
+# install node-gyp to build spawner-service
+RUN yarn global add node-gyp
 RUN yarn install --production=true
 
 # WORKDIR /composer/node/lync 
