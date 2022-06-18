@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        BASE_IMAGE_RELEASE: [18.04, 20.04]
+        BASE_IMAGE_RELEASE: [18.04, 20.04, 22.04]
     steps: 
     - name: Checkout repository
       uses: actions/checkout@v2
