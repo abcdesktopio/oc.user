@@ -1,10 +1,22 @@
 #/bin/bash
-DEFAULT_IMAGE=abcdesktopio/oc.user.18.04:dev
 
+# set default IMAGE_RELEASE to run test
+DEFAULT_IMAGE=abcdesktopio/oc.user.18.04:dev
 IMAGE_RELEASE="${1:-$DEFAULT_IMAGE}"
+
+# show used IMAGE_RELEASE
 echo "Run oc.user test for $IMAGE_RELEASE"
+
+#
+# create the container
+# with env 
+#     TESTING_MODE='true' 
+#     DISABLE_REMOTEIP_FILTERING='enabled'
+#
 CONTAINER_ID=$(docker run --rm --env TESTING_MODE='true' --env DISABLE_REMOTEIP_FILTERING='enabled' -d $IMAGE_RELEASE )
-# TIMEOUT in milliseconds
+
+# define
+# TIMEOUT in milliseconds to exec command inside the container
 TIMEOUT=120000 
 
 echo "Container ID: ${CONTAINER_ID}"
