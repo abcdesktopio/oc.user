@@ -1,5 +1,4 @@
 #!/bin/bash
-#!/bin/bash
 
 # The default install use yarn install
 # yarn install --production=true
