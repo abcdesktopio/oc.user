@@ -26,6 +26,12 @@ until [ "`docker inspect -f {{.State.Running}} $CONTAINER_ID`"=="true" ]; do
     sleep 0.1;
 done;
 
+
+# install package before running tests
+# list files
+echo "Install tests missing dev packages to run test as user root"
+docker exec --user root ${CONTAINER_ID} /composer/node/install-tests.sh
+
 # get the ip addr of the container
 CONTAINER_IP=$(docker exec ${CONTAINER_ID} hostname -i)
 if [ $? -ne 0 ]; then
@@ -33,7 +39,6 @@ if [ $? -ne 0 ]; then
         docker logs ${CONTAINER_ID}
         exit 1
 fi
-
 
 echo "Waiting for X11 service"
 # desktopservicestcpport = { 'x11server': 6081, 'spawner': 29786, 'broadcast': 29784 }"
@@ -76,14 +81,6 @@ do
 done
 echo "Container services are started"
 
-
-docker exec --user root ${CONTAINER_ID} ls -la /composer/node
-
-# install package before running tests
-# list files
-docker exec ${CONTAINER_ID} ls -la /composer/node
-echo "Install tests missing dev packages as user root"
-docker exec --user root ${CONTAINER_ID} bash -e /composer/node/install-tests.sh
 
 # run tests
 echo "Run tests..."
