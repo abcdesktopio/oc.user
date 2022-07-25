@@ -74,8 +74,21 @@ jobs:
           BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }}
           BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }}
         tags: abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
+        
+        
+    - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
+          format: 'sarif'
+          output: oc.user.${{ matrix.BASE_IMAGE_RELEASE }}.sarif
+
+    - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: oc.user.${{ matrix.BASE_IMAGE_RELEASE }}.sarif
   
- 
     - name: Run Buildx oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
          echo "kubernetes" > TARGET_MODE
