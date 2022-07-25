@@ -3,7 +3,7 @@ LOG_FILE=/var/log/desktop/openbox_autostart.log
 echo 'Start autostart' > $LOG_FILE
 
 # set DISPLAY to use
-export DISPLAY=:0.0
+# export DISPLAY=:0.0
 
 # make Xauth
 # permit xhost from x.x.x.2 to x.x.x.254 modulo 2
@@ -22,8 +22,8 @@ export DISPLAY=:0.0
 #    true $((i=i+1))
 # done
 
-echo "X11LISTEN=$X11LISTEN" > $LOG_FILE
-if [ "$X11LISTEN" == "tcp" ]; then
+echo "ENV_X11LISTEN=$ENV_X11LISTEN" > $LOG_FILE
+if [ "$ENV_X11LISTEN" == "tcp" ]; then
 	echo "running xhost + command" > $LOG_FILE
 	xhost + > $LOG_FILE
 else
@@ -32,7 +32,7 @@ fi
 
 # set fonts for Qt applications
 # Used by Dropbox for exemple 
-xrdb -merge $HOME/.Xresources 2>>$LOG_FILE
+# [[ -f ~/.Xresources ]] && xrdb -merge $HOME/.Xresources 2>>$LOG_FILE
 
 # Change default backgroup color in X11
 xsetroot -solid '#6ec6f0' 2>>$LOG_FILE
