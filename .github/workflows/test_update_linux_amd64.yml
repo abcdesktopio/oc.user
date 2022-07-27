@@ -77,15 +77,15 @@ jobs:
         
         
     - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
-          format: 'sarif'
-          output: oc.user.${{ matrix.BASE_IMAGE_RELEASE }}.sarif
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
+        format: 'sarif'
+        output: oc.user.${{ matrix.BASE_IMAGE_RELEASE }}.sarif
 
     - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
-        if: always()
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
         with:
           sarif_file: oc.user.${{ matrix.BASE_IMAGE_RELEASE }}.sarif
   
