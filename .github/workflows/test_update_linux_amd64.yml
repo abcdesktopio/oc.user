@@ -86,8 +86,8 @@ jobs:
     - name: Upload Trivy scan results to GitHub Security tab
       uses: github/codeql-action/upload-sarif@v2
       if: always()
-        with:
-          sarif_file: oc.user.${{ matrix.BASE_IMAGE_RELEASE }}.sarif
+      with:
+        sarif_file: oc.user.${{ matrix.BASE_IMAGE_RELEASE }}.sarif
   
     - name: Run Buildx oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}
       run: |
