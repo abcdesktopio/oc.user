@@ -11,14 +11,14 @@ fi
 
 # SendCutText    - Send clipboard changes to clients. (default=1)
 # AcceptCutText  - Accept clipboard updates from clients. (default=1)
-if [ "$SENDCUTTEXT" == "disable" ]; then
+if [ "$SENDCUTTEXT" == "disabled" ]; then
         XVNC_PARAMS="$XVNC_PARAMS -SendCutText=0"
 	echo "No Send clipboard changes to clients"
 else
         echo "Send clipboard changes to clients"
 fi
 
-if [ "$ACCEPTCUTTEXT" == "disable" ]; then
+if [ "$ACCEPTCUTTEXT" == "disabled" ]; then
         XVNC_PARAMS="$XVNC_PARAMS -AcceptCutText=0"
 	echo "No Accept clipboard updates from clients"
 else
