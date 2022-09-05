@@ -1,7 +1,6 @@
-all: version userdocker1804 userkubernetes1804 userdocker2004 userkubernetes2004 userkubernetesssh2004
+all: version userkubernetes1804 userhardening1804 userhardening2004 userkubernetes2004
 registry: all push
-NOCACHE := false 
-
+NOCACHE ?= false
 ifdef $$NOCACHE
   NOCACHE := $$NOCACHE
 endif
@@ -9,8 +8,11 @@ endif
 version:
 	$(shell ./mkversion.sh)
 
-userdocker1804:
-	echo docker > TARGET_MODE
+themes:
+	docker build --no-cache=$(NOCACHE) --tag abcdesktopio/oc.themes --file ./Dockerfile.themes .
+
+userhardening1804:
+	echo hardening > TARGET_MODE
 	docker build \
 	    --no-cache=$(NOCACHE) \
 	    --build-arg BASE_IMAGE_RELEASE=18.04 \
@@ -18,11 +20,11 @@ userdocker1804:
             --build-arg TAG=dev \
             --platform linux/amd64 \
             --output "type=docker" \
-            --tag abcdesktopio/oc.user.18.04:dev \
+            --tag abcdesktopio/oc.user.kubernetes.hardening.18.04:dev \
             --file ./Dockerfile .
 
-userdocker2004:
-	echo docker > TARGET_MODE
+userhardening2004:
+	echo hardening > TARGET_MODE
 	docker build \
             --no-cache=$(NOCACHE) \
             --build-arg BASE_IMAGE_RELEASE=20.04 \
@@ -30,7 +32,7 @@ userdocker2004:
             --build-arg TAG=dev \
             --platform linux/amd64 \
             --output "type=docker" \
-            --tag abcdesktopio/oc.user.20.04:dev \
+            --tag abcdesktopio/oc.user.kubernetes.hardening.20.04:dev \
             --file ./Dockerfile .
 
 userkubernetes1804:
@@ -57,28 +59,6 @@ userkubernetes2004:
             --tag abcdesktopio/oc.user.kubernetes.20.04:dev \
             --file ./Dockerfile .
 
-userkubernetesssh2004:
-	echo kubernetes > TARGET_MODE
-	docker build \
-            --no-cache=$(NOCACHE) \
-            --build-arg BASE_IMAGE_RELEASE=18.04 \
-            --build-arg BASE_IMAGE=abcdesktopio/oc.user.kubernetes.18.04 \
-            --build-arg TAG=dev \
-            --platform linux/amd64 \
-            --output "type=kubernetes" \
-            --tag abcdesktopio/oc.user.kubernetes.ssh.18.04:dev \
-            --file ./Dockerfile.ssh .
-	docker build \
-            --no-cache=$(NOCACHE) \
-            --build-arg BASE_IMAGE_RELEASE=20.04 \
-            --build-arg BASE_IMAGE=abcdesktopio/oc.user.kubernetes.20.04 \
-            --build-arg TAG=dev \
-            --platform linux/amd64 \
-            --output "type=kubernetes" \
-            --tag abcdesktopio/oc.user.kubernetes.ssh.20.04:dev \
-            --file ./Dockerfile.ssh .
-
-
 build:version  user
 	@echo "Build done."
 
@@ -91,3 +71,7 @@ docs:
 
 push:
 	docker push abcdesktopio/oc.user.18.04:dev
+	docker push abcdesktopio/oc.user.20.04:dev
+	docker push abcdesktopio/oc.user.kubernetes.18.04:dev
+	docker push abcdesktopio/oc.user.kubernetes.20.04:dev
+
