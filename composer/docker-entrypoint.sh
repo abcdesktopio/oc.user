@@ -21,7 +21,7 @@ export USER=${USER:-'balloon'}
 export HOME=${HOME:-'/home/balloon'}
 export LOGNAME=${LOGNAME:-'balloon'}
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:$HOME/.local/share/applications/bin/"
-export ABCDESKTOP_RUN_DIR='/composer/run'
+export ABCDESKTOP_RUN_DIR=${ABCDESKTOP_RUN_DIR:-'/var/run/desktop'}
 export DISABLE_REMOTEIP_FILTERING=${DISABLE_REMOTEIP_FILTERING:-'disabled'}
 export BROADCAST_COOKIE=${BROADCAST_COOKIE:-$ABCDESKTOP_SESSION}
 
@@ -34,9 +34,6 @@ export BROADCAST_COOKIE=${BROADCAST_COOKIE:-$ABCDESKTOP_SESSION}
 # - /root/.local/share
 # - /usr/local/share/
 # - /usr/share/
-
-
-
 
 DEFAULT_VNC_PASSWD="111111"
 
