@@ -29,5 +29,5 @@ fi
 echo "XVNC_PARAMS=$XVNC_PARAMS"
 
 
-/usr/bin/Xvnc :0 zliblevel=5 -auth /home/balloon/.Xauthority -geometry 3840x2160 -SendPrimary=0 -depth 24 -rfbport=-1 -rfbunixpath /tmp/.x11vnc -pn -rfbauth /composer/run/.vnc/passwd -interface ${CONTAINER_IP_ADDR} ${XVNC_PARAMS}
+/usr/bin/Xvnc :0 zliblevel=5 -auth /home/balloon/.Xauthority -geometry 3840x2160 -SendPrimary=0 -depth 24 -rfbport=-1 -rfbunixpath /tmp/.x11vnc -pn -rfbauth "$ABCDESKTOP_RUN_DIR"/.vnc/passwd -interface ${CONTAINER_IP_ADDR} ${XVNC_PARAMS}
 
