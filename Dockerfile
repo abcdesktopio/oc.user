@@ -63,10 +63,10 @@ RUN yarn global add node-gyp
 RUN yarn install --production=true
 
 WORKDIR /composer/node/file-service
-RUN if [ $(cat /TARGET_MODE) = docker ]; then yarn install --production=true fi
+RUN if [ $(cat /TARGET_MODE) = docker ]; then yarn install --production=true; fi
 
 WORKDIR /composer/node/printer-service
-RUN if [ $(cat /TARGET_MODE) = docker ]; then yarn install --production=true fi
+RUN if [ $(cat /TARGET_MODE) = docker ]; then yarn install --production=true; fi
 
 WORKDIR /composer/node/xterm.js
 RUN if [ $(cat /TARGET_MODE) != hardening ]; then yarn install --production=true; fi
