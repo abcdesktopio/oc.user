@@ -21,9 +21,13 @@ export USER=${USER:-'balloon'}
 export HOME=${HOME:-'/home/balloon'}
 export LOGNAME=${LOGNAME:-'balloon'}
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:$HOME/.local/share/applications/bin/"
-export ABCDESKTOP_RUN_DIR='/composer/run'
+export ABCDESKTOP_RUN_DIR=${ABCDESKTOP_RUN_DIR:-'/var/run/desktop'}
 export DISABLE_REMOTEIP_FILTERING=${DISABLE_REMOTEIP_FILTERING:-'disabled'}
 export BROADCAST_COOKIE=${BROADCAST_COOKIE:-$ABCDESKTOP_SESSION}
+
+# Read first $POD_IP if not set get from hostname -i ip addr
+export CONTAINER_IP_ADDR=${POD_IP:-$(hostname -i)}
+echo "Container local ip addr is $CONTAINER_IP_ADDR"
 
 # export DBUS_SESSION_BUS_ADDRESS=tcp:host=localhost,bind=*,port=55556,family=ipv4
 
@@ -35,10 +39,14 @@ export BROADCAST_COOKIE=${BROADCAST_COOKIE:-$ABCDESKTOP_SESSION}
 # - /usr/local/share/
 # - /usr/share/
 
+# set umask to 
+# make sur log file can not be read by everyone
+umask 027
 
 
 
-DEFAULT_VNC_PASSWD="111111"
+
+id
 
 showHelp() {
 cat << EOF
@@ -70,29 +78,18 @@ done
 # First start
 # Clean lock 
 rm -rf /tmp/.X0-lock
-# BALLOON_UID=4096
-# chown $BALLOON_UID:$BALLOON_UID /home/balloon
 
 # get VNC_PASSWORD 
-# use vncpasswd command line to create passwd file
+# use vncpasswd command line to create a vnc passwd file
 mkdir -p ${ABCDESKTOP_RUN_DIR}/.vnc
 # read the vnc password from the kubernetes secret
 if [ -f /var/secrets/abcdesktop/vnc/password ]; then
         echo 'vnc password use kubernetes secret'
 	cat /var/secrets/abcdesktop/vnc/password | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
 else
-	# no kubernetes secret has been define
-	# use VNC_PASSWORD and VNC_KEY
-        # VNC_KEY is a symetric key
-	# VNC_PASSWORD is the crypto
-	if [ ! -z "$VNC_PASSWORD" ]; then
-		# add missing = in b32 encoded password
-		B32VNC_PASSWORD=$(echo -n "$VNC_PASSWORD" |/composer/safe_b32.sh)
-		# echo -n "$B32VNC_PASSWORD | base32 -d | openssl aes-256-cbc -pbkdf2 -d -k "$VNC_KEY" | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
-		echo -n $VNC_PASSWORD | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
-	else
-		echo 'error not vnc password has been set, the var VNC_PASSWORD is empty or unset'
-	fi
+	echo 'error not vnc password has been set, everything is going wrong'
+	echo 'run a ls -la /var/secrets/abcdesktop to help troubleshooting'
+	ls -la /var/secrets/abcdesktop
 fi
 
 
