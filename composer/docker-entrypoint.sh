@@ -18,10 +18,13 @@ export UBUNTU_MENUPROXY=
 export DISPLAY=${DISPLAY:-':0.0'}
 export X11LISTEN=${X11LISTEN:-'udp'}
 export USER=${USER:-'balloon'}
+export UID=${UID:-4096}
+export GID=${GID:-4096}
 export HOME=${HOME:-'/home/balloon'}
 export LOGNAME=${LOGNAME:-'balloon'}
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:$HOME/.local/share/applications/bin/"
 export ABCDESKTOP_RUN_DIR=${ABCDESKTOP_RUN_DIR:-'/var/run/desktop'}
+export ABCDESKTOP_LOG_DIR=${ABCDESKTOP_LOG_DIR:-'/var/log/desktop'}
 export DISABLE_REMOTEIP_FILTERING=${DISABLE_REMOTEIP_FILTERING:-'disabled'}
 export BROADCAST_COOKIE=${BROADCAST_COOKIE:-$ABCDESKTOP_SESSION}
 
@@ -98,7 +101,8 @@ fi
 if [ ! -L ~/.cache ]; then
 	echo "~/.cache is not a link"
         rm -rf ~/.cache
-	ln -s ~/.cache /container/.cache
+	mkdir -p /var/run/desktop/.cache
+	ln -s ~/.cache /var/run/desktop/.cache
 fi
 
 
