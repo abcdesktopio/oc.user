@@ -36,7 +36,7 @@ RUN apt-get update && apt-get install -y  --no-install-recommends \
 COPY composer /composer
 
 # add wait-port
-RUN mkdir -p /composer/node/wait-port && cd /composer/node/wait-port && yarn add wait-port
+RUN mkdir -p /composer/node/wait-port && cd /composer/node/wait-port && yarn add wait-port@0.2.9
 
 # Add nodejs service
 # yarn install --production[=true|false]
@@ -63,15 +63,15 @@ RUN yarn global add node-gyp
 RUN yarn install --production=true
 
 WORKDIR /composer/node/file-service
-RUN if [ $(cat /TARGET_MODE) = docker ]; then RUN yarn install --production=true fi
+RUN if [ $(cat /TARGET_MODE) = docker ]; then yarn install --production=true; fi
 
 WORKDIR /composer/node/printer-service
-RUN if [ $(cat /TARGET_MODE) = docker ]; then RUN yarn install --production=true fi
+RUN if [ $(cat /TARGET_MODE) = docker ]; then yarn install --production=true; fi
 
 WORKDIR /composer/node/xterm.js
 RUN if [ $(cat /TARGET_MODE) != hardening ]; then yarn install --production=true; fi
 
-# version.json must be created by mkversion.sh nbash script
+# version.json must be created by mkversion.sh bash script
 COPY composer/version.json /composer/version.json
 
 # --- END node_modules_builder ---
@@ -106,7 +106,13 @@ COPY --from=node_modules_builder 	/composer  		/composer
 # if TARGET_MODE is hardening
 # remove shell websocket xterm.js files
 RUN if [ $(cat /TARGET_MODE) = hardening ]; then \
-        rm -rf /composer/node/xterm.js;		 \
+        rm -rf /composer/node/xterm.js; \
+    fi
+
+
+RUN if [ $(cat /TARGET_MODE) = kubernetes ] || [ $(cat /TARGET_MODE) = hardening ]; then \
+	rm -rf /composer/node/printer-service \
+	       /composer/node/file-service; \  
     fi
 
 #
@@ -175,6 +181,11 @@ RUN if [ $(cat /TARGET_MODE) != hardening ]; then 	\
     fi
 
 RUN if [ $(cat /TARGET_MODE) = hardening ]; then echo 'removing /etc/supervisor/conf.d/xterm.conf' &&  rm /etc/supervisor/conf.d/xterm.conf; fi
+RUN if [ $(cat /TARGET_MODE) = kubernetes ] || [ $(cat /TARGET_MODE) = hardening ]; then \
+	echo 'removing /etc/supervisor/conf.d/file-service.conf /etc/supervisor/conf.d/cupsd.conf /etc/supervisor/conf.d/printerfile-service.conf /etc/supervisor/conf.d/pulseaudio.conf' &&  	\
+	rm 	/etc/supervisor/conf.d/file-service.conf /etc/supervisor/conf.d/cupsd.conf /etc/supervisor/conf.d/printerfile-service.conf /etc/supervisor/conf.d/pulseaudio.conf;		\
+    fi
+
 
 # 
 # create a fake ntlm_auth.desktop file
@@ -182,8 +193,8 @@ RUN if [ $(cat /TARGET_MODE) = hardening ]; then echo 'removing /etc/supervisor/
 RUN touch /usr/bin/ntlm_auth.desktop
 
 # LOG AND PID SECTION
-RUN mkdir -p /var/log/desktop /var/run/desktop /container/.cache && \
-    chown -R $BUSER:$BUSER /var/log/desktop /var/run/desktop /container/.cache
+RUN mkdir -p /var/log/desktop /var/run/desktop && \
+    chown -R $BUSER:$BUSER /var/log/desktop /var/run/desktop
 
 # Clean unecessary package
 # but it's too late
