@@ -237,6 +237,17 @@ function callbackExec(err, command, args) {
 }
 
 /**
+ * do not push all env var, only web interface 
+ */
+async function getenv() {
+
+  const jsonres = { };
+  jsonres.env = { 'ACCEPTCUTTEXT': process.env['ACCEPTCUTTEXT'],  'SENDCUTTEXT': process.env['SENDCUTTEXT'] };
+  return { ...jsonres };
+}
+
+
+/**
  *
  * @param {*} httpHeaderAcceptLanguage
  */
@@ -329,6 +340,11 @@ function routerInit(router) {
     res.send(jsonres);
   }));
 
+
+  router.get('/getenv', asyncHandler(async (req, res) => {
+    const jsonres = await getenv();
+    res.send(jsonres);
+  }));
 
   /**
    * @swagger
