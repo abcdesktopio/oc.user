@@ -212,29 +212,6 @@ async function about(clientIpAddr) {
 
 /**
  *
- */
-async function getenv() {
-
-  const jsonres = {};
-  jsonres.env = process.env;
-  return { ...jsonres };
-}
-
-/**
- *
- */
-async function getnetworkinterfaces() {
-
-  const jsonres = {};
-  jsonres.networkInterfaces = os.networkInterfaces();
-  return { ...jsonres };
-}
-
-
-
-
-/**
- *
  * @param {*} err
  * @param {*} command
  * @param {*} args
@@ -351,26 +328,6 @@ function routerInit(router) {
     const jsonres = await about(clientIpAddr);
     res.send(jsonres);
   }));
-
-  router.get('/getenv', asyncHandler(async (req, res) => {
-    const jsonres = await getenv();
-    res.send(jsonres);
-  }));
-
-  router.get('/getnetworkinterfaces', asyncHandler(async (req, res) => {
-    const jsonres = await getnetworkinterfaces();
-    res.send(jsonres);
-  }));
-
-  /* 
-   * deprecated 
-  router.post('/kill', (req, res) => {
-    const { pid } = req.body;
-    process.kill(pid, 9);
-    const ret = { code: 200, data: 'ok' };
-    res.status(ret.code).send(ret);
-  });
-  */
 
 
   /**
