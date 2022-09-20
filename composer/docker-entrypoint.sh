@@ -32,8 +32,8 @@ export BROADCAST_COOKIE=${BROADCAST_COOKIE:-$ABCDESKTOP_SESSION}
 # ABCDESKTOP_LABEL_sendcuttext    - Send clipboard changes to clients.
 # ABCDESKTOP_LABEL_acceptcuttext  - Accept clipboard updates from clients.
 # kubernetes pod's label var override default value
-export SENDCUTTEXT=${ABCDESKTOP_LABEL_sendcuttext}:-$SENDCUTTEXT}
-export ACCEPTCUTTEXT=${ABCDESKTOP_LABEL_acceptcuttext}:-$ACCEPTCUTTEXT}
+export SENDCUTTEXT=${ABCDESKTOP_LABEL_sendcuttext:-$SENDCUTTEXT}
+export ACCEPTCUTTEXT=${ABCDESKTOP_LABEL_acceptcuttext:-$ACCEPTCUTTEXT}
 
 
 # Read first $POD_IP if not set get from hostname -i ip addr
