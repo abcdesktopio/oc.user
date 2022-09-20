@@ -36,7 +36,11 @@ RUN apt-get update && apt-get install -y  --no-install-recommends \
 COPY composer /composer
 
 # add wait-port
-RUN mkdir -p /composer/node/wait-port && cd /composer/node/wait-port && yarn add wait-port@0.2.9
+# use only wait-port realase 
+# - 0.2.9 
+# or 
+# >= 1.0.1
+RUN mkdir -p /composer/node/wait-port && cd /composer/node/wait-port && yarn add wait-port@1.0.1
 
 # Add nodejs service
 # yarn install --production[=true|false]
