@@ -14,7 +14,7 @@ WALLPAPER_PATH=~/.wallpapers
 
 ## Export Var
 export LIBOVERLAY_SCROLLBAR=0
-export UBUNTU_MENUPROXY=
+export UBUNTU_MENUPROXY=0
 export DISPLAY=${DISPLAY:-':0.0'}
 export X11LISTEN=${X11LISTEN:-'udp'}
 export USER=${USER:-'balloon'}
@@ -28,6 +28,20 @@ export ABCDESKTOP_LOG_DIR=${ABCDESKTOP_LOG_DIR:-'/var/log/desktop'}
 export DISABLE_REMOTEIP_FILTERING=${DISABLE_REMOTEIP_FILTERING:-'disabled'}
 export BROADCAST_COOKIE=${BROADCAST_COOKIE:-$ABCDESKTOP_SESSION}
 
+# Read Label Var
+# ABCDESKTOP_LABEL_sendcuttext    - Send clipboard changes to clients.
+# ABCDESKTOP_LABEL_acceptcuttext  - Accept clipboard updates from clients.
+# kubernetes pod's label var override default value
+export SENDCUTTEXT=${ABCDESKTOP_LABEL_sendcuttext}:-$SENDCUTTEXT}
+export ACCEPTCUTTEXT=${ABCDESKTOP_LABEL_acceptcuttext}:-$ACCEPTCUTTEXT}
+
+
+# Read first $POD_IP if not set get from hostname -i ip addr
+CONTAINER_IP_ADDR=${POD_IP:-$(hostname -i)}
+echo "Container local ip addr is $CONTAINER_IP_ADDR"
+export CONTAINER_IP_ADDR
+
+# 
 # export DBUS_SESSION_BUS_ADDRESS=tcp:host=localhost,bind=*,port=55556,family=ipv4
 
 # Note that '/home/balloon/.local/share' is not in the search path
@@ -38,7 +52,6 @@ export BROADCAST_COOKIE=${BROADCAST_COOKIE:-$ABCDESKTOP_SESSION}
 # - /usr/local/share/
 # - /usr/share/
 
-DEFAULT_VNC_PASSWD="111111"
 
 showHelp() {
 cat << EOF
@@ -70,8 +83,6 @@ done
 # First start
 # Clean lock 
 rm -rf /tmp/.X0-lock
-# BALLOON_UID=4096
-# chown $BALLOON_UID:$BALLOON_UID /home/balloon
 
 # get VNC_PASSWORD 
 # use vncpasswd command line to create passwd file
@@ -208,7 +219,11 @@ if [ ! -d ~/.wallpapers ]; then
   	cp -rp /composer/wallpapers/* ~/.wallpapers &
 	cp_pid=$!
 	echo "TESTING_MODE=$TESTING_MODE"
+	# check if we are running self test 
 	# if we are in testing mode wait for cp command finnish
+	# self test start too quickly
+	# without wait state
+	# files in ~/.wallpapers must exist  
 	if [ ! -z "$TESTING_MODE" ]; then
 		echo "We are in testing mode, waiting for cp command complete"
 		wait $cp_pid
@@ -355,37 +370,32 @@ fi
 # add file start info timedate data
 echo `date` > ${ABCDESKTOP_RUN_DIR}/start.txt
 
-# Read first ip add
-CONTAINER_IP_ADDR=$(hostname -i)
-echo "Container local ip addr is $CONTAINER_IP_ADDR"
-export CONTAINER_IP_ADDR
-
 # update pulseaudio conf
-if [ -f /etc/pulse/default.pa ]; then
-	# replace CONTAINER_IP_ADDR in listen for pulseaudio
-	# NEVER listening to 127.0.0.1:x for ws hack security 
-	sed -i "s/module-http-protocol-tcp/module-http-protocol-tcp listen=$CONTAINER_IP_ADDR/g" /etc/pulse/default.pa 
-fi 
+# if [ -f /etc/pulse/default.pa ]; then
+#	# replace CONTAINER_IP_ADDR in listen for pulseaudio
+#	# NEVER listening to 127.0.0.1:x for ws hack security 
+#	sed -i "s/module-http-protocol-tcp/module-http-protocol-tcp listen=$CONTAINER_IP_ADDR/g" /etc/pulse/default.pa 
+# fi 
 
  
 # update cupds conf
-if [ -f /etc/cups/cupsd.conf  ]; then
-	# replace CONTAINER_IP_ADDR in listen for cupsd
-	# NEVER listening to 127.0.0.1:x for ws hack security 
-	sed -i "s/localhost:631/$CONTAINER_IP_ADDR:631/g" /etc/cups/cupsd.conf 
-fi
+# if [ -f /etc/cups/cupsd.conf  ]; then
+#         # replace CONTAINER_IP_ADDR in listen for cupsd
+# 	# NEVER listening to 127.0.0.1:x for ws hack security 
+# 	sed -i "s/localhost:631/$CONTAINER_IP_ADDR:631/g" /etc/cups/cupsd.conf 
+# fi
 
-# start sshd on demand
-if [ ! -z "$SSHD_ENABLE" ]; then
-	if [ ! -z "$SSHD_NETWORK_INTERFACE" ]; then
-		# only v4  grep 'inet '
-		SSHD_BIND_IPADDR=$(ifconfig $SSHD_NETWORK_INTERFACE | grep 'inet ' |  awk '{ print $2 }')
-	else
-		SSHD_BIND_IPADDR="0.0.0.0"
-	fi
-	SSHD_PORT=${SSHD_PORT:-22}
-	/usr/sbin/sshd -p $SSHD_PORT -o ListenAddress=$SSHD_BIND_IPADDR
-fi
+# # start sshd on demand
+# if [ ! -z "$SSHD_ENABLE" ]; then
+# 	if [ ! -z "$SSHD_NETWORK_INTERFACE" ]; then
+# 		# only v4  grep 'inet '
+# 		SSHD_BIND_IPADDR=$(ifconfig $SSHD_NETWORK_INTERFACE | grep 'inet ' |  awk '{ print $2 }')
+# 	else
+# 		SSHD_BIND_IPADDR="0.0.0.0"
+# 	fi
+# 	SSHD_PORT=${SSHD_PORT:-22}
+# 	/usr/sbin/sshd -p $SSHD_PORT -o ListenAddress=$SSHD_BIND_IPADDR
+# fi
 
 
 if [ ! -z "$KUBERNETES_SERVICE_HOST" ]; then
@@ -407,7 +417,6 @@ fi
 if  [ ! -z "$ABCDESKTOP_DEMO_ENABLE" ]; then
    sleep 530 && zenity --info --ellipsize --text="Your session will expire in few seconds" &
 fi
-
 
 
 # export VAR to running procces
