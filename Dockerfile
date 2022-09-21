@@ -186,8 +186,8 @@ RUN if [ $(cat /TARGET_MODE) != hardening ]; then 	\
 
 RUN if [ $(cat /TARGET_MODE) = hardening ]; then echo 'removing /etc/supervisor/conf.d/xterm.conf' &&  rm /etc/supervisor/conf.d/xterm.conf; fi
 RUN if [ $(cat /TARGET_MODE) = kubernetes ] || [ $(cat /TARGET_MODE) = hardening ]; then \
-	echo 'removing /etc/supervisor/conf.d/file-service.conf /etc/supervisor/conf.d/cupsd.conf /etc/supervisor/conf.d/printerfile-service.conf /etc/supervisor/conf.d/pulseaudio.conf /etc/supervisor/conf.d/printer-service.conf' &&  	\
-	rm             /etc/supervisor/conf.d/file-service.conf /etc/supervisor/conf.d/cupsd.conf /etc/supervisor/conf.d/printerfile-service.conf /etc/supervisor/conf.d/pulseaudio.conf /etc/supervisor/conf.d/printer-service.conf;	\
+	echo 'removing file-service.conf cupsd.conf printerfile-service.conf pulseaudio.conf printer-service.conf' &&  \
+	rm /etc/supervisor/conf.d/file-service.conf /etc/supervisor/conf.d/cupsd.conf /etc/supervisor/conf.d/printerfile-service.conf /etc/supervisor/conf.d/pulseaudio.conf /etc/supervisor/conf.d/printer-service.conf; \
     fi
 
 
