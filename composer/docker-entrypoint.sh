@@ -18,11 +18,10 @@ export UBUNTU_MENUPROXY=0
 export DISPLAY=${DISPLAY:-':0.0'}
 export X11LISTEN=${X11LISTEN:-'udp'}
 export USER=${USER:-'balloon'}
-export UID=${UID:-4096}
 export GID=${GID:-4096}
 export HOME=${HOME:-'/home/balloon'}
 export LOGNAME=${LOGNAME:-'balloon'}
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:$HOME/.local/share/applications/bin/"
+export PATH==${PATH:-"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$HOME/.local/share/applications/bin/"}
 export ABCDESKTOP_RUN_DIR=${ABCDESKTOP_RUN_DIR:-'/var/run/desktop'}
 export ABCDESKTOP_LOG_DIR=${ABCDESKTOP_LOG_DIR:-'/var/log/desktop'}
 export DISABLE_REMOTEIP_FILTERING=${DISABLE_REMOTEIP_FILTERING:-'disabled'}
@@ -36,6 +35,7 @@ export SENDCUTTEXT=${ABCDESKTOP_LABEL_sendcuttext:-$SENDCUTTEXT}
 export ACCEPTCUTTEXT=${ABCDESKTOP_LABEL_acceptcuttext:-$ACCEPTCUTTEXT}
 
 
+# Read ip 
 # Read first $POD_IP if not set get from hostname -i ip addr
 CONTAINER_IP_ADDR=${POD_IP:-$(hostname -i)}
 echo "Container local ip addr is $CONTAINER_IP_ADDR"
