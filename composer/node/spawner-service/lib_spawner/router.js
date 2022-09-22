@@ -111,6 +111,15 @@ router.get('/version', asyncHandler(async (_, res) => {
   res.status(ret.code).send(ret);
 }));
 
+
+// healtz to make shure that the service is up
+router.get('/healtz', asyncHandler(async (_, res) => {
+  const ret = { code: 200, data: 'OK' };
+  res.status(ret.code).send(ret);
+}));
+
+
+
 // Screen mode
 screen.routerInit(router);
 
