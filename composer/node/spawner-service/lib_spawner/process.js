@@ -243,6 +243,11 @@ async function getenv() {
 
   const jsonres = { };
   jsonres.env = { 'ACCEPTCUTTEXT': process.env['ACCEPTCUTTEXT'],  'SENDCUTTEXT': process.env['SENDCUTTEXT'] };
+  for (var key in process.env) {
+  	if (key.startsWith('ABCDESKTOP_SERVICE_')) {
+		jsonres.env[key]=process.env[key];
+	}
+  }
   return { ...jsonres };
 }
 
