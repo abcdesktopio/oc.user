@@ -13,6 +13,8 @@ themes:
 
 userhardening1804:
 	echo hardening > TARGET_MODE
+	./mkversion.sh
+	cat composer/version.json
 	docker build \
 	    --no-cache=$(NOCACHE) \
 	    --build-arg BASE_IMAGE_RELEASE=18.04 \
@@ -25,6 +27,8 @@ userhardening1804:
 
 userhardening2004:
 	echo hardening > TARGET_MODE
+	./mkversion.sh
+	cat composer/version.json
 	docker build \
             --no-cache=$(NOCACHE) \
             --build-arg BASE_IMAGE_RELEASE=20.04 \
@@ -37,6 +41,8 @@ userhardening2004:
 
 userkubernetes1804:
 	echo kubernetes > TARGET_MODE
+	./mkversion.sh
+	cat composer/version.json
 	docker build \
             --no-cache=$(NOCACHE) \
             --build-arg BASE_IMAGE_RELEASE=18.04 \
@@ -49,6 +55,8 @@ userkubernetes1804:
 
 userkubernetes2004:
 	echo kubernetes > TARGET_MODE
+	./mkversion.sh
+	cat composer/version.json
 	docker build \
             --no-cache=$(NOCACHE) \
             --build-arg BASE_IMAGE_RELEASE=20.04 \
