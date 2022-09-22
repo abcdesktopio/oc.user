@@ -26,20 +26,16 @@ export ABCDESKTOP_RUN_DIR=${ABCDESKTOP_RUN_DIR:-'/var/run/desktop'}
 export ABCDESKTOP_LOG_DIR=${ABCDESKTOP_LOG_DIR:-'/var/log/desktop'}
 export DISABLE_REMOTEIP_FILTERING=${DISABLE_REMOTEIP_FILTERING:-'disabled'}
 export BROADCAST_COOKIE=${BROADCAST_COOKIE:-$ABCDESKTOP_SESSION}
-
 # Read Label Var
 # ABCDESKTOP_LABEL_sendcuttext    - Send clipboard changes to clients.
 # ABCDESKTOP_LABEL_acceptcuttext  - Accept clipboard updates from clients.
 # kubernetes pod's label var override default value
 export SENDCUTTEXT=${ABCDESKTOP_LABEL_sendcuttext:-$SENDCUTTEXT}
 export ACCEPTCUTTEXT=${ABCDESKTOP_LABEL_acceptcuttext:-$ACCEPTCUTTEXT}
-
-
 # Read ip 
 # Read first $POD_IP if not set get from hostname -i ip addr
-CONTAINER_IP_ADDR=${POD_IP:-$(hostname -i)}
+export CONTAINER_IP_ADDR=${POD_IP:-$(hostname -i)}
 echo "Container local ip addr is $CONTAINER_IP_ADDR"
-export CONTAINER_IP_ADDR
 
 # 
 # export DBUS_SESSION_BUS_ADDRESS=tcp:host=localhost,bind=*,port=55556,family=ipv4
