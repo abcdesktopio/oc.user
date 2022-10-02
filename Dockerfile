@@ -40,7 +40,9 @@ COPY composer /composer
 # - 0.2.9 
 # or 
 # >= 1.0.1
-RUN mkdir -p /composer/node/wait-port && cd /composer/node/wait-port && yarn add wait-port@0.2.9
+RUN mkdir -p /composer/node/wait-port && \
+	  cd /composer/node/wait-port && \
+ 	  yarn add wait-port@1.0.1
 
 # Add nodejs service
 # yarn install --production[=true|false]
