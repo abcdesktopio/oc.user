@@ -124,7 +124,7 @@ async function generateDesktopFiles(list = []) {
     path,
     executablefilename,
     icon,
-    icon_data,
+    icondata,
     icon_url,
     name,
     launch,
@@ -167,10 +167,10 @@ async function generateDesktopFiles(list = []) {
         // file does not exists
         // decode base64 data it
         if (err) {
-        if (icon_data) {
+        if (icondata) {
             console.log( 'writing new icon file ' + contentdesktop.Icon );
             fs.writeFile(   contentdesktop.Icon, 
-                            icon_data,
+                            icondata,
                             'base64',
                             (err) => {
                                 if (err)
