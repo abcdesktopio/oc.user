@@ -24,7 +24,7 @@ const wss = new WebSocketServer({
 });
 
 function broadcastconnectionlist() {
-  //console.log('start broadcastconnectionlist');
+  // console.log('start broadcastconnectionlist');
   try {
     const command = '/composer/connectcount.sh';
     ChildProcess.exec(command, (err, stdout, stderr) => {
@@ -56,7 +56,7 @@ function getstrJSONstatus() {
 }
 
 wss.broadcast = (data) => {
-  console.log(`broadcast: ${data}`);
+  // console.log(`broadcast: ${data}`);
   wss.clients.forEach((client) => {
     try {
       client.send(data);
@@ -67,7 +67,7 @@ wss.broadcast = (data) => {
 };
 
 wss.broadcast_keepalive = () => {
-  console.log('broadcast keep_alive');
+  // console.log('broadcast keep_alive');
   wss.broadcast(getstrJSONstatus());
   setTimeout(wss.broadcast_keepalive, KEEPALIVE_TIMEOUT);
 };
@@ -80,11 +80,11 @@ wss.unicast = (data) => {
     }
 
     try {
-      console.log('unicat try to send');
-      console.log(data);
+      // console.log('unicat try to send');
+      // console.log(data);
       client.send(data);
       bSendDone = true;
-      console.log('unicat done');
+      // console.log('unicat done');
     } catch (err) {
       console.error(err);
     }
@@ -92,7 +92,6 @@ wss.unicast = (data) => {
 };
 
 wss.on('connection', async (ws, req) => {
-
   console.log('connection');
   const { remoteAddress }    = req.connection;
   const { broadcast_cookie } = req.headers;
@@ -127,7 +126,7 @@ wss.on('connection', async (ws, req) => {
   }
   
   ws.on('message', async (message) => {
-    console.log('received: %s', message);
+    // console.log('received: %s', message);
     let json;
     try {
       json = JSON.parse(message);
