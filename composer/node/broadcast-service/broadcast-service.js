@@ -146,7 +146,7 @@ wss.on('connection', async (ws, req) => {
       || json.method === 'display.setBackgroundBorderColor'
       || json.method === 'speaker.available'
       || json.method === 'printer.available') {
-      console.log('sending: %s', message);
+      // console.log('sending: %s', message);
       wss.broadcast(message);
     }
 
@@ -159,7 +159,7 @@ wss.on('connection', async (ws, req) => {
       || json.method === 'logout'
       || json.method === 'container'
       || json.method === 'download') {
-      console.log('Unicast send msg: %s', message);
+      // console.log('Unicast send msg: %s', message);
       wss.unicast(message);
     }
   });
