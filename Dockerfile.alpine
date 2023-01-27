@@ -1,0 +1,206 @@
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+# Default release is 18.04
+ARG TAG=edge
+# Default base image 
+ARG BASE_IMAGE=alpine
+
+
+#
+# create apk package for openbox
+# pkg files will be located in /root/packages/$(uname -m) directory 
+# patched with openbox.title.patch for abcdesktop
+FROM ${BASE_IMAGE}:${TAG} as openbox_alpine_builder
+RUN apk add gcc make g++ bash build-base alpine-sdk sudo wget python3
+RUN mkdir -p /var/cache/distfiles
+RUN mkdir -p /openbox/src
+WORKDIR /openbox
+RUN wget https://raw.githubusercontent.com/abcdesktopio/openbox/main/openbox-3.6.1.tar.gz
+RUN wget https://git.alpinelinux.org/aports/plain/community/openbox/python3.patch
+RUN wget https://raw.githubusercontent.com/abcdesktopio/openbox/main/APKBUILD
+RUN wget https://raw.githubusercontent.com/abcdesktopio/openbox/main/openbox.title.patch
+RUN abuild-keygen -a -n
+RUN abuild -F deps
+# -a Add 1 to current pkgrel
+RUN apkgrel -a APKBUILD
+RUN abuild -F
+# package are in directory /root/packages/$(uname -m)
+
+
+# install all nodejs modules
+# build nodejs module
+# create /composer/node
+# use FROM BASE_IMAGE
+# define FROM before use ENV command
+FROM ${BASE_IMAGE}:${TAG} as alpine_node_modules_builder
+
+# Add alpine repo
+# https://dl-cdn.alpinelinux.org/alpine/edge/main
+# https://dl-cdn.alpinelinux.org/alpine/edge/community
+# https://dl-cdn.alpinelinux.org/alpine/edge/testing
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" > /etc/apk/repositories; \
+    echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories; \
+    echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories 
+
+RUN apk add  --no-cache --update  \
+	python3		\
+	nodejs		\
+	yarn		\
+        make		\
+	gcc		\
+	g++		\
+	libx11-dev 	\
+	libxmu-dev
+
+COPY composer /composer
+RUN mkdir -p /composer/node/wait-port 	&& \
+    cd /composer/node/wait-port 	&& \
+    yarn add wait-port@1.0.1
+
+# Use this flag to instruct Yarn to ignore NODE_ENV and take its production-or-not status from this flag instead.
+WORKDIR /composer/node/common-libraries
+RUN   yarn install --production=true
+
+WORKDIR /composer/node/broadcast-service
+RUN yarn install --production=true
+
+WORKDIR /composer/node/ocrun
+RUN yarn install --production=true
+
+WORKDIR /composer/node/ocdownload
+RUN yarn install --production=true
+
+WORKDIR /composer/node/occall
+RUN yarn install --production=true
+
+WORKDIR /composer/node/spawner-service
+RUN yarn global add node-gyp
+RUN yarn install --production=true
+
+WORKDIR /composer/node/xterm.js
+RUN yarn install --production=true
+
+
+
+
+
+
+
+
+
+
+#
+# The main oc.user start here
+#
+FROM ${BASE_IMAGE}:${TAG}
+
+COPY etc /etc
+RUN apk add --no-cache --update \
+	python3			\
+        curl            	\
+	bash			\
+        supervisor      	\
+        tigervnc        	\
+        wmctrl          	\
+        cups-client     	\
+        pulseaudio-utils        \
+        xauth                   \
+        websockify		\
+	openssl			
+
+RUN apk add --no-cache --update \
+	desktop-file-utils	\
+	xdg-user-dirs		\
+	xhost                   \
+        xsetroot		\
+	adwaita-icon-theme	\
+	adwaita-qt		\
+	xclip			\
+	imagemagick		\
+	libadwaita
+
+
+# add some fonts
+RUN apk add  --no-cache --update  \
+	terminus-font
+
+RUN apk add --no-cache --update \
+        openbox 		\
+	obconf-qt		\
+        nodejs			\
+	feh
+
+RUN apk add  --no-cache --update  \
+        qterminal
+
+
+# add some fonts
+RUN apk add  --no-cache --update  \
+        font-opensans \
+        font-adobe-100dpi \
+        font-noto       \
+        font-ubuntu-nerd \
+        font-bh-lucidatypewriter-100dpi \
+        font-dejavu-sans-mono-nerd \
+        font-adobe-utopia-100dpi \
+        font-xfree86-type1 \
+        ttf-freefont \
+        font-ibm-type1 \
+        font-liberation
+
+
+COPY --from=openbox_alpine_builder /root/packages /tmp/packages
+RUN apk add --allow-untrusted \ 
+	/tmp/packages/$(apk add --print-arch)/openbox-libs-3.6.1*	\
+	/tmp/packages/$(apk add --print-arch)/openbox-3.6.1*
+COPY --from=alpine_node_modules_builder /composer /composer
+
+#
+# themes section
+# copy themes from abcdesktopio/oc.themes
+# COPY themes /usr/share/themes
+# COPY --from=abcdesktopio/oc.themes      /usr/share/icons        /usr/share/icons
+# COPY --from=abcdesktopio/oc.themes      /usr/share/themes       /usr/share/themes
+# COPY --from=theme_builder /usr/share/themes /usr/share/themes
+ADD Arc_OSXbuttons.tar /usr/share/themes
+
+
+# version.json must be created by mkversion.sh bash script
+COPY composer/version.json /composer/version.json	
+   
+# LOG AND PID SECTION
+RUN mkdir -p /var/log/desktop /var/run/desktop 
+
+# change passwd shadow group gshadow
+ENV ABCDESKTOP_LOCALACCOUNT_DIR "/var/secrets/abcdesktop/localaccount"
+RUN mkdir -p $ABCDESKTOP_LOCALACCOUNT_DIR
+RUN for f in passwd shadow group gshadow ; do if [ -f /etc/$f ] ; then  cp /etc/$f $ABCDESKTOP_LOCALACCOUNT_DIR ; rm -f /etc/$f; ln -s $ABCDESKTOP_LOCALACCOUNT_DIR/$f /etc/$f; fi; done
+
+# set build date
+RUN date > /etc/build.date
+
+# WORKDIR /home/$BUSER
+# set default user
+# USER $BUSER
+RUN apk add  --no-cache --update  \
+        sudo 
+RUN echo "ALL ALL=(ALL:ALL) ALL" > /etc/sudoers.d/all
+
+# set command
+CMD [ "/composer/docker-entrypoint.sh" ]
+
+####################################################
+# SERVICE                           #   TCP PORT   #
+####################################################
+# XTERM_TCP_PORT                        29781
+# BROADCAST_SERVICE_TCP_PORT            29784
+# SPAWNER_SERVICE_TCP_PORT              29786
+# WS_TCP_BRIDGE_SERVICE_TCP_PORT         6081
+# DBUS_SESSION_TCP_PORT                 55556
+# DBUS_SYSTEM_TCP_PORT                  55557
+####################################################
+
+## RESERVED TCP PORT 29782 for pulseaudio
+## RESERVED TCP PORT 29785 for cupsd
+
+EXPOSE 6081 29781 29784 29786 
