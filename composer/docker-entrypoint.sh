@@ -42,38 +42,7 @@ echo "Container local ip addr is $CONTAINER_IP_ADDR"
 # set umask to 
 # make sur log file can not be read by everyone
 umask 027
-
-
-
-
 id
-
-showHelp() {
-cat << EOF
-Usage: $0 [-hv]
-docker-entrypoint.sh script to start docker application
-
--h, -help,          --help                  Display help
-
-EOF
-}
-
-options=$(getopt -l "help:" -o "h:" -a -- "$@")
-
-# set --:
-# If no arguments follow this option, then the positional parameters are unset. Otherwise, the positional parameters
-# are set to the arguments, even if some of them begin with a ‘-’.
-eval set -- "$options"
-
-while [[ $1 != -- ]]; do
-case $1 in
--h|--help)
-    showHelp
-    exit 0
-    ;;
-esac
-done
-
 
 # First start
 # Clean lock 
@@ -93,15 +62,6 @@ else
 fi
 
 
-# Create a lot of directories and files in homedir 
-# 
-if [ ! -L ~/.cache ]; then
-	echo "~/.cache is not a link"
-        rm -rf ~/.cache
-	ln -s ~/.cache /container/.cache
-fi
-
-
 # create a MIT-MAGIC-COOKIE-1 entry in .Xauthority
 if [ ! -z "$XAUTH_KEY" ]; then
 	# remove previous file
@@ -111,14 +71,6 @@ if [ ! -z "$XAUTH_KEY" ]; then
 	echo "create ~/.Xauthority file"
 	touch  ~/.Xauthority
 	xauth add :0 MIT-MAGIC-COOKIE-1 $XAUTH_KEY
-fi
-
-if [ -z "$KUBERNETES_SERVICE_HOST" ]; then
-	echo "not a KUBERNETES_SERVICE_HOST node"
-	echo "create ~/.printer-queue directory"
-	if [ ! -d ~/.printer-queue ]; then
-		mkdir ~/.printer-queue
-	fi
 fi
 
 if [ ! -d ~/.store ]; then  
@@ -138,7 +90,11 @@ if [ ! -d ~/.config ]; then
 fi
 
 if [ ! -z "$PULSEAUDIO_COOKIE" ]; then
-	cat /etc/pulse/cookie | openssl rc4 -K "$PULSEAUDIO_COOKIE" -nopad -nosalt > ~/.config/pulse/cookie
+	if [ ! -f ~/.config/pulse/cookie ]; then
+		echo 'create ~/.config/pulse/cookie'
+                mkdir -p ~/.config/pulse
+                cat /etc/pulse/cookie | openssl rc4 -K "$PULSEAUDIO_COOKIE" -nopad -nosalt > ~/.config/pulse/cookie
+        fi
 fi
 
 if [ ! -d ~/.config/autostart ]; then
@@ -180,9 +136,9 @@ if [ ! -f ~/.gtk-bookmarks ]; then
         touch ~/.gtk-bookmarks
 fi
 
-if [ ! -f ~/.xsettingsd ]; then
-	cp -rp /composer/.xsettingsd ~
-fi
+# if [ ! -f ~/.xsettingsd ]; then
+# 	cp -rp /composer/.xsettingsd ~
+# fi
 
 if [ ! -d ~/.gconf ]; then
         cp -rp /composer/.gconf ~
@@ -215,14 +171,13 @@ fi
 
 if [ ! -f ~/.config/user-dirs.dirs ]; then
 	echo "run xdg-user-dirs-update"
-	xdg-user-dirs-update --force
-	export $(grep -v '^#' user-dirs.dirs | xargs -0)
-
+	# xdg-user-dirs-update --force
+	# export $(grep -v '^#' user-dirs.dirs | xargs -0)
 	xdg-user-dirs-update &
 fi 
 
 # create .local entries
-mkdir -p ~/.local/share/icons   
+# mkdir -p ~/.local/share/icons   
 mkdir -p ~/.local/share/mime
 mkdir -p ~/.local/share/applications/bin
 
@@ -234,14 +189,6 @@ fi
   	# cp -rp /composer/mime ~/.local/share
   	# update-mime-database ~/.local/share/mime > /var/log/desktop/update-mime-database.log &
 # fi
-
-# before starting pulseaudio
-# check if the owner of $HOME belongs to $USER
-# pulseaudio crash if the home does not belong to user
-if [ -f /composer/checkhomeowner.sh ]; then
-  echo "Processing /composer/checkhomeowner.sh file...";
-  source /composer/checkhomeowner.sh
-fi 
 
 ## DBUS Section
 # source https://georgik.rocks/how-to-start-d-bus-in-docker-container/
@@ -344,7 +291,6 @@ fi
 if [ ! -z "$USERPRINCIPALNAME" ] && [ ! -z "$REALM" ] && [ ! -z "$KRB5_CONFIG" ] && [ ! -z "$KRB5_CLIENT_KTNAME" ]; then
 	kinit "$USERPRINCIPALNAME@$REALM" -k -t $KRB5_CLIENT_KTNAME &
 fi 
-
 ## END OF KERBEROS
 
 
@@ -355,21 +301,6 @@ echo `date` > ${ABCDESKTOP_RUN_DIR}/start.txt
 CONTAINER_IP_ADDR=$(hostname -i)
 echo "Container local ip addr is $CONTAINER_IP_ADDR"
 export CONTAINER_IP_ADDR
-
-# update pulseaudio conf
-if [ -f /etc/pulse/default.pa ]; then
-	# replace CONTAINER_IP_ADDR in listen for pulseaudio
-	# NEVER listening to 127.0.0.1:x for ws hack security 
-	sed -i "s/module-http-protocol-tcp/module-http-protocol-tcp listen=$CONTAINER_IP_ADDR/g" /etc/pulse/default.pa 
-fi 
-
- 
-# update cupds conf
-if [ -f /etc/cups/cupsd.conf  ]; then
-	# replace CONTAINER_IP_ADDR in listen for cupsd
-	# NEVER listening to 127.0.0.1:x for ws hack security 
-	sed -i "s/localhost:631/$CONTAINER_IP_ADDR:631/g" /etc/cups/cupsd.conf 
-fi
 
 # start sshd on demand
 if [ ! -z "$SSHD_ENABLE" ]; then
@@ -387,17 +318,6 @@ fi
 if [ ! -z "$KUBERNETES_SERVICE_HOST" ]; then
    echo "starting in kubernetes mode " >> /var/log/desktop/config.log
    echo "starting KUBERNETES_SERVICE_HOST is set to $KUBERNETES_SERVICE_HOST" >> /var/log/desktop/config.log
-else
-   echo "starting in docker mode" >> /var/log/desktop/config.log
-   # KUBERNETES_SERVICE_HOST must exist 
-   # else supervisord return an error  
-   KUBERNETES_SERVICE_HOST=''
-   # Add NGINX_SERVICE_HOST ip addr
-   NGINX_SERVICE_HOST=$(getent hosts nginx | awk '{ print $1 }')
-   export NGINX_SERVICE_HOST
-   echo "NGINX_SERVICE_HOST=$NGINX_SERVICE_HOST" >> /var/log/desktop/config.log
-   echo "starting /composer/post-docker-entrypoint.sh in background" >> /var/log/desktop/config.log
-   /composer/post-docker-entrypoint.sh &
 fi
 
 if  [ ! -z "$ABCDESKTOP_DEMO_ENABLE" ]; then
