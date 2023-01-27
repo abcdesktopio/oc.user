@@ -9,5 +9,39 @@ else
         echo "Not listening tcp"
 fi
 
-/usr/bin/Xvnc :0 zliblevel=5 -auth /home/balloon/.Xauthority -geometry 3840x2160 -SendPrimary=0 -depth 24 -rfbport=-1 -rfbunixpath /tmp/.x11vnc -pn -rfbauth /composer/run/.vnc/passwd -interface ${CONTAINER_IP_ADDR} ${XVNC_PARAMS}
+# SendCutText    - Send clipboard changes to clients. (default=1)
+# AcceptCutText  - Accept clipboard updates from clients. (default=1)
+if [ "$SENDCUTTEXT" == "disabled" ]; then
+        XVNC_PARAMS="$XVNC_PARAMS -SendCutText=0"
+	echo "No Send clipboard changes to clients"
+else
+        echo "Send clipboard changes to clients"
+fi
 
+if [ "$ACCEPTCUTTEXT" == "disabled" ]; then
+        XVNC_PARAMS="$XVNC_PARAMS -AcceptCutText=0"
+	echo "No Accept clipboard updates from clients"
+else
+        echo "Accept clipboard updates from clients"
+fi
+
+
+if [ -z "$CONTAINER_IP_ADDR" ]; then
+	echo "this is wrong CONTAINER_IP_ADDR is not set"
+	echo "try to read again" 
+	CONTAINER_IP_ADDR=$(hostname -i)
+	if [ -z "$CONTAINER_IP_ADDR" ]; then
+		echo "This should be a fatal error listening on all interface"
+	else
+		XVNC_PARAMS="$XVNC_PARAMS -interface ${CONTAINER_IP_ADDR}"
+	fi
+else
+	XVNC_PARAMS="$XVNC_PARAMS -interface ${CONTAINER_IP_ADDR}"
+fi
+
+
+echo "XVNC_PARAMS=$XVNC_PARAMS"
+echo "CONTAINER_IP_ADDR=$CONTAINER_IP_ADDR"
+
+
+/usr/bin/Xvnc :0 zliblevel=5 -auth ~/.Xauthority -geometry 3840x2160 -SendPrimary=0 -depth 24 -rfbport=-1 -rfbunixpath /tmp/.x11vnc -pn -rfbauth "$ABCDESKTOP_RUN_DIR"/.vnc/passwd ${XVNC_PARAMS}
