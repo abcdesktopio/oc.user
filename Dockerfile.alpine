@@ -111,7 +111,8 @@ RUN apk add --no-cache --update \
         pulseaudio-utils        \
         xauth                   \
         websockify		\
-	openssl			
+	openssl			\
+	krb5		
 
 RUN apk add --no-cache --update \
 	desktop-file-utils	\
