@@ -193,10 +193,10 @@ fi
 ## DBUS Section
 # source https://georgik.rocks/how-to-start-d-bus-in-docker-container/
 # source https://stackoverflow.com/questions/10158684/connecting-to-dbus-over-tcp
-if [ ! -f /var/lib/dbus/machine-id ]; then
-  echo 'starting dbus-uuidgen > /var/lib/dbus/machine-id' >> /var/log/desktop/dbus.log
-  dbus-uuidgen > /var/lib/dbus/machine-id &
-fi
+# if [ ! -f /var/lib/dbus/machine-id ]; then
+#   echo 'starting dbus-uuidgen > /var/lib/dbus/machine-id' >> /var/log/desktop/dbus.log
+#   dbus-uuidgen > /var/lib/dbus/machine-id &
+# fi
 
 if [ ! -d /var/run/dbus ]; then 
 	mkdir -p /var/run/dbus
@@ -241,33 +241,31 @@ export EXTERNAL_DESKTOP_DOMAIN
 
 
 
-# Check if need to start dbus session
-if [ ! -z "$OD_DBUS_SESSION_BUS" ]; then
-   echo "starting OD_DBUS_SESSION_BUS is set $OD_DBUS_SESSION_BUS" >> /var/log/desktop/dbus.log
-   dbus_session=$(dbus-daemon --config-file=/usr/share/dbus-1/session.conf --print-address --fork --nosyslog)
-   if [ $? -eq 0 ]; then
-   	echo "export DBUS_SESSION_BUS_ADDRESS=$dbus_session" > ~/.DBUS_SESSION_BUS
-	chmod 755  ~/.DBUS_SESSION_BUS
-        echo "DBUS_SESSION is set $dbus_session" >> /var/log/desktop/dbus.log
-   else
-	[ -f ~/.DBUS_SESSION_BUS ] && rm ~/.DBUS_SESSION_BUS
-   fi
-fi 
+# # Check if need to start dbus session
+#if [ ! -z "$OD_DBUS_SESSION_BUS" ]; then
+#   echo "starting OD_DBUS_SESSION_BUS is set $OD_DBUS_SESSION_BUS" >> /var/log/desktop/dbus.log
+#   dbus_session=$(dbus-daemon --config-file=/usr/share/dbus-1/session.conf --print-address --fork --nosyslog)
+#   if [ $? -eq 0 ]; then
+#   	echo "export DBUS_SESSION_BUS_ADDRESS=$dbus_session" > ~/.DBUS_SESSION_BUS
+#	chmod 755  ~/.DBUS_SESSION_BUS
+#        echo "DBUS_SESSION is set $dbus_session" >> /var/log/desktop/dbus.log
+#   else
+#	[ -f ~/.DBUS_SESSION_BUS ] && rm ~/.DBUS_SESSION_BUS
+#   fi
+#fi 
 
-# Check if need to start dbus system
-if [ ! -z "$OD_DBUS_SYSTEM_BUS" ]; then
-   echo "starting OD_DBUS_SYSTEM_BUS is set $OD_DBUS_SYSTEM_BUS" >> /var/log/desktop/dbus.log
-   dbus_system=$(dbus-daemon --config-file=/usr/share/dbus-1/system.conf --print-address  --fork --nosyslog ) 
-   if [ $? -eq 0 ]; then
-   	echo "export DBUS_SYSTEM_BUS_ADDRESS=$dbus_system" > ~/.DBUS_SYSTEM_BUS
-	chmod 755 ~/.DBUS_SYSTEM_BUS
-	echo "DBUS_SYSTEM is set $dbus_system" >> /var/log/desktop/dbus.log
-   else
-	[ -f ~/.DBUS_SYSTEM_BUS ] && rm ~/.DBUS_SYSTEM_BUS
-   fi
-fi
-
-# dbus-daemon --config-file=/usr/share/dbus-1/system.conf --print-address
+## Check if need to start dbus system
+#if [ ! -z "$OD_DBUS_SYSTEM_BUS" ]; then
+#   echo "starting OD_DBUS_SYSTEM_BUS is set $OD_DBUS_SYSTEM_BUS" >> /var/log/desktop/dbus.log
+#   dbus_system=$(dbus-daemon --config-file=/usr/share/dbus-1/system.conf --print-address  --fork --nosyslog ) 
+#   if [ $? -eq 0 ]; then
+#   	echo "export DBUS_SYSTEM_BUS_ADDRESS=$dbus_system" > ~/.DBUS_SYSTEM_BUS
+#	chmod 755 ~/.DBUS_SYSTEM_BUS
+#	echo "DBUS_SYSTEM is set $dbus_system" >> /var/log/desktop/dbus.log
+#   else
+#	[ -f ~/.DBUS_SYSTEM_BUS ] && rm ~/.DBUS_SYSTEM_BUS
+#   fi
+#fi
 
 
 ## KERBEROS SECTION
