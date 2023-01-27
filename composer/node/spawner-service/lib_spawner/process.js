@@ -76,8 +76,6 @@ function getEnvDefault() {
     LIBOVERLAY_SCROLLBAR: '0',
     SHELL: '/bin/bash',
     PATH: `/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:${roothomedir}/.local/share/applications/bin`,
-    UID: 4096,
-    EUID: 4096,
     LANGUAGE: l,
     LANG: lUtf8,
     LC_ALL: lUtf8,
@@ -194,7 +192,7 @@ async function about(clientIpAddr) {
 
   const jsonres = {};
   jsonres.hostname = os.hostname();
-  jsonres.ipaddr = os.networkInterfaces().eth0[0].address;
+  jsonres.ipaddr = process.env['CONTAINER_IP_ADDR'];
   jsonres.platform = os.platform();
   jsonres.arch = os.arch();
   jsonres.release = os.release();
@@ -211,6 +209,29 @@ async function about(clientIpAddr) {
 
   return { ...jsonres, ...getProcessEnv() };
 }
+
+/**
+ *
+ */
+async function getenv() {
+
+  const jsonres = {};
+  jsonres.env = process.env;
+  return { ...jsonres };
+}
+
+/**
+ *
+ */
+async function getnetworkinterfaces() {
+
+  const jsonres = {};
+  jsonres.networkInterfaces = os.networkInterfaces();
+  return { ...jsonres };
+}
+
+
+
 
 /**
  *
@@ -331,12 +352,26 @@ function routerInit(router) {
     res.send(jsonres);
   }));
 
+  router.get('/getenv', asyncHandler(async (req, res) => {
+    const jsonres = await getenv();
+    res.send(jsonres);
+  }));
+
+  router.get('/getnetworkinterfaces', asyncHandler(async (req, res) => {
+    const jsonres = await getnetworkinterfaces();
+    res.send(jsonres);
+  }));
+
+  /* 
+   * deprecated 
   router.post('/kill', (req, res) => {
     const { pid } = req.body;
     process.kill(pid, 9);
     const ret = { code: 200, data: 'ok' };
     res.status(ret.code).send(ret);
   });
+  */
+
 
   /**
    * @swagger
