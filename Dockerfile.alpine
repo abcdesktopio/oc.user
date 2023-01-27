@@ -38,9 +38,10 @@ FROM ${BASE_IMAGE}:${TAG} as alpine_node_modules_builder
 # https://dl-cdn.alpinelinux.org/alpine/edge/main
 # https://dl-cdn.alpinelinux.org/alpine/edge/community
 # https://dl-cdn.alpinelinux.org/alpine/edge/testing
-RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" > /etc/apk/repositories; \
-    echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories; \
-    echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories 
+# Add tagged repos as well as the edge repo so that we can selectively install edge packages
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" 	>> /etc/apk/repositories && \
+    echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
+    echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" 	>> /etc/apk/repositories 
 
 RUN apk add  --no-cache --update  \
 	python3		\
@@ -95,6 +96,10 @@ RUN yarn install --production=true
 FROM ${BASE_IMAGE}:${TAG}
 
 COPY etc /etc
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main"      >> /etc/apk/repositories && \
+    echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
+    echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing"   >> /etc/apk/repositories
+
 RUN apk add --no-cache --update \
 	python3			\
         curl            	\
