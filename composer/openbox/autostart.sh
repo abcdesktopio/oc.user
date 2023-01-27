@@ -1,40 +1,32 @@
 #!/bin/bash
-LOG_FILE=/var/log/desktop/openbox_autostart.log
-echo 'Start autostart' > $LOG_FILE
+STDOUT_LOGFILE=/var/log/desktop/openbox_autostart.log
 
-# set DISPLAY to use
-# export DISPLAY=:0.0
+log() {
+echo "$(date) $1" >> $STDOUT_LOGFILE
+}
 
-# make Xauth
-# permit xhost from x.x.x.2 to x.x.x.254 modulo 2
-# subnet=$(ifconfig eth0 | grep "inet addr" | cut -d ':' -f 2 | cut -d ' ' -f 1 | cut -d '.' -f 1,2,3)
+log "Start autostart"
 
+# 
+#
+# There are two commonly used ways to allow access to an X server. 
+# - ABCDESKTOP used an Xauthority file, which is shared by the clients, and needs no further server-side configuration. 
+# - The other is via the xhost list, where configuration is done on the server at runtime (so this is not a permanent change).
+#
+#
 
-# do not use for 
-# Step the loop manually
-# openbox shell default is not bash
-# i=2
-# max=255
-# while [ $i -lt $max ]
-# do
-#    # echo xhost +"$subnet"."$i" >> /tmp/autostart.log
-#    xhost +"$subnet"."$i"
-#    true $((i=i+1))
-# done
-
-echo "ENV_X11LISTEN=$ENV_X11LISTEN" > $LOG_FILE
+log "ENV_X11LISTEN=$ENV_X11LISTEN"
 if [ "$ENV_X11LISTEN" == "tcp" ]; then
-	echo "running xhost + command" > $LOG_FILE
-	xhost + > $LOG_FILE
+	log "running xhost + command"
+	xhost + > $STDOUT_LOGFILE
 else
-	echo "Not running xhost command" > $LOG_FILE
+	log "Not running xhost command"
 fi
 
 # set fonts for Qt applications
-# Used by Dropbox for exemple 
-# [[ -f ~/.Xresources ]] && xrdb -merge $HOME/.Xresources 2>>$LOG_FILE
+# [[ -f ~/.Xresources ]] && xrdb -merge $HOME/.Xresources 2>>$STDOUT_LOGFILE
 
 # Change default backgroup color in X11
-xsetroot -solid '#6ec6f0' 2>>$LOG_FILE
+xsetroot -solid '#6ec6f0' 2>>$STDOUT_LOGFILE
 
-echo 'End autostart' >> $LOG_FILE
+log "End autostart"
