@@ -5,12 +5,12 @@ ARG BASE_IMAGE_RELEASE=18.04
 # Default base image 
 ARG BASE_IMAGE=abcdesktopio/oc.software.18.04
 
-
 FROM abcdesktopio/mutter:${BASE_IMAGE_RELEASE} AS mutter
 
 # --- BEGIN node_modules_builder ---
 FROM ${BASE_IMAGE}:${TAG} as node_modules_builder
 
+COPY TARGET_MODE /TARGET_MODE
 RUN cat /etc/lsb-release
 # 
 #  Add dev package to node install
@@ -57,22 +57,13 @@ RUN yarn install --production=true
 WORKDIR /composer/node/occall
 RUN yarn install --production=true
 
-WORKDIR /composer/node/file-service
-RUN yarn install --production=true
-
-WORKDIR /composer/node/printer-service
-RUN yarn install --production=true
-
 WORKDIR /composer/node/spawner-service
 # install node-gyp to build spawner-service
 RUN yarn global add node-gyp
 RUN yarn install --production=true
 
-# WORKDIR /composer/node/lync 
-# RUN yarn install
-
 WORKDIR /composer/node/xterm.js
-RUN yarn install --production=true
+RUN if [ $(cat /TARGET_MODE) != hardening ]; then yarn install --production=true; fi
 
 # version.json must be created by mkversion.sh nbash script
 COPY composer/version.json /composer/version.json
@@ -83,34 +74,6 @@ COPY composer/version.json /composer/version.json
 # --- START Build image ---
 FROM ${BASE_IMAGE}:${TAG}
 COPY TARGET_MODE /TARGET_MODE
-
-# if TARGET_MODE is docker
-# no pod is ready to provide
-# sound and printer
-# add sound and printer service
-# cups-pdf: pdf printer support
-# scrot: screenshot tools
-# smbclient need to install smb printer
-# cups: printer support
-# add pulseaudio server
-RUN if [ $(cat /TARGET_MODE) = docker ]; then \
-	apt-get update && apt-get install -y --no-install-recommends \
-		pulseaudio 	\
-        	smbclient	\
-		cups-pdf 	\
-		scrot  		\
-        	cups		\
-    	&& apt-get clean && rm -rf /var/lib/apt/lists/*; fi
-
-# if TARGET_MODE is kubernetes
-# cupsd, pulseaudo printer-service file-service are dedicated container inside the user pod
-# remove supervisor files
-RUN if [ $(cat /TARGET_MODE) = kubernetes ]; then \
-	rm -rf 	/etc/supervisor/conf.d/pulseaudio.conf \
-		/etc/supervisor/conf.d/printer-service.conf \
-		/etc/supervisor/conf.d/file-service.conf \
-		/etc/supervisor/conf.d/cupsd.conf;\
-    fi
 
 # splitted for debug
 # update replace by default websockify package
@@ -131,14 +94,29 @@ RUN apt-get update && apt-get install -y  \
     && apt-get clean                    \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get install -y  \
+	gsetroot	\
+    && apt autoremove -y        \
+    && apt-get clean                    \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=node_modules_builder 	/composer  		/composer
+
+# if TARGET_MODE is hardening
+# remove shell websocket xterm.js files
+RUN if [ $(cat /TARGET_MODE) = hardening ]; then \
+        rm -rf /composer/node/xterm.js;		 \
+    fi
 
 #
 # themes section
 # copy themes from abcdesktopio/oc.themes
 COPY --from=abcdesktopio/oc.themes 	/usr/share/icons  	/usr/share/icons
 COPY --from=abcdesktopio/oc.themes 	/usr/share/themes 	/usr/share/themes
+
+#
+#
+#
 RUN apt-get update && apt-get install -y --no-install-recommends \
 	adwaita-icon-theme-full 	\
 	gnome-themes-standard		\
@@ -169,7 +147,7 @@ ENV BUSER balloon
 # RUN adduser --disabled-password --gecos '' $BUSER
 # RUN id -u $BUSER &>/dev/null || 
 RUN groupadd --gid 4096 $BUSER
-RUN useradd --create-home --shell /bin/bash --uid 4096 -g $BUSER --groups lpadmin,sudo $BUSER
+RUN useradd --create-home --shell /bin/bash --uid 4096 -g $BUSER $BUSER
 # create an ubuntu user
 RUN echo "balloon:lmdpocpetit" | chpasswd $BUSER
 
@@ -183,27 +161,27 @@ RUN rm -rf /etc/X11/openbox
 
 COPY etc /etc
 
-RUN chown -R $BUSER:$BUSER /etc/pulse && \
-    chown -R $BUSER:$BUSER /etc/cups
-
-RUN date > /etc/build.date
-
-
-# if TARGET_MODE is docker
-# Add here commands need to run as sudo user
-# cupsd must be run as root
-# changehomeowner  
-RUN if [ $(cat /TARGET_MODE) = docker ]; then \
-	echo "$BUSER ALL=(root) NOPASSWD: /usr/sbin/cupsd" >> /etc/sudoers.d/cupsd  && \
-	echo "$BUSER ALL=(root) NOPASSWD: /composer/changehomeowner.sh" >> /etc/sudoers.d/changehomeowner; \
+# if TARGET_MODE is not hardening
+# cupsd, pulseaudo printer-service file-service are dedicated container inside the user pod
+# remove supervisor files
+RUN if [ $(cat /TARGET_MODE) != hardening ]; then 	\
+	apt-get update && 				\
+	apt-get install -y --no-install-recommends 	\
+		iputils-ping 	\
+		vim 		\
+		telnet 		\
+		qterminal && 	\
+	apt-get clean; \
     fi
 
-# if TARGET_MODE is kubernetes
-# kubernetes use a -n init container command, 
-# no need the bash script /composer/changehomeowner.sh
-RUN if [ $(cat /TARGET_MODE) = kubernetes ]; then \
-	rm /composer/changehomeowner.sh; \
+# remove /etc/supervisor/conf.d/xterm.conf in hardening
+RUN if [ $(cat /TARGET_MODE) = hardening ]; then echo 'removing /etc/supervisor/conf.d/xterm.conf' &&  rm /etc/supervisor/conf.d/xterm.conf; fi
+# remove /etc/supervisor/conf.d/file-service.conf /etc/supervisor/conf.d/cupsd.conf /etc/supervisor/conf.d/printerfile-service.conf /etc/supervisor/conf.d/pulseaudio.conf in kubernetes
+RUN if [ $(cat /TARGET_MODE) = kubernetes ] || [ $(cat /TARGET_MODE) = hardening ]; then \
+    echo 'removing /etc/supervisor/conf.d/file-service.conf /etc/supervisor/conf.d/cupsd.conf /etc/supervisor/conf.d/printerfile-service.conf /etc/supervisor/conf.d/pulseaudio.conf' &&    \
+    rm  /etc/supervisor/conf.d/file-service.conf /etc/supervisor/conf.d/cupsd.conf /etc/supervisor/conf.d/printerfile-service.conf /etc/supervisor/conf.d/pulseaudio.conf;              \
     fi
+
 
 
 # 
@@ -212,73 +190,25 @@ RUN if [ $(cat /TARGET_MODE) = kubernetes ]; then \
 RUN touch /usr/bin/ntlm_auth.desktop
 
 # LOG AND PID SECTION
-RUN mkdir -p 	/var/log/desktop \ 
-        	/var/run/desktop \
-        	/composer/run	 \
-		/container/.cache 	 
+RUN mkdir -p 		/var/log/desktop /var/run/desktop /container/.cache && \
+    chmod 777 		/var/log/desktop /var/run/desktop /container/.cache
 
-# XDG
-RUN mkdir -p  	/run/user/4096	&& \
-    chown $BUSER:$BUSER /run/user/4096 && \
-    chmod 700 /run/user/4096 
-    
-
-## DBUS SECTION
-RUN mkdir -p    /var/run/dbus      
-RUN touch /var/lib/dbus/machine-id
-RUN chown -R $BUSER:$BUSER 				\
-		/var/run/dbus    			\
-		/var/lib/dbus				\
-		/var/lib/dbus/machine-id  
-		
-# DO NOT CHANGE
-# COPY usr/share/dbus-1/session.conf /usr/share/dbus-1/session.conf
-# COPY usr/share/dbus-1/system.conf  /usr/share/dbus-1/system.conf
-
-
-# change access rights
-RUN chown -R $BUSER:$BUSER 				\
-	/container					\
-	/container/.cache                               \  
-	/etc/X11/openbox				\
-	/var/log/desktop				\
-	/var/run/desktop				\
-	/composer/run					\
-	/composer/mime					\
-	/composer/icons					\
-	/composer/.gtkrc-2.0				\
-	/composer/.xsettingsd				\
-	/composer/.gconf				\
-	/composer/.Xresources
-
-# install the abcdesktop openbox package
-# COPY --from=mutter *.deb  /tmp/
-# WORKDIR /tmp
-#RUN apt-get update && \
-#    apt-get install -y --no-install-recommends  \
-#	mutter				&& \
-#    apt-get install -y --no-install-recommends ./mutter-common*.deb          && \
-#    apt-get install -y --no-install-recommends ./libmutter-?-0*.deb          && \
-#    apt-get install -y --no-install-recommends ./gir1.2-mutter-*.deb         && \
-#    apt-get install -y --no-install-recommends ./mutter_3.*.deb        	&& \   
-#    rm -rf /tmp/*.deb			&& \
-#    apt-get clean  			&& \
-#    rm -rf /var/lib/apt/lists/*
-
-# RUN apt-get update && \
-#    apt-get install -y --no-install-recommends  \
-#	libglib2.0-bin				\
-#    && \
-#    apt-get clean                       && \
-#    rm -rf /var/lib/apt/lists/*
-
-# Clean unecessary package
+# clean unnecessary package
 # but it's too late
 RUN rm -rf /tmp/*
 
-# VOLUME /home/$BUSER
+# change passwd shadow group gshadow
+ENV ABCDESKTOP_LOCALACCOUNT_DIR "/var/secrets/abcdesktop/localaccount"
+RUN mkdir -p $ABCDESKTOP_LOCALACCOUNT_DIR 
+RUN for f in passwd shadow group gshadow ; do if [ -f /etc/$f ] ; then  cp /etc/$f $ABCDESKTOP_LOCALACCOUNT_DIR ; rm -f /etc/$f; ln -s $ABCDESKTOP_LOCALACCOUNT_DIR/$f /etc/$f; fi; done
+# set build date
+RUN date > /etc/build.date
 WORKDIR /home/$BUSER
+
+# set default user
 USER $BUSER
+
+# set command
 CMD [ "/composer/docker-entrypoint.sh" ]
 
 ####################################################
