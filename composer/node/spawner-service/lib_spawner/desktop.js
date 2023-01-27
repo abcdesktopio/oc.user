@@ -118,26 +118,29 @@ function getmimeforfile(_filename) {
  * @desc Build .desktop files to run containerized applications
  */
 async function generateDesktopFiles(list = []) {
+  console.log('generateDesktopFiles');
+  console.log(`list of application len is ${list.length}`);	
   const ocrunpath = '/composer/node/ocrun/ocrun.js';
   for (const {
     mimetype,
     path,
     executablefilename,
     icon,
-    icon_data,
+    icondata,
     icon_url,
     name,
     launch,
     desktopfile,
   } of list) {
+    console.log(`name=${name}`);
     if ( path
       && executablefilename
       && icon
       && name
       && launch
       && desktopfile) {
+      console.log(desktopfile);
       const filepath = `${roothomedir}/.local/share/applications/${desktopfile}`;
-
       const contentdesktop = {};
       contentdesktop.Name = name;
       contentdesktop.Exec = `${roothomedir}/.local/share/applications/bin/${launch} %U`;
@@ -167,10 +170,10 @@ async function generateDesktopFiles(list = []) {
         // file does not exists
         // decode base64 data it
         if (err) {
-        if (icon_data) {
+        if (icondata) {
             console.log( 'writing new icon file ' + contentdesktop.Icon );
             fs.writeFile(   contentdesktop.Icon, 
-                            icon_data,
+                            icondata,
                             'base64',
                             (err) => {
                                 if (err)
