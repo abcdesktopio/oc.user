@@ -59,6 +59,8 @@ else
 	echo 'error not vnc password has been set, everything is going wrong'
 	echo 'run a ls -la /var/secrets/abcdesktop to help troubleshooting'
 	ls -la /var/secrets/abcdesktop
+	echo 'fix use changemeplease as vncpassword'
+	echo changemeplease | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
 fi
 
 
@@ -316,6 +318,10 @@ fi
 if [ ! -z "$KUBERNETES_SERVICE_HOST" ]; then
    echo "starting in kubernetes mode " >> /var/log/desktop/config.log
    echo "starting KUBERNETES_SERVICE_HOST is set to $KUBERNETES_SERVICE_HOST" >> /var/log/desktop/config.log
+else
+   echo 'KUBERNETES_SERVICE_HOST is not set, this is wrong'
+   echo 'fix KUBERNETES_SERVICE_HOST=localhost as dummy value' 
+   export KUBERNETES_SERVICE_HOST=localhost
 fi
 
 if  [ ! -z "$ABCDESKTOP_DEMO_ENABLE" ]; then
