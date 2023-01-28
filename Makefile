@@ -1,75 +1,53 @@
-all: version userkubernetes1804 userhardening1804 userhardening2004 userkubernetes2004
+all: version kubernetes hardening
 registry: all push
 NOCACHE ?= false
-ifdef $$NOCACHE
-  NOCACHE := $$NOCACHE
+
+ifdef NOCACHE
+  NOCACHE=false
+endif
+
+ifndef TAG
+ TAG=3.0
 endif
 
 version:
+	@echo "use TAG=$(TAG)"\;
+	@echo "use PROXY=$(PROXY)"\;
+	@echo "use NOCACHE=$(NOCACHE)"\;
 	$(shell ./mkversion.sh)
 
-themes:
-	docker build --no-cache=$(NOCACHE) --tag abcdesktopio/oc.themes --file ./Dockerfile.themes .
+test:
+	./make-test.sh
 
-userhardening1804:
+kubernetes:
 	echo hardening > TARGET_MODE
 	docker build \
 	    --no-cache=$(NOCACHE) \
-	    --build-arg BASE_IMAGE_RELEASE=18.04 \
-            --build-arg BASE_IMAGE=abcdesktopio/oc.software.18.04 \
-            --build-arg TAG=dev \
-            --platform linux/amd64 \
+	    --build-arg BASE_IMAGE_RELEASE=edge \
+            --build-arg BASE_IMAGE=alpine \
             --output "type=docker" \
-            --tag abcdesktopio/oc.user.kubernetes.hardening.18.04:3.0.dev \
-            --file ./Dockerfile .
+	    --tag abcdesktopio/oc.user.alpine:$(TAG) \
+            --file ./Dockerfile.alpine .
 
-userhardening2004:
+hardening:
 	echo hardening > TARGET_MODE
 	docker build \
             --no-cache=$(NOCACHE) \
-            --build-arg BASE_IMAGE_RELEASE=20.04 \
-            --build-arg BASE_IMAGE=abcdesktopio/oc.software.20.04 \
-            --build-arg TAG=dev \
-            --platform linux/amd64 \
+            --build-arg BASE_IMAGE_RELEASE=edge \
+            --build-arg BASE_IMAGE=alpine \
             --output "type=docker" \
-            --tag abcdesktopio/oc.user.kubernetes.hardening.20.04:3.0.dev \
-            --file ./Dockerfile .
-
-userkubernetes1804:
-	echo kubernetes > TARGET_MODE
-	docker build \
-            --no-cache=$(NOCACHE) \
-            --build-arg BASE_IMAGE_RELEASE=18.04 \
-            --build-arg BASE_IMAGE=abcdesktopio/oc.software.18.04 \
-            --build-arg TAG=dev \
-            --platform linux/amd64 \
-            --output "type=kubernetes" \
-            --tag abcdesktopio/oc.user.kubernetes.18.04:3.0.dev \
-            --file ./Dockerfile .
-
-userkubernetes2004:
-	echo kubernetes > TARGET_MODE
-	docker build \
-            --no-cache=$(NOCACHE) \
-            --build-arg BASE_IMAGE_RELEASE=20.04 \
-            --build-arg BASE_IMAGE=abcdesktopio/oc.software.20.04 \
-            --build-arg TAG=dev \
-            --platform linux/amd64 \
-            --output "type=kubernetes" \
-            --tag abcdesktopio/oc.user.kubernetes.20.04:3.0.dev \
-            --file ./Dockerfile .
-
-build:version  user
-	@echo "Build done."
+	    --tag abcdesktopio/oc.user.alpine.hardening:$(TAG) \
+            --file ./Dockerfile.alpine .
 
 clean:
-	docker rmi abcdesktopio/oc.user.18.04:3.0.dev
+	docker rmi abcdesktopio/oc.user.alpine.hardening:$(TAG)
+	docker rmi abcdesktopio/oc.user.alpine:$(TAG)
 
 docs:
 	cd composer/node/spawner-service && npm run docs
 	cd composer/node/file-service && npm run docs
 
 push:
-	docker push abcdesktopio/oc.user.kubernetes.18.04:3.0.dev
-	docker push abcdesktopio/oc.user.kubernetes.20.04:3.0.dev
+	docker push abcdesktopio/oc.user.alpine.hardening:$(TAG)
+	docker push abcdesktopio/oc.user.alpine:$(TAG)
 
