@@ -6,12 +6,5 @@
 # yarn install --production=false
 
 apt-get update
-apt-get install -y 	\
-	libxmu-dev	\
-	gcc             \
-	g++             \
-	make    	\
-	libx11-dev 	\
-	libxmu-dev 	\
-	git
+apt-get install -y libxmu-dev gcc g++ make libx11-dev libxmu-dev git
 
