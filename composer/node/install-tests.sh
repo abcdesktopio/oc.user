@@ -5,20 +5,13 @@
 # this script install missing package with --production=false option
 # yarn install --production=false
 
-#curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/yarnkey.gpg >/dev/null
-#echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-#apt-get update && apt-get install yarn
-#apt-get install -y npm
+DISTRIB=$(awk '/^ID=/' /etc/*-release | sed 's/ID=//' | tr '[:upper:]' '[:lower:]')
+echo "distrib is $DISTRIB"
+if [ -f /composer/node/install-tests-$DISTRIB.sh ]; then
+	echo "call /composer/node/install-tests-$DISTRIB.sh"
+	/composer/node/install-tests-$DISTRIB.sh
+fi	
 
-apt-get update
-apt-get install -y 	\
-	libxmu-dev	\
-	gcc             \
-	g++             \
-	make    	\
-	libx11-dev 	\
-	libxmu-dev 	\
-	git
 # install yarn with npm install
 # npm install -g yarn
 # install full options without production
