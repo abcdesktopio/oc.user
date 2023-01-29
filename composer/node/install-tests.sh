@@ -5,12 +5,19 @@
 # this script install missing package with --production=false option
 # yarn install --production=false
 
-DISTRIB=$(awk '/^ID=/' /etc/*-release | sed 's/ID=//' | tr '[:upper:]' '[:lower:]')
-echo "distrib is $DISTRIB"
-if [ -f /composer/node/install-tests-$DISTRIB.sh ]; then
-	echo "call /composer/node/install-tests-$DISTRIB.sh"
-	/composer/node/install-tests-$DISTRIB.sh
-fi	
+distrib=$(awk '/^ID=/' /etc/*-release | sed 's/ID=//' | tr '[:upper:]' '[:lower:]')
+echo "distrib is $distrib"
+
+if [[ ${distrib} == "alpine" ]]; then
+	echo "install packages for $distrib"
+	apk add git gcc make g++ bash build-base alpine-sdk sudo wget python3 libx11-dev yarn
+fi
+
+if [[ ${distrib} == "ubuntu" ]]; then
+	echo "install packages for $distrib"
+	apt-get update
+	apt-get install -y libxmu-dev gcc g++ make libx11-dev libxmu-dev git
+fi
 
 # install yarn with npm install
 # npm install -g yarn
