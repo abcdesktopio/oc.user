@@ -297,11 +297,6 @@ fi
 # add file start info timedate data
 echo `date` > ${ABCDESKTOP_RUN_DIR}/start.txt
 
-# Read first ip add
-CONTAINER_IP_ADDR=$(hostname -i)
-echo "Container local ip addr is $CONTAINER_IP_ADDR"
-export CONTAINER_IP_ADDR
-
 # start sshd on demand
 if [ ! -z "$SSHD_ENABLE" ]; then
 	if [ ! -z "$SSHD_NETWORK_INTERFACE" ]; then
