@@ -14,7 +14,7 @@ cd /composer/node/broadcast-service
 CONTAINER_IP=${CONTAINER_IP} yarn test
 
 if [ -f /TARGET_MODE ]; then
-	if [ $(cat /TARGET_MODE) != hardening ];
+	if [ $(cat /TARGET_MODE) != hardening ]; then
 		cd /composer/node/xterm.js 
 		CONTAINER_IP=${CONTAINER_IP} yarn test
 	fi
