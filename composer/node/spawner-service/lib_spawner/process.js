@@ -362,16 +362,13 @@ function routerInit(router) {
     res.send(jsonres);
   }));
 
-  /* 
-   * deprecated 
+   
   router.post('/kill', (req, res) => {
     const { pid } = req.body;
     process.kill(pid, 9);
     const ret = { code: 200, data: 'ok' };
     res.status(ret.code).send(ret);
   });
-  */
-
 
   /**
    * @swagger
