@@ -24,7 +24,7 @@ echo "Container ID: ${CONTAINER_ID}"
 echo "Waiting for ${CONTAINER_ID}.State.Running..."
 until [ "`docker inspect -f {{.State.Running}} $CONTAINER_ID`"=="true" ]; do
     echo '.'
-    sleep 0.1;
+    sleep 1;
 done;
 
 
@@ -40,6 +40,8 @@ if [ $? -ne 0 ]; then
         docker logs ${CONTAINER_ID}
         exit 1
 fi
+
+echo "${CONTAINER_ID} has ip address ${CONTAINER_IP}" 
 
 echo "Waiting for X11 service"
 # desktopservicestcpport = { 'x11server': 6081, 'spawner': 29786, 'broadcast': 29784 }"
@@ -69,7 +71,7 @@ if [ $? -ne 0 ]; then
         exit 1
 fi
 
-MAX_SERVICE_COUNT=9
+MAX_SERVICE_COUNT=6
 echo "Waiting for supervisor status"
 while true
 do
