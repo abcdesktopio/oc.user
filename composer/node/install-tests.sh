@@ -23,7 +23,7 @@ if [[ ${distrib} == "ubuntu" ]]; then
 	curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/nul
 	echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | tee /etc/apt/sources.list.d/yarn.list
 	apt-get update && apt-get install -y yarn
-	apt-get install x11-apps
+	apt-get install -y x11-apps
 fi
 
 # install yarn with npm install
