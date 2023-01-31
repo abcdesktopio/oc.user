@@ -1,8 +1,8 @@
-all: version kubernetes hardening
+all: version alpine
 registry: all push
 NOCACHE ?= false
 
-ifdef NOCACHE
+ifndef NOCACHE
   NOCACHE=false
 endif
 
@@ -17,10 +17,10 @@ version:
 	$(shell ./mkversion.sh)
 
 test:
-	./make-test.sh
+	./make-test.sh abcdesktopio/oc.user.alpine:$(TAG)
 
-kubernetes:
-	echo hardening > TARGET_MODE
+alpine:
+	echo kubernetes > TARGET_MODE
 	docker build \
 	    --no-cache=$(NOCACHE) \
 	    --build-arg BASE_IMAGE_RELEASE=edge \
@@ -29,7 +29,6 @@ kubernetes:
 	    --tag abcdesktopio/oc.user.alpine:$(TAG) \
             --file ./Dockerfile.alpine .
 
-hardening:
 	echo hardening > TARGET_MODE
 	docker build \
             --no-cache=$(NOCACHE) \
@@ -38,6 +37,26 @@ hardening:
             --output "type=docker" \
 	    --tag abcdesktopio/oc.user.alpine.hardening:$(TAG) \
             --file ./Dockerfile.alpine .
+
+ubuntu:
+	echo kubernetes > TARGET_MODE
+	docker build \
+            --no-cache=$(NOCACHE) \
+            --build-arg BASE_IMAGE_RELEASE=22.04 \
+            --build-arg BASE_IMAGE=ubuntu \
+            --output "type=docker" \
+            --tag abcdesktopio/oc.user.ubuntu:$(TAG) \
+            --file ./Dockerfile.ubuntu .
+
+	echo hardening > TARGET_MODE
+	docker build \
+            --no-cache=$(NOCACHE) \
+            --build-arg BASE_IMAGE_RELEASE=22.04 \
+            --build-arg BASE_IMAGE=ubuntu \
+            --output "type=docker" \
+            --tag abcdesktopio/oc.user.ubuntu.hardening:$(TAG) \
+            --file ./Dockerfile.ubuntu .
+
 
 clean:
 	docker rmi abcdesktopio/oc.user.alpine.hardening:$(TAG)
