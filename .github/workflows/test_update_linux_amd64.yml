@@ -3,14 +3,6 @@ name: Build and test oc.user images linux amd64
 on:
   push:
     branches: [ main ]
-  repository_dispatch:
-    types: [
-      dispatch-from-pulse,
-      dispatch-from-cups,
-      dispatch-from-oc.software,
-      dispatch-from-file-service,
-      dispatch-from-printer-service
-    ]
     
 env:
   TEST_TAG: abcdesktopio/oc.user:test
@@ -18,9 +10,7 @@ env:
 jobs:
   update_image:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        BASE_IMAGE_RELEASE: [18.04, 20.04, 22.04]
+
     steps: 
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -40,7 +30,7 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_TOKEN }}
 
-    - name: Run Buildx oc.user.${{ matrix.BASE_IMAGE_RELEASE }}
+    - name: Run Buildx oc.user.alpine
       run: |
           echo "docker" > TARGET_MODE
           ./mkversion.sh
@@ -49,90 +39,44 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         context: .
-        file: ./Dockerfile
+        file: ./Dockerfile.alpine
         platforms: linux/amd64
         load: true
         build-args: |
           TAG=dev
-          BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }}
-          BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }}
+          BASE_IMAGE_RELEASE=edge
+          BASE_IMAGE=alpine
         tags: ${{ env.TEST_TAG }}
 
     - name: Run and test docker image ${{ env.TEST_TAG }}
       run: |
         ./make-test.sh ${{ env.TEST_TAG }}
     
-    - name: Build and push image oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
+    - name: Build and push image oc.user.alpine:dev
       uses: docker/build-push-action@v3
       with:
         context: .
-        file: ./Dockerfile
+        file: ./Dockerfile.alpine
         platforms: linux/amd64, linux/arm64
         push: true
         build-args: |
           TAG=dev
-          BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }}
-          BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }}
-        tags: abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
+          BASE_IMAGE_RELEASE=edge
+          BASE_IMAGE=alpine
+        tags: abcdesktopio/oc.user.alpine:dev
         
         
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev
+        image-ref: abcdesktopio/oc.user.alpine:dev
         format: 'sarif'
-        output: oc.user.${{ matrix.BASE_IMAGE_RELEASE }}.sarif
+        output: oc.user.alpine.sarif
 
     - name: Upload Trivy scan results to GitHub Security tab
       uses: github/codeql-action/upload-sarif@v2
       if: always()
       with:
-        sarif_file: oc.user.${{ matrix.BASE_IMAGE_RELEASE }}.sarif
+        sarif_file: oc.user.alpine.sarif
   
-    - name: Run Buildx oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}
-      run: |
-         echo "kubernetes" > TARGET_MODE
-         ./mkversion.sh
-         
-    - name: Build and push image oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}:dev
-      uses: docker/build-push-action@v3
-      with:
-        context: .
-        file: ./Dockerfile
-        platforms: linux/amd64, linux/arm64
-        push: true
-        build-args: |
-          TAG=dev
-          BASE_IMAGE_RELEASE=${{ matrix.BASE_IMAGE_RELEASE }}
-          BASE_IMAGE=abcdesktopio/oc.software.${{ matrix.BASE_IMAGE_RELEASE }}
-        tags: |
-          abcdesktopio/oc.user.kubernetes.${{ matrix.BASE_IMAGE_RELEASE }}:dev
-        
-    # - name: Update platform webhook pull
-    #  run: curl -X POST -u "${{ secrets.WEBHOOK_USERNAME }}:${{ secrets.WEBHOOK_PASSWORD }}" -d "abcdesktopio/oc.user.${{ matrix.BASE_IMAGE_RELEASE }}:dev"  "${{ secrets.WEBHOOK_URL }}/kubernetes/pull"
-      
 
-  dispatch_oc_user_debuger:
-    runs-on: ubuntu-latest
-    needs: update_image
-    steps:
-      - name: Dispatch repository oc.user.debuger
-        uses: peter-evans/repository-dispatch@v1
-        with:
-          token: ${{ secrets.TOKEN_DISPATCH }}
-          repository: abcdesktopio/oc.user.debuger
-          event-type: dispatch-from-oc.user
-
-      - name: Dispatch repository oc.user.nvidia
-        uses: peter-evans/repository-dispatch@v1
-        with:
-          token: ${{ secrets.TOKEN_DISPATCH }}
-          repository: abcdesktopio/oc.user.nvidia
-          event-type: dispatch-from-oc.user
-
-      - name: Dispatch repository oc.user.tunnel
-        uses: peter-evans/repository-dispatch@v1
-        with:
-          token: ${{ secrets.TOKEN_DISPATCH }}
-          repository: abcdesktopio/oc.user.tunnel
-          event-type: dispatch-from-oc.user
