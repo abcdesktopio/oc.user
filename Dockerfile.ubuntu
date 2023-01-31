@@ -1,0 +1,238 @@
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+# Default release is 18.04
+ARG TAG=latest
+# Default base image 
+ARG BASE_IMAGE=ubuntu
+ARG BASE_IMAGE_RELEASE=18.04
+
+#
+# create apk package for openbox
+# pkg files will be located in /root/packages/$(uname -m) directory 
+# patched with openbox.title.patch for abcdesktop
+FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} as openbox_ubuntu_builder
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+RUN sed -i '/deb-src/s/^# //' /etc/apt/sources.list
+RUN apt update
+RUN apt-get install -y --no-install-recommends fakeroot devscripts devscripts binutils wget
+RUN apt-get build-dep -y openbox
+RUN mkdir -p /openbox/src
+WORKDIR /openbox
+RUN apt-get source openbox
+RUN wget https://raw.githubusercontent.com/abcdesktopio/openbox/main/openbox.title.patch
+RUN cd openbox-3.6.1 && patch -p2 < ../openbox.title.patch
+RUN cd openbox-3.6.1 && dch -n abcdesktop_sig_usr
+RUN cd openbox-3.6.1 && EDITOR=/bin/true dpkg-source -q --commit . abcdesktop_sig_usr
+RUN cd openbox-3.6.1 && debuild -us -uc
+
+
+
+# install all nodejs modules
+# build nodejs module
+# create /composer/node
+# use FROM BASE_IMAGE
+# define FROM before use ENV command
+FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} as ubuntu_node_modules_builder
+
+COPY TARGET_MODE /TARGET_MODE
+
+RUN apt-get update && apt-get install -y  --no-install-recommends      \
+        gcc                             \
+        g++                             \
+        make                            \
+        && apt-get clean                \
+        && rm -rf /var/lib/apt/lists/*
+
+# to make install wmctrljs nodejs components
+# add build dev package 
+RUN apt-get update && apt-get install -y  --no-install-recommends \
+        ca-certificates \
+        libx11-dev \
+        libxmu-dev \
+        git        \
+        curl       \
+        gnupg      \
+        dpkg
+
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs && apt-get clean && rm -rf /var/lib/apt/lists/* && node --version
+RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null
+RUN echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt-get update && apt-get install -y yarn
+
+COPY composer /composer
+
+# add wait-port
+WORKDIR /composer/node/wait-port 
+RUN yarn install --production=true
+
+# Add nodejs service
+# yarn install --production[=true|false]
+# yarn will not install any package listed in devDependencies if the NODE_ENV environment variable is set to production. 
+# Use this flag to instruct Yarn to ignore NODE_ENV and take its production-or-not status from this flag instead.
+WORKDIR /composer/node/common-libraries
+RUN   yarn install --production=true
+
+WORKDIR /composer/node/broadcast-service
+RUN yarn install --production=true
+
+WORKDIR /composer/node/ocrun
+RUN yarn install --production=true
+
+WORKDIR /composer/node/ocdownload
+RUN yarn install --production=true
+
+WORKDIR /composer/node/occall
+RUN yarn install --production=true
+
+WORKDIR /composer/node/spawner-service
+# install node-gyp to build spawner-service
+RUN yarn global add node-gyp
+RUN yarn install --production=true
+
+WORKDIR /composer/node/xterm.js
+RUN if [ $(cat /TARGET_MODE) != hardening ]; then yarn install --production=true; fi
+
+# version.json must be created by mkversion.sh bash script
+COPY composer/version.json /composer/version.json
+
+
+#
+# The main oc.user start here
+#
+FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE}
+
+COPY TARGET_MODE /TARGET_MODE
+COPY etc /etc
+
+# install tigervnc
+RUN apt-get update && \
+    (   ( apt-get install --no-install-recommends -y tigervnc-standalone-server=1.12.0+dfsg-4 ) || \
+        ( tigerdeburl="https://raw.githubusercontent.com/abcdesktopio/oc.software/main/tigervncserver_1.12.0_ubuntu-$(lsb_release -sr)_$(dpkg --print-architecture).deb" && \
+          echo $tigerdeburl && \
+          curl --output /tmp/download.deb "$tigerdeburl" && \
+          apt-get update && \
+          cd /tmp && apt-get install --no-install-recommends -y ./download.deb && \
+          rm /tmp/download.deb ) ) && \
+    apt-get install -y --no-install-recommends tigervnc-tools && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates         \
+        curl            	\
+	bash			\
+        supervisor      	\
+        wmctrl          	\
+        cups-client     	\
+        pulseaudio-utils        \
+        xauth                   \
+        websockify		\
+	openssl                 \
+     && apt-get clean           \
+        && rm -rf /var/lib/apt/lists/*
+
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	desktop-file-utils	\
+	xdg-user-dirs		\
+	x11-xserver-utils      \
+	adwaita-icon-theme	\
+	adwaita-qt		\
+	xclip			\
+	imagemagick		\
+     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	obconf-qt		\
+	feh                     \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# add some fonts
+# add qterminal
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        qterminal               \
+        xfonts-base             \
+        xfonts-encodings        \
+        xfonts-utils            \
+        fonts-noto              \
+        fonts-roboto            \
+        fonts-ubuntu            \
+        fonts-freefont-ttf      \
+        fonts-wine              \
+        && apt-get clean        \
+        && rm -rf /var/lib/apt/lists/*        
+
+# install openbox 
+RUN mkdir -p /tmp/packages
+COPY --from=openbox_ubuntu_builder /openbox/libobt*             /tmp/packages/
+COPY --from=openbox_ubuntu_builder /openbox/openbox_3.6.1*      /tmp/packages/
+COPY --from=openbox_ubuntu_builder /openbox/libobrender*        /tmp/packages/
+
+RUN apt-get update  && \
+        apt-get install -y --no-install-recommends -f /tmp/packages/libobt2v5_3.6.1-10.1_amd64.deb         && \
+        apt-get install -y --no-install-recommends -f /tmp/packages/libobrender32v5_3.6.1-10.1_amd64.deb   && \
+        apt-get install -y --no-install-recommends -f /tmp/packages/openbox_3.6.1-10.1_amd64.deb           && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*        
+
+# install composer
+COPY --from=ubuntu_node_modules_builder /composer /composer
+
+# install nodejs
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -     \
+    && apt-get install -y --no-install-recommends  nodejs       \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* && node --version
+
+#
+# themes section
+# copy themes from abcdesktopio/oc.themes
+# COPY themes /usr/share/themes
+# COPY --from=abcdesktopio/oc.themes      /usr/share/icons        /usr/share/icons
+# COPY --from=abcdesktopio/oc.themes      /usr/share/themes       /usr/share/themes
+# COPY --from=theme_builder /usr/share/themes /usr/share/themes
+ADD Arc_OSXbuttons.tar /usr/share/themes	
+   
+# LOG AND PID SECTION
+RUN mkdir -p /var/log/desktop /var/run/desktop 
+
+# remove /etc/supervisor/conf.d/xterm.conf in hardening
+RUN if [ $(cat /TARGET_MODE) = hardening ]; then echo 'removing /etc/supervisor/conf.d/xterm.conf' &&  rm /etc/supervisor/conf.d/xterm.conf; fi
+
+
+# change passwd shadow group gshadow
+ENV ABCDESKTOP_LOCALACCOUNT_DIR "/var/secrets/abcdesktop/localaccount"
+RUN mkdir -p $ABCDESKTOP_LOCALACCOUNT_DIR
+RUN for f in passwd shadow group gshadow ; do if [ -f /etc/$f ] ; then  cp /etc/$f $ABCDESKTOP_LOCALACCOUNT_DIR ; rm -f /etc/$f; ln -s $ABCDESKTOP_LOCALACCOUNT_DIR/$f /etc/$f; fi; done
+
+# set build date
+RUN date > /etc/build.date
+
+# WORKDIR /home/$BUSER
+# set default user
+# USER $BUSER
+RUN apt-get update  &&  apt-get install        \ 
+        sudo                    \
+    && apt-get clean            \
+    && rm -rf /var/lib/apt/lists/*    
+RUN echo "ALL ALL=(ALL:ALL) ALL" > /etc/sudoers.d/all
+
+# set command
+CMD [ "/composer/docker-entrypoint.sh" ]
+
+####################################################
+# SERVICE                           #   TCP PORT   #
+####################################################
+# XTERM_TCP_PORT                        29781
+# BROADCAST_SERVICE_TCP_PORT            29784
+# SPAWNER_SERVICE_TCP_PORT              29786
+# WS_TCP_BRIDGE_SERVICE_TCP_PORT         6081
+# DBUS_SESSION_TCP_PORT                 55556
+# DBUS_SYSTEM_TCP_PORT                  55557
+####################################################
+
+## RESERVED TCP PORT 29782 for pulseaudio
+## RESERVED TCP PORT 29785 for cupsd
+
+EXPOSE 6081 29781 29784 29786 
