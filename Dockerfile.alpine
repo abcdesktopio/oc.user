@@ -34,6 +34,8 @@ RUN abuild -F
 # define FROM before use ENV command
 FROM ${BASE_IMAGE}:${TAG} as alpine_node_modules_builder
 
+COPY TARGET_MODE /TARGET_MODE
+
 # Add alpine repo
 # https://dl-cdn.alpinelinux.org/alpine/edge/main
 # https://dl-cdn.alpinelinux.org/alpine/edge/community
@@ -79,7 +81,7 @@ RUN yarn global add node-gyp
 RUN yarn install --production=true
 
 WORKDIR /composer/node/xterm.js
-RUN yarn install --production=true
+RUN if [ $(cat /TARGET_MODE) != hardening ]; then yarn install --production=true; fi
 
 
 
@@ -95,7 +97,10 @@ RUN yarn install --production=true
 #
 FROM ${BASE_IMAGE}:${TAG}
 
+COPY TARGET_MODE /TARGET_MODE
+
 COPY etc /etc
+
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main"      >> /etc/apk/repositories && \
     echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
     echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing"   >> /etc/apk/repositories
@@ -128,17 +133,8 @@ RUN apk add --no-cache --update \
 
 # add some fonts
 RUN apk add  --no-cache --update  \
-	terminus-font
-
-RUN apk add --no-cache --update \
-        openbox 		\
-	obconf-qt		\
-        nodejs			\
-	feh
-
-RUN apk add  --no-cache --update  \
-        qterminal
-
+	terminus-font		\
+	qterminal
 
 # add some fonts
 RUN apk add  --no-cache --update  \
@@ -159,6 +155,12 @@ COPY --from=openbox_alpine_builder /root/packages /tmp/packages
 RUN apk add --allow-untrusted \ 
 	/tmp/packages/$(apk add --print-arch)/openbox-libs-3.6.1*	\
 	/tmp/packages/$(apk add --print-arch)/openbox-3.6.1*
+
+RUN apk add --no-cache --update \
+        obconf-qt               \
+        nodejs                  \
+        feh
+
 COPY --from=alpine_node_modules_builder /composer /composer
 
 #
