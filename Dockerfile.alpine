@@ -2,6 +2,7 @@ ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 # Default release is 18.04
 ARG TAG=edge
+ARG BASE_IMAGE_RELEASE=edge
 # Default base image 
 ARG BASE_IMAGE=alpine
 
@@ -10,7 +11,7 @@ ARG BASE_IMAGE=alpine
 # create apk package for openbox
 # pkg files will be located in /root/packages/$(uname -m) directory 
 # patched with openbox.title.patch for abcdesktop
-FROM ${BASE_IMAGE}:${TAG} as openbox_alpine_builder
+FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} as openbox_alpine_builder
 RUN apk add gcc make g++ bash build-base alpine-sdk sudo wget python3
 RUN mkdir -p /var/cache/distfiles
 RUN mkdir -p /openbox/src
@@ -32,7 +33,7 @@ RUN abuild -F
 # create /composer/node
 # use FROM BASE_IMAGE
 # define FROM before use ENV command
-FROM ${BASE_IMAGE}:${TAG} as alpine_node_modules_builder
+FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} as alpine_node_modules_builder
 
 COPY TARGET_MODE /TARGET_MODE
 
@@ -95,7 +96,7 @@ RUN if [ $(cat /TARGET_MODE) != hardening ]; then yarn install --production=true
 #
 # The main oc.user start here
 #
-FROM ${BASE_IMAGE}:${TAG}
+FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE}
 
 COPY TARGET_MODE /TARGET_MODE
 
