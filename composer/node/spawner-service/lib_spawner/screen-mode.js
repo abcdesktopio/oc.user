@@ -51,7 +51,9 @@ async function xsetroot(color) {
 async function esetroot(imgName, bgColor) {
   const ret = { code: 500, data: 'unknow error' };
   // const command = `Esetroot -bg "${bgColor}" -center -fit  "${imgName}"`;
-  const command = `/usr/bin/feh --bg-fill "${imgName}"`;
+  // const command = `/usr/bin/feh --bg-fill "${imgName}"`;
+  // const command = `/usr/bin/feh --fullscreen --borderless --image-bg "${bgColor}" --bg-fill "${imgName}"`;
+  const command = `/composer/esetroot.sh "${bgColor}" "${imgName}"`;
   console.log(command);
   try {
     await exec(command);
