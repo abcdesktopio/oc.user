@@ -4,13 +4,13 @@ ARG BUILDPLATFORM
 ARG TAG=latest
 # Default base image 
 ARG BASE_IMAGE=ubuntu
-ARG BASE_IMAGE_RELEASE=18.04
+
 
 #
 # create apk package for openbox
 # pkg files will be located in /root/packages/$(uname -m) directory 
 # patched with openbox.title.patch for abcdesktop
-FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} as openbox_ubuntu_builder
+FROM ${BASE_IMAGE}:${TAG} as openbox_ubuntu_builder
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 RUN sed -i '/deb-src/s/^# //' /etc/apt/sources.list
 RUN apt update
@@ -32,7 +32,7 @@ RUN cd openbox-3.6.1 && debuild -us -uc
 # create /composer/node
 # use FROM BASE_IMAGE
 # define FROM before use ENV command
-FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} as ubuntu_node_modules_builder
+FROM ${BASE_IMAGE}:${TAG} as ubuntu_node_modules_builder
 
 COPY TARGET_MODE /TARGET_MODE
 
@@ -100,24 +100,10 @@ COPY composer/version.json /composer/version.json
 #
 # The main oc.user start here
 #
-FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE}
+FROM ${BASE_IMAGE}:${TAG}
 
 COPY TARGET_MODE /TARGET_MODE
 COPY etc /etc
-
-# install tigervnc
-RUN apt-get update && \
-    (   ( apt-get install --no-install-recommends -y tigervnc-standalone-server=1.12.0+dfsg-4 ) || \
-        ( tigerdeburl="https://raw.githubusercontent.com/abcdesktopio/oc.software/main/tigervncserver_1.12.0_ubuntu-$(lsb_release -sr)_$(dpkg --print-architecture).deb" && \
-          echo $tigerdeburl && \
-          curl --output /tmp/download.deb "$tigerdeburl" && \
-          apt-get update && \
-          cd /tmp && apt-get install --no-install-recommends -y ./download.deb && \
-          rm /tmp/download.deb ) ) && \
-    apt-get install -y --no-install-recommends tigervnc-tools && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         ca-certificates         \
@@ -129,9 +115,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         pulseaudio-utils        \
         xauth                   \
         websockify		\
+	tightvncpasswd		\
 	openssl                 \
-     && apt-get clean           \
-        && rm -rf /var/lib/apt/lists/*
+	tigervnc-standalone-server	\
+     && ln -s /usr/bin/tightvncpasswd /usr/bin/vncpasswd \
+     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -155,13 +143,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN apt-get update && apt-get install -y --no-install-recommends \
         qterminal               \
         xfonts-base             \
-        xfonts-encodings        \
-        xfonts-utils            \
-        fonts-noto              \
-        fonts-roboto            \
-        fonts-ubuntu            \
-        fonts-freefont-ttf      \
-        fonts-wine              \
         && apt-get clean        \
         && rm -rf /var/lib/apt/lists/*        
 
@@ -199,7 +180,6 @@ RUN mkdir -p /var/log/desktop /var/run/desktop
 
 # remove /etc/supervisor/conf.d/xterm.conf in hardening
 RUN if [ $(cat /TARGET_MODE) = hardening ]; then echo 'removing /etc/supervisor/conf.d/xterm.conf' &&  rm /etc/supervisor/conf.d/xterm.conf; fi
-
 
 # change passwd shadow group gshadow
 ENV ABCDESKTOP_LOCALACCOUNT_DIR "/var/secrets/abcdesktop/localaccount"

@@ -107,6 +107,7 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main"      >> /etc/apk/repo
     echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing"   >> /etc/apk/repositories
 
 RUN apk add --no-cache --update \
+	gcompat			\
 	python3			\
         curl            	\
 	bash			\
@@ -137,19 +138,13 @@ RUN apk add  --no-cache --update  \
 	terminus-font		\
 	qterminal
 
-# add some fonts
+# add some fonts These selections will cover most languages and are a good fit for most setups
 RUN apk add  --no-cache --update  \
-        font-opensans \
-        font-adobe-100dpi \
-        font-noto       \
-        font-ubuntu-nerd \
-        font-bh-lucidatypewriter-100dpi \
-        font-dejavu-sans-mono-nerd \
-        font-adobe-utopia-100dpi \
-        font-xfree86-type1 \
-        ttf-freefont \
-        font-ibm-type1 \
-        font-liberation
+        ttf-inconsolata 	\
+        ttf-dejavu 		\
+	ttf-font-awesome 	\
+	font-noto-extra		\
+        font-noto 
 
 
 COPY --from=openbox_alpine_builder /root/packages /tmp/packages
@@ -191,8 +186,10 @@ RUN date > /etc/build.date
 # WORKDIR /home/$BUSER
 # set default user
 # USER $BUSER
-RUN apk add  --no-cache --update  \
-        sudo 
+RUN apk add  --no-cache --update  	\
+        sudo				\
+	vim
+
 RUN echo "ALL ALL=(ALL:ALL) ALL" > /etc/sudoers.d/all
 
 # set command
