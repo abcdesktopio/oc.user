@@ -32,7 +32,7 @@ jobs:
 
     - name: Run Buildx oc.user.alpine
       run: |
-          echo "docker" > TARGET_MODE
+          echo "kubernetes" > TARGET_MODE
           ./mkversion.sh
      
     - name: Build test image ${{ env.TEST_TAG }}
@@ -50,7 +50,7 @@ jobs:
 
     - name: Run and test docker image ${{ env.TEST_TAG }}
       run: |
-        ./make-test.sh ${{ env.TEST_TAG }}
+        ./make-test.sh abcdesktopio/oc.user.ubuntu:${{ env.TEST_TAG }}
     
     - name: Build and push image oc.user.ubuntu:dev
       uses: docker/build-push-action@v3
