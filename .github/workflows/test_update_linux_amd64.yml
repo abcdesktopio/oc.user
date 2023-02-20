@@ -32,51 +32,51 @@ jobs:
 
     - name: Run Buildx oc.user.alpine
       run: |
-          echo "docker" > TARGET_MODE
+          echo "kubernetes" > TARGET_MODE
           ./mkversion.sh
      
     - name: Build test image ${{ env.TEST_TAG }}
       uses: docker/build-push-action@v3
       with:
         context: .
-        file: ./Dockerfile.alpine
+        file: ./Dockerfile.ubuntu
         platforms: linux/amd64
         load: true
         build-args: |
           TAG=dev
-          BASE_IMAGE_RELEASE=edge
-          BASE_IMAGE=alpine
+          BASE_IMAGE_RELEASE=22.04
+          BASE_IMAGE=ubuntu
         tags: ${{ env.TEST_TAG }}
 
     - name: Run and test docker image ${{ env.TEST_TAG }}
       run: |
-        ./make-test.sh ${{ env.TEST_TAG }}
+        ./make-test.sh abcdesktopio/oc.user.ubuntu:${{ env.TEST_TAG }}
     
-    - name: Build and push image oc.user.alpine:dev
+    - name: Build and push image oc.user.ubuntu:dev
       uses: docker/build-push-action@v3
       with:
         context: .
-        file: ./Dockerfile.alpine
+        file: ./Dockerfile.ubuntu
         platforms: linux/amd64, linux/arm64
         push: true
         build-args: |
           TAG=dev
           BASE_IMAGE_RELEASE=edge
           BASE_IMAGE=alpine
-        tags: abcdesktopio/oc.user.alpine:dev
+        tags: abcdesktopio/oc.user.ubuntu:dev
         
         
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: abcdesktopio/oc.user.alpine:dev
+        image-ref: abcdesktopio/oc.user.ubuntu:dev
         format: 'sarif'
-        output: oc.user.alpine.sarif
+        output: oc.user.ubuntu.sarif
 
     - name: Upload Trivy scan results to GitHub Security tab
       uses: github/codeql-action/upload-sarif@v2
       if: always()
       with:
-        sarif_file: oc.user.alpine.sarif
+        sarif_file: oc.user.ubuntu.sarif
   
 
