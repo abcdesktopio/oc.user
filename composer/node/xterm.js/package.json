@@ -1,33 +1,17 @@
 {
-  "name": "back-end",
-  "version": "1.0.0",
-  "description": "Backend for desktop xterm",
-  "main": "dist/main.js",
-  "scripts": {
-    "start": "tsc && node dist/main.js",
-    "test": "jest --bail"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "@types/express-validator": "^3.0.0",
-    "express": "^4.17.1",
-    "express-validator": "^6.4.0",
+    "xterm": "^5.1.0",
+    "xterm-addon-attach": "^0.8.0",
+    "xterm-addon-fit": "^0.7.0",
+    "xterm-addon-search": "^0.11.0",
+    "xterm-addon-web-links": "^0.8.0",
+    "express": "^4.18.2",
+    "express-validator": "^6.15.0 ",
     "express-ws": "^5.0.2",
-    "helmet": "^3.21.2",
-    "jest": "^27.5.1",
-    "node-pty": "^0.9.0",
+    "helmet": "^6.0.1",
+    "jest": "^29.4.3",
+    "node-pty": "^0.10.1",
     "oc.user.libraries": "^1.0.1",
-    "supertest": "^4.0.2",
-    "ws": "^5.2.3"
-  },
-  "devDependencies": {
-    "@types/dotenv": "^8.2.0",
-    "@types/express": "^4.17.2",
-    "@types/express-ws": "^3.0.0",
-    "@types/helmet": "0.0.45",
-    "@types/node": "^13.7.1",
-    "dotenv": "^8.2.0"
+    "supertest": "^6.3.3"
   }
 }
