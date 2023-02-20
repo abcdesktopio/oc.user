@@ -1,7 +1,6 @@
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 # Default release is 18.04
-ARG TAG=edge
 ARG BASE_IMAGE_RELEASE=edge
 # Default base image 
 ARG BASE_IMAGE=alpine
@@ -42,9 +41,9 @@ COPY TARGET_MODE /TARGET_MODE
 # https://dl-cdn.alpinelinux.org/alpine/edge/community
 # https://dl-cdn.alpinelinux.org/alpine/edge/testing
 # Add tagged repos as well as the edge repo so that we can selectively install edge packages
-RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" 	>> /etc/apk/repositories && \
-    echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
-    echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" 	>> /etc/apk/repositories 
+#RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" 	>> /etc/apk/repositories && \
+#    echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
+#    echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" 	>> /etc/apk/repositories 
 
 RUN apk add  --no-cache --update  \
 	python3		\
