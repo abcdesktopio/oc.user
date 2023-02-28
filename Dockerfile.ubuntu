@@ -4,7 +4,8 @@ ARG BUILDPLATFORM
 ARG TAG=latest
 # Default base image 
 ARG BASE_IMAGE=ubuntu
-
+# BASE_IMAGE_RELEASE deprecated
+ARG BASE_IMAGE_RELEASE
 
 #
 # create apk package for openbox
@@ -13,13 +14,13 @@ ARG BASE_IMAGE=ubuntu
 FROM ${BASE_IMAGE}:${TAG} as openbox_ubuntu_builder
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 RUN sed -i '/deb-src/s/^# //' /etc/apt/sources.list
-RUN apt update
-RUN apt-get install -y --no-install-recommends fakeroot devscripts devscripts binutils wget
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends devscripts wget ca-certificates
 RUN apt-get build-dep -y openbox
 RUN mkdir -p /openbox/src
 WORKDIR /openbox
 RUN apt-get source openbox
-RUN wget https://raw.githubusercontent.com/abcdesktopio/openbox/main/openbox.title.patch
+RUN wget https://raw.githubusercontent.com/abcdesktopio/openbox/main/openbox.title.patch 
 RUN cd openbox-3.6.1 && patch -p2 < ../openbox.title.patch
 RUN cd openbox-3.6.1 && dch -n abcdesktop_sig_usr
 RUN cd openbox-3.6.1 && EDITOR=/bin/true dpkg-source -q --commit . abcdesktop_sig_usr
@@ -64,38 +65,38 @@ COPY composer /composer
 
 # add wait-port
 WORKDIR /composer/node/wait-port 
-RUN yarn install --production=true
+RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 
 # Add nodejs service
 # yarn install --production[=true|false]
 # yarn will not install any package listed in devDependencies if the NODE_ENV environment variable is set to production. 
 # Use this flag to instruct Yarn to ignore NODE_ENV and take its production-or-not status from this flag instead.
 WORKDIR /composer/node/common-libraries
-RUN   yarn install --production=true
+RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 
 WORKDIR /composer/node/broadcast-service
-RUN yarn install --production=true
+RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 
 WORKDIR /composer/node/ocrun
-RUN yarn install --production=true
+RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 
 WORKDIR /composer/node/ocdownload
-RUN yarn install --production=true
+RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 
 WORKDIR /composer/node/occall
-RUN yarn install --production=true
+RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 
 WORKDIR /composer/node/spawner-service
 # install node-gyp to build spawner-service
 RUN yarn global add node-gyp
-RUN yarn install --production=true
+RUN yarn install --production=true 
+# && npm i --package-lock-only && npm audit fix
 
 WORKDIR /composer/node/xterm.js
-RUN if [ $(cat /TARGET_MODE) != hardening ]; then yarn install --production=true; fi
+RUN if [ $(cat /TARGET_MODE) != hardening ]; then yarn install --production=true; npm audit fix; fi
 
 # version.json must be created by mkversion.sh bash script
 COPY composer/version.json /composer/version.json
-
 
 #
 # The main oc.user start here
