@@ -23,16 +23,17 @@ alpine:
 	echo kubernetes > TARGET_MODE
 	docker build \
 	    --no-cache=$(NOCACHE) \
-	    --build-arg BASE_IMAGE_RELEASE=edge \
+	    --build-arg BASE_IMAGE_RELEASE=latest \
             --build-arg BASE_IMAGE=alpine \
             --output "type=docker" \
 	    --tag abcdesktopio/oc.user.alpine:$(TAG) \
             --file ./Dockerfile.alpine .
 
+alpine.hardening:
 	echo hardening > TARGET_MODE
 	docker build \
             --no-cache=$(NOCACHE) \
-            --build-arg BASE_IMAGE_RELEASE=edge \
+            --build-arg BASE_IMAGE_RELEASE=latest \
             --build-arg BASE_IMAGE=alpine \
             --output "type=docker" \
 	    --tag abcdesktopio/oc.user.alpine.hardening:$(TAG) \
@@ -48,6 +49,7 @@ ubuntu:
             --tag abcdesktopio/oc.user.ubuntu:$(TAG) \
             --file ./Dockerfile.ubuntu .
 
+ubuntu.hardening:
 	echo hardening > TARGET_MODE
 	docker build \
             --no-cache=$(NOCACHE) \
