@@ -43,7 +43,7 @@ Only docker image format is supported by the `make-test.sh` script.
 To test the new image `abcdesktopio/oc.user.18.04:dev`, run the `make-test.sh` script :
 
 ```bash
-./make-test.sh abcdesktopio/oc.user.18.04:dev
+./make-test.sh abcdesktopio/oc.user.ubuntu:dev
 ```
 
 
@@ -274,6 +274,8 @@ Alpine uses the musl C standard library, while Ubuntu, Debian, and Fedora use gl
 Please read musl-vs-glibc https://octopus.com/blog/using-alpine-docker-image#musl-vs-glibc
 
 > Most Linux distributions use the GNU version (glibc) of the standard C library that is required by pretty much every C program, including Python. But Alpine Linux uses musl, those binary wheels are compiled against glibc, and therefore Alpine disabled Linux wheel support.
+
+To build the alpine based image, run `make alpine` :
 
 
 ```bash
