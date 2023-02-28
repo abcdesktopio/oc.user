@@ -199,10 +199,23 @@ fi
 #   echo 'starting dbus-uuidgen > /var/lib/dbus/machine-id' >> /var/log/desktop/dbus.log
 #   dbus-uuidgen > /var/lib/dbus/machine-id &
 # fi
+# 
+# if [ ! -d /var/run/dbus ]; then 
+# 	mkdir -p /var/run/dbus
+# fi
 
-if [ ! -d /var/run/dbus ]; then 
-	mkdir -p /var/run/dbus
-fi
+## LANG SECTION
+# set lang
+# ALL_LANG="LC_ALL LC_PAPER LC_ADDRESS LC_MONETARY LC_TIME LC_MEASUREMENT LC_IDENTIFICATION LC_TELEPHONE LC_NUMERIC"
+#if [ ! -z $LANG ] ; then
+#        for l in $ALL_LANG ; do
+#                if [ -z $l ] ; then
+#                        export $l=$LANG
+#                fi;
+#                echo $l=${!l}
+#	done
+#fi
+
 
 # check if user bind local interface
 # mode bridge and need to build a new x509 certificat USE_CERTBOT_CERTONLY
@@ -335,22 +348,23 @@ export KUBERNETES_SERVICE_HOST
 # file in .config
 # current_wallpaper
 # if $SET_DEFAULT_WALLPAPER is defined
-if [ ! -z "$SET_DEFAULT_WALLPAPER" ]; then
+DEFAULT_WALLPAPER=${ABCDESKTOP_LABEL_default_wallpaper:-$SET_DEFAULT_WALLPAPER}
+if [ ! -z "$DEFAULT_WALLPAPER" ]; then
         CONFIGSTORE_PATH=~/.store
         # if $SET_DEFAULT_WALLPAPER file exists
-        if [ -f "$WALLPAPER_PATH/$SET_DEFAULT_WALLPAPER" ]; then
+        if [ -f "$WALLPAPER_PATH/$DEFAULT_WALLPAPER" ]; then
                 CURRENT_WALLPAPER_FILE=~/.config/current_wallpaper
                 # if a wall_paper as not already been set
                 if [ ! -f "$CURRENT_WALLPAPER_FILE" ]; then
                         # if .config/current_wallpaper does not exist
-                        echo "Define wallpaper as $SET_DEFAULT_WALLPAPER to $CURRENT_WALLPAPER_FILE"
-                        cp "$WALLPAPER_PATH/$SET_DEFAULT_WALLPAPER" "$CURRENT_WALLPAPER_FILE"
-                        echo -n "$SET_DEFAULT_WALLPAPER" > "$CONFIGSTORE_PATH"/currentImg
+                        echo "Define wallpaper as $DEFAULT_WALLPAPER to $CURRENT_WALLPAPER_FILE"
+                        cp "$WALLPAPER_PATH/$DEFAULT_WALLPAPER" "$CURRENT_WALLPAPER_FILE"
+                        echo -n "$DEFAULT_WALLPAPER" > "$CONFIGSTORE_PATH"/currentImg
                 else
-                        echo "$CURRENT_WALLPAPER_FILE exists skipping value $SET_DEFAULT_WALLPAPER"
+                        echo "$CURRENT_WALLPAPER_FILE exists skipping value $DEFAULT_WALLPAPER"
                 fi
         else
-                        echo "File $WALLPAPER_PATH/$SET_DEFAULT_WALLPAPER does not exist skipping wallpaper"
+                        echo "File $WALLPAPER_PATH/$DEFAULT_WALLPAPER does not exist skipping wallpaper"
         fi
 else
         echo "SET_DEFAULT_WALLPAPER is not defined, keep default wallpapers config"
