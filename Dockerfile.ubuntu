@@ -40,9 +40,7 @@ COPY TARGET_MODE /TARGET_MODE
 RUN apt-get update && apt-get install -y  --no-install-recommends      \
         gcc                             \
         g++                             \
-        make                            \
-        && apt-get clean                \
-        && rm -rf /var/lib/apt/lists/*
+        make                            
 
 # to make install wmctrljs nodejs components
 # add build dev package 
@@ -55,8 +53,9 @@ RUN apt-get update && apt-get install -y  --no-install-recommends \
         gnupg      \
         dpkg
 
-RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs && apt-get clean && rm -rf /var/lib/apt/lists/* && node --version
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - && apt-get install -y nodejs 
+# RUN curl -o- -L https://yarnpkg.com/install.sh | bash
+# RUN apt-get update && apt-get install -y yarn
 RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null
 RUN echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | tee /etc/apt/sources.list.d/yarn.list
 RUN apt-get update && apt-get install -y yarn
@@ -93,7 +92,7 @@ RUN yarn install --production=true
 # && npm i --package-lock-only && npm audit fix
 
 WORKDIR /composer/node/xterm.js
-RUN if [ $(cat /TARGET_MODE) != hardening ]; then yarn install --production=true; npm audit fix; fi
+RUN if [ $(cat /TARGET_MODE) != hardening ]; then yarn install --production=true; npm i --package-lock-only; npm audit fix; fi
 
 # version.json must be created by mkversion.sh bash script
 COPY composer/version.json /composer/version.json
