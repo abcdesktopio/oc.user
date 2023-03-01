@@ -348,7 +348,12 @@ export KUBERNETES_SERVICE_HOST
 # file in .config
 # current_wallpaper
 # if $SET_DEFAULT_WALLPAPER is defined
-DEFAULT_WALLPAPER=${ABCDESKTOP_LABEL_default_wallpaper:-$SET_DEFAULT_WALLPAPER}
+# first use ABCDESKTOP_LABEL_set_default_wallpaper is set
+#
+# echo "ABCDESKTOP_LABEL_set_default_wallpaper is $ABCDESKTOP_LABEL_set_default_wallpaper"
+# echo "SET_DEFAULT_WALLPAPER=$SET_DEFAULT_WALLPAPER"
+DEFAULT_WALLPAPER=${ABCDESKTOP_LABEL_set_default_wallpaper:-$SET_DEFAULT_WALLPAPER}
+echo "DEFAULT_WALLPAPER=$DEFAULT_WALLPAPER"
 if [ ! -z "$DEFAULT_WALLPAPER" ]; then
         CONFIGSTORE_PATH=~/.store
         # if $SET_DEFAULT_WALLPAPER file exists
