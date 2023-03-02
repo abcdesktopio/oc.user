@@ -17,7 +17,7 @@ version:
 	$(shell ./mkversion.sh)
 
 test:
-	./make-test.sh abcdesktopio/oc.user.alpine:$(TAG)
+	./make-test.sh abcdesktopio/oc.user.ubuntu:$(TAG)
 
 alpine:
 	echo kubernetes > TARGET_MODE
