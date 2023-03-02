@@ -43,7 +43,7 @@ jobs:
         platforms: linux/amd64
         load: true
         build-args: |
-          TAG=dev
+          TAG=22.04
           BASE_IMAGE_RELEASE=22.04
           BASE_IMAGE=ubuntu
         tags: ${{ env.TEST_TAG }}
@@ -60,9 +60,9 @@ jobs:
         platforms: linux/amd64, linux/arm64
         push: true
         build-args: |
-          TAG=dev
-          BASE_IMAGE_RELEASE=edge
-          BASE_IMAGE=alpine
+          TAG=22.04
+          BASE_IMAGE_RELEASE=22.04
+          BASE_IMAGE=ubuntu
         tags: abcdesktopio/oc.user.ubuntu:dev
         
         
