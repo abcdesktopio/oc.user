@@ -1,4 +1,7 @@
 {
+  "name": "back-end",
+  "version": "1.0.0",
+  "description": "Backend for desktop xterm",
   "dependencies": {
     "xterm": "^5.1.0",
     "xterm-addon-attach": "^0.8.0",
@@ -13,5 +16,14 @@
     "node-pty": "^0.10.1",
     "oc.user.libraries": "^1.0.1",
     "supertest": "^6.3.3"
+  },
+  "scripts": {
+    "start": "node dist/main.js",
+    "test": "jest --bail"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/express-ws": "^3.0.1",
+    "@types/node": "^18.14.4"
   }
 }
