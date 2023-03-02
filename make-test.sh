@@ -1,5 +1,7 @@
 #/bin/bash
 
+
+echo args is $1 
 # set default IMAGE_RELEASE to run test
 DEFAULT_IMAGE=abcdesktopio/oc.user.ubuntu:3.0
 IMAGE_RELEASE=${1:-$DEFAULT_IMAGE}
