@@ -1,9 +1,8 @@
 #/bin/bash
 
-TAG=3.0
 # set default IMAGE_RELEASE to run test
-DEFAULT_IMAGE=abcdesktopio/oc.user.alpine:$TAG
-IMAGE_RELEASE="${1:-$DEFAULT_IMAGE}"
+DEFAULT_IMAGE=abcdesktopio/oc.user.ubuntu:3.0
+IMAGE_RELEASE=${1:-$DEFAULT_IMAGE}
 
 # show used IMAGE_RELEASE
 echo "Run oc.user test for $IMAGE_RELEASE"
