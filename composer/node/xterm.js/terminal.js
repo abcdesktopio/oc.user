@@ -25,7 +25,7 @@ module.exports = class Terminal {
           name: 'xterm-256color',
           cols: cols || 80,
           rows: rows || 24,
-          cwd: process.env.PWD,
+          cwd: process.env.HOME,
           env: {
             COLORTERM:'truecolor',
             ...process.env
