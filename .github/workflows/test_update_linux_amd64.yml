@@ -36,7 +36,7 @@ jobs:
           ./mkversion.sh
      
     - name: Build test image ${{ env.TEST_TAG }}
-      uses: docker/build-push-action@v3
+      uses: docker/build-push-action@v4
       with:
         context: .
         file: ./Dockerfile.ubuntu
@@ -50,10 +50,10 @@ jobs:
 
     - name: Run and test docker image ${{ env.TEST_TAG }}
       run: |
-        ./make-test.sh abcdesktopio/oc.user.ubuntu:${{ env.TEST_TAG }}
+        ./make-test.sh ${{ env.TEST_TAG }}
     
     - name: Build and push image oc.user.ubuntu:dev
-      uses: docker/build-push-action@v3
+      uses: docker/build-push-action@v4
       with:
         context: .
         file: ./Dockerfile.ubuntu
