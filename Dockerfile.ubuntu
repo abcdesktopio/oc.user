@@ -25,7 +25,7 @@ RUN cd openbox-3.6.1 && patch -p2 < ../openbox.title.patch
 RUN cd openbox-3.6.1 && dch -n abcdesktop_sig_usr
 RUN cd openbox-3.6.1 && EDITOR=/bin/true dpkg-source -q --commit . abcdesktop_sig_usr
 RUN cd openbox-3.6.1 && debuild -us -uc
-
+RUN ls *.deb
 
 
 # install all nodejs modules
@@ -153,9 +153,7 @@ COPY --from=openbox_ubuntu_builder /openbox/openbox_3.6.1*      /tmp/packages/
 COPY --from=openbox_ubuntu_builder /openbox/libobrender*        /tmp/packages/
 
 RUN apt-get update  && \
-        apt-get install -y --no-install-recommends -f /tmp/packages/libobt2v5_3.6.1-10.1_amd64.deb         && \
-        apt-get install -y --no-install-recommends -f /tmp/packages/libobrender32v5_3.6.1-10.1_amd64.deb   && \
-        apt-get install -y --no-install-recommends -f /tmp/packages/openbox_3.6.1-10.1_amd64.deb           && \
+        apt-get install -y --no-install-recommends -f /tmp/packages/*.deb  && \
     apt-get clean && rm -rf /var/lib/apt/lists/*        
 
 # install composer
