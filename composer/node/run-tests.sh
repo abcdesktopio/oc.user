@@ -4,6 +4,10 @@
 export DISPLAY=:0.0
 CONTAINER_IP=$(hostname -i)
 
+
+echo 'netstat dump'
+netstat -anp 
+
 echo 'testing spawner-service'
 cd /composer/node/spawner-service 
 CONTAINER_IP=${CONTAINER_IP} yarn test
