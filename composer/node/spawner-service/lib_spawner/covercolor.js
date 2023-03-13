@@ -12,10 +12,40 @@
 */
 
 const im = require('imagemagick');
-const dominantColor = require('dominant-color');
 const systempath = require('path');
 const fs = require('fs');
 const hexRgb = require('hex-rgb');
+
+function dominantColor(path, opts, next){
+  if (typeof opts === 'function'){
+    next = opts
+    opts = undefined
+  }
+  if (!next) next = function(){}
+  if (!opts) opts = {}
+  if (!opts.format) opts.format = 'hex'
+
+  var imArgs = [path, '-scale', '1x1\!', '-format', '%[pixel:u]', 'info:-']
+
+  im.convert(imArgs, function(err, stdout){
+    if (err) next(err)
+    // console.log( stdout );
+    stdout = stdout.replaceAll( '%', '' ); 
+    var rgb = stdout.substring(stdout.indexOf('(') + 1, stdout.indexOf(')'))
+
+    // rgb=87.2724%,92.9305%,80.8743%,1
+    //console.log( 'rgb=' + rgb );
+    var results = {
+      hex: function(){ return require('rgb-hex').apply(this, rgb.split(',')) },
+      rgb: function(){ return rgb.split(',') }
+    }
+
+    //console.log( 'hex=' + results['hex']() );
+    //console.log( 'rgb=' + results['rgb']() );	  
+    next(null, results[opts.format]());
+  })
+}
+
 
 function cropImage(path, gravity, next) {
   const crop = {
@@ -34,10 +64,15 @@ function cropImage(path, gravity, next) {
   const imArgs = [path, '-gravity', gravity, '-crop', cropprecent, tmpfilename];
   im.convert(imArgs, (err) => {
     if (err) next(err);
+
+    console.log('call dominantColor(' + tmpfilename + ')' );
     dominantColor(tmpfilename, (errDominantColor, color) => {
+      console.log('done dominantColor(' + tmpfilename + ')' ); 
       if (errDominantColor) {
+	console.log( 'errDominantColor=' + errDominantColor );
         next(errDominantColor);
       } else {
+	console.log( 'dominantColor=' + color );
         next(null, color);
       }
       fs.unlink(tmpfilename, () => {});
@@ -45,13 +80,21 @@ function cropImage(path, gravity, next) {
   });
 }
 
+async function  mocolor( tmpfilename ) {
+	let domlor = await domcolor(tmpfilename);
+	return domlor;
+}
+
+
 function covercolorborder(path, next) {
   const borderSides = ['North', 'South', 'West', 'East'];
+  //const borderSides = ['North'];
   const borderColor = [];
   let currentSide = 0;
 
   function callback(err, color) {
     if (color) {
+      console.log( 'covercolorborder callback color=' + color );
       borderColor[currentSide] = hexRgb(color);
       ++currentSide;
       if (currentSide < borderSides.length) {
@@ -70,6 +113,7 @@ function covercolorborder(path, next) {
         next(null, mycolor);
       }
     } else {
+      console.log( 'covercolorborder callback error=' + err );
       next(`covercolorborder.callback:  error ${err}`, null);
     }
   }
