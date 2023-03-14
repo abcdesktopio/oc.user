@@ -12,39 +12,41 @@
 */
 
 const im = require('imagemagick');
+const ColorThief = require('colorthief');
 const systempath = require('path');
 const fs = require('fs');
-const hexRgb = require('hex-rgb');
 
-function dominantColor(path, opts, next){
-  if (typeof opts === 'function'){
+const rgbToHex = (r, g, b) => '#' + [r, g, b].map(x => {
+  const hex = x.toString(16)
+  return hex.length === 1 ? '0' + hex : hex
+}).join('')
+
+function dominantColor(path, opts, next) {
+  if (typeof opts === 'function') {
     next = opts
     opts = undefined
   }
   if (!next) next = function(){}
   if (!opts) opts = {}
-  if (!opts.format) opts.format = 'hex'
+  if (!opts.format) opts.format = 'hex';
 
-  var imArgs = [path, '-scale', '1x1\!', '-format', '%[pixel:u]', 'info:-']
+  /*
+  ColorThief.getColor(path)
+    .then(color => { 
+	    console.log( 'color=' + color);
+	    next(null, color);
+    })
+    .catch(err => { console.log(err); })
+  */
 
-  im.convert(imArgs, function(err, stdout){
-    if (err) next(err)
-    // console.log( stdout );
-    stdout = stdout.replaceAll( '%', '' ); 
-    var rgb = stdout.substring(stdout.indexOf('(') + 1, stdout.indexOf(')'))
+  ColorThief.getPalette(path, 5)
+    .then(palette => { console.log(palette);
+    	next(null, palette[0]); })
+    .catch(err => { console.log(err) })
 
-    // rgb=87.2724%,92.9305%,80.8743%,1
-    //console.log( 'rgb=' + rgb );
-    var results = {
-      hex: function(){ return require('rgb-hex').apply(this, rgb.split(',')) },
-      rgb: function(){ return rgb.split(',') }
-    }
 
-    //console.log( 'hex=' + results['hex']() );
-    //console.log( 'rgb=' + results['rgb']() );	  
-    next(null, results[opts.format]());
-  })
 }
+
 
 
 function cropImage(path, gravity, next) {
@@ -64,15 +66,10 @@ function cropImage(path, gravity, next) {
   const imArgs = [path, '-gravity', gravity, '-crop', cropprecent, tmpfilename];
   im.convert(imArgs, (err) => {
     if (err) next(err);
-
-    console.log('call dominantColor(' + tmpfilename + ')' );
     dominantColor(tmpfilename, (errDominantColor, color) => {
-      console.log('done dominantColor(' + tmpfilename + ')' ); 
       if (errDominantColor) {
-	console.log( 'errDominantColor=' + errDominantColor );
         next(errDominantColor);
       } else {
-	console.log( 'dominantColor=' + color );
         next(null, color);
       }
       fs.unlink(tmpfilename, () => {});
@@ -80,40 +77,33 @@ function cropImage(path, gravity, next) {
   });
 }
 
-async function  mocolor( tmpfilename ) {
-	let domlor = await domcolor(tmpfilename);
-	return domlor;
-}
-
-
 function covercolorborder(path, next) {
-  const borderSides = ['North', 'South', 'West', 'East'];
-  //const borderSides = ['North'];
+  const borderSides = ['North' ];
   const borderColor = [];
   let currentSide = 0;
 
   function callback(err, color) {
     if (color) {
-      console.log( 'covercolorborder callback color=' + color );
-      borderColor[currentSide] = hexRgb(color);
+      console.log('covercolorborder:' + color );
+      borderColor[currentSide] = color;
       ++currentSide;
       if (currentSide < borderSides.length) {
         cropImage(path, borderSides[currentSide], callback);
       } else {
-        const mycolor = hexRgb('000000');
-        for (let i = 0; i < borderColor.length; ++i) {
-          mycolor.red += borderColor[i].red;
-          mycolor.green += borderColor[i].green;
-          mycolor.blue += borderColor[i].blue;
+        const mycolor = { red:borderColor[0][0], green:borderColor[0][1], blue:borderColor[0][2] };
+	console.log( 'mycolor=' + mycolor );
+        for (let i=1; i < borderColor.length; ++i) {
+          mycolor.red += borderColor[i][0];
+          mycolor.green += borderColor[i][1];
+          mycolor.blue += borderColor[i][2];
         }
         mycolor.red = Math.trunc(mycolor.red / borderColor.length);
         mycolor.green = Math.trunc(mycolor.green / borderColor.length);
         mycolor.blue = Math.trunc(mycolor.blue / borderColor.length);
-
-        next(null, mycolor);
+        console.log( 'mycolor=' + mycolor );
+        next(null, colortohashstring(mycolor) );
       }
     } else {
-      console.log( 'covercolorborder callback error=' + err );
       next(`covercolorborder.callback:  error ${err}`, null);
     }
   }
