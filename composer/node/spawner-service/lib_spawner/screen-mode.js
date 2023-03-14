@@ -74,14 +74,13 @@ async function changeBgImage(imgName = '') {
   const ret = { code: 500, data: '' };
   try {
     const color = await covercolor.covercolor(imgName);
-    const col = covercolor.colortohashstring(color);
-    const { code, data } = await esetroot(imgName, col);
+    const { code, data } = await esetroot(imgName, color);
     if (code === 200) {
-      await set('currentImgColor', col);
-      await broadcast.broadcastevent('display.setBackgroundBorderColor', col);
+      await set('currentImgColor', color);
+      await broadcast.broadcastevent('display.setBackgroundBorderColor', color);
 
       ret.code = code;
-      ret.data = { color: col, subData: data };
+      ret.data = { color: color, subData: data };
     }
   } catch (err) {
     ret.data = err;
