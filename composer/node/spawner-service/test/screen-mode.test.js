@@ -119,9 +119,7 @@ describe('Test screen-mode endpoints', () => {
     for (const imgName of wallpapers) {
       it(`Should change background image and check the expected color for img [${imgName}]`, async () => {
         const color = await covercolor(`${roothomedir}/.wallpapers/${imgName}`);
-	console.log( `using ${imgName} return ${color}` );
         const expected = { code: 200, data: { color: color, subData: 'ok' } };
-	console.log( `using wallpaper file ${roothomedir}/.wallpapers/${imgName}` );
         return request
           .post('/spawner/setBackgroundImage')
           .send({ imgName })
@@ -135,7 +133,6 @@ describe('Test screen-mode endpoints', () => {
         return new Promise(async (resolve, reject) => {
           try {
             const color = await covercolor(`${roothomedir}/.wallpapers/${imgName}`);
-	    console.log( `using ${imgName} return ${color}` );
             const expected = { code: 200, data: { color: color, subData: 'ok' } };
             ws.on('message', (msg) => {
               const { method, data } = JSON.parse(msg);
