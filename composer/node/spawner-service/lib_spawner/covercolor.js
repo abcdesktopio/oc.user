@@ -40,8 +40,10 @@ function dominantColor(path, opts, next) {
   */
 
   ColorThief.getPalette(path, 5)
-    .then(palette => { console.log(palette);
-    	next(null, palette[0]); })
+    .then(palette => { 
+	// console.log(palette);
+    	next(null, palette[0]); 
+    })
     .catch(err => { console.log(err) })
 
 
@@ -84,14 +86,14 @@ function covercolorborder(path, next) {
 
   function callback(err, color) {
     if (color) {
-      console.log('covercolorborder:' + color );
+      // console.log('covercolorborder:' + color );
       borderColor[currentSide] = color;
       ++currentSide;
       if (currentSide < borderSides.length) {
         cropImage(path, borderSides[currentSide], callback);
       } else {
         const mycolor = { red:borderColor[0][0], green:borderColor[0][1], blue:borderColor[0][2] };
-	console.log( 'mycolor=' + mycolor );
+	console.log( 'first mycolor=' + mycolor );
         for (let i=1; i < borderColor.length; ++i) {
           mycolor.red += borderColor[i][0];
           mycolor.green += borderColor[i][1];
@@ -100,7 +102,7 @@ function covercolorborder(path, next) {
         mycolor.red = Math.trunc(mycolor.red / borderColor.length);
         mycolor.green = Math.trunc(mycolor.green / borderColor.length);
         mycolor.blue = Math.trunc(mycolor.blue / borderColor.length);
-        console.log( 'mycolor=' + mycolor );
+        console.log( 'average mycolor=' + mycolor );
         next(null, colortohashstring(mycolor) );
       }
     } else {
