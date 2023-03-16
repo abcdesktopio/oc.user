@@ -105,7 +105,9 @@ FROM ${BASE_IMAGE}:${TAG}
 COPY TARGET_MODE /TARGET_MODE
 COPY etc /etc
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update  && \
+    apt-get upgrade -y --no-install-recommends && \
+    apt-get install -y --no-install-recommends \
         ca-certificates         \
         curl            	\
 	bash			\
@@ -117,7 +119,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         websockify		\
 	tightvncpasswd		\
 	openssl                 \
-	tigervnc-standalone-server	\
+	tigervnc-standalone-server \
      && ln -s /usr/bin/tightvncpasswd /usr/bin/vncpasswd \
      && apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -125,7 +127,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN apt-get update && apt-get install -y --no-install-recommends \
 	desktop-file-utils	\
 	xdg-user-dirs		\
-	x11-xserver-utils      \
+	x11-xserver-utils       \
 	adwaita-icon-theme	\
 	adwaita-qt		\
 	xclip			\
