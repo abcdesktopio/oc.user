@@ -21,6 +21,7 @@ test:
 
 alpine:
 	echo kubernetes > TARGET_MODE
+	docker pull alpine
 	docker build \
 	    --no-cache=$(NOCACHE) \
 	    --build-arg BASE_IMAGE_RELEASE=latest \
@@ -41,6 +42,7 @@ alpine.hardening:
 
 ubuntu:
 	echo kubernetes > TARGET_MODE
+	docker pull ubuntu:22.04
 	docker build \
             --no-cache=$(NOCACHE) \
             --build-arg BASE_IMAGE_RELEASE=22.04 \
