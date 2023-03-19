@@ -1,6 +1,6 @@
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
-# Default release is 18.04
+# Default release is 22.04
 ARG TAG=latest
 # Default base image 
 ARG BASE_IMAGE=ubuntu
@@ -8,8 +8,8 @@ ARG BASE_IMAGE=ubuntu
 ARG BASE_IMAGE_RELEASE
 
 #
-# create apk package for openbox
-# pkg files will be located in /root/packages/$(uname -m) directory 
+# create package for openbox
+# deb files will be located in /root/packages/$(uname -m) directory 
 # patched with openbox.title.patch for abcdesktop
 FROM ${BASE_IMAGE}:${TAG} as openbox_ubuntu_builder
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
