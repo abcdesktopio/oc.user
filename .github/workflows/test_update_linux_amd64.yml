@@ -52,7 +52,7 @@ jobs:
       run: |
         ./make-test.sh ${{ env.TEST_TAG }}
     
-    - name: Build and push image oc.user.ubuntu:dev
+    - name: Build and push image oc.user.ubuntu:3.0
       uses: docker/build-push-action@v4
       with:
         context: .
@@ -63,13 +63,13 @@ jobs:
           TAG=22.04
           BASE_IMAGE_RELEASE=22.04
           BASE_IMAGE=ubuntu
-        tags: abcdesktopio/oc.user.ubuntu:dev
+        tags: abcdesktopio/oc.user.ubuntu:3.0
         
         
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: abcdesktopio/oc.user.ubuntu:dev
+        image-ref: abcdesktopio/oc.user.ubuntu:3.0
         format: 'sarif'
         output: oc.user.ubuntu.sarif
 
