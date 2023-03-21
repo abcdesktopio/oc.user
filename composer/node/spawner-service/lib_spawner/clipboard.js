@@ -22,12 +22,12 @@ const { spawn } = require('child_process');
  */
 function clipboardsync() {
   // Print selected data from primary clipboard to standard output
-  const xclip = spawn('xclip', ['-selection', 'primary', '-o'], {
+  const xclip = spawn('/usr/bin/xclip', ['-selection', 'primary', '-o'], {
     env: process.env,
   });
 
   xclip.stdout.on('data', (data) => {
-    const xoutclip = spawn('xclip', ['-selection', 'clipboard', '-i'], {
+    const xoutclip = spawn('/usr/bin/xclip', ['-selection', 'clipboard', '-i'], {
       env: process.env,
     });
 
