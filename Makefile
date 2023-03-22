@@ -1,4 +1,4 @@
-all: version alpine
+all: version ubuntu
 registry: all push
 NOCACHE ?= false
 
@@ -26,7 +26,6 @@ alpine:
 	    --no-cache=$(NOCACHE) \
 	    --build-arg BASE_IMAGE_RELEASE=latest \
             --build-arg BASE_IMAGE=alpine \
-            --output "type=docker" \
 	    --tag abcdesktopio/oc.user.alpine:$(TAG) \
             --file ./Dockerfile.alpine .
 
@@ -36,7 +35,6 @@ alpine.hardening:
             --no-cache=$(NOCACHE) \
             --build-arg BASE_IMAGE_RELEASE=latest \
             --build-arg BASE_IMAGE=alpine \
-            --output "type=docker" \
 	    --tag abcdesktopio/oc.user.alpine.hardening:$(TAG) \
             --file ./Dockerfile.alpine .
 
@@ -47,7 +45,6 @@ ubuntu:
             --no-cache=$(NOCACHE) \
             --build-arg BASE_IMAGE_RELEASE=22.04 \
             --build-arg BASE_IMAGE=ubuntu \
-            --output "type=docker" \
             --tag abcdesktopio/oc.user.ubuntu:$(TAG) \
             --file ./Dockerfile.ubuntu .
 
@@ -57,7 +54,6 @@ ubuntu.hardening:
             --no-cache=$(NOCACHE) \
             --build-arg BASE_IMAGE_RELEASE=22.04 \
             --build-arg BASE_IMAGE=ubuntu \
-            --output "type=docker" \
             --tag abcdesktopio/oc.user.ubuntu.hardening:$(TAG) \
             --file ./Dockerfile.ubuntu .
 
