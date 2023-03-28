@@ -182,6 +182,21 @@ RUN mkdir -p /var/log/desktop /var/run/desktop
 # remove /etc/supervisor/conf.d/xterm.conf in hardening
 RUN if [ $(cat /TARGET_MODE) = hardening ]; then echo 'removing /etc/supervisor/conf.d/xterm.conf' &&  rm /etc/supervisor/conf.d/xterm.conf; fi
 
+
+# add default user balloon for compatility with 2.0
+# Next command use $BUSER context
+ENV BUSER balloon
+# RUN adduser --disabled-password --gecos '' $BUSER
+# RUN id -u $BUSER &>/dev/null || 
+RUN groupadd --gid 4096 $BUSER
+RUN useradd --create-home --shell /bin/bash --uid 4096 -g $BUSER --groups sudo $BUSER
+# create an ubuntu user
+RUN echo "balloon:lmdpocpetit" | chpasswd $BUSER
+# hack: be shure to own the home dir 
+RUN chown -R $BUSER:$BUSER /home/$BUSER
+
+
+
 # change passwd shadow group gshadow
 ENV ABCDESKTOP_LOCALACCOUNT_DIR "/var/secrets/abcdesktop/localaccount"
 RUN mkdir -p $ABCDESKTOP_LOCALACCOUNT_DIR
@@ -190,9 +205,6 @@ RUN for f in passwd shadow group gshadow ; do if [ -f /etc/$f ] ; then  cp /etc/
 # set build date
 RUN date > /etc/build.date
 
-# WORKDIR /home/$BUSER
-# set default user
-# USER $BUSER
 RUN if [ $(cat /TARGET_MODE) != hardening ]; then \
 	apt-get update && apt-get install  -y --no-install-recommends sudo && \
 	apt-get clean && rm -rf /var/lib/apt/lists/* && \
@@ -215,5 +227,10 @@ CMD [ "/composer/docker-entrypoint.sh" ]
 
 ## RESERVED TCP PORT 29782 for pulseaudio
 ## RESERVED TCP PORT 29785 for cupsd
+
+# VOLUME /home/$BUSER
+# Set for compatibility 2.0
+WORKDIR /home/$BUSER
+USER $BUSER
 
 EXPOSE 6081 29781 29784 29786 
