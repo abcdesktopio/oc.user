@@ -46,7 +46,26 @@ ubuntu:
             --build-arg BASE_IMAGE_RELEASE=22.04 \
             --build-arg BASE_IMAGE=ubuntu \
             --tag abcdesktopio/oc.user.ubuntu:$(TAG) \
-            --file ./Dockerfile.ubuntu .
+            --file Dockerfile.ubuntu .
+
+nvidia:
+	docker pull ubuntu:22.04
+	docker build \
+            --no-cache=$(NOCACHE) \
+            --build-arg BASE_IMAGE_RELEASE=22.04 \
+            --build-arg BASE_IMAGE=ubuntu \
+	    --build-arg CUDA_VERSION=12.1.0 \
+	    --build-arg UBUNTU_RELEASE=22.04 \
+            --tag abcdesktopio/oc.user.ubuntu.nvidia:$(TAG) \
+            --file Dockerfile.nvidia .
+
+citrix:
+	docker build 			\
+            --no-cache=$(NOCACHE)  	\
+	    --build-arg TAG=$(TAG) 	\
+            --build-arg BASE_IMAGE=abcdesktopio/oc.user.ubuntu \
+	    --tag abcdesktopio/oc.user.citrix.ubuntu:$(TAG) \
+            --file ./Dockerfile.citrix .
 
 ubuntu.hardening:
 	echo hardening > TARGET_MODE
