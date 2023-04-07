@@ -74,7 +74,7 @@ fi
 # -rfbauth "$ABCDESKTOP_RUN_DIR"/.vnc/passwd
 if [ "${NOVNC_ENABLE,,}" = "true" ]; then
 	-noxfixes
-  x11vnc -display "${DISPLAY}" -passwdfile /var/secrets/abcdesktop/vnc/password  -noxfixes -unixsock /tmp/.x11vnc -shared -forever -repeat -xkb -noipv6 -snapfb -threads -xrandr "resize" -rfbport 5900 &
+  x11vnc -display "${DISPLAY}" -passwdfile /var/secrets/abcdesktop/vnc/password -unixsock /tmp/.x11vnc -shared -forever -repeat -xkb -noipv6 -noxfixes -snapfb -threads -xrandr "resize" -rfbport 5900 &
 fi
 
 echo "Session Running. Press [Return] to exit."
