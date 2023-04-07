@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Local vars
 #Set Script Name variable
@@ -15,7 +15,7 @@ WALLPAPER_PATH=~/.wallpapers
 ## Export Var
 export LIBOVERLAY_SCROLLBAR=0
 export UBUNTU_MENUPROXY=
-export DISPLAY=${DISPLAY:-':0.0'}
+export DISPLAY=${DISPLAY:-':0'}
 export X11LISTEN=${X11LISTEN:-'udp'}
 export USER=${USER:-'balloon'}
 export HOME=${HOME:-'/home/balloon'}
@@ -24,6 +24,20 @@ export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/g
 export ABCDESKTOP_RUN_DIR=${ABCDESKTOP_RUN_DIR:-'/var/run/desktop'}
 export DISABLE_REMOTEIP_FILTERING=${DISABLE_REMOTEIP_FILTERING:-'disabled'}
 export BROADCAST_COOKIE=${BROADCAST_COOKIE:-$ABCDESKTOP_SESSION}
+export SUPERVISOR_PID_FILE=/var/run/desktop/supervisord.pid
+
+# TRAP for container signal SIGINT SIGQUIT SIGHUP SIGTERM
+stop() {
+   echo "$(date +'%F %T,%3N') starting stop"
+   echo "$(date +'%F %T,%3N') stopping all services"
+   /usr/bin/supervisorctl stop all
+   if [ -f "${SUPERVISOR_PID_FILE}" ]; then 
+	kill -9 $(cat "${SUPERVISOR_PID_FILE}")
+   fi 
+   echo "$(date +'%F %T,%3N') this is the end..."
+}
+trap stop SIGINT SIGQUIT SIGHUP SIGTERM
+
 
 # Read first $POD_IP if not set get from hostname -i ip addr
 export CONTAINER_IP_ADDR=${POD_IP:-$(hostname -i)}
