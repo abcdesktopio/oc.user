@@ -11,6 +11,18 @@ export ABCDESKTOP_RUN_DIR=${ABCDESKTOP_RUN_DIR:-'/var/run/desktop'}
 export NOVNC_ENABLE=${NOVNC_ENABLE:-true}
 export DISPLAY=:0 
 
+
+
+X11_PARAMS=""
+echo "X11LISTEN=$X11LISTEN"
+# add -listen $X11LISTEN if $X11LISTEN is set to tcp
+if [ "$X11LISTEN" == "tcp" ]; then
+	X11_PARAMS="-listen $X11LISTEN"
+else
+        echo "Not listening tcp"
+fi
+
+
 # Get first GPU device if all devices are available or `NVIDIA_VISIBLE_DEVICES` is not set
 if [ "$NVIDIA_VISIBLE_DEVICES" == "all" ]; then
   export GPU_SELECT=$(nvidia-smi --query-gpu=uuid --format=csv | sed -n 2p)
@@ -57,7 +69,7 @@ sed -i '/Section\s\+"Screen"/a\    '"Option \"UseDisplayDevice\" \"none\"" /etc/
 
 # Default display is :0 across the container
 # Run Xorg server with required extensions
-Xorg vt7 -noreset -novtswitch -sharevts -dpi "${DPI}" +extension "GLX" +extension "RANDR" +extension "RENDER" +extension "MIT-SHM" "${DISPLAY}" &
+Xorg vt7 -noreset -novtswitch -sharevts -dpi "${DPI}" +extension "GLX" +extension "RANDR" +extension "RENDER" +extension "MIT-SHM" ${X11_PARAMS} "${DISPLAY}" &
 
 # Wait for X11 to start
 echo "Waiting for X socket"
