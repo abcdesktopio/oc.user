@@ -9,7 +9,7 @@ export CDEPTH=${CDEPTH:-24}
 export VIDEO_PORT=${VIDEO_PORT:-DFP}
 export ABCDESKTOP_RUN_DIR=${ABCDESKTOP_RUN_DIR:-'/var/run/desktop'}
 export NOVNC_ENABLE=${NOVNC_ENABLE:-true}
-export DISPLAY=${DISPLAY:-':0'}
+export DISPLAY=:0 
 
 # Get first GPU device if all devices are available or `NVIDIA_VISIBLE_DEVICES` is not set
 if [ "$NVIDIA_VISIBLE_DEVICES" == "all" ]; then
@@ -73,7 +73,6 @@ fi
 # Run the x11vnc + noVNC fallback web interface if enabled
 # -rfbauth "$ABCDESKTOP_RUN_DIR"/.vnc/passwd
 if [ "${NOVNC_ENABLE,,}" = "true" ]; then
-	-noxfixes
   x11vnc -display "${DISPLAY}" -passwdfile /var/secrets/abcdesktop/vnc/password -unixsock /tmp/.x11vnc -shared -forever -repeat -xkb -noipv6 -noxfixes -snapfb -threads -xrandr "resize" -rfbport 5900 &
 fi
 
