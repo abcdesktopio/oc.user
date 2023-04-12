@@ -104,9 +104,13 @@ FROM ${BASE_IMAGE}:${TAG}
 
 COPY TARGET_MODE /TARGET_MODE
 COPY etc /etc
-
+COPY tigervncserver_1.13.1-1ubuntu1_amd64.deb /tmp
 RUN apt-get update  && \
     apt-get upgrade -y --no-install-recommends && \
+    apt-get install -y --no-install-recommends /tmp/tigervncserver_1.13.1-1ubuntu1_amd64.deb && \
+    rm /tmp/tigervncserver_1.13.1-1ubuntu1_amd64.deb && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* 
+RUN apt-get update  && \    
     apt-get install -y --no-install-recommends \
         ca-certificates         \
         curl            	\
@@ -117,10 +121,7 @@ RUN apt-get update  && \
         pulseaudio-utils        \
         xauth                   \
         websockify		\
-	tightvncpasswd		\
 	openssl                 \
-	tigervnc-standalone-server \
-     && ln -s /usr/bin/tightvncpasswd /usr/bin/vncpasswd \
      && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
