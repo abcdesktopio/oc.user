@@ -22,8 +22,9 @@ if [ "$USE_CERTBOT_CERTONLY" == "enabled" ]; then
 	CERT="/etc/letsencrypt/live/$FQDN/fullchain.pem"
 	PRIVKEY="/etc/letsencrypt/live/$FQDN/privkey.pem"
 	echo "/composer/wsproxy.py --key=$PRIVKEY --cert=$CERT --unix-target $X11VNCSOCKET $BIND_INTERFACE6081" > /var/var/deskop/wsproxy.log
-	/composer/wsproxy.py --key=$PRIVKEY --cert=$CERT --unix-target $X11VNCSOCKET $BIND_INTERFACE
+	/usr/bin/websockify  --key=$PRIVKEY --cert=$CERT --unix-target=$X11VNCSOCKET $BIND_INTERFACE
 else
-	/composer/wsproxy.py --unix-target $X11VNCSOCKET $BIND_INTERFACE
+	/usr/bin/websockify $BIND_INTERFACE --unix-target=$X11VNCSOCKET 
+	# /composer/wsproxy.py --unix-target=$X11VNCSOCKET $BIND_INTERFACE
 fi
 
