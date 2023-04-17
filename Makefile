@@ -45,9 +45,20 @@ ubuntu:
             --no-cache=$(NOCACHE) \
             --build-arg BASE_IMAGE_RELEASE=22.04 \
             --build-arg BASE_IMAGE=ubuntu \
+	    --build-arg LINK_LOCALACCOUNT=true \
             --tag abcdesktopio/oc.user.ubuntu:$(TAG) \
             --file Dockerfile.ubuntu .
 
+ubuntu_noaccount:
+	echo kubernetes > TARGET_MODE
+	docker pull ubuntu:22.04
+	docker build \
+            --no-cache=$(NOCACHE) \
+            --build-arg BASE_IMAGE_RELEASE=22.04 \
+            --build-arg BASE_IMAGE=ubuntu \
+	    --build-arg LINK_LOCALACCOUNT=false \
+            --tag abcdesktopio/oc.user.ubuntu:$(TAG) \
+            --file Dockerfile.ubuntu .
 nvidia:
 	docker pull ubuntu:22.04
 	docker build \
