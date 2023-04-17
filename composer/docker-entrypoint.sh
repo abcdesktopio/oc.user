@@ -174,17 +174,21 @@ fi
 if [ ! -d ~/.wallpapers ]; then
   	# add default wallpapers 
   	# we can't run a link if home dir is configured as a dedicated volume
+	echo ~/.wallpapers does not exist
+	echo create ~/.wallpapers
   	mkdir ~/.wallpapers
-  	cp -rp /composer/wallpapers/* ~/.wallpapers &
-	cp_pid=$!
-	echo "TESTING_MODE=$TESTING_MODE"
-	# if we are in testing mode wait for cp command finnish
-	if [ ! -z "$TESTING_MODE" ]; then
-		echo "We are in testing mode, waiting for cp command complete"
-		wait $cp_pid
-		echo "~/.wallpapers dump"
-		ls -la ~/.wallpapers
-	fi
+	echo copy new wallpaper files in ~/.wallpapers
+	cp -rp /composer/wallpapers/* ~/.wallpapers
+  	# cp -rp /composer/wallpapers/* ~/.wallpapers &
+	# cp_pid=$!
+	# echo "TESTING_MODE=$TESTING_MODE"
+	# # if we are in testing mode wait for cp command finnish
+	# if [ ! -z "$TESTING_MODE" ]; then
+	# 	echo "We are in testing mode, waiting for cp command complete"
+	#	wait $cp_pid
+	#	echo "~/.wallpapers dump"
+	#	ls -la ~/.wallpapers
+	# fi
 fi
 
 if [ ! -f ~/.config/user-dirs.dirs ]; then
@@ -327,16 +331,16 @@ fi
 echo `date` > ${ABCDESKTOP_RUN_DIR}/start.txt
 
 # start sshd on demand
-if [ ! -z "$SSHD_ENABLE" ]; then
-	if [ ! -z "$SSHD_NETWORK_INTERFACE" ]; then
-		# only v4  grep 'inet '
-		SSHD_BIND_IPADDR=$(ifconfig $SSHD_NETWORK_INTERFACE | grep 'inet ' |  awk '{ print $2 }')
-	else
-		SSHD_BIND_IPADDR="0.0.0.0"
-	fi
-	SSHD_PORT=${SSHD_PORT:-22}
-	/usr/sbin/sshd -p $SSHD_PORT -o ListenAddress=$SSHD_BIND_IPADDR
-fi
+# if [ ! -z "$SSHD_ENABLE" ]; then
+#	if [ ! -z "$SSHD_NETWORK_INTERFACE" ]; then
+#		# only v4  grep 'inet '
+#		SSHD_BIND_IPADDR=$(ifconfig $SSHD_NETWORK_INTERFACE | grep 'inet ' |  awk '{ print $2 }')
+#	else
+#		SSHD_BIND_IPADDR="0.0.0.0"
+#	fi
+#	SSHD_PORT=${SSHD_PORT:-22}
+#	/usr/sbin/sshd -p $SSHD_PORT -o ListenAddress=$SSHD_BIND_IPADDR
+# fi
 
 
 if [ ! -z "$KUBERNETES_SERVICE_HOST" ]; then
@@ -369,23 +373,21 @@ export KUBERNETES_SERVICE_HOST
 # echo "ABCDESKTOP_LABEL_set_default_wallpaper is $ABCDESKTOP_LABEL_set_default_wallpaper"
 # echo "SET_DEFAULT_WALLPAPER=$SET_DEFAULT_WALLPAPER"
 DEFAULT_WALLPAPER=${ABCDESKTOP_LABEL_set_default_wallpaper:-$SET_DEFAULT_WALLPAPER}
-echo "DEFAULT_WALLPAPER=$DEFAULT_WALLPAPER"
-if [ ! -z "$DEFAULT_WALLPAPER" ]; then
+echo "DEFAULT_WALLPAPER=${DEFAULT_WALLPAPER}"
+if [ ! -z ${DEFAULT_WALLPAPER} ]; then
         CONFIGSTORE_PATH=~/.store
         # if $SET_DEFAULT_WALLPAPER file exists
         if [ -f "$WALLPAPER_PATH/$DEFAULT_WALLPAPER" ]; then
+		echo $WALLPAPER_PATH/$DEFAULT_WALLPAPER file exists
                 CURRENT_WALLPAPER_FILE=~/.config/current_wallpaper
-                # if a wall_paper as not already been set
-                if [ ! -f "$CURRENT_WALLPAPER_FILE" ]; then
-                        # if .config/current_wallpaper does not exist
-                        echo "Define wallpaper as $DEFAULT_WALLPAPER to $CURRENT_WALLPAPER_FILE"
-                        cp "$WALLPAPER_PATH/$DEFAULT_WALLPAPER" "$CURRENT_WALLPAPER_FILE"
-                        echo -n "$DEFAULT_WALLPAPER" > "$CONFIGSTORE_PATH"/currentImg
-                else
-                        echo "$CURRENT_WALLPAPER_FILE exists skipping value $DEFAULT_WALLPAPER"
-                fi
+                if [ -f ${CURRENT_WALLPAPER_FILE} ]; then
+			echo Reset wallpaper file to ${WALLPAPER_PATH}/${DEFAULT_WALLPAPER}
+		fi
+                echo "Define wallpaper as $DEFAULT_WALLPAPER to $CURRENT_WALLPAPER_FILE"
+                cp "$WALLPAPER_PATH/$DEFAULT_WALLPAPER" "$CURRENT_WALLPAPER_FILE"
+                echo -n ${DEFAULT_WALLPAPER} > ${CONFIGSTORE_PATH}/currentImg
         else
-                        echo "File $WALLPAPER_PATH/$DEFAULT_WALLPAPER does not exist skipping wallpaper"
+                echo "File $WALLPAPER_PATH/$DEFAULT_WALLPAPER does not exist skipping wallpaper"
         fi
 else
         echo "SET_DEFAULT_WALLPAPER is not defined, keep default wallpapers config"
