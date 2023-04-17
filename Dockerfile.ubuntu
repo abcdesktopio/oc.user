@@ -6,7 +6,7 @@ ARG TAG=latest
 ARG BASE_IMAGE=ubuntu
 # BASE_IMAGE_RELEASE deprecated
 ARG BASE_IMAGE_RELEASE
-
+ARG LINK_LOCALACCOUNT=true
 #
 # create package for openbox
 # deb files will be located in /root/packages/$(uname -m) directory 
@@ -97,6 +97,11 @@ RUN if [ $(cat /TARGET_MODE) != hardening ]; then yarn install --production=true
 # version.json must be created by mkversion.sh bash script
 COPY composer/version.json /composer/version.json
 
+
+
+
+
+
 #
 # The main oc.user start here
 #
@@ -104,21 +109,22 @@ FROM ${BASE_IMAGE}:${TAG}
 
 COPY TARGET_MODE /TARGET_MODE
 COPY etc /etc
-# COPY tigervncserver_1.13.1-1ubuntu1_amd64.deb /tmp
 RUN apt-get update  && \
     apt-get upgrade -y --no-install-recommends && \
     apt-get install -y --no-install-recommends \
         ca-certificates         \
         curl                    \
-        bash		        \
-	file			&& \
+        bash		        && \
     apt-get clean 		&& \
     rm -rf /var/lib/apt/lists/*
 
 
 # install
+# Do not use 
+# COPY tigervncserver_1.13.1-1ubuntu1_amd64.deb /tmp to install
 # tigervncserver_1.13.1-1ubuntu1_amd64.deb
 # tigervncserver_1.13.1-1ubuntu1_arm64.deb    
+# but replace by curl command to support dpkg --print-architecture for amd64 and arm64
 RUN apt-get update  && \  
     tigervncdeburl="https://raw.githubusercontent.com/abcdesktopio/oc.user/main/tigervncserver_1.13.1-1ubuntu1_$(dpkg --print-architecture).deb" && \
     echo Download $tigervncdeburl && \
@@ -150,12 +156,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	gsetroot		\
      && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-	obconf-qt		\
-	feh                     \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
-
 # add some fonts
 # add qterminal
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -172,15 +172,26 @@ COPY --from=openbox_ubuntu_builder /openbox/libobrender*        /tmp/packages/
 
 RUN apt-get update  && \
         apt-get install -y --no-install-recommends -f /tmp/packages/*.deb  && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*        
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*        
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        obconf-qt	   \
+        feh		&& \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 
 # install composer
 COPY --from=ubuntu_node_modules_builder /composer /composer
 
 # install nodejs
-RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -     \
-    && apt-get install -y --no-install-recommends  nodejs       \
-    && apt-get clean && rm -rf /var/lib/apt/lists/* && node --version
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y --no-install-recommends  nodejs && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    node --version
 
 #
 # themes section
@@ -196,7 +207,6 @@ RUN mkdir -p /var/log/desktop /var/run/desktop && chmod 777 /var/log/desktop /va
 
 # remove /etc/supervisor/conf.d/xterm.conf in hardening
 RUN if [ $(cat /TARGET_MODE) = hardening ]; then echo 'removing /etc/supervisor/conf.d/xterm.conf' &&  rm /etc/supervisor/conf.d/xterm.conf; fi
-
 
 # add default user balloon for compatility with 2.0
 # Next command use $BUSER context
