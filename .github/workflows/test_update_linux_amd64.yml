@@ -41,7 +41,7 @@ jobs:
         context: .
         file: ./Dockerfile.ubuntu
         platforms: linux/amd64, linux/arm64
-        load: true
+        push: true
         build-args: |
           TAG=22.04
           BASE_IMAGE_RELEASE=22.04
