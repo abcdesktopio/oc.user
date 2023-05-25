@@ -49,6 +49,16 @@ ubuntu:
             --tag abcdesktopio/oc.user.ubuntu:$(TAG) \
             --file Dockerfile.ubuntu .
 
+selkies:
+	docker pull ghcr.io/selkies-project/selkies-gstreamer/py-build:master
+	docker pull ghcr.io/selkies-project/selkies-gstreamer/gst-web
+	docker pull ghcr.io/selkies-project/selkies-gstreamer/gstreamer:master-ubuntu22.04
+	docker build \
+	    --build-arg BASE_IMAGE_RELEASE=22.04 \
+            --build-arg BASE_IMAGE=abcdesktopio/oc.user.ubuntu:$(TAG) \
+	    --tag abcdesktopio/oc.user.ubuntu:selkies \
+	    --file Dockerfile.selkies .
+
 ubuntu_noaccount:
 	echo kubernetes > TARGET_MODE
 	docker pull ubuntu:22.04
