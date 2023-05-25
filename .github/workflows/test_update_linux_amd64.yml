@@ -4,9 +4,6 @@ on:
   push:
     branches: [ main ]
     
-env:
-  TEST_TAG: abcdesktopio/oc.user:test
-  
 jobs:
   update_image:
     runs-on: ubuntu-latest
@@ -29,13 +26,18 @@ jobs:
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_TOKEN }}
+        
+    - name: "image tag"
+      env: 
+        imagetag: ${{ github.head_ref || github.ref_name || 'dev' }}
+      run: echo "image tag set to '${{ env.imagetag }}'"
 
-    - name: Run Buildx oc.user.alpine
+    - name: Run Buildx oc.user
       run: |
           echo "kubernetes" > TARGET_MODE
           ./mkversion.sh
      
-    - name: Build test image ${{ env.TEST_TAG }}
+    - name: Build test image abcdesktopio/oc.user:test
       uses: docker/build-push-action@v4
       with:
         context: .
@@ -46,13 +48,13 @@ jobs:
           TAG=22.04
           BASE_IMAGE_RELEASE=22.04
           BASE_IMAGE=ubuntu
-        tags: ${{ env.TEST_TAG }}
+        tags: abcdesktopio/oc.user:test
 
-    - name: Run and test docker image ${{ env.TEST_TAG }}
+    - name: Run and test docker image abcdesktopio/oc.user:test
       run: |
-        ./make-test.sh ${{ env.TEST_TAG }}
+        ./make-test.sh abcdesktopio/oc.user:test
     
-    - name: Build and push image oc.user.ubuntu:3.0
+    - name: Build and push image oc.user.ubuntu:${{ env.imagetag }}
       uses: docker/build-push-action@v4
       with:
         context: .
@@ -63,13 +65,13 @@ jobs:
           TAG=22.04
           BASE_IMAGE_RELEASE=22.04
           BASE_IMAGE=ubuntu
-        tags: abcdesktopio/oc.user.ubuntu:dev
+        tags: abcdesktopio/oc.user.ubuntu:${{ env.imagetag }}
         
         
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: abcdesktopio/oc.user.ubuntu:dev
+        image-ref: abcdesktopio/oc.user.ubuntu:${{ env.imagetag }}
         format: 'sarif'
         output: oc.user.ubuntu.sarif
 
