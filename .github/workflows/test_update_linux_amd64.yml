@@ -40,7 +40,7 @@ jobs:
       with:
         context: .
         file: ./Dockerfile.ubuntu
-        platforms: linux/amd64
+        platforms: linux/amd64, linux/arm64
         load: true
         build-args: |
           TAG=22.04
