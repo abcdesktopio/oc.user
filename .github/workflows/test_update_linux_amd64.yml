@@ -30,8 +30,6 @@ jobs:
         password: ${{ secrets.DOCKER_TOKEN }}
         
     - name: "image tag"
-      env: 
-        imagetag: ${{ github.head_ref || github.ref_name || 'dev' }}
       run: echo "image tag set to '${{ env.imagetag }}'"
 
     - name: Run Buildx oc.user
