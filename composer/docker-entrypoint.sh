@@ -13,15 +13,19 @@ WALLPAPER_PATH=~/.wallpapers
 ((ABCDESKTOP_SESSION=((RANDOM<<15|RANDOM)<<15|RANDOM)<<15|RANDOM))
 
 ## Export Var
+export NAMESPACE=${POD_NAMESPACE:-'abcdesktop'}
+echo   NAMESPACE=${NAMESPACE}
 export LIBOVERLAY_SCROLLBAR=0
 export UBUNTU_MENUPROXY=
 export DISPLAY=${DISPLAY:-':0'}
 export X11LISTEN=${X11LISTEN:-'udp'}
+echo   X11LISTEN=${X11LISTEN}
 export USER=${USER:-'balloon'}
 export HOME=${HOME:-'/home/balloon'}
 export LOGNAME=${LOGNAME:-'balloon'}
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:$HOME/.local/share/applications/bin/"
 export ABCDESKTOP_RUN_DIR=${ABCDESKTOP_RUN_DIR:-'/var/run/desktop'}
+export ABCDESKTOP_SECRETS_DIR="/var/secrets/$NAMESPACE"
 export DISABLE_REMOTEIP_FILTERING=${DISABLE_REMOTEIP_FILTERING:-'disabled'}
 export BROADCAST_COOKIE=${BROADCAST_COOKIE:-$ABCDESKTOP_SESSION}
 export SUPERVISOR_PID_FILE=/var/run/desktop/supervisord.pid
@@ -68,13 +72,13 @@ rm -rf /tmp/.X0-lock
 # use vncpasswd command line to create a vnc passwd file
 mkdir -p ${ABCDESKTOP_RUN_DIR}/.vnc
 # read the vnc password from the kubernetes secret
-if [ -f /var/secrets/abcdesktop/vnc/password ]; then
+if [ -f ${ABCDESKTOP_SECRETS_DIR}/vnc/password ]; then
         echo 'vnc password use kubernetes secret'
-	cat /var/secrets/abcdesktop/vnc/password | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
+	cat ${ABCDESKTOP_SECRETS_DIR}/vnc/password | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
 else
 	echo 'error not vnc password has been set, everything is going wrong'
-	echo 'run a ls -la /var/secrets/abcdesktop to help troubleshooting'
-	ls -la /var/secrets/abcdesktop
+	echo "run a ls -la ${ABCDESKTOP_SECRETS_DIR}/vnc to help troubleshooting"
+	ls -la ${ABCDESKTOP_SECRETS_DIR}/vnc
 	echo 'fix use changemeplease as vncpassword'
 	echo changemeplease | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
 fi
@@ -274,8 +278,6 @@ export USE_CERTBOT_CERTONLY
 export EXTERNAL_DESKTOP_HOSTNAME
 export EXTERNAL_DESKTOP_DOMAIN
 
-
-
 # # Check if need to start dbus session
 #if [ ! -z "$OD_DBUS_SESSION_BUS" ]; then
 #   echo "starting OD_DBUS_SESSION_BUS is set $OD_DBUS_SESSION_BUS" >> /var/log/desktop/dbus.log
@@ -304,20 +306,20 @@ export EXTERNAL_DESKTOP_DOMAIN
 
 
 ## KERBEROS SECTION
-if [ -f /var/secrets/abcdesktop/kerberos/keytab ]; then
-	export KRB5_CLIENT_KTNAME=/var/secrets/abcdesktop/kerberos/keytab
+if [ -f ${ABCDESKTOP_SECRETS_DIR}/kerberos/keytab ]; then
+	export KRB5_CLIENT_KTNAME=${ABCDESKTOP_SECRETS_DIR}/kerberos/keytab
 fi
 
-if [ -f /var/secrets/abcdesktop/kerberos/krb5.conf ]; then
-        export KRB5_CONFIG=/var/secrets/abcdesktop/kerberos/krb5.conf
+if [ -f ${ABCDESKTOP_SECRETS_DIR}/kerberos/krb5.conf ]; then
+        export KRB5_CONFIG=${ABCDESKTOP_SECRETS_DIR}/kerberos/krb5.conf
 fi
 
-if [ -f /var/secrets/abcdesktop/kerberos/PRINCIPAL ]; then
-	export USERPRINCIPALNAME=$(cat /var/secrets/abcdesktop/kerberos/PRINCIPAL)
+if [ -f ${ABCDESKTOP_SECRETS_DIR}/kerberos/PRINCIPAL ]; then
+	export USERPRINCIPALNAME=$(cat ${ABCDESKTOP_SECRETS_DIR}/kerberos/PRINCIPAL)
 fi
 
-if [ -f /var/secrets/abcdesktop/kerberos/REALM ]; then
-        export REALM=$(cat /var/secrets/abcdesktop/kerberos/REALM)
+if [ -f ${ABCDESKTOP_SECRETS_DIR}/kerberos/REALM ]; then
+        export REALM=$(cat ${ABCDESKTOP_SECRETS_DIR}/kerberos/REALM)
 fi
 
 # Now run kinit if all vars are set 
