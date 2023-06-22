@@ -24,7 +24,6 @@ if [ "$USE_CERTBOT_CERTONLY" == "enabled" ]; then
 	echo "/composer/wsproxy.py --key=$PRIVKEY --cert=$CERT --unix-target $X11VNCSOCKET $BIND_INTERFACE6081" > /var/var/deskop/wsproxy.log
 	/usr/bin/websockify --heartbeat=30 --key=$PRIVKEY --cert=$CERT --unix-target=$X11VNCSOCKET $BIND_INTERFACE
 else
-	/usr/bin/websockify $BIND_INTERFACE --unix-target=$X11VNCSOCKET 
-	# /composer/wsproxy.py --heartbeat=30 --unix-target=$X11VNCSOCKET $BIND_INTERFACE
+	/usr/bin/websockify --heartbeat=30  $BIND_INTERFACE --unix-target=$X11VNCSOCKET 
 fi
 
