@@ -13,8 +13,19 @@ if [ "$DISABLE_REMOTEIP_FILTERING" == "enabled" ]; then
 else
 	BIND_INTERFACE="$(hostname -i):6081"
 fi
-
 echo "DISABLE_REMOTEIP_FILTERING is $DISABLE_REMOTEIP_FILTERING, listening $BIND_INTERFACE"
+
+#
+# add WEBSOCKIFY_HEARTBEAT option
+# force nginx ingress websocket timeout
+# read https://github.com/abcdesktopio/oc.pyos/issues/2
+#
+echo "WEBSOCKIFY_HEARTBEAT=$WEBSOCKIFY_HEARTBEAT"
+HEARTBEAT_OPTION=''
+if [ ! -z "$WEBSOCKIFY_HEARTBEAT" ]; then
+	HEARTBEAT_OPTION="--heartbeat=${WEBSOCKIFY_HEARTBEAT}"
+fi
+echo "HEARTBEAT_OPTION=$HEARTBEAT_OPTION"
 
 if [ "$USE_CERTBOT_CERTONLY" == "enabled" ]; then
 	FQDN="$EXTERNAL_DESKTOP_HOSTNAME.$EXTERNAL_DESKTOP_DOMAIN"
@@ -22,8 +33,8 @@ if [ "$USE_CERTBOT_CERTONLY" == "enabled" ]; then
 	CERT="/etc/letsencrypt/live/$FQDN/fullchain.pem"
 	PRIVKEY="/etc/letsencrypt/live/$FQDN/privkey.pem"
 	echo "/composer/wsproxy.py --key=$PRIVKEY --cert=$CERT --unix-target $X11VNCSOCKET $BIND_INTERFACE6081" > /var/var/deskop/wsproxy.log
-	/usr/bin/websockify --heartbeat=30 --key=$PRIVKEY --cert=$CERT --unix-target=$X11VNCSOCKET $BIND_INTERFACE
+	/usr/bin/websockify  $HEARTBEAT_OPTION  --key=$PRIVKEY --cert=$CERT --unix-target=$X11VNCSOCKET $BIND_INTERFACE
 else
-	/usr/bin/websockify --heartbeat=30  $BIND_INTERFACE --unix-target=$X11VNCSOCKET 
+	/usr/bin/websockify $HEARTBEAT_OPTION $BIND_INTERFACE --unix-target=$X11VNCSOCKET 
+	# /composer/wsproxy.py --unix-target=$X11VNCSOCKET $BIND_INTERFACE
 fi
-
