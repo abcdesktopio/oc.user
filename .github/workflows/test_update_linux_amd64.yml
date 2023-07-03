@@ -48,11 +48,11 @@ jobs:
           TAG=22.04
           BASE_IMAGE_RELEASE=22.04
           BASE_IMAGE=ubuntu
-        tags: abcdesktopio/oc.user:test
+        tags: abcdesktopio/oc.user:test.${{ env.imagetag }}
 
     - name: Run and test docker image abcdesktopio/oc.user:test
       run: |
-        ./make-test.sh abcdesktopio/oc.user:test
+        ./make-test.sh abcdesktopio/oc.user:test.${{ env.imagetag }}
     
     - name: Build and push image oc.user.ubuntu:${{ env.imagetag }}
       uses: docker/build-push-action@v4
