@@ -118,6 +118,15 @@ RUN apt-get update  && \
     apt-get clean 		&& \
     rm -rf /var/lib/apt/lists/*
 
+# add languages 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        language-pack-en                \
+        language-pack-fr                \
+        language-pack-nn                \
+        language-pack-de                \
+        && locale-gen                   \
+        && apt-get clean                \
+        && rm -rf /var/lib/apt/lists/*
 
 # install
 # Do not use 
