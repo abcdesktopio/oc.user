@@ -221,7 +221,7 @@ RUN echo "balloon:lmdpocpetit" | chpasswd $BUSER
 RUN chown -R $BUSER:$BUSER /home/$BUSER
 
 # change passwd shadow group gshadow
-ENV ABCDESKTOP_LOCALACCOUNT_DIR "/var/secrets/abcdesktop/localaccount"
+ENV ABCDESKTOP_LOCALACCOUNT_DIR "/etc/localaccount"
 RUN mkdir -p $ABCDESKTOP_LOCALACCOUNT_DIR
 RUN for f in passwd shadow group gshadow ; do if [ -f /etc/$f ] ; then  cp /etc/$f $ABCDESKTOP_LOCALACCOUNT_DIR ; rm -f /etc/$f; ln -s $ABCDESKTOP_LOCALACCOUNT_DIR/$f /etc/$f; fi; done
 
