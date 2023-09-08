@@ -115,7 +115,11 @@ if [ ! -z "$PULSEAUDIO_COOKIE" ]; then
 	if [ ! -f ~/.config/pulse/cookie ]; then
 		echo 'create ~/.config/pulse/cookie'
                 mkdir -p ~/.config/pulse
-                cat /etc/pulse/cookie | openssl rc4 -K "$PULSEAUDIO_COOKIE" -nopad -nosalt > ~/.config/pulse/cookie
+		# create a 256 Bytes cookie file for pulseaudio
+                for i in {1..8} 
+		do 
+  			echo "$PULSEAUDIO_COOKIE" >> ~/.config/pulse/cookie
+     		done
         fi
 fi
 
