@@ -118,7 +118,7 @@ if [ ! -z "$PULSEAUDIO_COOKIE" ]; then
 		# create a 256 Bytes cookie file for pulseaudio
                 for i in {1..8} 
 		do 
-  			echo "$PULSEAUDIO_COOKIE" >> ~/.config/pulse/cookie
+  			echo -n "$PULSEAUDIO_COOKIE" >> ~/.config/pulse/cookie
      		done
         fi
 fi
