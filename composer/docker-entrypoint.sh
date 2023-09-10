@@ -112,7 +112,10 @@ if [ ! -d ~/.config ]; then
 fi
 
 if [ ! -z "$PULSEAUDIO_COOKIE" ]; then
+	# create ~/.config/pulse if not exist
 	mkdir -p ~/.config/pulse
+ 	# remove file content ~/.config/pulse/cookie 
+ 	true > ~/.config/pulse/cookie
 	# create a 256 Bytes cookie file for pulseaudio
 	for i in {1..8} 
 	do 
