@@ -112,15 +112,14 @@ if [ ! -d ~/.config ]; then
 fi
 
 if [ ! -z "$PULSEAUDIO_COOKIE" ]; then
-	if [ ! -f ~/.config/pulse/cookie ]; then
-		echo 'create ~/.config/pulse/cookie'
-                mkdir -p ~/.config/pulse
-		# create a 256 Bytes cookie file for pulseaudio
-                for i in {1..8} 
-		do 
-  			echo -n "$PULSEAUDIO_COOKIE" >> ~/.config/pulse/cookie
-     		done
-        fi
+	mkdir -p ~/.config/pulse
+	# create a 256 Bytes cookie file for pulseaudio
+	for i in {1..8} 
+	do 
+		echo -n "$PULSEAUDIO_COOKIE" >> ~/.config/pulse/cookie
+	done
+ else
+ 	echo "error PULSEAUDIO_COOKIE is not defined, sound goes wrong"
 fi
 
 if [ ! -d ~/.config/autostart ]; then
