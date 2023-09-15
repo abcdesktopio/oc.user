@@ -8,7 +8,7 @@ echo "$(date) $1" >> $STDOUT_LOGFILE
 log "Start autostart"
 
 # Change default backgroup color in X11
-hsetroot -solid '#6ec6f0' 2>>$STDOUT_LOGFILE
+xsetroot -solid '#6ec6f0' 2>>$STDOUT_LOGFILE
 
 # 
 #
