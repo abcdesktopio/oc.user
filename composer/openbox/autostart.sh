@@ -7,8 +7,26 @@ echo "$(date) $1" >> $STDOUT_LOGFILE
 
 log "Start autostart"
 
+# default BG_COLOR
+BG_COLOR="#6ec6f0"
+
 # Change default backgroup color in X11
-xsetroot -solid '#6ec6f0' 2>>$STDOUT_LOGFILE
+# use hsetroot else xsetroot
+if command -v "hsetroot" &> /dev/null
+then
+        hsetroot -solid "$BG_COLOR" 2>>$STDOUT_LOGFILE
+else
+	if command -v "xsetroot" &> /dev/null
+ 	then
+		xsetroot -solid "$BG_COLOR" 2>>$STDOUT_LOGFILE
+  	fi
+fi
+
+# start picom
+if command -v "picom" &> /dev/null
+then
+        picom -b 2>>$STDOUT_LOGFILE
+fi
 
 # 
 #
