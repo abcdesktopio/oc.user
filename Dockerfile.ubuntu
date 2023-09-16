@@ -183,15 +183,16 @@ RUN apt-get update  && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*        
 
+# picom need hsetroot 
+# xsetroot is not supported by picom
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        obconf-qt \
-        feh \
+    apt-get install -y --no-install-recommends 
+	obconf-qt \
+	feh \
 	picom \
-	hsetroot \
+	hsetroot && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-
 
 # install composer
 COPY --from=ubuntu_node_modules_builder /composer /composer
