@@ -3,9 +3,7 @@
 # Local vars
 #Set Script Name variable
 SCRIPT=`basename ${BASH_SOURCE[0]}`
-#Initialize variables to default values.
-# init.sh "  width + " " + height + " "
-# Set default mode to Full HD 
+
 OPT_LOCAL=""
 WALLPAPER_PATH=~/.wallpapers
 # ABCDESKTOP_SESSION is a random value 
@@ -86,12 +84,8 @@ fi
 
 # create a MIT-MAGIC-COOKIE-1 entry in .Xauthority
 if [ ! -z "$XAUTH_KEY" ]; then
-	# remove previous file
-	# add * prevent lock file
-	echo "remove ~/.Xauthority file"
-	rm -rf ~/.Xauthority*
-	echo "create ~/.Xauthority file"
-	touch  ~/.Xauthority
+ 	# reset file content
+ 	true > ~/.Xauthority
 	xauth add :0 MIT-MAGIC-COOKIE-1 $XAUTH_KEY
 fi
 
