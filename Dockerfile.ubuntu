@@ -186,7 +186,7 @@ RUN apt-get update  && \
 # picom need hsetroot 
 # xsetroot is not supported by picom
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends 
+    apt-get install -y --no-install-recommends \
 	obconf-qt \
 	feh \
 	picom \
