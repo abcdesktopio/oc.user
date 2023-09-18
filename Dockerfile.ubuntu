@@ -180,15 +180,16 @@ COPY --from=openbox_ubuntu_builder /openbox/libobrender*        /tmp/packages/
 
 RUN apt-get update  && \
         apt-get install -y --no-install-recommends -f /tmp/packages/*.deb  && \
+	apt-get install -y --no-install-recommends feh && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*        
 
+# 
+# to add compositor ( this option takes more than 200 M of memory per user's pod )
 # picom need hsetroot 
 # xsetroot is not supported by picom
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-	obconf-qt \
-	feh \
 	picom \
 	hsetroot && \
     apt-get clean && \
