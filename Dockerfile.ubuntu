@@ -132,25 +132,29 @@ ARG TARGET_MODE
 # convert ARG to ENV with same name
 ENV ABCDESKTOP_LOCALACCOUNT_DIR=$ABCDESKTOP_LOCALACCOUNT_DIR
 ENV TARGET_MODE=$TARGET_MODE
+# set node release
+ENV NODE_MAJOR=18
 
 COPY etc /etc
-RUN apt-get update  && \
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
+    apt-get update  && \
     apt-get upgrade -y --no-install-recommends && \
     apt-get install -y --no-install-recommends \
-        ca-certificates         \
-        curl                    \
+        ca-certificates \
+        curl \
+	gnupg \
         bash		        && \
     apt-get clean 		&& \
     rm -rf /var/lib/apt/lists/*
 
 # add languages 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        language-pack-en                \
-        language-pack-fr                \
-        language-pack-nn                \
-        language-pack-de                \
-        && locale-gen                   \
-        && apt-get clean                \
+        language-pack-en \
+        language-pack-fr \
+        language-pack-nn \
+        language-pack-de \
+        && locale-gen \
+        && apt-get clean \
         && rm -rf /var/lib/apt/lists/*
 
 # install
@@ -169,23 +173,23 @@ RUN apt-get update  && \
 
 RUN apt-get update  && \    
     apt-get install -y --no-install-recommends \
-        supervisor      	\
-        wmctrl          	\
-        cups-client     	\
-        pulseaudio-utils        \
-        xauth                   \
-        websockify		\
+        supervisor \
+        wmctrl \
+        cups-client \
+        pulseaudio-utils \
+        xauth \
+        websockify \
      && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-	desktop-file-utils	\
-	xdg-user-dirs		\
-	x11-xserver-utils       \
-	adwaita-icon-theme	\
-	adwaita-qt		\
-	xclip			\
-	imagemagick		\
+	desktop-file-utils \
+	xdg-user-dirs \
+	x11-xserver-utils \
+	adwaita-icon-theme \
+	adwaita-qt \
+	xclip \
+	imagemagick \
      && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
@@ -216,8 +220,11 @@ RUN apt-get update && \
 COPY --from=ubuntu_node_modules_builder /composer /composer
 
 # install nodejs
-RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get install -y --no-install-recommends  nodejs && \
+RUN mkdir -p /etc/apt/keyrings && \
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list && \
+    apt-get update && \
+    apt-get install nodejs -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     node --version
