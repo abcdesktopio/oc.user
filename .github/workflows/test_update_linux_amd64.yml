@@ -10,7 +10,7 @@ jobs:
   build_matrix: 
     strategy:
       matrix:
-        target_mode: [kubernetes, hardening]
+        target_mode: [ubuntu, hardening]
     runs-on: ubuntu-latest
     steps: 
       - name: Checkout repository
@@ -53,9 +53,9 @@ jobs:
             BASE_IMAGE=ubuntu
           tags: abcdesktopio/oc.user:test.3.1
 
-      - name: Run and test docker image abcdesktopio/oc.user:test.3.1
+      - name: Run and test docker image abcdesktopio/oc.user.${{ matrix.target_mode }}:test.3.1
         run: |
-          ./make-test.sh abcdesktopio/oc.user:test.3.1
+          ./make-test.sh abcdesktopio/oc.user.${{ matrix.target_mode }}:test.3.1
     
       - name: Build and push image oc.user.ubuntu:3.0
         uses: docker/build-push-action@v4
@@ -70,7 +70,7 @@ jobs:
             TAG=22.04
             BASE_IMAGE_RELEASE=22.04
             BASE_IMAGE=ubuntu
-          tags: abcdesktopio/oc.user.ubuntu:3.0
+          tags: abcdesktopio/oc.user.${{ matrix.target_mode }}:3.0
        
       - name: Build and push image oc.user.ubuntu:3.1
         uses: docker/build-push-action@v4
@@ -85,7 +85,7 @@ jobs:
             TAG=22.04
             BASE_IMAGE_RELEASE=22.04
             BASE_IMAGE=ubuntu
-          tags: abcdesktopio/oc.user.ubuntu:3.1
+          tags: abcdesktopio/oc.user.${{ matrix.target_mode }}:3.1
         
     # - name: Run Trivy vulnerability scanner
     # uses: aquasecurity/trivy-action@master
