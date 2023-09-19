@@ -11,6 +11,7 @@ log "Start autostart"
 BG_COLOR="#6ec6f0"
 
 # Change default backgroup color in X11
+# picom need hsetroot command
 # use hsetroot else xsetroot
 if command -v "hsetroot" &> /dev/null
 then

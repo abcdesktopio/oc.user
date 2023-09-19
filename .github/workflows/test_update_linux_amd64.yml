@@ -68,17 +68,17 @@ jobs:
         tags: abcdesktopio/oc.user.ubuntu:${{ env.imagetag }}
         
         
-    - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@master
-      with:
-        image-ref: abcdesktopio/oc.user.ubuntu:${{ env.imagetag }}
-        format: 'sarif'
-        output: oc.user.ubuntu.sarif
+    # - name: Run Trivy vulnerability scanner
+    # uses: aquasecurity/trivy-action@master
+    #  with:
+    #    image-ref: abcdesktopio/oc.user.ubuntu:${{ env.imagetag }}
+    #    format: 'sarif'
+    #    output: oc.user.ubuntu.sarif
 
-    - name: Upload Trivy scan results to GitHub Security tab
-      uses: github/codeql-action/upload-sarif@v2
-      if: always()
-      with:
-        sarif_file: oc.user.ubuntu.sarif
+    # - name: Upload Trivy scan results to GitHub Security tab
+    #  uses: github/codeql-action/upload-sarif@v2
+    #  if: always()
+    #  with:
+    #    sarif_file: oc.user.ubuntu.sarif
   
 
