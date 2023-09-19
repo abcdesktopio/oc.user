@@ -32,7 +32,7 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
         
       - name: "image tag"
-        run: echo "image tag set to ${{ matrix.version }}"
+        run: echo "image tag set to ${{ matrix.target_mode }}"
 
       - name: Run Buildx oc.user
         run: |
@@ -51,7 +51,7 @@ jobs:
             TAG=22.04
             BASE_IMAGE_RELEASE=22.04
             BASE_IMAGE=ubuntu
-          tags: abcdesktopio/oc.user:test.3.1
+          tags: abcdesktopio/oc.user.matrix.${{ matrix.target_mode }}:test.3.1
 
       - name: Run and test docker image abcdesktopio/oc.user.${{ matrix.target_mode }}:test.3.1
         run: |
