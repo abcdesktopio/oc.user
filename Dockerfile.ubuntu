@@ -46,10 +46,12 @@ FROM ${BASE_IMAGE}:${TAG} as ubuntu_node_modules_builder
 ARG TARGET_MODE
 # convert ARG to ENV with same name
 ENV TARGET_MODE=$TARGET_MODE
+ENV NODE_MAJOR=18
 
-RUN apt-get update && apt-get install -y  --no-install-recommends      \
-        gcc                             \
-        g++                             \
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+RUN apt-get update && apt-get install -y  --no-install-recommends \
+        gcc \
+        g++ \
         make                            
 
 # to make install wmctrljs nodejs components
@@ -58,10 +60,11 @@ RUN apt-get update && apt-get install -y  --no-install-recommends \
         ca-certificates \
         libx11-dev \
         libxmu-dev \
-        git        \
-        curl       \
-        gnupg      \
+        git \
+        curl \
+        gnupg \
         dpkg
+
 
 RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - && apt-get install -y nodejs 
 # RUN curl -o- -L https://yarnpkg.com/install.sh | bash
@@ -69,6 +72,12 @@ RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - && apt-get install -
 RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null
 RUN echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | tee /etc/apt/sources.list.d/yarn.list
 RUN apt-get update && apt-get install -y yarn
+
+# RUN curl -o- -L https://yarnpkg.com/install.sh | bash
+# RUN apt-get update && apt-get install -y yarn
+#RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null
+#RUN echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | tee /etc/apt/sources.list.d/yarn.list
+#RUN apt-get update && apt-get install -y yarn
 
 COPY composer /composer
 
@@ -154,7 +163,7 @@ RUN apt-get update  && \
     tigervncdeburl="https://raw.githubusercontent.com/abcdesktopio/oc.user/main/tigervncserver_1.13.1-1ubuntu1_$(dpkg --print-architecture).deb" && \
     echo Download $tigervncdeburl && \
     curl -sL --output /tmp/tigervncserver.deb "$tigervncdeburl" && \  
-    apt-get install -y /tmp/tigervncserver.deb && \
+    apt-get install -y --no-install-recommends /tmp/tigervncserver.deb && \
     rm -f /tmp/*.deb && \
     apt-get clean && rm -rf /var/lib/apt/lists/* 
 
@@ -177,7 +186,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	adwaita-qt		\
 	xclip			\
 	imagemagick		\
-        xfonts-base		\
      && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
