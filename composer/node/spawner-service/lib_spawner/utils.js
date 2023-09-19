@@ -71,7 +71,7 @@ async function set(key, value) {
   const normalize_requestedfile = safeNormalizePath( key, '.store');
   if (normalize_requestedfile) {
   	console.log(`set : ${normalize_requestedfile}`);
-  	await fs.promises.writeFile(fullpath, value);
+  	await fs.promises.writeFile(normalize_requestedfile, value);
   }
   else
     console.error( `normalize_requestedfile has failed, path not in ${process.env.HOME}/.store requested ${key}` );
