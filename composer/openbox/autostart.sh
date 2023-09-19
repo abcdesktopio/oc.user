@@ -24,10 +24,10 @@ else
 fi
 
 # start picom
-if command -v "picom" &> /dev/null
-then
-        picom -b 2>>$STDOUT_LOGFILE
-fi
+# if command -v "picom" &> /dev/null
+#then
+#        picom -b 2>>$STDOUT_LOGFILE
+#fi
 
 # 
 #
