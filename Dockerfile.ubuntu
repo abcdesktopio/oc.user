@@ -5,8 +5,15 @@ ARG TAG=latest
 # Default base image 
 ARG BASE_IMAGE=ubuntu
 # BASE_IMAGE_RELEASE deprecated
-ARG BASE_IMAGE_RELEASE
-ARG LINK_LOCALACCOUNT=true
+ARG BASE_IMAGE_RELEASE=22.04
+
+# ABCDESKTOP_LOCALACCOUNT_DIR arg
+# use in ENV ABCDESKTOP_LOCALACCOUNT_DIR=$ABCDESKTOP_LOCALACCOUNT_DIR
+# release >= 3.1 set value to "/etc/localaccount"
+# release <  3.1 set value to "/var/secrets/abcdesktop/localaccount"
+ARG ABCDESKTOP_LOCALACCOUNT_DIR
+# ="/etc/localaccount"
+
 #
 # create package for openbox
 # deb files will be located in /root/packages/$(uname -m) directory 
@@ -35,7 +42,10 @@ RUN ls *.deb
 # define FROM before use ENV command
 FROM ${BASE_IMAGE}:${TAG} as ubuntu_node_modules_builder
 
-COPY TARGET_MODE /TARGET_MODE
+# define arg
+ARG TARGET_MODE
+# convert ARG to ENV with same name
+ENV TARGET_MODE=$TARGET_MODE
 
 RUN apt-get update && apt-get install -y  --no-install-recommends      \
         gcc                             \
@@ -92,7 +102,7 @@ RUN yarn install --production=true
 # && npm i --package-lock-only && npm audit fix
 
 WORKDIR /composer/node/xterm.js
-RUN if [ $(cat /TARGET_MODE) != hardening ]; then yarn install --production=true; npm i --package-lock-only; npm audit fix; fi
+RUN if [ ${TARGET_MODE} != hardening ]; then echo TARGET_MODE=${TARGET_MODE}; yarn install --production=true; npm i --package-lock-only; npm audit fix; else echo TARGET_MODE=${TARGET_MODE}; fi
 
 # version.json must be created by mkversion.sh bash script
 COPY composer/version.json /composer/version.json
@@ -107,7 +117,13 @@ COPY composer/version.json /composer/version.json
 #
 FROM ${BASE_IMAGE}:${TAG}
 
-COPY TARGET_MODE /TARGET_MODE
+# define arg
+ARG ABCDESKTOP_LOCALACCOUNT_DIR
+ARG TARGET_MODE
+# convert ARG to ENV with same name
+ENV ABCDESKTOP_LOCALACCOUNT_DIR=$ABCDESKTOP_LOCALACCOUNT_DIR
+ENV TARGET_MODE=$TARGET_MODE
+
 COPY etc /etc
 RUN apt-get update  && \
     apt-get upgrade -y --no-install-recommends && \
@@ -161,16 +177,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	adwaita-qt		\
 	xclip			\
 	imagemagick		\
-	gsetroot		\
+        xfonts-base		\
      && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# add some fonts
-# add qterminal
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        qterminal               \
-        xfonts-base             \
-        && apt-get clean        \
-        && rm -rf /var/lib/apt/lists/*        
 
 # install openbox 
 RUN mkdir -p /tmp/packages
@@ -185,7 +194,7 @@ RUN apt-get update  && \
     rm -rf /var/lib/apt/lists/*        
 
 # 
-# to add compositor ( this option takes more than 200 M of memory per user's pod )
+# to add compositor ( this option takes more memory in user's pod )
 # picom need hsetroot 
 # xsetroot is not supported by picom
 RUN apt-get update && \
@@ -221,8 +230,7 @@ ADD Arc_OSXbuttons.tar /usr/share/themes
 RUN mkdir -p /var/log/desktop /var/run/desktop && chmod 777 /var/log/desktop /var/run/desktop
 
 # remove /etc/supervisor/conf.d/xterm.conf in hardening
-RUN if [ $(cat /TARGET_MODE) = hardening ]; then echo 'removing /etc/supervisor/conf.d/xterm.conf' &&  rm /etc/supervisor/conf.d/xterm.conf; fi
-
+RUN if [ ${TARGET_MODE} == hardening ]; then echo 'removing /etc/supervisor/conf.d/xterm.conf' &&  rm /etc/supervisor/conf.d/xterm.conf; fi
 #
 # create account balloon for compatility with 2.0
 # Next command use $BUSER context
@@ -237,15 +245,20 @@ RUN groupadd --gid 4096 $BUSER && \
     chown -R $BUSER:$BUSER /home/$BUSER
 
 # change passwd shadow group gshadow
-ENV ABCDESKTOP_LOCALACCOUNT_DIR "/etc/localaccount"
 RUN mkdir -p $ABCDESKTOP_LOCALACCOUNT_DIR && \
     for f in passwd shadow group gshadow ; do if [ -f /etc/$f ] ; then  cp /etc/$f $ABCDESKTOP_LOCALACCOUNT_DIR ; rm -f /etc/$f; ln -s $ABCDESKTOP_LOCALACCOUNT_DIR/$f /etc/$f; fi; done
 
 # set build date
 RUN date > /etc/build.date
 
-RUN if [ $(cat /TARGET_MODE) != hardening ]; then \
-	apt-get update && apt-get install  -y --no-install-recommends sudo && \
+
+# install sudo 
+# install qterminal xfonts-base
+# allow all users to run sudo commands
+# remove it if need
+RUN if [ ${TARGET_MODE} != hardening ]; then \
+	apt-get update && \
+        apt-get install -y --no-install-recommends sudo qterminal xfonts-base && \
 	apt-get clean && rm -rf /var/lib/apt/lists/* && \
 	echo "ALL ALL=(ALL:ALL) ALL" > /etc/sudoers.d/all; \
     fi
