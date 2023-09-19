@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         target_mode: [kubernetes, hardening]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps: 
       - name: Checkout repository
         uses: actions/checkout@v3
