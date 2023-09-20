@@ -3,8 +3,6 @@
 # set vars for test mode
 export DISPLAY=:0.0
 CONTAINER_IP=$(hostname -i)
-
-
 echo 'netstat dump'
 netstat -anp 
 
@@ -19,9 +17,14 @@ echo 'testing broadcast-service'
 cd /composer/node/broadcast-service 
 CONTAINER_IP=${CONTAINER_IP} yarn test
 
-if [ -f /TARGET_MODE ]; then
-	if [ $(cat /TARGET_MODE) != hardening ]; then
-		cd /composer/node/xterm.js 
-		CONTAINER_IP=${CONTAINER_IP} yarn test
-	fi
+if [ "$VAR1" = "$VAR2" ]; then
+    echo "Strings are equal."
+else
+    echo "Strings are not equal."
+fi
+
+# xterm exists only in 'ubuntu' ( the default configuration )
+if [ "$TARGET_MODE" == "ubuntu"  ]; then
+	cd /composer/node/xterm.js 
+	CONTAINER_IP=${CONTAINER_IP} yarn test
 fi
