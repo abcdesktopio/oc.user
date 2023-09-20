@@ -5,6 +5,7 @@
   "version": "0.0.6",
   "description": "Node.js spawner service",
   "author": "Alexandre DEVELY",
+  "license": "GNU GPL 2",
   "scripts": {
     "test": "jest --bail",
     "swagger-spec": "swagger-jsdoc -d swaggerDef.js -o swaggerSpec.json",
