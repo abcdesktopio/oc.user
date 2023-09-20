@@ -7,7 +7,7 @@ DEFAULT_IMAGE=abcdesktopio/oc.user.ubuntu:3.0
 IMAGE_RELEASE=${1:-$DEFAULT_IMAGE}
 
 # show used IMAGE_RELEASE
-echo "Run oc.user test for $IMAGE_RELEASE"
+echo "Run oc.user test for $IMAGE_RELEASE mode=$TARGET_MODE"
 
 #
 # create the container
@@ -72,12 +72,21 @@ if [ $? -ne 0 ]; then
         exit 1
 fi
 
+# service 
 MAX_SERVICE_COUNT=6
-echo "Waiting for supervisor status"
+echo "TARGET_MODE is $TARGET_MODE"
+# test if the image id hardening mode
+if [ "$TARGET_MODE" == "hardening" ]; then
+	# in hardening xterm service does not exist 
+	# reduce the MAX_SERVICE_COUNT
+	MAX_SERVICE_COUNT=$(( $MAX_SERVICE_COUNT - 1 ))
+fi
+
+echo "waiting for $MAX_SERVICE_COUNT services ready"
 TRY_COUNT=0
 while [ $TRY_COUNT -le 10 ]
 do
-    SERVICE_COUNT=$(docker exec ${CONTAINER_ID} supervisorctl status | grep RUNNING | wc -l)
+    SERVICE_COUNT=$(docker exec ${CONTAINER_ID} supervisorctl status|grep RUNNING|wc -l)
     echo "TRY_COUNT=$TRY_COUNT SERVICE_COUNT=$SERVICE_COUNT/$MAX_SERVICE_COUNT"
     if [ "$SERVICE_COUNT" -ge "$MAX_SERVICE_COUNT" ]; then
 	    break;
