@@ -17,14 +17,8 @@ echo 'testing broadcast-service'
 cd /composer/node/broadcast-service 
 CONTAINER_IP=${CONTAINER_IP} yarn test
 
-if [ "$VAR1" = "$VAR2" ]; then
-    echo "Strings are equal."
-else
-    echo "Strings are not equal."
-fi
-
 # xterm exists only in 'ubuntu' ( the default configuration )
-if [ "$TARGET_MODE" == "ubuntu"  ]; then
+if [ "$TARGET_MODE" == "ubuntu" ]; then
 	cd /composer/node/xterm.js 
 	CONTAINER_IP=${CONTAINER_IP} yarn test
 fi
