@@ -72,18 +72,24 @@ if [ $? -ne 0 ]; then
         exit 1
 fi
 
-MAX_SERVICE_COUNT=6
+
+# hardening the number of services is 5
+# ubuntu    the number of services is 6
+# define the low value between hardening and ubuntu
+MAX_SERVICE_COUNT=5
 echo "Waiting for supervisor status"
-while true
+TRY_COUNT=0
+while [ $TRY_COUNT -le 10 ]
 do
     SERVICE_COUNT=$(docker exec ${CONTAINER_ID} supervisorctl status | grep RUNNING | wc -l)
-    echo "SERVICE_COUNT=$SERVICE_COUNT/$MAX_SERVICE_COUNT"
+    echo "TRY_COUNT=$TRY_COUNT SERVICE_COUNT=$SERVICE_COUNT/$MAX_SERVICE_COUNT"
     if [ "$SERVICE_COUNT" -ge "$MAX_SERVICE_COUNT" ]; then
 	    break;
     fi
-    sleep 1;
+    TRY_COUNT=$(( $TRY_COUNT + 1 ))
+    sleep $TRY_COUNT;
 done
-echo "Container services are started"
+echo "Container services are started TRY_COUNT=$TRY_COUNT SERVICE_COUNT=$SERVICE_COUNT/$MAX_SERVICE_COUNT"
 
 
 # run tests
