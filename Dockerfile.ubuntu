@@ -111,11 +111,10 @@ RUN yarn install --production=true
 # && npm i --package-lock-only && npm audit fix
 
 WORKDIR /composer/node/xterm.js
-RUN if [ ${TARGET_MODE} != hardening ]; then echo TARGET_MODE=${TARGET_MODE}; yarn install --production=true; npm i --package-lock-only; npm audit fix; else echo TARGET_MODE=${TARGET_MODE}; fi
+RUN if [ "${TARGET_MODE}" != "hardening" ]; then echo TARGET_MODE=${TARGET_MODE}; yarn install --production=true; npm i --package-lock-only; npm audit fix; else echo TARGET_MODE=${TARGET_MODE}; fi
 
 # version.json must be created by mkversion.sh bash script
 COPY composer/version.json /composer/version.json
-
 
 
 
@@ -151,7 +150,6 @@ RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selectio
 RUN apt-get update && apt-get install -y --no-install-recommends \
         language-pack-en \
         language-pack-fr \
-        language-pack-nn \
         language-pack-de \
         && locale-gen \
         && apt-get clean \
@@ -245,7 +243,8 @@ ADD Arc_OSXbuttons.tar /usr/share/themes
 RUN mkdir -p /var/log/desktop /var/run/desktop && chmod 777 /var/log/desktop /var/run/desktop
 
 # remove /etc/supervisor/conf.d/xterm.conf in hardening
-RUN if [ ${TARGET_MODE} == hardening ]; then echo 'removing /etc/supervisor/conf.d/xterm.conf' &&  rm /etc/supervisor/conf.d/xterm.conf; fi
+RUN if [ "${TARGET_MODE}" == "hardening" ]; then echo 'removing /etc/supervisor/conf.d/xterm.conf' &&  rm /etc/supervisor/conf.d/xterm.conf; fi
+
 #
 # create account balloon for compatility with 2.0
 # Next command use $BUSER context
