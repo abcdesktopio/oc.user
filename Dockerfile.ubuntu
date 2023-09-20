@@ -270,7 +270,7 @@ RUN date > /etc/build.date
 # install qterminal xfonts-base
 # allow all users to run sudo commands
 # remove it if need
-RUN if [ ${TARGET_MODE} != hardening ]; then \
+RUN if [ "${TARGET_MODE}" != "hardening" ]; then \
 	apt-get update && \
         apt-get install -y --no-install-recommends sudo qterminal xfonts-base && \
 	apt-get clean && rm -rf /var/lib/apt/lists/* && \
