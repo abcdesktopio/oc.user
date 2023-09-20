@@ -3,7 +3,8 @@
 # set vars for test mode
 export DISPLAY=:0.0
 CONTAINER_IP=$(hostname -i)
-echo 'netstat dump'
+echo "TARGET_MODE=$TARGET_MODE"
+echo "netstat dump"
 netstat -anp 
 
 echo 'testing spawner-service'
