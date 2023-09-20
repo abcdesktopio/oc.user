@@ -97,6 +97,15 @@ done
 echo "Container services are started TRY_COUNT=$TRY_COUNT SERVICE_COUNT=$SERVICE_COUNT/$MAX_SERVICE_COUNT"
 
 
+if [ "$TARGET_MODE" == "hardening" ]; then
+	# remove application test for hardening 
+	# there is no default application
+	docker exec ${CONTAINER_ID} rm /composer/node/node/spawner-service/test/app.test.js
+fi
+
+
+docker exec ${CONTAINER_ID} bash -e /composer/node/run-tests.sh
+
 # run tests
 echo "Run tests..."
 docker exec ${CONTAINER_ID} bash -e /composer/node/run-tests.sh
