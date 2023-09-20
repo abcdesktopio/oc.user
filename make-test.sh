@@ -100,7 +100,8 @@ echo "Container services are started TRY_COUNT=$TRY_COUNT SERVICE_COUNT=$SERVICE
 if [ "$TARGET_MODE" == "hardening" ]; then
 	# remove application test for hardening 
 	# there is no default application
-	docker exec ${CONTAINER_ID} rm /composer/node/node/spawner-service/test/app.test.js
+	docker exec --user 0 ${CONTAINER_ID} bash -c "rm -f  /composer/node/node/spawner-service/test/app.test.js"
+	docker exec --user 0 ${CONTAINER_ID} bash -c "ls -la /composer/node/node/spawner-service/test"
 fi
 
 
