@@ -2,6 +2,7 @@
   "name": "broadcast-service",
   "main": "broadcast-service.js",
   "private": true,
+  "license": "GPLv2",
   "version": "0.0.6",
   "description": "Node.js broadcast service",
   "author": "Alexandre DEVELY",
