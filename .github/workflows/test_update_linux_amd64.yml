@@ -55,8 +55,7 @@ jobs:
 
       - name: Run and test docker image abcdesktopio/oc.user.${{ matrix.target_mode }}:test.3.1
         run: |
-          export TARGET_MODE=${{ matrix.target_mode }}
-          ./make-test.sh abcdesktopio/oc.user.${{ matrix.target_mode }}:test.3.1
+          TARGET_MODE=${{ matrix.target_mode }} ./make-test.sh abcdesktopio/oc.user.${{ matrix.target_mode }}:test.3.1
     
       - name: Build and push image oc.user.ubuntu:3.0
         uses: docker/build-push-action@v4
