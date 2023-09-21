@@ -3,15 +3,19 @@ const process = require('process');
 const roothomedir = `${process.env.HOME}`;
 const pathVersion = '/composer/version.json';
 
+/*
+remove qterminal for hardening test
+  {
+    key: 'qterminal.qterminal',
+    path: '/usr/bin/qterminal',
+  }
+*/
+
 const applist = [
   {
     key: 'xeyes.XEyes',
     path: '/usr/bin/xeyes',
-  },
-  {
-    key: 'qterminal.qterminal',
-    path: '/usr/bin/qterminal',
-  },
+  }
 ].map((app) => {
   try {
     if (app.path[0] !== '/') {
