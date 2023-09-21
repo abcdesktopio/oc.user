@@ -14,40 +14,6 @@ ARG BASE_IMAGE_RELEASE=22.04
 ARG ABCDESKTOP_LOCALACCOUNT_DIR
 # ="/etc/localaccount"
 
-FROM ${BASE_IMAGE}:${TAG} as debug
-
-RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-RUN apt-get update && apt-get install -y  --no-install-recommends \
-        gcc \
-        g++ \
-        make
-
-# to make install wmctrljs nodejs components
-# add build dev package 
-RUN apt-get update && apt-get install -y  --no-install-recommends \
-        ca-certificates \
-        libx11-dev \
-        libxmu-dev \
-        git \
-        curl \
-        gnupg \
-        dpkg
-
-
-RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - && apt-get install -y nodejs
-# RUN curl -o- -L https://yarnpkg.com/install.sh | bash
-# RUN apt-get update && apt-get install -y yarn
-RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null
-RUN echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | tee /etc/apt/sources.list.d/yarn.list
-RUN apt-get update && apt-get install -y yarn
-
-COPY composer /composer
-# WORKDIR /composer/node/xterm.js
-RUN if [ "$TARGET_MODE" == "hardening" ]; then rm -rf /composer/node/xterm.js; ls -la /composer/node; else cd /composer/node/xterm.js; yarn install --production=true; npm i --package-lock-only; npm audit fix; ls -la /composer/node/xterm.js; fi
-
-# end if debug
-
-
 #
 # create package for openbox
 # deb files will be located in /root/packages/$(uname -m) directory 
@@ -145,7 +111,7 @@ RUN yarn install --production=true
 # && npm i --package-lock-only && npm audit fix
 
 # WORKDIR /composer/node/xterm.js
-RUN if [ "$TARGET_MODE" == "hardening" ]; then rm -rf /composer/node/xterm.js; ls -la /composer/node; else cd /composer/node/xterm.js; yarn install --production=true; npm i --package-lock-only; npm audit fix; ls -la /composer/node/xterm.js; fi
+RUN if [ "$TARGET_MODE" = "hardening" ] ; then rm -rf /composer/node/xterm.js; ls -la /composer/node; else cd /composer/node/xterm.js; yarn install --production=true; npm i --package-lock-only; npm audit fix; ls -la /composer/node/xterm.js; fi
 
 # version.json must be created by mkversion.sh bash script
 COPY composer/version.json /composer/version.json
@@ -277,7 +243,7 @@ ADD Arc_OSXbuttons.tar /usr/share/themes
 RUN mkdir -p /var/log/desktop /var/run/desktop && chmod 777 /var/log/desktop /var/run/desktop
 
 # remove /etc/supervisor/conf.d/xterm.conf in hardening
-RUN if [ "${TARGET_MODE}" == "hardening" ]; then rm -f /etc/supervisor/conf.d/xterm.conf; echo "supervisor xterm.conf has been removed"; fi
+RUN if [ "${TARGET_MODE}" = "hardening" ] ; then rm -f /etc/supervisor/conf.d/xterm.conf; echo "supervisor xterm.conf has been removed"; fi
 
 #
 # create account balloon for compatility with 2.0
