@@ -1,0 +1,31 @@
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+# Default release is 22.04
+ARG TAG=latest
+# Default base image 
+ARG BASE_IMAGE=ubuntu
+# BASE_IMAGE_RELEASE deprecated
+ARG BASE_IMAGE_RELEASE=22.04
+
+# ABCDESKTOP_LOCALACCOUNT_DIR arg
+# use in ENV ABCDESKTOP_LOCALACCOUNT_DIR=$ABCDESKTOP_LOCALACCOUNT_DIR
+# release >= 3.1 set value to "/etc/localaccount"
+# release <  3.1 set value to "/var/secrets/abcdesktop/localaccount"
+ARG ABCDESKTOP_LOCALACCOUNT_DIR
+# ="/etc/localaccount"
+
+#
+# create package for openbox
+# deb files will be located in /root/packages/$(uname -m) directory 
+# patched with openbox.title.patch for abcdesktop
+FROM ${BASE_IMAGE}:${TAG}
+ARG TARGET_MODE
+USER 0
+# install sudo 
+# install qterminal xfonts-base
+# allow all users to run sudo commands
+# remove it if need
+RUN if [ "${TARGET_MODE}" != "hardening" ]; then apt-get update && apt-get install -y --no-install-recommends sudo && apt-get clean && rm -rf /var/lib/apt/lists/* && echo "ALL ALL=(ALL:ALL) ALL" > /etc/sudoers.d/all; fi
+WORKDIR /home/$BUSER
+USER $BUSER
+
