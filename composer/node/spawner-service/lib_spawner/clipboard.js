@@ -14,6 +14,7 @@
 const { spawn } = require('child_process');
 
 /**
+ read https://superuser.com/questions/90257/what-is-the-difference-between-the-x-clipboards
  * -selection
     specify which X selection to use,
     options are "primary" to use XA_PRIMARY (default),
@@ -21,19 +22,34 @@ const { spawn } = require('child_process');
  * @desc Sync both clipboards
  */
 function clipboardsync() {
-  // Print selected data from primary clipboard to standard output
+  // Read selected data from primary clipboard to standard output
+  // Read the XA_PRIMARY clipboard
   const xclip = spawn('/usr/bin/xclip', ['-selection', 'primary', '-o'], {
     env: process.env,
   });
 
+  // write XA_PRIMARY clipboard data to XA_SECONDARY and to XA_CLIPBOARD
+  // 
   xclip.stdout.on('data', (data) => {
-    const xoutclip = spawn('/usr/bin/xclip', ['-selection', 'clipboard', '-i'], {
-      env: process.env,
-    });
-
+      
+    const xoutclip_xa_clipboard = spawn(
+        '/usr/bin/xclip', 
+        ['-selection', 'clipboard', '-i'], 
+        { env: process.env }
+    );
     // Write output from primary to clipboard
-    xoutclip.stdin.write(data);
-    xoutclip.stdin.end();
+    xoutclip_xa_clipboard.stdin.write(data);
+    xoutclip_xa_clipboard.stdin.end();
+
+    const xoutclip_xa_secondary = spawn(
+        '/usr/bin/xclip', 
+        ['-selection', 'secondary', '-i'], 
+        { env: process.env }
+    );
+    // Write output from primary to secondary
+    xoutclip_xa_secondary.stdin.write(data);
+    xoutclip_xa_secondary.stdin.end();
+      
   });
 }
 
