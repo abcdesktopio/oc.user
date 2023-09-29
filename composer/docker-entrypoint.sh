@@ -119,11 +119,6 @@ if [ ! -z "$PULSEAUDIO_COOKIE" ]; then
  	echo "error PULSEAUDIO_COOKIE is not defined, sound goes wrong"
 fi
 
-if [ ! -d ~/.config/autostart ]; then
-	echo "create  ~/.config/autostart directory"
-        mkdir -p ~/.config/autostart
-fi
-
 if [ ! -d ~/.config/gtk-3.0 ]; then
 	echo "create  ~/.config/gtk-3.0 directory"
         mkdir -p ~/.config/gtk-3.0
