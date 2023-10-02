@@ -33,10 +33,6 @@ echo "install /composer/node/spawner-service"
 cd /composer/node/spawner-service
 yarn install --production=false
 
-echo "install /composer/node/file-service"
-cd /composer/node/file-service
-yarn install --production=false
-
 echo "install /composer/node/broadcast-service"
 cd /composer/node/broadcast-service
 yarn install --production=false

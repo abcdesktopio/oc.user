@@ -11,9 +11,6 @@ echo 'testing spawner-service'
 cd /composer/node/spawner-service 
 CONTAINER_IP=${CONTAINER_IP} yarn test
 
-# cd /composer/node/file-service 
-# CONTAINER_IP=${CONTAINER_IP} yarn test
-
 echo 'testing broadcast-service'
 cd /composer/node/broadcast-service 
 CONTAINER_IP=${CONTAINER_IP} yarn test
