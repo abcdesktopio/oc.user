@@ -93,7 +93,7 @@ function covercolorborder(path, next) {
         cropImage(path, borderSides[currentSide], callback);
       } else {
         const mycolor = { red:borderColor[0][0], green:borderColor[0][1], blue:borderColor[0][2] };
-	console.log( 'first mycolor=' + mycolor );
+	// console.log( 'first mycolor=' + mycolor );
         for (let i=1; i < borderColor.length; ++i) {
           mycolor.red += borderColor[i][0];
           mycolor.green += borderColor[i][1];
@@ -102,7 +102,7 @@ function covercolorborder(path, next) {
         mycolor.red = Math.trunc(mycolor.red / borderColor.length);
         mycolor.green = Math.trunc(mycolor.green / borderColor.length);
         mycolor.blue = Math.trunc(mycolor.blue / borderColor.length);
-        console.log( 'average mycolor=' + mycolor );
+        // console.log( 'average mycolor=' + mycolor );
         next(null, colortohashstring(mycolor) );
       }
     } else {
