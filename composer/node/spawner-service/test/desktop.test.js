@@ -51,6 +51,28 @@ describe('Test desktop endpoints', () => {
         .then(callBackExpect(expected, 422));
     });
 
+   
+    it('Should has response with forbidden because of invalid path test 1', () => {
+      const expected = { code: 404, data: 'Not found' };
+      return request
+        .post('/spawner/setDesktop')
+        .send({ key: '../../../../../../../../../../tmp/testfile', value: 'dummy' })
+        .then(callBackExpect(expected, 404 ));
+    });
+
+    it('Should has response with forbidden because of invalid path test 2', () => {
+      const expected = { code: 404, data: 'Not found' };
+      return request
+        .post('/spawner/setDesktop')
+        .send({ key: '~/../../../../../../../../../../var/log/desktop/testfile', value: 'dummy' })
+	.then(callBackExpect(expected,404));
+    });
+
+    it('Should has response with success', () => request
+      .post('/spawner/setDesktop')
+      .send({ key: 'superfile', value: 'superdata' })
+      .expect(callbackExpectOk));
+
     it('Should has response with success', () => request
       .post('/spawner/setDesktop')
       .send({ key: 'my_test_key', value: 'my_test_value' })
@@ -69,6 +91,39 @@ describe('Test desktop endpoints', () => {
           .query({ key: null })
           .then(callBackExpect(expected, 422));
       });
+
+    it('Should has response with forbidden because of key provided has invalid path test 1', () => {
+      const expected = { code: 404, data: 'Not found' };
+      return request
+        .get('/spawner/getDesktop')
+        .query({ key: '../../../../../../../../etc/passwd' })
+        .then(callBackExpect(expected,404));
+    });
+
+    it('Should has response with forbidden because of key provided has invalid path test 2', () => {
+      const expected = { code: 404, data: 'Not found' };
+      return request
+        .get('/spawner/getDesktop')
+        .query({ key: '~/../../../../../../../../etc/passwd' })
+        .then(callBackExpect(expected,404));
+    });
+
+    it('Should has response with forbidden because of key provided has invalid path test 3', () => {
+      const expected = { code: 404, data: 'Not found' };
+      return request
+        .get('/spawner/getDesktop')
+        .query({ key: '~/../../../../../../../../tmp/.X0-lock' })
+        .then(callBackExpect(expected,404));
+    });
+
+    it('Should has response with forbidden because of key provided has invalid path test 4', () => {
+      const expected = { code: 404, data: 'Not found' };
+      return request
+        .get('/spawner/getDesktop')
+        .query({ key: '~/../../../../../../../../var/log/desktop/xserver.log' })
+        .then(callBackExpect(expected,404));
+    });
+
 
       it('Should forbidden because of empty', () => {
         const expected = {
