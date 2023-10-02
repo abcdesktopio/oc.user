@@ -290,8 +290,10 @@ function routerInit(router) {
    */
   router.post('/setDesktop', middlewares.get('setDesktop'), asyncHandler(async (req, res) => {
     const { key = '', value = '' } = req.body;
-    const ret = { code: 200, data: 'ok' };
-    await set(key, value);
+    const ret = { code: 500, data: 'error' };
+    const { code, data } = await set(key, value);
+    ret.code = code;
+    ret.data = data;
     res.status(ret.code).send(ret);
   }));
 

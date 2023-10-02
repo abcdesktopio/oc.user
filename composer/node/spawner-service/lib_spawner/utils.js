@@ -33,8 +33,10 @@ function safeNormalizePath( key, localDirectory )
   // return false
   if (requested_directory.startsWith(store_directory))
         return normalize_requestedfile;
-  else
+  else {
+	console.log( `safeNormalizePath return false, requested_directory=${requested_directory} normalize_requestedfile=${normalize_requestedfile}` ); 
         return undefined;
+  }
 }
 
 
@@ -50,7 +52,6 @@ async function get(key) {
         console.error( `normalize_requestedfile has failed, path not in ${process.env.HOME}/.store requested ${key}` );
         return ret;
   }
-
   try {
     await fs.promises.access(normalize_requestedfile, fs.constants.R_OK);
     ret.data = await fs.promises.readFile(normalize_requestedfile, 'utf8');
@@ -68,13 +69,18 @@ async function get(key) {
  * @param {string} value
  */
 async function set(key, value) {
+  const ret = { code: 404, data: 'Not found' };
   const normalize_requestedfile = safeNormalizePath( key, '.store');
   if (normalize_requestedfile) {
   	console.log(`set : ${normalize_requestedfile}`);
   	await fs.promises.writeFile(normalize_requestedfile, value);
+	ret.code = 200;
+	ret.data = 'ok';
   }
-  else
+  else {
     console.error( `normalize_requestedfile has failed, path not in ${process.env.HOME}/.store requested ${key}` );
+  }
+  return ret;
 }
 
 /**
