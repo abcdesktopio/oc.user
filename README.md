@@ -4,7 +4,6 @@
 This repository contains the source code to build a user desktop container for abcdesktop project.
 
 [![Build and test oc.user images linux/amd64, linux/arm64](https://github.com/abcdesktopio/oc.user/actions/workflows/test_update_linux_amd64.yml/badge.svg)](https://github.com/abcdesktopio/oc.user/actions/workflows/test_update_linux_amd64.yml)
-![Docker Pulls](https://img.shields.io/docker/pulls/abcdesktopio/oc.user.default.svg)
 ![GNU GPL v2.0 License](https://img.shields.io/github/license/abcdesktopio/oc.user.svg)
 
 abcdesktop.io user container based on ubuntu
