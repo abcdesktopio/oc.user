@@ -139,7 +139,9 @@ RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selectio
     rm -rf /var/lib/apt/lists/*
 
 # add languages 
+# locales for locale-gen command
 RUN apt-get update && apt-get install -y --no-install-recommends \
+	locales \
         language-pack-en \
         language-pack-fr \
         language-pack-de \
