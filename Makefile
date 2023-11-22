@@ -46,6 +46,7 @@ ubuntu:
             --build-arg BASE_IMAGE_RELEASE=22.04 \
             --build-arg BASE_IMAGE=ubuntu \
 	    --build-arg LINK_LOCALACCOUNT=true \
+	    --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/var/secrets/abcdesktop/localaccount\
             --tag abcdesktopio/oc.user.ubuntu:$(TAG) \
             --file Dockerfile.ubuntu .
 
