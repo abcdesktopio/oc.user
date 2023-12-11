@@ -1,4 +1,4 @@
-all: version ubuntu sudo
+all: version default ubuntu
 registry: all push
 NOCACHE ?= false
 
@@ -60,7 +60,7 @@ hardening31:
             --tag abcdesktopio/oc.user.hardening:3.1 \
             --file Dockerfile.ubuntu .
 
-ubuntu:
+default:
 	docker pull ubuntu:22.04
 	docker build \
             --no-cache=$(NOCACHE) \
@@ -69,9 +69,11 @@ ubuntu:
             --build-arg BASE_IMAGE_RELEASE=22.04 \
             --build-arg BASE_IMAGE=ubuntu \
             --tag abcdesktopio/oc.user.default:$(TAG) \
+	    --build-arg LINK_LOCALACCOUNT=true \
+	    --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/var/secrets/abcdesktop/localaccount \
             --file Dockerfile.ubuntu .
 
-sudo:
+ubuntu:
 	docker build \
             --no-cache=$(NOCACHE) \
             --build-arg TARGET_MODE=ubuntu \

@@ -140,7 +140,9 @@ RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selectio
     rm -rf /var/lib/apt/lists/*
 
 # add languages 
+# locales for locale-gen command
 RUN apt-get update && apt-get install -y --no-install-recommends \
+	locales \
         language-pack-en \
         language-pack-fr \
         language-pack-de \
@@ -228,9 +230,6 @@ RUN mkdir -p /etc/apt/keyrings && \
 # COPY --from=abcdesktopio/oc.themes      /usr/share/themes       /usr/share/themes
 # COPY --from=theme_builder /usr/share/themes /usr/share/themes
 ADD Arc_OSXbuttons.tar /usr/share/themes	
-# ADD Helvetica.ttf.gz /usr/share/fonts/truetype/helvetica
-# RUN fc-cache -f -v /usr/share/fonts/truetype/helvetica
-
 
 # LOG AND PID SECTION
 RUN mkdir -p /var/log/desktop /var/run/desktop && chmod 777 /var/log/desktop /var/run/desktop
@@ -243,11 +242,10 @@ RUN if [ "${TARGET_MODE}" = "hardening" ] ; then rm -f /etc/supervisor/conf.d/xt
 # Next command use $BUSER context
 # this is the default user if no user defined
 # create group, user, set password
-# add user in sudo group
 # fix home dir owner
 ENV BUSER balloon
 RUN groupadd --gid 4096 $BUSER && \
-    useradd --create-home --shell /bin/bash --uid 4096 -g $BUSER --groups sudo $BUSER && \
+    useradd --create-home --shell /bin/bash --uid 4096 -g $BUSER $BUSER && \
     echo "balloon:lmdpocpetit" | chpasswd $BUSER &&\
     chown -R $BUSER:$BUSER /home/$BUSER
 
