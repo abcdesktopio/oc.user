@@ -19,6 +19,7 @@ ARG ABCDESKTOP_LOCALACCOUNT_DIR
 # deb files will be located in /root/packages/$(uname -m) directory 
 # patched with openbox.title.patch for abcdesktop
 FROM ${BASE_IMAGE}:${TAG} as openbox_ubuntu_builder
+ENV DEBEMAIL nobody@abcdesktop.io
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 RUN sed -i '/deb-src/s/^# //' /etc/apt/sources.list
 RUN apt-get update

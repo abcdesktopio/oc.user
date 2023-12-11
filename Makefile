@@ -1,4 +1,4 @@
-all: version ubuntu
+all: version ubuntu sudo
 registry: all push
 NOCACHE ?= false
 
@@ -7,7 +7,7 @@ ifndef NOCACHE
 endif
 
 ifndef TAG
- TAG=3.0
+ TAG=3.1
 endif
 
 version:
@@ -20,7 +20,6 @@ test:
 	./make-test.sh abcdesktopio/oc.user.ubuntu:$(TAG)
 
 alpine:
-	echo kubernetes > TARGET_MODE
 	docker pull alpine
 	docker build \
 	    --no-cache=$(NOCACHE) \
@@ -30,7 +29,6 @@ alpine:
             --file ./Dockerfile.alpine .
 
 alpine.hardening:
-	echo hardening > TARGET_MODE
 	docker build \
             --no-cache=$(NOCACHE) \
             --build-arg BASE_IMAGE_RELEASE=latest \
@@ -38,16 +36,51 @@ alpine.hardening:
 	    --tag abcdesktopio/oc.user.alpine.hardening:$(TAG) \
             --file ./Dockerfile.alpine .
 
-ubuntu:
-	echo kubernetes > TARGET_MODE
+
+
+ubuntu30:
 	docker pull ubuntu:22.04
 	docker build \
             --no-cache=$(NOCACHE) \
+            --build-arg TARGET_MODE=kubernetes \
+            --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/var/secrets/abcdesktop/localaccount \
             --build-arg BASE_IMAGE_RELEASE=22.04 \
             --build-arg BASE_IMAGE=ubuntu \
-	    --build-arg LINK_LOCALACCOUNT=true \
-            --tag abcdesktopio/oc.user.ubuntu:$(TAG) \
+            --tag abcdesktopio/oc.user.ubuntu:3.0 \
             --file Dockerfile.ubuntu .
+
+hardening31:
+	docker pull ubuntu:22.04
+	docker build \
+            --no-cache=$(NOCACHE) \
+	    --build-arg TARGET_MODE=hardening \
+	    --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
+            --build-arg BASE_IMAGE_RELEASE=22.04 \
+            --build-arg BASE_IMAGE=ubuntu \
+            --tag abcdesktopio/oc.user.hardening:3.1 \
+            --file Dockerfile.ubuntu .
+
+ubuntu:
+	docker pull ubuntu:22.04
+	docker build \
+            --no-cache=$(NOCACHE) \
+            --build-arg TARGET_MODE=ubuntu \
+            --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
+            --build-arg BASE_IMAGE_RELEASE=22.04 \
+            --build-arg BASE_IMAGE=ubuntu \
+            --tag abcdesktopio/oc.user.default:$(TAG) \
+            --file Dockerfile.ubuntu .
+
+sudo:
+	docker build \
+            --no-cache=$(NOCACHE) \
+            --build-arg TARGET_MODE=ubuntu \
+	    --build-arg TAG=$(TAG)  \
+	    --build-arg BASE_IMAGE=abcdesktopio/oc.user.default \
+            --tag abcdesktopio/oc.user.ubuntu:$(TAG) \
+            --file Dockerfile.sudo .
+
+
 
 selkies:
 	docker pull ghcr.io/selkies-project/selkies-gstreamer/py-build:master
