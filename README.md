@@ -18,9 +18,13 @@ git submodule update --init --recursive --remote
 
 ## Build the complete desktop container image
 
+Run the make command to build 
+
 ```bash
 TAG=3.1 make
 ```
+
+You should read on stdout
 
 ```
 use TAG=3.1;
