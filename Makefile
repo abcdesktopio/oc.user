@@ -70,7 +70,6 @@ default:
             --build-arg BASE_IMAGE=ubuntu \
             --tag abcdesktopio/oc.user.default:$(TAG) \
 	    --build-arg LINK_LOCALACCOUNT=true \
-	    --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/var/secrets/abcdesktop/localaccount \
             --file Dockerfile.ubuntu .
 
 ubuntu:
