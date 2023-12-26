@@ -3,7 +3,7 @@
 
 echo args is $1 
 # set default IMAGE_RELEASE to run test
-DEFAULT_IMAGE=abcdesktopio/oc.user.ubuntu:3.0
+DEFAULT_IMAGE=abcdesktopio/oc.user.ubuntu:3.2
 IMAGE_RELEASE=${1:-$DEFAULT_IMAGE}
 
 # show used IMAGE_RELEASE
