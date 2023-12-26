@@ -170,6 +170,7 @@ RUN apt-get update  && \
         wmctrl \
         cups-client \
         pulseaudio-utils \
+        pavumeter \
         xauth \
         websockify \
      && apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -230,6 +231,10 @@ RUN mkdir -p /etc/apt/keyrings && \
 # COPY --from=abcdesktopio/oc.themes      /usr/share/themes       /usr/share/themes
 # COPY --from=theme_builder /usr/share/themes /usr/share/themes
 ADD Arc_OSXbuttons.tar /usr/share/themes	
+
+
+# add sound files from ubuntu alsa package alsa-utils
+ADD usr/share/sounds/alsa /usr/share/sounds/alsa
 
 # LOG AND PID SECTION
 RUN mkdir -p /var/log/desktop /var/run/desktop && chmod 777 /var/log/desktop /var/run/desktop
