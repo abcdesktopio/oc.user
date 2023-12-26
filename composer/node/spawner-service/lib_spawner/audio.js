@@ -21,6 +21,8 @@ const { broadcastevent } = require('./broadcast');
 
 const exec = util.promisify(childProcess.exec);
 const pathPulseSocket = path.join('/', 'tmp', '.pulse.sock');
+const pathPulseCtl = '/usr/bin/pactl';
+
 
 global.audioConf = {
   pulseAudioSocketIsUp: false,
@@ -119,6 +121,29 @@ function setAudioQuality(sink = '', callback) {
   });
 }
 
+
+/**
+ *
+ * @param {Function} callback
+ * @desc Run pactl info
+ * run pactl -s /tmp/.pulse.sock info
+ */
+async function isPulseAvailable(callback) {
+  const pactlCommandInfo = `${pathPulseCtl} -s ${pathPulseSocket} info`;
+  childProcess.exec(pactlCommandInfo, (err, stdout, stderr) => {
+    if ( err )
+          console.error( pactlCommandInfo, ' returns ', stderr);
+  }).on('exit', (code) => {
+        if (code === 0)
+          callback( { status:200, message:'OK'} );
+        else
+          callback( { status:500, message:'error'} );
+  });
+}
+
+
+
+
 function routerInit(router) {
   /**
    * @swagger
@@ -152,6 +177,12 @@ function routerInit(router) {
     });
   });
 
+  router.get('/getPulseInfo', asyncHandler(async (req, res) => {
+    getPulseInfo( (data) => {
+      res.send(data);
+    } );
+  }));
+
   /**
    * @swagger
    *
@@ -181,6 +212,14 @@ function routerInit(router) {
    *         schema:
    *           $ref: '#/definitions/Success'
    */
+  
+  router.get('/isPulseAvailable', asyncHandler(async (req, res) => {
+    isPulseAvailable( (data) => {
+      res.send(data);
+    });
+  }));
+
+
   router.put('/configurePulse', middlewares.get('configurePulse'), asyncHandler(async function handlerForConfigurePulseEndpoint (req, res) {
     const { destinationIp, port } = req.body;
 
