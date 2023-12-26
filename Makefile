@@ -1,4 +1,4 @@
-all: version default ubuntu
+all: version default sudo 
 registry: all push
 NOCACHE ?= false
 
@@ -7,7 +7,7 @@ ifndef NOCACHE
 endif
 
 ifndef TAG
- TAG=3.1
+ TAG=3.2
 endif
 
 version:
@@ -72,13 +72,13 @@ default:
 	    --build-arg LINK_LOCALACCOUNT=true \
             --file Dockerfile.ubuntu .
 
-ubuntu:
+sudo:
 	docker build \
             --no-cache=$(NOCACHE) \
             --build-arg TARGET_MODE=ubuntu \
 	    --build-arg TAG=$(TAG)  \
 	    --build-arg BASE_IMAGE=abcdesktopio/oc.user.default \
-            --tag abcdesktopio/oc.user.ubuntu:$(TAG) \
+            --tag abcdesktopio/oc.user.sudo:$(TAG) \
             --file Dockerfile.sudo .
 
 
