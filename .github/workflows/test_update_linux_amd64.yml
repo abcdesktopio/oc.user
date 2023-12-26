@@ -51,28 +51,13 @@ jobs:
             TAG=22.04
             BASE_IMAGE_RELEASE=22.04
             BASE_IMAGE=ubuntu
-          tags: abcdesktopio/oc.user.${{ matrix.target_mode }}:test.3.1
+          tags: abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ imagetag }}
 
-      - name: Run and test docker image abcdesktopio/oc.user.${{ matrix.target_mode }}:test.3.1
+      - name: Run and test docker image abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ imagetag }}
         run: |
-          TARGET_MODE=${{ matrix.target_mode }} ./make-test.sh abcdesktopio/oc.user.${{ matrix.target_mode }}:test.3.1
+          TARGET_MODE=${{ matrix.target_mode }} ./make-test.sh abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ imagetag }}
     
-      - name: Build and push image oc.user.${{ matrix.target_mode }}:3.0
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: ./Dockerfile.ubuntu
-          platforms: linux/amd64, linux/arm64
-          push: true
-          build-args: |
-            TARGET_MODE=${{ matrix.target_mode }}
-            ABCDESKTOP_LOCALACCOUNT_DIR=/var/secrets/abcdesktop/localaccount
-            TAG=22.04
-            BASE_IMAGE_RELEASE=22.04
-            BASE_IMAGE=ubuntu
-          tags: abcdesktopio/oc.user.${{ matrix.target_mode }}:3.0
-       
-      - name: Build and push image oc.user.${{ matrix.target_mode }}:3.1
+      - name: Build and push image oc.user.${{ matrix.target_mode }}:${{ imagetag }}
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -85,18 +70,15 @@ jobs:
             TAG=22.04
             BASE_IMAGE_RELEASE=22.04
             BASE_IMAGE=ubuntu
-          tags: abcdesktopio/oc.user.${{ matrix.target_mode }}:3.1
-        
-    # - name: Run Trivy vulnerability scanner
-    # uses: aquasecurity/trivy-action@master
-    #  with:
-    #    image-ref: abcdesktopio/oc.user.ubuntu:${{ env.imagetag }}
-    #    format: 'sarif'
-    #    output: oc.user.ubuntu.sarif
-
-    # - name: Upload Trivy scan results to GitHub Security tab
-    #  uses: github/codeql-action/upload-sarif@v2
-    #  if: always()
-    #  with:
-    #    sarif_file: oc.user.ubuntu.sarif
+          tags: abcdesktopio/oc.user.${{ matrix.target_mode }}:${{ imagetag }}
+      
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: abcdesktopio/oc.user.${{ matrix.target_mode }}:${{ imagetag }}
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
 
