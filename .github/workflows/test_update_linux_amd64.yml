@@ -31,9 +31,6 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
         
-      - name: "image tag"
-        run: echo "image tag set to ${{ matrix.target_mode }}"
-
       - name: Run Buildx oc.user
         run: |
           ./mkversion.sh ${{ matrix.target_mode }}
@@ -51,13 +48,13 @@ jobs:
             TAG=22.04
             BASE_IMAGE_RELEASE=22.04
             BASE_IMAGE=ubuntu
-          tags: abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ imagetag }}
+          tags: abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ env.imagetag }}
 
-      - name: Run and test docker image abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ imagetag }}
+      - name: Run and test docker image abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ env.imagetag }}
         run: |
-          TARGET_MODE=${{ matrix.target_mode }} ./make-test.sh abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ imagetag }}
+          TARGET_MODE=${{ matrix.target_mode }} ./make-test.sh abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ env.imagetag }}
     
-      - name: Build and push image oc.user.${{ matrix.target_mode }}:${{ imagetag }}
+      - name: Build and push image oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -70,12 +67,12 @@ jobs:
             TAG=22.04
             BASE_IMAGE_RELEASE=22.04
             BASE_IMAGE=ubuntu
-          tags: abcdesktopio/oc.user.${{ matrix.target_mode }}:${{ imagetag }}
+          tags: abcdesktopio/oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
       
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: abcdesktopio/oc.user.${{ matrix.target_mode }}:${{ imagetag }}
+          image-ref: abcdesktopio/oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
