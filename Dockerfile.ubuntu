@@ -183,26 +183,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	adwaita-qt \
 	xclip \
 	imagemagick \
+	gsetroot \
      && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
-# install openbox 
+# install openbox custome packages 
 RUN mkdir -p /tmp/packages
-COPY --from=openbox_ubuntu_builder /openbox/libobt*             /tmp/packages/
-COPY --from=openbox_ubuntu_builder /openbox/openbox_3.6.1*      /tmp/packages/
-COPY --from=openbox_ubuntu_builder /openbox/libobrender*        /tmp/packages/
-
+COPY --from=openbox_ubuntu_builder /openbox/libobt* /openbox/openbox_3.6.1* /openbox/libobrender* /tmp/packages/
 RUN apt-get update  && \
         apt-get install -y --no-install-recommends -f /tmp/packages/*.deb  && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*        
-
-
-RUN apt-get update && \
-    	apt-get install -y --no-install-recommends gsetroot && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
 
 # 
 # Uncommant lines to add picom compositor and watermarking support 
