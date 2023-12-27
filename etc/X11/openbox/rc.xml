@@ -42,7 +42,7 @@
                   'Active' - where the active window is -->
   </placement>
   <notify>
-	<filenamepid>/var/run/desktop/spawner.pid</filenamepid>
+    <filenamepid>/var/run/desktop/spawner.pid</filenamepid>
   </notify>
   <theme>
     <name>Arc_OSX</name>
@@ -704,10 +704,10 @@
     <!-- show the manage desktops section in the client-list-(combined-)menu -->
   </menu>
   <applications>
-  	<application type="normal">
-		<focus>yes</focus>
-        </application>
-  <!--
+    <application type="normal">
+      <focus>yes</focus>
+    </application>
+    <!--
 	<application type="normal">
 		<maximized>yes</maximized>
 	</application>
