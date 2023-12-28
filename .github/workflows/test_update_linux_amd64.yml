@@ -37,7 +37,7 @@ jobs:
         run: |
           ./mkversion.sh ${{ matrix.target_mode }}
      
-      - name: Build test image abcdesktopio/oc.user:test
+      - name: Build test image abcdesktopio/oc.user:test.${{ env.imagetag }}
         uses: docker/build-push-action@v4
         with:
           context: .
