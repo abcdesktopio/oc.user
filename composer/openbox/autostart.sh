@@ -16,13 +16,9 @@ BG_COLOR="#6ec6f0"
 if [ -x /usr/bin/hsetroot ]; then
 	/usr/bin/hsetroot -solid "$BG_COLOR" 2>>$STDOUT_LOGFILE
 else
-	if [ -x /usr/bin/gsetroot ]; then
-		/usr/bin/gsetroot -solid "$BG_COLOR" 2>>$STDOUT_LOGFILE
-        else
-		if [ -x /usr/bin/xsetroot ]; then 
- 			/usr/bin/xsetroot -solid "$BG_COLOR" 2>>$STDOUT_LOGFILE
-    		fi
-      	fi
+	if [ -x /usr/bin/xsetroot ]; then 
+ 		/usr/bin/xsetroot -solid "$BG_COLOR" 2>>$STDOUT_LOGFILE
+    	fi
 fi
 
 # start picom

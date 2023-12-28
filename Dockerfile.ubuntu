@@ -178,7 +178,6 @@ RUN apt-get update  && \
         wmctrl \
         cups-client \
         pulseaudio-utils \
-        pavumeter \
         xauth \
         websockify \
      && apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -191,31 +190,31 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	adwaita-icon-theme \
 	adwaita-qt \
 	xclip \
+    gsetroot \
      && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
-# install openbox 
+# install openbox custome packages 
 RUN mkdir -p /tmp/packages
-COPY --from=openbox_ubuntu_builder /openbox/libobt*             /tmp/packages/
-COPY --from=openbox_ubuntu_builder /openbox/openbox_3.6.1*      /tmp/packages/
-COPY --from=openbox_ubuntu_builder /openbox/libobrender*        /tmp/packages/
-
+COPY --from=openbox_ubuntu_builder /openbox/libobt* /openbox/openbox_3.6.1* /openbox/libobrender* /tmp/packages/
 RUN apt-get update  && \
         apt-get install -y --no-install-recommends -f /tmp/packages/*.deb  && \
-	apt-get install -y --no-install-recommends feh && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*        
 
 # 
+# Uncommant lines to add picom compositor and watermarking support 
+#
 # to add compositor ( this option takes more memory in user's pod )
 # picom need hsetroot 
 # xsetroot is not supported by picom
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-	picom \
-	hsetroot && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+#RUN apt-get update && \
+#    apt-get install -y --no-install-recommends \
+#	picom \
+#	hsetroot && \
+#    apt-get clean && \
+#    rm -rf /var/lib/apt/lists/*
+#
 
 # install composer
 COPY --from=ubuntu_node_modules_builder /composer /composer
@@ -271,7 +270,10 @@ RUN date > /etc/build.date
 # install qterminal xfonts-base
 RUN if [ "${TARGET_MODE}" != "hardening" ]; then \
 	apt-get update && \
-        apt-get install -y --no-install-recommends qterminal xfonts-base && \
+        apt-get install -y --no-install-recommends \
+		qterminal \
+		xfonts-base \
+		pavumeter && \
 	apt-get clean && rm -rf /var/lib/apt/lists/*; \
     fi
 
