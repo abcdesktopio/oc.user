@@ -77,11 +77,6 @@ RUN  mkdir -p /etc/apt/keyrings && \
 
 COPY composer /composer
 
-# Create libbmp.a and libcolorflow.a
-#WORKDIR /composer/node/spawner-service/lib_spawner/colorflow
-#RUN make
-#RUN make clean
-
 # add wait-port
 WORKDIR /composer/node/wait-port 
 RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
