@@ -10,6 +10,7 @@
 #include "include/libnsbmp.h"
 #include "include/colorflow.h"
 
+
 // Initialization global varibales
 int width, height;
 size_t size;
@@ -245,7 +246,7 @@ pixel** read_bmp_file(FILE *file){
   bmp_image bmp;
   size_t data_size;
   uint8_t *image;
-  pixel** pixels;
+  pixel** pixels = NULL;
 
   /* create our bmp image */
   bmp_create(&bmp, &bitmap_callbacks);
@@ -372,12 +373,11 @@ pixel** read_data(FILE *file, unsigned char* buffer){
   } // Compare with jpg signature
   else if (buffer[0] == 0xFF && buffer[1] == 0xD8 && buffer[2] == 0xFF) {
     pixels_image = read_jpg_file(file);
-  } // Compare with bmp signature
+  } 
   else if (buffer[0] == 'B' && buffer[1] == 'M') {
     pixels_image = read_bmp_file(file);
-  } // Compare with heif signature
+  } 
   else {
-    fclose(file);
     strLastErrorMessage = (char*)"Unsupported file format.";
     return NULL;
   }
@@ -396,6 +396,7 @@ int getColor(char* filename, pixel *myPixel) {
     strLastErrorMessage = strerror(errno);
     return 1;
   }
+
   size = sb.st_size;
 
   // Reading the first bytes of the binary file and store it in an array 
@@ -414,7 +415,8 @@ int getColor(char* filename, pixel *myPixel) {
     strLastErrorMessage = strerror(errno);
     return 1;
   }
-
+  
+  
   pixel** pixels_image = read_data(file, buffer);
 
   fclose(file);

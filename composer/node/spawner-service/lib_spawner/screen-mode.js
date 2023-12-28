@@ -15,7 +15,7 @@ const fs = require('fs');
 const childProcess = require('child_process');
 const util = require('util');
 const asyncHandler = require('express-async-handler');
-const covercolor = require('./covercolor');
+const colorflow = require('./colorflow/colorflow');
 const broadcast = require('./broadcast');
 const { set } = require('./utils');
 const middlewares = require('./middlewares');
@@ -73,7 +73,7 @@ async function esetroot(imgName, bgColor) {
 async function changeBgImage(imgName = '') {
   const ret = { code: 500, data: '' };
   try {
-    const color = await covercolor.covercolor(imgName);
+    const color = await colorflow(imgName);
     const { code, data } = await esetroot(imgName, color);
     if (code === 200) {
       await set('currentImgColor', color);

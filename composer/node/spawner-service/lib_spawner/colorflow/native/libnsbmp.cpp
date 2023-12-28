@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#include "libnsbmp.h"
+#include "include/libnsbmp.h"
 
 /*	The functions provided by this file allow for the decoding of
 	Microsoft's BMP and ICO image file formats.
@@ -241,7 +241,7 @@ bmp_result ico_analyse(ico_collection *ico, size_t size, uint8_t *data) {
 	 */
 	for (i = 0; i < count; i++) {
 		ico_image *image;
-		image = calloc(1, sizeof(ico_image));
+		image = (ico_image*)calloc(1, sizeof(ico_image));
 		if (!image)
 			return BMP_INSUFFICIENT_MEMORY;
 		result = next_ico_image(ico, image);
@@ -432,7 +432,7 @@ static bmp_result bmp_analyse_header(bmp_image *bmp, uint8_t *data) {
 		bmp->bpp = read_uint16(data, 14);
 		if (bmp->bpp == 0)
 			bmp->bpp = 8;
-		bmp->encoding = read_uint32(data, 16);
+		bmp->encoding = (bmp_encoding)read_int32(data, 16);
 		/**
 		 * The bpp value should be in the range 1-32, but the only
 		 * values considered legal are:
@@ -710,9 +710,9 @@ static bmp_result bmp_decode_rgb24(bmp_image *bmp, uint8_t **start, int bytes) {
 		if ((data + (skip * bmp->width)) > end)
 			return BMP_INSUFFICIENT_DATA;
 		if (bmp->reversed)
-			scanline = (void *)(top + (y * swidth));
+			scanline = (u_int32_t *)(top + (y * swidth));
 		else
-			scanline = (void *)(bottom - (y * swidth));
+			scanline = (u_int32_t *)(bottom - (y * swidth));
 		if (bmp->encoding == BMP_ENCODING_BITFIELDS) {
 			for (x = 0; x < bmp->width; x++) {
 				word = read_uint32(data, 0);
@@ -785,9 +785,9 @@ static bmp_result bmp_decode_rgb16(bmp_image *bmp, uint8_t **start, int bytes) {
 		if ((data + (2 * bmp->width)) > end)
 			return BMP_INSUFFICIENT_DATA;
 		if (bmp->reversed)
-			scanline = (void *)(top + (y * swidth));
+			scanline = (u_int32_t *)(top + (y * swidth));
 		else
-			scanline = (void *)(bottom - (y * swidth));
+			scanline = (u_int32_t *)(bottom - (y * swidth));
 		if (bmp->encoding == BMP_ENCODING_BITFIELDS) {
 			for (x = 0; x < bmp->width; x++) {
 				word = read_uint16(data, 0);
@@ -873,9 +873,9 @@ static bmp_result bmp_decode_rgb(bmp_image *bmp, uint8_t **start, int bytes) {
 		if ((data + (bmp->width / ppb)) > end)
 			return BMP_INSUFFICIENT_DATA;
 		if (bmp->reversed)
-			scanline = (void *)(top + (y * swidth));
+			scanline = (u_int32_t *)(top + (y * swidth));
 		else
-			scanline = (void *)(bottom - (y * swidth));
+			scanline = (u_int32_t *)(bottom - (y * swidth));
 		for (x = 0; x < bmp->width; x++) {
 			if (bit >= ppb) {
 				bit = 0;
@@ -919,7 +919,7 @@ static bmp_result bmp_decode_mask(bmp_image *bmp, uint8_t *data, int bytes) {
 			data++;
 		if ((data + (bmp->width >> 3)) > end)
 			return BMP_INSUFFICIENT_DATA;
-		scanline = (void *)(bottom - (y * swidth));
+		scanline = (u_int32_t *)(bottom - (y * swidth));
 		for (x = 0; x < bmp->width; x++) {
 			if ((x & 7) == 0)
 				cur_byte = *data++;
@@ -996,10 +996,10 @@ static bmp_result bmp_decode_rle(bmp_image *bmp, uint8_t *data, int bytes, int s
 				/* 00 - NN means escape NN pixels */
 				if (bmp->reversed) {
 					pixels_left = (y + 1) * bmp->width - x;
-					scanline = (void *)(top + (y * swidth));
+					scanline = (u_int32_t *)(top + (y * swidth));
 				} else {
 					pixels_left = (bmp->height - y + 1) * bmp->width - x;
-					scanline = (void *)(bottom - (y * swidth));
+					scanline = (u_int32_t *)(bottom - (y * swidth));
 				}
 				if (length > pixels_left)
 					length = pixels_left;
@@ -1046,10 +1046,10 @@ static bmp_result bmp_decode_rle(bmp_image *bmp, uint8_t *data, int bytes, int s
 			/* NN means perform RLE for NN pixels */
 			if (bmp->reversed) {
 				pixels_left = (y + 1) * bmp->width - x;
-				scanline = (void *)(top + (y * swidth));
+				scanline = (u_int32_t *)(top + (y * swidth));
 			} else {
 				pixels_left = (bmp->height - y + 1) * bmp->width - x;
-				scanline = (void *)(bottom - (y * swidth));
+				scanline = (u_int32_t *)(bottom - (y * swidth));
 			}
 			if (length > pixels_left)
 				length = pixels_left;

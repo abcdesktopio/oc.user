@@ -53,7 +53,8 @@ RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selectio
 RUN apt-get update && apt-get install -y  --no-install-recommends \
         gcc \
         g++ \
-        make                            
+        make \
+	    llvm                            
 
 # to make install wmctrljs nodejs components
 # add build dev package 
@@ -61,6 +62,8 @@ RUN apt-get update && apt-get install -y  --no-install-recommends \
         ca-certificates \
         libx11-dev \
         libxmu-dev \
+	    libpng-dev \
+	    libjpeg-dev \
         git \
         curl \
         gnupg \
@@ -73,6 +76,11 @@ RUN  mkdir -p /etc/apt/keyrings && \
 
 
 COPY composer /composer
+
+# Create libbmp.a and libcolorflow.a
+#WORKDIR /composer/node/spawner-service/lib_spawner/colorflow
+#RUN make
+#RUN make clean
 
 # add wait-port
 WORKDIR /composer/node/wait-port 
@@ -183,7 +191,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	adwaita-icon-theme \
 	adwaita-qt \
 	xclip \
-	imagemagick \
      && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 

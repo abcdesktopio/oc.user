@@ -1,10 +1,8 @@
 #include <iostream>
 #include <node/node.h>
+#include "include/colorflow.h"
 
-extern "C"{
-    #include "include/colorflow.h"
-    extern char* strLastErrorMessage;
-}
+extern char* strLastErrorMessage;
 using v8::FunctionCallbackInfo;
 using v8::Isolate;
 using v8::String;
@@ -39,8 +37,10 @@ void GetAverageColor(const v8::FunctionCallbackInfo<v8::Value>& args){
             String::NewFromUtf8(isolate, strLastErrorMessage).ToLocalChecked()));
         return;
     }
+    
 
-    char * result = pixelToHex( &myPixel );
+    char* result = pixelToHex( &myPixel );
+    
     if(!result){
       isolate->ThrowException(v8::Exception::TypeError( 
             String::NewFromUtf8(isolate, strLastErrorMessage).ToLocalChecked()));

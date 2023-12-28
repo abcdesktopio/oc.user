@@ -11,6 +11,23 @@
           "-lX11",
           "-lXmu"
       ]
+    },
+    {
+      "target_name": "colorflow",
+      "cflags!": [ "-fno-exceptions" ],
+      "cflags_cc!": [ "-fno-exceptions" ],
+      "sources": [
+          "lib_spawner/colorflow/native/libnsbmp.cpp",
+          "lib_spawner/colorflow/native/libcolorflow.cpp",
+          "lib_spawner/colorflow/native/colorflow.cpp"
+      ],
+      "include_dirs": [
+          "lib_spawner/colorflow/native/include"
+      ],
+      "libraries": [
+          "-lpng", 
+          "-ljpeg"
+      ]
     }
   ]
 }

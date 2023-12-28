@@ -8,7 +8,7 @@ const {
   callBackExpect,
 } = require('./utils');
 
-const { covercolor } = require('../lib_spawner/covercolor.js');
+const { colorflow } = require('../lib_spawner/colorflow/colorflow.js');
 
 const request = supertest(`http://${process.env.CONTAINER_IP}:29786`);
 
@@ -118,7 +118,7 @@ describe('Test screen-mode endpoints', () => {
 
     for (const imgName of wallpapers) {
       it(`Should change background image and check the expected color for img [${imgName}]`, async () => {
-        const color = await covercolor(`${roothomedir}/.wallpapers/${imgName}`);
+        const color = await colorflow(`${roothomedir}/.wallpapers/${imgName}`);
         const expected = { code: 200, data: { color: color, subData: 'ok' } };
         return request
           .post('/spawner/setBackgroundImage')
@@ -132,7 +132,7 @@ describe('Test screen-mode endpoints', () => {
         const ws = new WebSocketClient(buri);
         return new Promise(async (resolve, reject) => {
           try {
-            const color = await covercolor(`${roothomedir}/.wallpapers/${imgName}`);
+            const color = await colorflow(`${roothomedir}/.wallpapers/${imgName}`);
             const expected = { code: 200, data: { color: color, subData: 'ok' } };
             ws.on('message', (msg) => {
               const { method, data } = JSON.parse(msg);
@@ -174,7 +174,7 @@ describe('Test screen-mode endpoints', () => {
       console.log( `${roothomedir}/.wallpapers/${imgName}` );
 
       it(`Should setDefaultImage for img [${imgName}]`, async () => {
-        const color = await covercolor(`${roothomedir}/.wallpapers/${imgName}`);
+        const color = await colorflow(`${roothomedir}/.wallpapers/${imgName}`);
 	console.log( `using ${imgName} return ${color}` );
         const expected = { code: 200, data: { color: color, subData: 'ok' } };
 
@@ -197,7 +197,7 @@ describe('Test screen-mode endpoints', () => {
 
         return new Promise(async (resolve, reject) => {
           try {
-            const color = await covercolor(`${roothomedir}/.wallpapers/${imgName}`);
+            const color = await colorflow(`${roothomedir}/.wallpapers/${imgName}`);
 	    console.log( `using ${imgName} return ${color}` );
             const expected = { code: 200, data: { color: color, subData: 'ok' } };
 
