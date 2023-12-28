@@ -268,7 +268,6 @@ RUN if [ "${TARGET_MODE}" != "hardening" ]; then \
         apt-get install -y --no-install-recommends \
 		qterminal \
 		xfonts-base \
-		pavumeter && \
 	apt-get clean && rm -rf /var/lib/apt/lists/*; \
     fi
 
