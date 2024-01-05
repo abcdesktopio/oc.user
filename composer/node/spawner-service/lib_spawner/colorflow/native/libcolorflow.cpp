@@ -97,7 +97,9 @@ int* getAverageColor(pixel** pixels_image, double frame_percentage){
 /// @param image picture we want to get the color of each pixel
 /// @return matrix of pixels returned by function called 
 pixel** read_data(Imlib_Image image){
- imlib_context_set_image(image);
+
+  // getting the image data
+  imlib_context_set_image(image);
   unsigned int* data = imlib_image_get_data_for_reading_only();
   if(!data){
     // free image ressources
@@ -106,6 +108,7 @@ pixel** read_data(Imlib_Image image){
     exit(EXIT_FAILURE_OPEN_FAILED);
   }
 
+  // getting width and height values of the image
   width = imlib_image_get_width();
   height = imlib_image_get_height();
 
@@ -120,6 +123,7 @@ pixel** read_data(Imlib_Image image){
   for(int y = 0; y < height; y++) {
     pixels_image[y] = (pixel*)(pixels_image + height) + width * y;
     for(int x = 0; x < width; x++) {
+      // getting the color of each pixel and storing it RGBA values inside the matrix of pixels
       Imlib_Color color;
       imlib_image_query_pixel(x, y, &color);
       pixels_image[y][x] = createPixel(color.red,color.green,color.blue,color.alpha);
@@ -174,6 +178,9 @@ int getColor(char* filename, pixel *myPixel) {
   return 0;
 }
 
+/// @brief converts a pixel to its hexadecimal representation
+/// @param myPixel a pointer to a pixel structure containing red, green, and blue components
+/// @return hexadecimal representation ot myPixel (e.g., "#RRGGBB")
 char* pixelToHex(pixel* myPixel){
   static char average_HEX[8];
   int sizeCreatedStr = sprintf(average_HEX, "#%02X%02X%02X", myPixel->red, myPixel->green, myPixel->blue);
