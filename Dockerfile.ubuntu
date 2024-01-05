@@ -53,8 +53,7 @@ RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selectio
 RUN apt-get update && apt-get install -y  --no-install-recommends \
         gcc \
         g++ \
-        make \
-	    llvm                            
+        make                        
 
 # to make install wmctrljs nodejs components
 # add build dev package 
@@ -62,8 +61,7 @@ RUN apt-get update && apt-get install -y  --no-install-recommends \
         ca-certificates \
         libx11-dev \
         libxmu-dev \
-	    libpng-dev \
-	    libjpeg-dev \
+	    libimlib2-dev \
         git \
         curl \
         gnupg \

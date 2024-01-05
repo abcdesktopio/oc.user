@@ -5,15 +5,13 @@
 #include <unistd.h>
 #include <assert.h>
 #include <sys/stat.h>
-#include "include/png.h"
-#include "include/jpeglib.h"
-#include "include/libnsbmp.h"
+#include <Imlib2.h>
 #include "include/colorflow.h"
+
 
 
 // Initialization global varibales
 int width, height;
-size_t size;
 char* strLastErrorMessage;
 
 /// @param R Red component
@@ -28,272 +26,6 @@ pixel createPixel(unsigned char R, unsigned char G, unsigned char B, unsigned ch
   p.blue = B;
   p.alpha = A;
   return p;
-}
-
-/// @brief read a png file and store the RGBA values of each pixel in a matrix
-/// @param file binary file of a png picture
-/// @return matrix of pixels that contains the RGBA values of each pixel
-/// @author code from https://gist.github.com/niw/5963798
-pixel** read_png_file(FILE *file) {
-  png_byte color_type;
-  png_byte bit_depth;
-  png_bytep *row_pointers = NULL;
-
-  png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-  if(!png) return NULL;
-
-  png_infop info = png_create_info_struct(png);
-  if(!info) return NULL;
-
-  if(setjmp(png_jmpbuf(png))) return NULL;
-
-  png_init_io(png, file);
-
-  png_read_info(png, info);
-
-  width      = png_get_image_width(png, info);
-  height     = png_get_image_height(png, info);
-  color_type = png_get_color_type(png, info);
-  bit_depth  = png_get_bit_depth(png, info);
-
-  // Read any color_type into 8bit depth, RGBA format.
-  // See http://www.libpng.org/pub/png/libpng-manual.txt
-
-  if(bit_depth == 16)
-    png_set_strip_16(png);
-
-  if(color_type == PNG_COLOR_TYPE_PALETTE)
-    png_set_palette_to_rgb(png);
-
-  // PNG_COLOR_TYPE_GRAY_ALPHA is always 8 or 16bit depth.
-  if(color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8)
-    png_set_expand_gray_1_2_4_to_8(png);
-
-  if(png_get_valid(png, info, PNG_INFO_tRNS))
-    png_set_tRNS_to_alpha(png);
-
-  // These color_type don't have an alpha channel then fill it with 0xff.
-  if(color_type == PNG_COLOR_TYPE_RGB ||
-     color_type == PNG_COLOR_TYPE_GRAY ||
-     color_type == PNG_COLOR_TYPE_PALETTE)
-    png_set_filler(png, 0xFF, PNG_FILLER_AFTER);
-
-  if(color_type == PNG_COLOR_TYPE_GRAY ||
-     color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
-    png_set_gray_to_rgb(png);
-
-  png_read_update_info(png, info);
-
-  if (row_pointers) return NULL;
-
-  row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * height);
-  for(int y = 0; y < height; y++) {
-    row_pointers[y] = (png_byte*)malloc(png_get_rowbytes(png,info));
-  }
-
-  png_read_image(png, row_pointers);
-
-  // Allowing the memory for the matrix of pixels
-  pixel** pixels = (pixel**)malloc(height*sizeof(pixel*) + height*width*sizeof(pixel));
-  if(!pixels){
-        strLastErrorMessage = (char*)"Error while allowing memory for pixel matrix.";
-        return NULL;
-  }
-
-  for(int y = 0; y < height; y++) {
-    pixels[y] = (pixel*)(pixels + height) + width * y;
-    png_bytep row = row_pointers[y];
-    for(int x = 0; x < width; x++) {
-      png_bytep px = &(row[x * 4]);
-      pixels[y][x] = createPixel(px[0],px[1],px[2],px[3]);
-    }
-  }
-
-  // Free ressources
-  png_destroy_read_struct(&png, &info, NULL);
-
-  return pixels;
-}
-
-/// @brief read a jpeg file and store the RGBA values of each pixel in a matrix
-/// @param file binary file of a jpeg picture
-/// @return matrix of pixels that contains the RGBA values of each pixel
-/// @author code inspired by this code https://github.com/LuaDist/libjpeg/blob/master/example.c
-pixel** read_jpg_file(FILE *file){
-
-  // Structure for JPEG picture
-  struct jpeg_decompress_struct cinfo;
-  struct jpeg_error_mgr jerr;
-
-  cinfo.err = jpeg_std_error(&jerr);
-  jpeg_create_decompress(&cinfo);
-
-  // Link with JPEG file
-  jpeg_stdio_src(&cinfo, file);
-
-  // Reading headers
-  (void) jpeg_read_header(&cinfo, TRUE);
-
-  // Start decompress
-  (void) jpeg_start_decompress(&cinfo);
-
-  // Reading pictures informations
-  width = cinfo.output_width;
-  height = cinfo.output_height;
-  int numComponents = cinfo.output_components;
-  int row_stride = width * numComponents;
-
-  // Allow memory to be able to read 1 line of the picture
-  JSAMPARRAY buffer = (*cinfo.mem->alloc_sarray)((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
-
-  // Allowing the memory for the matrix of pixels
-  pixel** pixels = (pixel**)malloc(height*sizeof(pixel*) + height*width*sizeof(pixel));
-  if(!pixels){
-        strLastErrorMessage = (char*)"Error while allowing memory for pixel matrix.";
-        return NULL;
-  }
-
-
-  for(int y=0; y<height;y++){
-    (void) jpeg_read_scanlines(&cinfo, buffer, 1);
-    pixels[y] = (pixel*)(pixels + height) + width * y;
-    for (int x = 0; x < width; x++) {
-      pixels[y][x] = createPixel(buffer[0][x * numComponents],buffer[0][x * numComponents + 1],buffer[0][x * numComponents + 2],(cinfo.output_components == 4) ? buffer[0][x * numComponents + 2] : 255);
-    }
-  }
-
-  // Finish decompress
-  (void) jpeg_finish_decompress(&cinfo);
-
-  // Free ressources
-  jpeg_destroy_decompress(&cinfo);
-
-  return pixels;
-}
-
-/******************************************************************************************************************************************************************************
- *                                                                                                                                                                            *
- *                 Reading BMP files, all the following part is inspired by example code of libnsbmp http://source.netsurf-browser.org/libnsbmp.git/                          *
- *                                                                                                                                                                            *
-*******************************************************************************************************************************************************************************/
-
-#define BYTES_PER_PIXEL 4
-#define MAX_IMAGE_BYTES (48 * 1024 * 1024)
-
-static void *bitmap_create(int width, int height, unsigned int state)
-{
-        (void) state;  /* unused */
-        /* ensure a stupidly large (>50Megs or so) bitmap is not created */
-        if (((long long)width * (long long)height) > (MAX_IMAGE_BYTES/BYTES_PER_PIXEL)) {
-                return NULL;
-        }
-        return calloc(width * height, BYTES_PER_PIXEL);
-}
-
-
-static unsigned char *bitmap_get_buffer(void *bitmap)
-{
-        assert(bitmap);
-        return (unsigned char*)bitmap;
-}
-
-
-static size_t bitmap_get_bpp(void *bitmap)
-{
-        (void) bitmap;  /* unused */
-        return BYTES_PER_PIXEL;
-}
-
-
-static void bitmap_destroy(void *bitmap)
-{
-        assert(bitmap);
-        free(bitmap);
-}
-
-static unsigned char *load_file(FILE *fd, size_t *data_size)
-{
-        unsigned char *buffer;
-        size_t n;
-
-        buffer = (unsigned char*)malloc(size);
-        if (!buffer) {
-          strLastErrorMessage = (char*)"Error while allowing memory.";
-          return NULL;
-        }
-
-        n = fread(buffer, 1, size, fd);
-        if (n != size) {
-          return NULL;
-        }
-
-        *data_size = size;
-        return buffer;
-}
-
-/// @brief read a bmp file and store the RGBA values of each pixel in a matrix
-/// @param file binary file of a bmp picture
-/// @return matrix of pixels that contains the RGBA values of each pixel
-/// @authors code inspired by http://source.netsurf-browser.org/libnsbmp.git/
-pixel** read_bmp_file(FILE *file){
-  bmp_bitmap_callback_vt bitmap_callbacks = {
-    bitmap_create,
-    bitmap_destroy,
-    bitmap_get_buffer,
-    bitmap_get_bpp
-  };
-  bmp_result code;
-  bmp_image bmp;
-  size_t data_size;
-  uint8_t *image;
-  pixel** pixels = NULL;
-
-  /* create our bmp image */
-  bmp_create(&bmp, &bitmap_callbacks);
-
-  /* load file into memory */
-  unsigned char *data = load_file(file, &data_size);
-  if(!data){
-    return NULL;
-  }
-
-  /* analyse the BMP */
-  code = bmp_analyse(&bmp, size, data);
-  if (code != BMP_OK) {
-    goto cleanup;
-  }
-
-  /* decode the image */
-  code = bmp_decode(&bmp);
-  if (code != BMP_OK) {
-    goto cleanup;
-  }  
-
-  height = bmp.height;
-  width = bmp.width;
-
-  // Allowing the memory for the matrix of pixels
-  pixels = (pixel**)malloc(height*sizeof(pixel*) + height*width*sizeof(pixel));
-  if(!pixels){
-        strLastErrorMessage = (char*)"Error while allowing memory for pixel matrix.";
-        return NULL;
-  }
-
-  image = (uint8_t *) bmp.bitmap;
-  for (int y = 0; y < height; y++) {
-    pixels[y] = (pixel*)(pixels + height) + width * y;
-    for (int x = 0; x < width; x++) {
-      size_t z = (y * width + x) * BYTES_PER_PIXEL;
-      pixels[y][x] = createPixel(image[z],image[z + 1],image[z + 2],255);
-    }
-  }
-
-  cleanup:
-    /* clean up */
-    bmp_finalise(&bmp);
-    free(data);
-
-  return pixels;
 }
 
 /// @brief Return the average color of of a certain rectangular area of an image determined by start_row, end_row, start_column, end_column
@@ -361,29 +93,49 @@ int* getAverageColor(pixel** pixels_image, double frame_percentage){
 }
 
 
-/// @brief opens an picture and call the right function depends on its format
-/// @param file binary file of the picture to open-
-/// @param buffer first characters of the binary file that contains the signature of the format
+/// @brief opens a picture and store the RGBA values of each pixel in a matrix
+/// @param image picture we want to get the color of each pixel
 /// @return matrix of pixels returned by function called 
-pixel** read_data(FILE *file, unsigned char* buffer){
-  pixel** pixels_image;
-  // Compare with png signature
-  if (png_sig_cmp(buffer, 0, sizeof(buffer)) == 0) {
-    pixels_image = read_png_file(file);
-  } // Compare with jpg signature
-  else if (buffer[0] == 0xFF && buffer[1] == 0xD8 && buffer[2] == 0xFF) {
-    pixels_image = read_jpg_file(file);
-  } 
-  else if (buffer[0] == 'B' && buffer[1] == 'M') {
-    pixels_image = read_bmp_file(file);
-  } 
-  else {
-    strLastErrorMessage = (char*)"Unsupported file format.";
-    return NULL;
+pixel** read_data(Imlib_Image image){
+ imlib_context_set_image(image);
+  unsigned int* data = imlib_image_get_data_for_reading_only();
+  if(!data){
+    // free image ressources
+    imlib_free_image();
+    fprintf(stderr,"Error while reading data\n");
+    exit(EXIT_FAILURE_OPEN_FAILED);
   }
+
+  width = imlib_image_get_width();
+  height = imlib_image_get_height();
+
+  pixel** pixels_image = (pixel**)malloc(height*sizeof(pixel*) + height*width*sizeof(pixel));
+  if(!pixels_image){
+    // free image ressources
+    imlib_free_image();
+    fprintf(stderr,"Error while allowing memory.\n");
+    exit(EXIT_FAILURE_MALLOC);
+  }
+
+  for(int y = 0; y < height; y++) {
+    pixels_image[y] = (pixel*)(pixels_image + height) + width * y;
+    for(int x = 0; x < width; x++) {
+      Imlib_Color color;
+      imlib_image_query_pixel(x, y, &color);
+      pixels_image[y][x] = createPixel(color.red,color.green,color.blue,color.alpha);
+    }
+  }
+
+  // free image ressources
+  imlib_free_image();
+
   return pixels_image;
 }
 
+/// @brief get the average color of an image
+/// @param filename name of the image file we want the average color
+/// @param myPixel pixel the program wil store the RGBA values into
+/// @return 0 if everything is fine, 1 otherwise
 int getColor(char* filename, pixel *myPixel) {
   struct stat sb;
   FILE *file = fopen(filename, "rb");
@@ -397,29 +149,14 @@ int getColor(char* filename, pixel *myPixel) {
     return 1;
   }
 
-  size = sb.st_size;
+  Imlib_Image image = imlib_load_image(filename);
+  if(!image){
+    fprintf(stderr,"Error while loading image %s\n", filename);
+    perror("open");
+    exit(EXIT_FAILURE_OPEN_FAILED);
+  } 
 
-  // Reading the first bytes of the binary file and store it in an array 
-  unsigned char buffer[8];
-  int read_len = fread(buffer, 1, sizeof(buffer), file);
-  if(read_len != 8){
-    fclose(file);
-    strLastErrorMessage = (char*)"Error while reading file.";
-    return 1;
-  }
-
-  // Reseting the pointer at the begining of the file
-  int seek = fseek(file,0,SEEK_SET);
-  if(seek){
-    fclose(file);
-    strLastErrorMessage = strerror(errno);
-    return 1;
-  }
-  
-  
-  pixel** pixels_image = read_data(file, buffer);
-
-  fclose(file);
+  pixel** pixels_image = read_data(image);
 
   if(!pixels_image){
     return 1;
