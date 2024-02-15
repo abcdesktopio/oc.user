@@ -36,6 +36,7 @@ RUN cd openbox-3.6.1 && debuild -us -uc
 RUN ls *.deb
 
 
+#####
 # install all nodejs modules
 # build nodejs module
 # create /composer/node
