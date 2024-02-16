@@ -29,6 +29,11 @@ fi
 # install yarn with npm install
 # npm install -g yarn
 # install full options without production
+
+echo "install /composer/node/spawner-service/lib_spawner/colorflow"
+cd /composer/node/spawner-service/lib_spawner/colorflow
+yarn install  --production=false
+
 echo "install /composer/node/spawner-service"
 cd /composer/node/spawner-service
 yarn install --production=false
