@@ -52,6 +52,11 @@ jobs:
             BASE_IMAGE=ubuntu
           tags: abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ env.imagetag }}
 
+      - name: dump test scripts
+        run: |
+          cat /composer/node/install-tests.sh
+          cat /composer/node/run-tests.sh
+
       - name: Run and test docker image abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ env.imagetag }}
         run: |
           TARGET_MODE=${{ matrix.target_mode }} ./make-test.sh abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ env.imagetag }}
