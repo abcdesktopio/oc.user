@@ -1,0 +1,1 @@
+cmd_Release/colorflow.node := ln -f "Release/obj.target/colorflow.node" "Release/colorflow.node" 2>/dev/null || (rm -rf "Release/colorflow.node" && cp -af "Release/obj.target/colorflow.node" "Release/colorflow.node")

@@ -16,8 +16,8 @@ typedef struct{
 #define EXIT_FAILURE_UNKNOWN_OPTION 6
 #define EXIT_FAILURE_NEEDS_ARGUMENT 7
 
-
 int getColor(char* filename, pixel *myPixel);
 char* pixelToHex(pixel* myPixel);
+pixel** read_png_file(FILE *file);
 
 #endif
