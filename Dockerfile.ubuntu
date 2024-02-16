@@ -62,7 +62,7 @@ RUN apt-get update && apt-get install -y  --no-install-recommends \
         ca-certificates \
         libx11-dev \
         libxmu-dev \
-	    libimlib2-dev \
+	libimlib2-dev \
         git \
         curl \
         gnupg \
