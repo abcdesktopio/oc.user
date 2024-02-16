@@ -31,8 +31,13 @@ done;
 
 # install package before running tests
 # list files
+echo "Dump test install scripts"
+docker exec --user root ${CONTAINER_ID} cat /composer/node/install-tests.sh
+echo
+echo "Dump test run scripts"
+docker exec --user root ${CONTAINER_ID} cat /composer/node/run-tests.sh
+echo
 echo "Install tests missing dev packages to run test as user root"
-docker exec --user root ${CONTAINER_ID} /composer/node/install-tests.sh
 
 # get the ip addr of the container
 CONTAINER_IP=$(docker exec ${CONTAINER_ID} hostname -i)
