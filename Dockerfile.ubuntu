@@ -99,6 +99,9 @@ RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 WORKDIR /composer/node/occall
 RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 
+WORKDIR /composer/node/spawner-service/lib_spawner/colorflow
+RUN yarn install --production=true
+
 WORKDIR /composer/node/spawner-service
 # install node-gyp to build spawner-service
 RUN yarn global add node-gyp
