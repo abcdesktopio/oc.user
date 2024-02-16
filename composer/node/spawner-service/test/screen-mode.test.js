@@ -8,8 +8,7 @@ const {
   callBackExpect,
 } = require('./utils');
 
-const { colorflow } = require('../lib_spawner/colorflow/colorflow.js');
-
+const colorflow = require('../lib_spawner/colorflow/colorflow.js');
 const request = supertest(`http://${process.env.CONTAINER_IP}:29786`);
 
 const buri = `ws://${process.env.CONTAINER_IP}:29784`;
