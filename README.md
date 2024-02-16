@@ -11,7 +11,7 @@ abcdesktop.io user container based on ubuntu
 ## Clone the repository
 
 ```bash
-git clone -b 3.1 https://github.com/abcdesktopio/oc.user.git
+git clone -b 3.2 https://github.com/abcdesktopio/oc.user.git
 cd oc.user
 git submodule update --init --recursive --remote
 ```
@@ -21,13 +21,13 @@ git submodule update --init --recursive --remote
 Run the make command to build 
 
 ```bash
-TAG=3.1 make
+TAG=3.2 make
 ```
 
 You should read on stdout
 
 ```
-use TAG=3.1;
+use TAG=3.2;
 use PROXY=;
 use NOCACHE=false;
 docker pull ubuntu:22.04
