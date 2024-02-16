@@ -1,10 +1,10 @@
 const colorflow = require("./build/Release/colorflow");
 
 module.exports = function getMedianColor(imageName){
-  try{
+  try {
     return colorflow.getAverageColor(imageName);
   }
-  catch (err){
+  catch (err) {
     throw err;
   }
 }
