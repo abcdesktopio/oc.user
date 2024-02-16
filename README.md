@@ -21,13 +21,13 @@ git submodule update --init --recursive --remote
 Run the make command to build 
 
 ```bash
-TAG=3.1 make
+TAG=3.2 make
 ```
 
 You should read on stdout
 
 ```
-use TAG=3.1;
+use TAG=3.2;
 use PROXY=;
 use NOCACHE=false;
 docker pull ubuntu:22.04
