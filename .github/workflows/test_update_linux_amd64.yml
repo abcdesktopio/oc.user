@@ -36,11 +36,6 @@ jobs:
       - name: Run Buildx oc.user
         run: |
           ./mkversion.sh ${{ matrix.target_mode }}
-      
-      - name: dump test scripts
-        run: |
-          cat composer/node/install-tests.sh
-          cat composer/node/run-tests.sh
      
       - name: Build test image abcdesktopio/oc.user:test.${{ env.imagetag }}
         uses: docker/build-push-action@v4
