@@ -7,17 +7,16 @@ echo "$(date) $1" >> $STDOUT_LOGFILE
 
 log "Start autostart"
 
-# default BG_COLOR
-BG_COLOR="#6ec6f0"
-
+# default BG_COLOR is #6ec6f0
+ABCDESKTOP_BG_COLOR=${ABCDESKTOP_BG_COLOR:-'#6ec6f0'}
 # Change default backgroup color in X11
 # picom need hsetroot command
 # use hsetroot else xsetroot
 if [ -x /usr/bin/hsetroot ]; then
-	/usr/bin/hsetroot -solid "$BG_COLOR" 2>>$STDOUT_LOGFILE
+	/usr/bin/hsetroot -solid "$ABCDESKTOP_BG_COLOR" 2>>$STDOUT_LOGFILE
 else
 	if [ -x /usr/bin/xsetroot ]; then 
- 		/usr/bin/xsetroot -solid "$BG_COLOR" 2>>$STDOUT_LOGFILE
+ 		/usr/bin/xsetroot -solid "$ABCDESKTOP_BG_COLOR" 2>>$STDOUT_LOGFILE
     	fi
 fi
 
