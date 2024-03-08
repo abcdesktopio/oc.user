@@ -12,8 +12,8 @@ jobs:
       matrix:
         target_mode: [default, hardening]
     # The type of runner that the job will run on
-    # runs-on: ubuntu-latest
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
+    # runs-on: self-hosted
     steps: 
       - name: Checkout repository
         uses: actions/checkout@v4
