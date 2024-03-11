@@ -13,6 +13,10 @@ remove qterminal for hardening test
 
 const applist = [
   {
+    key: 'qterminal.qterminal',
+    path: '/usr/bin/qterminal',
+  },
+  {
     key: 'xeyes.XEyes',
     path: '/usr/bin/xeyes',
   }
