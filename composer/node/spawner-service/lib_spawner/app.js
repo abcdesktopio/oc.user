@@ -23,6 +23,9 @@ const { applist, language } = require('../global-values');
  * @desc // xdg-mime query default application/pdf
  */
 function launch(command, args) {
+  console.log(`launch:command is: ${command}`);
+  console.log(`launch:args is: ${args}`);
+  
   if (!command) { // Check the command their
     const ret = { code: 500, data: 'invalid command' };
     return ret;
