@@ -44,9 +44,11 @@ echo "install /composer/node/broadcast-service"
 cd /composer/node/broadcast-service
 yarn install --production=false
 
-echo "install /composer/node/xterm.js"
-cd /composer/node/xterm.js
-yarn install --production=false
+if [ -d /composer/node/xterm.js ]; then
+  echo "install /composer/node/xterm.js"
+  cd /composer/node/xterm.js
+  yarn install --production=false
+fi 
 
 echo "full install yarn done"
 
