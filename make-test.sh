@@ -108,7 +108,10 @@ docker exec ${CONTAINER_ID} bash -e /composer/node/run-tests.sh
 
 if [ $? -ne 0 ]; then
     echo "Tests failed"
+    echo "docker logs command"
     docker logs ${CONTAINER_ID}
+    echo "cat /var/log/desktop/spawner-service.log"
+    docker exec ${CONTAINER_ID} cat /var/log/desktop/spawner-service.log
     exit 1
 fi
 
