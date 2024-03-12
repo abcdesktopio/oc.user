@@ -92,7 +92,9 @@ router.use(express.json({ limit: '500mb' }));
  *              version:
  *                type: string
  */
-router.get('/version', asyncHandler(async (_, res) => {
+
+router.get('/version', asyncHandler(async (_req, res) => {
+  console.log('call /version');
   const ret = { code: 404, data: 'Can not found version file' };
   let fileExist = false;
   try {
@@ -103,6 +105,7 @@ router.get('/version', asyncHandler(async (_, res) => {
   }
 
   if (fileExist) {
+    console.log('open version file ', pathVersion);
     const version = await fs.promises.readFile(pathVersion, 'utf8');
     ret.data = JSON.parse(version);
     ret.code = 200;
