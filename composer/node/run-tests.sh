@@ -3,9 +3,13 @@
 # set vars for test mode
 export DISPLAY=:0.0
 CONTAINER_IP=$(hostname -i)
+echo "CONTAINER_IP=$CONTAINER_IP"
 echo "TARGET_MODE=$TARGET_MODE"
 echo "netstat dump"
 netstat -anp 
+
+echo supervisorctl status
+/usr/bin/supervisorctl status
 
 echo 'testing spawner-service'
 cd /composer/node/spawner-service 
