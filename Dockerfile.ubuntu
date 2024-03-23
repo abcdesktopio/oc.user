@@ -178,6 +178,7 @@ RUN apt-get update  && \
         pavumeter \
         xauth \
         websockify \
+	krb5-user \
      && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
@@ -200,7 +201,6 @@ RUN apt-get update  && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*        
 
-# 
 # Uncommant lines to add picom compositor and watermarking support 
 #
 # to add compositor ( this option takes more memory in user's pod )
