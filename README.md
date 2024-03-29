@@ -11,7 +11,7 @@ abcdesktop.io user container based on ubuntu
 ## Clone the repository
 
 ```bash
-git clone -b 3.2 https://github.com/abcdesktopio/oc.user.git
+git clone https://github.com/abcdesktopio/oc.user.git
 cd oc.user
 git submodule update --init --recursive --remote
 ```

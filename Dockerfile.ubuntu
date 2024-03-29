@@ -140,8 +140,9 @@ RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selectio
         ca-certificates \
         curl \
 	gnupg \
-        bash		        && \
-    apt-get clean 		&& \
+        netstat \
+        bash && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # add languages 
@@ -178,6 +179,7 @@ RUN apt-get update  && \
         pavumeter \
         xauth \
         websockify \
+	krb5-user \
      && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
@@ -200,7 +202,6 @@ RUN apt-get update  && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*        
 
-# 
 # Uncommant lines to add picom compositor and watermarking support 
 #
 # to add compositor ( this option takes more memory in user's pod )

@@ -319,7 +319,8 @@ fi
 
 # Now run kinit if all vars are set 
 if [ ! -z "$USERPRINCIPALNAME" ] && [ ! -z "$REALM" ] && [ ! -z "$KRB5_CONFIG" ] && [ ! -z "$KRB5_CLIENT_KTNAME" ]; then
-	kinit "$USERPRINCIPALNAME@$REALM" -k -t $KRB5_CLIENT_KTNAME &
+echo "/usr/bin/kinit $USERPRINCIPALNAME@$REALM -k -t $KRB5_CLIENT_KTNAME" > /tmp/krb5.log
+/usr/bin/kinit "$USERPRINCIPALNAME@$REALM" -k -t "$KRB5_CLIENT_KTNAME" &
 fi 
 ## END OF KERBEROS
 
