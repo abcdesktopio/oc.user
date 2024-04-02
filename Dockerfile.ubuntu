@@ -109,7 +109,16 @@ RUN yarn install --production=true
 # && npm i --package-lock-only && npm audit fix
 
 # WORKDIR /composer/node/xterm.js
-RUN if [ "$TARGET_MODE" = "hardening" ] ; then rm -rf /composer/node/xterm.js; ls -la /composer/node; else cd /composer/node/xterm.js; yarn install --production=true; npm i --package-lock-only; npm audit fix; ls -la /composer/node/xterm.js; fi
+RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
+        rm -rf /composer/node/xterm.js; \
+        ls -la /composer/node; \
+    else \
+        cd /composer/node/xterm.js; \
+        yarn install --production=true; \
+        npm i --package-lock-only; \
+        npm audit fix; \
+        ls -la /composer/node/xterm.js; \
+    fi
 
 # version.json must be created by mkversion.sh bash script
 COPY composer/version.json /composer/version.json
