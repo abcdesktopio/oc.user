@@ -1,38 +1,12 @@
-const which = require('which');
 const process = require('process');
 const roothomedir = `${process.env.HOME}`;
 const pathVersion = '/composer/version.json';
+const applist = [ { key: 'xeyes.XEyes', path: '/usr/bin/xeyes' } ];
 
-/*
-remove qterminal for hardening test
-  {
-    key: 'qterminal.qterminal',
-    path: '/usr/bin/qterminal',
-  }
-*/
-
-const applist = [
-  {
-    key: 'qterminal.qterminal',
-    path: '/usr/bin/qterminal',
-  },
-  {
-    key: 'xeyes.XEyes',
-    path: '/usr/bin/xeyes',
-  }
-].map((app) => {
-  try {
-    if (app.path[0] !== '/') {
-      return {
-        ...app,
-        path: which.sync(app.path),
-      };
-    }
-  } catch (e) {
-    console.error(e);
-  }
-  return app;
-});
+if (process.env.target_mode != "hardening" ) {
+  // if this is not hardening add application qterminal
+  applist.push( { key: 'qterminal.qterminal', path: '/usr/bin/qterminal'} );
+}
 
 const supportedLanguages = [
   'aa',
