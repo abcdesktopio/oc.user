@@ -6,6 +6,8 @@ const request = supertest(`http://${process.env.CONTAINER_IP}:29786`);
 
 const { applist } = require('/composer/node/spawner-service/global-values');
 
+console.log( applist );
+
 describe('Test app endpoints', () => {
   for (const { key, path } of applist) {
     const progName = key.split('.')[0];
