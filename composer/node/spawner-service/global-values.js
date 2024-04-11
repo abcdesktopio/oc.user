@@ -3,7 +3,7 @@ const roothomedir = `${process.env.HOME}`;
 const pathVersion = '/composer/version.json';
 const applist = [ { key: 'xeyes.XEyes', path: '/usr/bin/xeyes' } ];
 
-if (process.env.target_mode != "hardening" ) {
+if (process.env.TARGET_MODE != "hardening" ) {
   // if this is not hardening add application qterminal
   applist.push( { key: 'qterminal.qterminal', path: '/usr/bin/qterminal'} );
 }
