@@ -226,6 +226,8 @@ RUN apt-get update  && \
 
 # install composer
 COPY --from=ubuntu_node_modules_builder /composer /composer
+# create TARGET_MODE file with $TARGET_MODE env
+RUN echo $TARGET_MODE > /composer/TARGET_MODE
 
 # install nodejs
 RUN mkdir -p /etc/apt/keyrings && \
