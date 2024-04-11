@@ -10,7 +10,7 @@ jobs:
   build_matrix: 
     strategy:
       matrix:
-        target_mode: [default, hardening]
+        target_mode: [ubuntu, hardening]
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     # runs-on: self-hosted
