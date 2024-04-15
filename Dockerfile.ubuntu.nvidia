@@ -1,0 +1,391 @@
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+# Default release is 22.04
+ARG TAG=latest
+# Default base image 
+ARG BASE_IMAGE=ubuntu
+# BASE_IMAGE_RELEASE deprecated
+ARG BASE_IMAGE_RELEASE=22.04
+
+ARG CUDA_VERSION=12.4.1
+
+
+# ABCDESKTOP_LOCALACCOUNT_DIR arg
+# use in ENV ABCDESKTOP_LOCALACCOUNT_DIR=$ABCDESKTOP_LOCALACCOUNT_DIR
+# release >= 3.1 set value to "/etc/localaccount"
+# release <  3.1 set value to "/var/secrets/abcdesktop/localaccount"
+ARG ABCDESKTOP_LOCALACCOUNT_DIR
+# ="/etc/localaccount"
+
+#
+# create package for openbox
+# deb files will be located in /root/packages/$(uname -m) directory 
+# patched with openbox.title.patch for abcdesktop
+FROM ${BASE_IMAGE}:${TAG} as openbox_ubuntu_builder
+ENV DEBEMAIL nobody@abcdesktop.io
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+RUN sed -i '/deb-src/s/^# //' /etc/apt/sources.list
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends devscripts wget ca-certificates
+RUN apt-get build-dep -y openbox
+RUN mkdir -p /openbox/src
+WORKDIR /openbox
+RUN apt-get source openbox
+RUN wget https://raw.githubusercontent.com/abcdesktopio/openbox/main/openbox.title.patch 
+RUN cd openbox-3.6.1 && patch -p2 < ../openbox.title.patch
+RUN cd openbox-3.6.1 && dch -n abcdesktop_sig_usr
+RUN cd openbox-3.6.1 && EDITOR=/bin/true dpkg-source -q --commit . abcdesktop_sig_usr
+RUN cd openbox-3.6.1 && debuild -us -uc
+RUN ls *.deb
+
+
+#####
+# install all nodejs modules
+# build nodejs module
+# create /composer/node
+# use FROM BASE_IMAGE
+# define FROM before use ENV command
+FROM ${BASE_IMAGE}:${TAG} as ubuntu_node_modules_builder
+
+# define arg
+ARG TARGET_MODE
+# convert ARG to ENV with same name
+ENV TARGET_MODE=$TARGET_MODE
+ENV NODE_MAJOR=18
+
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+RUN apt-get update && apt-get install -y  --no-install-recommends \
+        gcc \
+        g++ \
+        make                        
+
+# to make install wmctrljs nodejs components
+# add build dev package 
+RUN apt-get update && apt-get install -y  --no-install-recommends \
+        ca-certificates \
+        libx11-dev \
+        libxmu-dev \
+	libimlib2-dev \
+        git \
+        curl \
+        gnupg \
+        dpkg
+
+# install yarn npm nodejs 
+RUN  mkdir -p /etc/apt/keyrings && \
+     curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
+     echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list && apt-get update && apt-get install -y --no-install-recommends nodejs && npm -g install yarn
+
+
+COPY composer /composer
+
+# add wait-port
+WORKDIR /composer/node/wait-port 
+RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
+
+# Add nodejs service
+# yarn install --production[=true|false]
+# yarn will not install any package listed in devDependencies if the NODE_ENV environment variable is set to production. 
+# Use this flag to instruct Yarn to ignore NODE_ENV and take its production-or-not status from this flag instead.
+WORKDIR /composer/node/common-libraries
+RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
+
+WORKDIR /composer/node/broadcast-service
+RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
+
+WORKDIR /composer/node/ocrun
+RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
+
+WORKDIR /composer/node/ocdownload
+RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
+
+WORKDIR /composer/node/occall
+RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
+
+WORKDIR /composer/node/spawner-service/lib_spawner/colorflow
+RUN yarn install --production=true
+
+WORKDIR /composer/node/spawner-service
+# install node-gyp to build spawner-service
+RUN yarn global add node-gyp
+RUN yarn install --production=true 
+# && npm i --package-lock-only && npm audit fix
+
+# WORKDIR /composer/node/xterm.js
+RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
+        rm -rf /composer/node/xterm.js; \
+        ls -la /composer/node; \
+    else \
+        cd /composer/node/xterm.js; \
+        yarn install --production=true; \
+        npm i --package-lock-only; \
+        npm audit fix; \
+        ls -la /composer/node/xterm.js; \
+    fi
+
+# version.json must be created by mkversion.sh bash script
+COPY composer/version.json /composer/version.json
+
+
+
+
+
+#
+# The main oc.user start here
+#
+FROM nvcr.io/nvidia/cuda:${CUDA_VERSION}-runtime-ubuntu${BASE_IMAGE_RELEASE}
+
+
+# define arg
+ARG ABCDESKTOP_LOCALACCOUNT_DIR
+ARG TARGET_MODE
+# convert ARG to ENV with same name
+ENV ABCDESKTOP_LOCALACCOUNT_DIR=$ABCDESKTOP_LOCALACCOUNT_DIR
+ENV TARGET_MODE=$TARGET_MODE
+# set node release
+ENV NODE_MAJOR=18
+
+COPY etc /etc
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
+    apt-get update  && \
+    apt-get upgrade -y --no-install-recommends && \
+    apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+	gnupg \
+        net-tools \
+        bash && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# add languages 
+# locales for locale-gen command
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	locales \
+        language-pack-en \
+        language-pack-fr \
+        language-pack-de \
+        && locale-gen \
+        && apt-get clean \
+        && rm -rf /var/lib/apt/lists/*
+
+# install
+# Do not use 
+# COPY tigervncserver_1.13.1-1ubuntu1_amd64.deb /tmp to install
+# tigervncserver_1.13.1-1ubuntu1_amd64.deb
+# tigervncserver_1.13.1-1ubuntu1_arm64.deb    
+# but replace by curl command to support dpkg --print-architecture for amd64 and arm64
+RUN apt-get update  && \  
+    tigervncdeburl="https://raw.githubusercontent.com/abcdesktopio/oc.user/main/tigervncserver_1.13.1-1ubuntu1_$(dpkg --print-architecture).deb" && \
+    echo Downloading $tigervncdeburl && \
+    curl -sL --output /tmp/tigervncserver.deb "$tigervncdeburl" && \  
+    apt-get install -y --no-install-recommends /tmp/tigervncserver.deb && \
+    rm -f /tmp/*.deb && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* 
+
+RUN apt-get update  && \    
+    apt-get install -y --no-install-recommends \
+        supervisor \
+        wmctrl \
+        cups-client \
+        pulseaudio-utils \
+        pavumeter \
+        xauth \
+        websockify \
+	krb5-user \
+     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	desktop-file-utils \
+	xdg-user-dirs \
+	x11-xserver-utils \
+	adwaita-icon-theme \
+	adwaita-qt \
+	xclip \
+    gsetroot \
+     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
+# install openbox custome packages 
+RUN mkdir -p /tmp/packages
+COPY --from=openbox_ubuntu_builder /openbox/libobt* /openbox/openbox_3.6.1* /openbox/libobrender* /tmp/packages/
+RUN apt-get update  && \
+        apt-get install -y --no-install-recommends -f /tmp/packages/*.deb  && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*        
+
+# Uncommant lines to add picom compositor and watermarking support 
+#
+# to add compositor ( this option takes more memory in user's pod )
+# picom need hsetroot 
+# xsetroot is not supported by picom
+#RUN apt-get update && \
+#    apt-get install -y --no-install-recommends \
+#	picom \
+#	hsetroot && \
+#    apt-get clean && \
+#    rm -rf /var/lib/apt/lists/*
+#
+
+# install composer
+COPY --from=ubuntu_node_modules_builder /composer /composer
+
+# install nodejs
+RUN mkdir -p /etc/apt/keyrings && \
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends nodejs && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    node --version
+
+#
+# themes section
+# copy themes from abcdesktopio/oc.themes
+# COPY themes /usr/share/themes
+# COPY --from=abcdesktopio/oc.themes      /usr/share/icons        /usr/share/icons
+# COPY --from=abcdesktopio/oc.themes      /usr/share/themes       /usr/share/themes
+# COPY --from=theme_builder /usr/share/themes /usr/share/themes
+ADD Arc_OSXbuttons.tar /usr/share/themes	
+
+
+# add sound files from ubuntu alsa package alsa-utils
+ADD usr/share/sounds/alsa /usr/share/sounds/alsa
+
+# LOG AND PID SECTION
+RUN mkdir -p /var/log/desktop /var/run/desktop && chmod 777 /var/log/desktop /var/run/desktop
+
+# remove /etc/supervisor/conf.d/xterm.conf in hardening
+RUN if [ "${TARGET_MODE}" = "hardening" ] ; then rm -f /etc/supervisor/conf.d/xterm.conf; echo "supervisor xterm.conf has been removed"; fi
+
+# install qterminal xfonts-base
+RUN if [ "${TARGET_MODE}" != "hardening" ]; then \
+	apt-get update && \
+	apt-get install -y --no-install-recommends qterminal xfonts-base && \
+	apt-get clean && rm -rf /var/lib/apt/lists/*; \
+    fi
+
+
+###########################################
+# nvidia xorg add ones
+#
+#
+# Install Xorg and other important libraries or packages
+RUN apt-get update && apt-get install --no-install-recommends -y \
+        # Install essential Xorg and NVIDIA packages, packages above this line should be the same between docker-nvidia-glx-desktop and docker-nvidia-egl-desktop
+        kmod \
+        libc6-dev \
+        libpci3 \
+        libelf-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install --no-install-recommends -y --force-yes -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"  \
+        xorg && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install --no-install-recommends -y \
+	vulkan-tools && \
+    rm -rf /var/lib/apt/lists/* 
+
+# Configure EGL manually
+RUN mkdir -p /usr/share/glvnd/egl_vendor.d/ && \
+    echo 	"{\n\
+    			\"file_format_version\" : \"1.0.0\",\n\
+    			\"ICD\": {\n\"library_path\": \"libEGL_nvidia.so.0\"\n }\n \
+    }" > /usr/share/glvnd/egl_vendor.d/10_nvidia.json
+
+# nvidia
+# Add x11vnc 
+RUN apt-get update  && \
+        apt-get install -y --no-install-recommends -f x11vnc  lxappearance-obconf && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# set DRIVER_VERSION
+ENV DRIVER_VERSION=550.67
+ENV TERM=linux
+# install nvidia modules
+RUN cd /tmp && \ 
+  curl -fsL -O "https://us.download.nvidia.com/XFree86/Linux-x86_64/$DRIVER_VERSION/NVIDIA-Linux-x86_64-$DRIVER_VERSION.run" || curl -fsL -O "https://us.download.nvidia.com/tesla/$DRIVER_VERSION/NVIDIA-Linux-x86_64-$DRIVER_VERSION.run" || { echo "Failed NVIDIA GPU driver download. Exiting."; exit 1; } && \
+  chmod 755 "NVIDIA-Linux-x86_64-$DRIVER_VERSION.run" && \
+  ./NVIDIA-Linux-x86_64-$DRIVER_VERSION.run -x && \
+  ls -la && \
+  cd "NVIDIA-Linux-x86_64-$DRIVER_VERSION" && \
+  ./nvidia-installer --silent \
+		    --no-systemd \
+                    --no-kernel-module \
+                    --no-nouveau-check \
+                    --no-nvidia-modprobe \
+                    --no-rpms \
+                    --no-backup \
+                    --no-check-for-alternate-installs && \
+  rm -rf /tmp/NVIDIA*
+
+# Allow starting Xorg from a pseudoterminal instead of strictly on a tty console
+RUN echo -e "allowed_users=anybody\nneeds_root_rights=yes" | tee /etc/X11/Xwrapper.config > /dev/null
+RUN sed -i "s/allowed_users=console/allowed_users=anybody/;$ a needs_root_rights=yes" /etc/X11/Xwrapper.config
+
+# install VIRTUALGL
+WORKDIR /tmp
+ARG VIRTUALGL_VERSION=3.1
+ARG VIRTUALGL_URL="https://sourceforge.net/projects/virtualgl/files"
+RUN curl -fsSL -O "${VIRTUALGL_URL}/virtualgl_${VIRTUALGL_VERSION}_amd64.deb" && \
+    apt-get update && apt-get install -y --no-install-recommends ./virtualgl_${VIRTUALGL_VERSION}_amd64.deb && \
+    rm -f "virtualgl_${VIRTUALGL_VERSION}_amd64.deb" && \
+    rm -rf /var/lib/apt/lists/* && \
+    chmod u+s /usr/lib/libvglfaker.so && \
+    chmod u+s /usr/lib/libdlfaker.so
+
+
+############################################
+
+
+
+
+
+
+
+#
+# create account balloon for compatility with 2.0
+# Next command use $BUSER context
+# this is the default user if no user defined
+# create group, user, set password
+# fix home dir owner
+ENV BUSER balloon
+RUN groupadd --gid 4096 $BUSER && \
+    useradd --create-home --shell /bin/bash --uid 4096 -g $BUSER $BUSER && \
+    echo "balloon:lmdpocpetit" | chpasswd $BUSER &&\
+    chown -R $BUSER:$BUSER /home/$BUSER
+
+# change passwd shadow group gshadow
+RUN mkdir -p $ABCDESKTOP_LOCALACCOUNT_DIR && \
+    for f in passwd shadow group gshadow ; do if [ -f /etc/$f ] ; then  cp /etc/$f $ABCDESKTOP_LOCALACCOUNT_DIR ; rm -f /etc/$f; ln -s $ABCDESKTOP_LOCALACCOUNT_DIR/$f /etc/$f; fi; done
+
+# set build date
+RUN date > /etc/build.date
+
+
+# set command
+CMD [ "/composer/docker-entrypoint.sh" ]
+
+####################################################
+# SERVICE                           #   TCP PORT   #
+####################################################
+# XTERM_TCP_PORT                        29781
+# BROADCAST_SERVICE_TCP_PORT            29784
+# SPAWNER_SERVICE_TCP_PORT              29786
+# WS_TCP_BRIDGE_SERVICE_TCP_PORT         6081
+# DBUS_SESSION_TCP_PORT                 55556
+# DBUS_SYSTEM_TCP_PORT                  55557
+####################################################
+
+## RESERVED TCP PORT 29782 for pulseaudio
+## RESERVED TCP PORT 29785 for cupsd
+
+# VOLUME /home/$BUSER
+# Set for compatibility 2.0
+WORKDIR /home/$BUSER
+USER $BUSER
+
+EXPOSE 6081 29781 29784 29786
