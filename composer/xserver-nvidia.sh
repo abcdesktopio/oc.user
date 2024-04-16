@@ -56,16 +56,18 @@ unset IFS
 BUS_ID=PCI:$((16#${ARR_ID[1]})):$((16#${ARR_ID[2]})):$((16#${ARR_ID[3]}))
 # A custom modeline should be generated because there is no monitor to fetch this information normally
 export MODELINE=$(cvt -r "${SIZEW}" "${SIZEH}" "${REFRESH}" | sed -n 2p)
+
 # Generate /etc/X11/xorg.conf with nvidia-xconfig
-nvidia-xconfig --virtual="${SIZEW}x${SIZEH}" --depth="$CDEPTH" --mode=$(echo "$MODELINE" | awk '{print $2}' | tr -d '"') --allow-empty-initial-configuration --no-probe-all-gpus --busid="$BUS_ID" --no-multigpu --no-sli --no-base-mosaic --only-one-x-screen ${CONNECTED_MONITOR}
+# nvidia-xconfig --virtual="${SIZEW}x${SIZEH}" --depth="$CDEPTH" --mode=$(echo "$MODELINE" | awk '{print $2}' | tr -d '"') --allow-empty-initial-configuration --no-probe-all-gpus --busid="$BUS_ID" --no-multigpu --no-sli --no-base-mosaic --only-one-x-screen ${CONNECTED_MONITOR}
+sudo /usr/bin/nvidia-xconfig --virtual="${SIZEW}x${SIZEH}" --depth="$CDEPTH" --mode=$(echo "$MODELINE" | awk '{print $2}' | tr -d '"') --allow-empty-initial-configuration --no-probe-all-gpus --busid="$BUS_ID" --no-sli --no-base-mosaic --only-one-x-screen ${CONNECTED_MONITOR}
 # Guarantee that the X server starts without a monitor by adding more options to the configuration
-sed -i '/Driver\s\+"nvidia"/a\    Option         "ModeValidation" "NoMaxPClkCheck, NoEdidMaxPClkCheck, NoMaxSizeCheck, NoHorizSyncCheck, NoVertRefreshCheck, NoVirtualSizeCheck, NoExtendedGpuCapabilitiesCheck, NoTotalSizeCheck, NoDualLinkDVICheck, NoDisplayPortBandwidthCheck, AllowNon3DVisionModes, AllowNonHDMI3DModes, AllowNonEdidModes, NoEdidHDMI2Check, AllowDpInterlaced"\n    Option         "HardDPMS" "False"' /etc/X11/xorg.conf
+sudo sed -i '/Driver\s\+"nvidia"/a\    Option         "ModeValidation" "NoMaxPClkCheck, NoEdidMaxPClkCheck, NoMaxSizeCheck, NoHorizSyncCheck, NoVertRefreshCheck, NoVirtualSizeCheck, NoExtendedGpuCapabilitiesCheck, NoTotalSizeCheck, NoDualLinkDVICheck, NoDisplayPortBandwidthCheck, AllowNon3DVisionModes, AllowNonHDMI3DModes, AllowNonEdidModes, NoEdidHDMI2Check, AllowDpInterlaced"\n    Option         "HardDPMS" "False"' /etc/X11/xorg.conf
 # Add custom generated modeline to the configuration
-sed -i '/Section\s\+"Monitor"/a\    '"$MODELINE" /etc/X11/xorg.conf
+sudo sed -i '/Section\s\+"Monitor"/a\    '"$MODELINE" /etc/X11/xorg.conf
 # Prevent interference between GPUs, add this to the host or other containers running Xorg as well
-echo -e "Section \"ServerFlags\"\n    Option \"AutoAddGPU\" \"false\"\nEndSection" | tee -a /etc/X11/xorg.conf > /dev/null
+sudo echo -e "Section \"ServerFlags\"\n    Option \"AutoAddGPU\" \"false\"\nEndSection" | tee -a /etc/X11/xorg.conf > /dev/null
 # In Section Screen add Option “UseDisplayDevice” “none”
-sed -i '/Section\s\+"Screen"/a\    '"Option \"UseDisplayDevice\" \"none\"" /etc/X11/xorg.conf
+sudo sed -i '/Section\s\+"Screen"/a\    '"Option \"UseDisplayDevice\" \"none\"" /etc/X11/xorg.conf
 
 # Default display is :0 across the container
 # Run Xorg server with required extensions
@@ -85,7 +87,10 @@ fi
 # Run the x11vnc + noVNC fallback web interface if enabled
 # -rfbauth "$ABCDESKTOP_RUN_DIR"/.vnc/passwd
 if [ "${NOVNC_ENABLE,,}" = "true" ]; then
-  x11vnc -display "${DISPLAY}" -passwdfile /var/secrets/abcdesktop/vnc/password -unixsock /tmp/.x11vnc -shared -forever -repeat -xkb -noipv6 -noxfixes -snapfb -threads -xrandr "resize" -rfbport 5900 &
+  # x11vnc -display "${DISPLAY}" -passwdfile /var/secrets/abcdesktop/vnc/password -unixsock /tmp/.x11vnc -shared -forever -repeat -xkb -noipv6 -noxfixes -snapfb -threads -xrandr "resize" -rfbport 5900 &
+   while true; do
+     x0vncserver -display :0 -rfbport=-1 -rfbunixpath /tmp/.x11vnc -rfbauth /var/run/desktop/.vnc/passwd
+   done
 fi
 
 echo "Session Running. Press [Return] to exit."
