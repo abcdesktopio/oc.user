@@ -272,12 +272,33 @@ RUN if [ "${TARGET_MODE}" != "hardening" ]; then \
 # nvidia xorg add ones
 #
 #
+#
+
+# Make all NVIDIA GPUs visible by default
+ENV NVIDIA_VISIBLE_DEVICES all
+# All NVIDIA driver capabilities should preferably be used, check `NVIDIA_DRIVER_CAPABILITIES` inside the container if things do not work
+ENV NVIDIA_DRIVER_CAPABILITIES all
+# Disable VSYNC for NVIDIA GPUs
+ENV __GL_SYNC_TO_VBLANK 0
+
+# Anything above this line should always be kept the same between docker-nvidia-glx-desktop and docker-nvidia-egl-desktop
+ENV SIZEW 1920
+ENV SIZEH 1080
+ENV REFRESH 60
+ENV DPI 96
+ENV CDEPTH 24
+ENV VIDEO_PORT DFP
+#
 # Install Xorg and other important libraries or packages
 RUN apt-get update && apt-get install --no-install-recommends -y \
         # Install essential Xorg and NVIDIA packages, packages above this line should be the same between docker-nvidia-glx-desktop and docker-nvidia-egl-desktop
         kmod \
         libc6-dev \
         libpci3 \
+        xcvt \
+        vim \
+	mesa-utils \
+	pkg-config \
         libelf-dev && \
     rm -rf /var/lib/apt/lists/*
 
@@ -303,7 +324,7 @@ RUN apt-get update  && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # set DRIVER_VERSION
-ENV DRIVER_VERSION=550.67
+ENV DRIVER_VERSION=550.54.14
 ENV TERM=linux
 # install nvidia modules
 RUN cd /tmp && \ 
@@ -341,10 +362,19 @@ RUN curl -fsSL -O "${VIRTUALGL_URL}/virtualgl_${VIRTUALGL_VERSION}_amd64.deb" &&
 ############################################
 
 
+# 
+# add sudo
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends sudo && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    echo "ALL ALL=(ALL:ALL) ALL" >> /etc/sudoers.d/all && \
+    echo "ALL ALL = NOPASSWD: /usr/bin/nvidia-xconfig" >> /etc/sudoers.d/all
 
 
-
-
+# create a xorg.conf
+# this file will be updated by /usr/bin/nvidia-xconfig as user
+RUN touch /etc/X11/xorg.conf && chmod 666 /etc/X11/xorg.conf
 
 #
 # create account balloon for compatility with 2.0
