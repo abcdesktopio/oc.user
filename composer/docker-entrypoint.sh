@@ -420,8 +420,8 @@ if [ -d /proc/driver/nvidia ]; then
        if [ -x /usr/bin/nvidia-smi ]; then
 	       	echo command line /usr/bin/nvidia-smi found
 	        echo nvidia-smi read gpu_uuid
-       		nvidia-smi --query-gpu=gpu_uuid --format=csv,noheader > /tmp/gpu.uuid
-	 	cat /tmp/gpu.uuid
+       		nvidia-smi --query-gpu=gpu_uuid --format=csv,noheader > /tmp/gpu_uuid
+	 	cat /tmp/gpu_uuid
 	fi
 fi
 
