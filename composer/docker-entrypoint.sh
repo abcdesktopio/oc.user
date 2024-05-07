@@ -413,6 +413,19 @@ else
         echo "SET_DEFAULT_COLOR is not defined, keep default value"
 fi
 
+# nvidia test
+if [ -d /proc/driver/nvidia ]; then
+       echo /proc/driver/nvidia exists
+       # suppose there is an gpu 
+       if [ -x /usr/bin/nvidia-smi ]; then
+	       	echo command line /usr/bin/nvidia-smi found
+	        echo nvidia-smi read gpu_uuid
+       		nvidia-smi --query-gpu=gpu_uuid --format=csv,noheader > /tmp/gpu_uuid
+	 	cat /tmp/gpu_uuid
+	fi
+fi
+
+
 # end of config setup 
 
 # run dump to log
