@@ -84,7 +84,7 @@ if [ ! -z $APPLICATION_TYPE ]; then
 fi 
 
 # example for nvidia
-NVIDIA_GPU=''
+NVIDIA_GPU="{ \"SAMPLEENV\" : \"samplevalue\" }"
 # nvidia test
 if [ -d /proc/driver/nvidia ]; then
        # /proc/driver/nvidia exists
@@ -97,5 +97,8 @@ if [ -d /proc/driver/nvidia ]; then
         fi
 fi
 
+# you can add a list of dict
+# like [ {"SAMPLEENV1": "samplevalue"}, {"SAMPLEENV2":"samplevalue"} ]
+#
 echo "[$NVIDIA_GPU]"
 
