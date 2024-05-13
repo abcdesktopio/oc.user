@@ -10,7 +10,7 @@ if [ -d /proc/driver/nvidia ]; then
 			echo "ABCDESKTOP_USE_X11_NVIDIA=${ABCDESKTOP_USE_X11_NVIDIA}"
 			if [ ! -z ${ABCDESKTOP_USE_X11_NVIDIA} ]; then 
 				echo "${ABCDESKTOP_USE_X11_NVIDIA} is set"
-				/composer/xserver-nvidia.sh
+				exec /composer/xserver-nvidia.sh
 			        exit 0
 			fi
 		fi
@@ -18,5 +18,5 @@ if [ -d /proc/driver/nvidia ]; then
 fi
 
 # fallback to tigervnc
-/composer/tigervnc.sh
+exec /composer/tigervnc.sh
  
