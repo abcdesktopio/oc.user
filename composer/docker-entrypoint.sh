@@ -21,7 +21,7 @@ echo   X11LISTEN=${X11LISTEN}
 export USER=${USER:-'balloon'}
 export HOME=${HOME:-'/home/balloon'}
 export LOGNAME=${LOGNAME:-'balloon'}
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:$HOME/.local/share/applications/bin/"
+export PATH="$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:$HOME/.local/share/applications/bin/"
 export ABCDESKTOP_RUN_DIR=${ABCDESKTOP_RUN_DIR:-'/var/run/desktop'}
 export ABCDESKTOP_SECRETS_DIR="/var/secrets/$NAMESPACE"
 export DISABLE_REMOTEIP_FILTERING=${DISABLE_REMOTEIP_FILTERING:-'disabled'}
@@ -195,12 +195,18 @@ if [ ! -f ~/.config/user-dirs.dirs ]; then
 	# xdg-user-dirs-update --force
 	# export $(grep -v '^#' user-dirs.dirs | xargs -0)
 	xdg-user-dirs-update &
-fi 
+fi
 
-# create .local entries
-# mkdir -p ~/.local/share/icons   
-mkdir -p ~/.local/share/mime
-mkdir -p ~/.local/share/applications/bin
+# clean previous .local/share/applications
+# remove desktopfile
+# remove bin application link to ocrun.js node js script
+if [ -d ~/.local/share/applications ]; then
+	echo removing previous ~/.local/share/applications
+        rm -f ~/.local/share/applications/*.desktop ~/.local/share/applications/bin/* &
+fi
+
+# always create ~/.local/share/applications/bin
+mkdir -p ~/.local/share/mime ~/.local/share/applications/bin
 
 if [ ! -d ~/.local/share/icons ]; then
   	cp -rp /composer/icons ~/.local/share &
