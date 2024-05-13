@@ -33,8 +33,10 @@ if [ "$USE_CERTBOT_CERTONLY" == "enabled" ]; then
 	CERT="/etc/letsencrypt/live/$FQDN/fullchain.pem"
 	PRIVKEY="/etc/letsencrypt/live/$FQDN/privkey.pem"
 	echo "/composer/wsproxy.py --key=$PRIVKEY --cert=$CERT --unix-target $X11VNCSOCKET $BIND_INTERFACE6081" > /var/var/deskop/wsproxy.log
-	/usr/bin/websockify  $HEARTBEAT_OPTION  --key=$PRIVKEY --cert=$CERT --unix-target=$X11VNCSOCKET $BIND_INTERFACE
+	# exec is added at the beginning of the last line which replaces the shell process with binaryfile process so supervisord stops that process
+	exec /usr/bin/websockify  $HEARTBEAT_OPTION  --key=$PRIVKEY --cert=$CERT --unix-target=$X11VNCSOCKET $BIND_INTERFACE
 else
-	/usr/bin/websockify $HEARTBEAT_OPTION $BIND_INTERFACE --unix-target=$X11VNCSOCKET 
+	# exec is added at the beginning of the last line which replaces the shell process with binaryfile process so supervisord stops that process
+	exec /usr/bin/websockify $HEARTBEAT_OPTION $BIND_INTERFACE --unix-target=$X11VNCSOCKET 
 	# /composer/wsproxy.py --unix-target=$X11VNCSOCKET $BIND_INTERFACE
 fi
