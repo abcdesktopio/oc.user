@@ -121,7 +121,7 @@ async function generateDesktopFiles(list = []) {
   console.log('generateDesktopFiles');
   console.log(`list of application len is ${list.length}`);	
   const ocrunpath = '/composer/node/ocrun/ocrun.js';
-  for (const {
+  for ( let {
     mimetype,
     path,
     executablefilename,
@@ -132,15 +132,20 @@ async function generateDesktopFiles(list = []) {
     launch,
     desktopfile,
   } of list) {
-    console.log(`name=${name}`);
+    console.log(`application name=${name}`);
     if ( path
       && executablefilename
       && icon
       && name
-      && launch
-      && desktopfile) {
-      console.log(desktopfile);
+      && launch ) {
+
+      // check if desktopfile has been define
+      if (!desktopfile) {
+	    // if the desktopfile is not defined by the application metadata, we create a new one
+	    desktopfile = `${launch}.desktop`;
+      }
       const filepath = `${roothomedir}/.local/share/applications/${desktopfile}`;
+      console.log(`creating a new desktop file ${filepath} for application name=${name}` ); 
       const contentdesktop = {};
       contentdesktop.Name = name;
       contentdesktop.Exec = `${roothomedir}/.local/share/applications/bin/${launch} %U`;
@@ -149,7 +154,7 @@ async function generateDesktopFiles(list = []) {
       contentdesktop.Type = 'Application';
       contentdesktop.Icon = `${roothomedir}/.local/share/icons/${icon}`;
       try {
-        fs.symlink(ocrunpath, `${roothomedir}/.local/share/applications/bin/${launch}`, () => { });
+        fs.symlink(ocrunpath, `${roothomedir}/.local/share/applications/bin/${launch}`, () => {});
         await fs.promises.writeFile(filepath, ini.stringify(contentdesktop, {
           section: 'Desktop Entry',
         }));
@@ -188,7 +193,9 @@ async function generateDesktopFiles(list = []) {
 
     }
   }
-
+  
+  // All desktop files are created in ${roothomedir}/.local/share/applications 
+  // run update-desktop-database 
   const updateproc = spawn('update-desktop-database', [`${roothomedir}/.local/share/applications`]);
   updateproc.stderr.on('data', (data) => {
     console.log(`ps stderr: ${data}`);
