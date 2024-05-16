@@ -101,12 +101,4 @@ fi
 
 # Run the x11vnc + noVNC fallback web interface if enabled
 # -rfbauth "$ABCDESKTOP_RUN_DIR"/.vnc/passwd
-if [ "${NOVNC_ENABLE,,}" = "true" ]; then
-  # x11vnc -display "${DISPLAY}" -passwdfile /var/secrets/abcdesktop/vnc/password -unixsock /tmp/.x11vnc -shared -forever -repeat -xkb -noipv6 -noxfixes -snapfb -threads -xrandr "resize" -rfbport 5900 &
-   while true; do
-     x0vncserver -display :0 -AcceptSetDesktopSize=1 -Log *:stdout:100 -rfbport=-1 -rfbunixpath /tmp/.x11vnc -rfbauth /var/run/desktop/.vnc/passwd | grep --line-buffered 'VNCSConnST:  Got request for framebuffer resize to' | awk -W interactive '{print $8}' | xargs -I{} xrandr --fb {}
-   done
-fi
-
-echo "Session Running. Press [Return] to exit."
-read
+exec x0vncserver -display :0 -AcceptSetDesktopSize=1 -Log *:stdout:100 -rfbport=-1 -rfbunixpath /tmp/.x11vnc -rfbauth /var/run/desktop/.vnc/passwd | grep --line-buffered 'VNCSConnST:  Got request for framebuffer resize to' | awk -W interactive '{print $8}' | xargs -I{} xrandr --fb {}
