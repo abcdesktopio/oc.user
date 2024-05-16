@@ -1,0 +1,21 @@
+apt remove tigervncserver
+apt install tigervnc-xorg-extension
+
+file: /etc/X11/xorg.conf.d/10-vnc.conf 
+Section "Module"
+  Load "vnc"
+EndSection
+
+Section "Screen"
+  Identifier "Screen0"
+  Option "UserPasswdVerifier" "VncAuth"
+  Option "PasswordFile" "/var/run/desktop/.vnc/passwd"
+EndSection
+
+to start Xorg in xserver-nvidia.sh
+
+exec Xorg vt7 -verbose 5 -noreset -novtswitch -sharevts -dpi "${DPI}" -extension "XVideo-MotionCompensation" +extension "GLX" +extension "RANDR" +extension "RENDER" +extension "MIT-SHM" ${X11_PARAMS} "${DISPLAY}"
+
+
+glxgears black screen
+
