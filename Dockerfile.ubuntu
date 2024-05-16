@@ -179,7 +179,12 @@ RUN apt-get update  && \
     rm -f /tmp/*.deb && \
     apt-get clean && rm -rf /var/lib/apt/lists/* 
 
-RUN apt-get update  && \    
+
+
+#  x11-xserver-utils
+#    - xsetroot, a tool for tailoring the appearance of the root window;
+#
+RUN apt-get update && \    
     apt-get install -y --no-install-recommends \
         supervisor \
         wmctrl \
@@ -189,18 +194,14 @@ RUN apt-get update  && \
         xauth \
         websockify \
 	krb5-user \
-     && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
 	desktop-file-utils \
 	xdg-user-dirs \
 	x11-xserver-utils \
 	adwaita-icon-theme \
 	adwaita-qt \
 	xclip \
-    gsetroot \
-     && apt-get clean && rm -rf /var/lib/apt/lists/*
+        gsetroot \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
 # install openbox custome packages 
@@ -245,7 +246,6 @@ RUN mkdir -p /etc/apt/keyrings && \
 # COPY --from=abcdesktopio/oc.themes      /usr/share/themes       /usr/share/themes
 # COPY --from=theme_builder /usr/share/themes /usr/share/themes
 ADD Arc_OSXbuttons.tar /usr/share/themes	
-
 
 # add sound files from ubuntu alsa package alsa-utils
 ADD usr/share/sounds/alsa /usr/share/sounds/alsa
