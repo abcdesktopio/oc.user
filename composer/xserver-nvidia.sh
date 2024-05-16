@@ -10,7 +10,10 @@ export VIDEO_PORT=${VIDEO_PORT:-DFP}
 export ABCDESKTOP_RUN_DIR=${ABCDESKTOP_RUN_DIR:-'/var/run/desktop'}
 export NOVNC_ENABLE=${NOVNC_ENABLE:-true}
 export DISPLAY=:0 
-
+export WIDTH=${WIDTH:-1024}
+export HEIGHT=${HEIGHT:-768}
+export MAX_WIDTH=${MAX_WIDTH:-1920}
+export MAX_HEIGHT=${MAX_HEIGHT:-1080}
 
 
 X11_PARAMS=""
@@ -62,8 +65,20 @@ export MODELINE=$(cvt -r "${SIZEW}" "${SIZEH}" "${REFRESH}" | sed -n 2p)
 sudo /usr/bin/nvidia-xconfig --virtual="${SIZEW}x${SIZEH}" --depth="$CDEPTH" --mode=$(echo "$MODELINE" | awk '{print $2}' | tr -d '"') --allow-empty-initial-configuration --no-probe-all-gpus --busid="$BUS_ID" --no-sli --no-base-mosaic --only-one-x-screen ${CONNECTED_MONITOR}
 # Guarantee that the X server starts without a monitor by adding more options to the configuration
 sed -i '/Driver\s\+"nvidia"/a\    Option         "ModeValidation" "NoMaxPClkCheck, NoEdidMaxPClkCheck, NoMaxSizeCheck, NoHorizSyncCheck, NoVertRefreshCheck, NoVirtualSizeCheck, NoExtendedGpuCapabilitiesCheck, NoTotalSizeCheck, NoDualLinkDVICheck, NoDisplayPortBandwidthCheck, AllowNon3DVisionModes, AllowNonHDMI3DModes, AllowNonEdidModes, NoEdidHDMI2Check, AllowDpInterlaced"\n    Option         "HardDPMS" "False"' /etc/X11/xorg.conf
+
+
 # Add custom generated modeline to the configuration
 sed -i '/Section\s\+"Monitor"/a\    '"$MODELINE" /etc/X11/xorg.conf
+
+# Add custom generated modeline to the configuration
+#for ((i=$WIDTH; i<=$MAX_WIDTH; i=i+$PIXELSEEK)); do
+#    for ((j=$HEIGHT; j<=$MAX_HEIGHT; j=j+$PIXELSEEK)); do
+#            # echo "$i x $j"
+#            MODELINE=$(cvt -r "${i}" "${j}" "${REFRESH}" | sed -n 2p)
+#            sed -i '/Section\s\+"Monitor"/a\    '"$MODELINE" /etc/X11/xorg.conf
+#    done
+#done
+
 # Prevent interference between GPUs, add this to the host or other containers running Xorg as well
 echo -e "Section \"ServerFlags\"\n    Option \"AutoAddGPU\" \"false\"\nEndSection" | tee -a /etc/X11/xorg.conf > /dev/null
 # In Section Screen add Option “UseDisplayDevice” “none”
@@ -89,7 +104,7 @@ fi
 if [ "${NOVNC_ENABLE,,}" = "true" ]; then
   # x11vnc -display "${DISPLAY}" -passwdfile /var/secrets/abcdesktop/vnc/password -unixsock /tmp/.x11vnc -shared -forever -repeat -xkb -noipv6 -noxfixes -snapfb -threads -xrandr "resize" -rfbport 5900 &
    while true; do
-     x0vncserver -display :0 -rfbport=-1 -rfbunixpath /tmp/.x11vnc -rfbauth /var/run/desktop/.vnc/passwd
+     x0vncserver -display :0 -AcceptSetDesktopSize=1 -Log *:stdout:100 -rfbport=-1 -rfbunixpath /tmp/.x11vnc -rfbauth /var/run/desktop/.vnc/passwd | grep --line-buffered 'VNCSConnST:  Got request for framebuffer resize to' | awk -W interactive '{print $8}' | xargs -I{} xrandr --fb {}
    done
 fi
 
