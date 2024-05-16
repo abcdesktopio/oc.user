@@ -43,5 +43,5 @@ fi
 echo "XVNC_PARAMS=$XVNC_PARAMS"
 echo "CONTAINER_IP_ADDR=$CONTAINER_IP_ADDR"
 
-
-exec /usr/bin/Xvnc :0 zliblevel=5 -auth ~/.Xauthority -geometry 3840x2160 -SendPrimary=0 -depth 24 -rfbport=-1 -rfbunixpath /tmp/.x11vnc -pn -rfbauth "$ABCDESKTOP_RUN_DIR"/.vnc/passwd ${XVNC_PARAMS} +extension GLX +extension RANDR +extension MIT-SHM
+# set 3840x2160 
+exec /usr/bin/Xvnc :0 zliblevel=5 -auth ~/.Xauthority -geometry 2560×1600 -SendPrimary=0 -depth 24 -rfbport=-1 -rfbunixpath /tmp/.x11vnc -pn -rfbauth "$ABCDESKTOP_RUN_DIR"/.vnc/passwd ${XVNC_PARAMS} +extension GLX +extension RANDR +extension MIT-SHM
