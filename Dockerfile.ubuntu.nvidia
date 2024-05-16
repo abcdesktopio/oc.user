@@ -274,6 +274,10 @@ RUN if [ "${TARGET_MODE}" != "hardening" ]; then \
 #
 #
 
+# Expose NVIDIA libraries and paths
+ENV PATH /usr/local/nvidia/bin${PATH:+:${PATH}}
+ENV LD_LIBRARY_PATH ${LD_LIBRARY_PATH:+${LD_LIBRARY_PATH}:}/usr/local/nvidia/lib:/usr/local/nvidia/lib64
+
 # Make all NVIDIA GPUs visible by default
 ENV NVIDIA_VISIBLE_DEVICES all
 # All NVIDIA driver capabilities should preferably be used, check `NVIDIA_DRIVER_CAPABILITIES` inside the container if things do not work
@@ -302,26 +306,25 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
         libelf-dev && \
     rm -rf /var/lib/apt/lists/*
 
+RUN echo "/usr/local/nvidia/lib"   >> /etc/ld.so.conf.d/nvidia.conf && \
+    echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf && \
+    ldconfig
+
 RUN apt-get update && apt-get install --no-install-recommends -y --force-yes -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"  \
         xorg && \
     rm -rf /var/lib/apt/lists/*
 
+# Install operating system libraries or packages
 RUN apt-get update && apt-get install --no-install-recommends -y \
-	vulkan-tools && \
+      vulkan-tools && \
     rm -rf /var/lib/apt/lists/* 
 
 # Configure EGL manually
 RUN mkdir -p /usr/share/glvnd/egl_vendor.d/ && \
-    echo 	"{\n\
-    			\"file_format_version\" : \"1.0.0\",\n\
-    			\"ICD\": {\n\"library_path\": \"libEGL_nvidia.so.0\"\n }\n \
+    echo       "{\n\
+                       \"file_format_version\" : \"1.0.0\",\n\
+                       \"ICD\": {\n\"library_path\": \"libEGL_nvidia.so.0\"\n }\n \
     }" > /usr/share/glvnd/egl_vendor.d/10_nvidia.json
-
-# nvidia
-# Add x11vnc 
-RUN apt-get update  && \
-        apt-get install -y --no-install-recommends -f x11vnc  lxappearance-obconf && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # set DRIVER_VERSION
 ENV DRIVER_VERSION=550.54.14
@@ -348,16 +351,16 @@ RUN echo -e "allowed_users=anybody\nneeds_root_rights=yes" | tee /etc/X11/Xwrapp
 RUN sed -i "s/allowed_users=console/allowed_users=anybody/;$ a needs_root_rights=yes" /etc/X11/Xwrapper.config
 
 # install VIRTUALGL
-WORKDIR /tmp
-ARG VIRTUALGL_VERSION=3.1
-ARG VIRTUALGL_URL="https://sourceforge.net/projects/virtualgl/files"
-RUN curl -fsSL -O "${VIRTUALGL_URL}/virtualgl_${VIRTUALGL_VERSION}_amd64.deb" && \
-    apt-get update && apt-get install -y --no-install-recommends ./virtualgl_${VIRTUALGL_VERSION}_amd64.deb && \
-    rm -f "virtualgl_${VIRTUALGL_VERSION}_amd64.deb" && \
-    rm -rf /var/lib/apt/lists/* && \
-    chmod u+s /usr/lib/libvglfaker.so && \
-    chmod u+s /usr/lib/libdlfaker.so
-
+#WORKDIR /tmp
+#ARG VIRTUALGL_VERSION=3.1
+#ARG VIRTUALGL_URL="https://sourceforge.net/projects/virtualgl/files"
+#RUN curl -fsSL -O "${VIRTUALGL_URL}/virtualgl_${VIRTUALGL_VERSION}_amd64.deb" && \
+#    apt-get update && apt-get install -y --no-install-recommends ./virtualgl_${VIRTUALGL_VERSION}_amd64.deb && \
+#    rm -f "virtualgl_${VIRTUALGL_VERSION}_amd64.deb" && \
+#    rm -rf /var/lib/apt/lists/* && \
+#    chmod u+s /usr/lib/libvglfaker.so && \
+#    chmod u+s /usr/lib/libdlfaker.so
+#
 
 ############################################
 
@@ -374,7 +377,7 @@ RUN apt-get update && \
 
 # create a xorg.conf
 # this file will be updated by /usr/bin/nvidia-xconfig as user
-RUN touch /etc/X11/xorg.conf && chmod 666 /etc/X11/xorg.conf
+RUN touch /etc/X11/xorg.conf && chmod 666 /etc/X11/xorg.conf && chmod 777 /etc/X11
 
 #
 # create account balloon for compatility with 2.0
