@@ -7,7 +7,7 @@ ifndef NOCACHE
 endif
 
 ifndef TAG
- TAG=3.2
+ TAG=3.3
 endif
 
 version:
@@ -38,16 +38,6 @@ alpine.hardening:
 
 
 
-ubuntu30:
-	docker pull ubuntu:22.04
-	docker build \
-            --no-cache=$(NOCACHE) \
-            --build-arg TARGET_MODE=kubernetes \
-            --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/var/secrets/abcdesktop/localaccount \
-            --build-arg BASE_IMAGE_RELEASE=22.04 \
-            --build-arg BASE_IMAGE=ubuntu \
-            --tag abcdesktopio/oc.user.ubuntu:3.0 \
-            --file Dockerfile.ubuntu .
 
 hardening31:
 	docker pull ubuntu:22.04
