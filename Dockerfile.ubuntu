@@ -164,7 +164,7 @@ RUN apt-get update  && \
 #    - xsetroot, a tool for tailoring the appearance of the root window;
 #
 RUN apt-get update && \    
-    apt-get install -y --no-install-recommends \
+    apt-get install -y --no-install-recommends -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
         supervisor \
         wmctrl \
         cups-client \
