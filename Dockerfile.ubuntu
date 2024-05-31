@@ -61,7 +61,7 @@ RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 # yarn install --production[=true|false]
 # yarn will not install any package listed in devDependencies if the NODE_ENV environment variable is set to production. 
 # Use this flag to instruct Yarn to ignore NODE_ENV and take its production-or-not status from this flag instead.
-RUN git clone https://github.com/abcdesktopio/oc.user.libraries.git /composer/node/common-libraries
+# RUN git clone https://github.com/abcdesktopio/oc.user.libraries.git /composer/node/common-libraries
 WORKDIR /composer/node/common-libraries
 RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 
@@ -69,7 +69,7 @@ WORKDIR /composer/node/broadcast-service
 RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 
 
-RUN git clone https://github.com/abcdesktopio/run-service.git /composer/node/ocrun
+# RUN git clone https://github.com/abcdesktopio/run-service.git /composer/node/ocrun
 WORKDIR /composer/node/ocrun
 RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 
