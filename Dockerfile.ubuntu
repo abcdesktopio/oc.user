@@ -14,6 +14,29 @@ ARG BASE_IMAGE_RELEASE=22.04
 ARG ABCDESKTOP_LOCALACCOUNT_DIR
 # ="/etc/localaccount"
 
+#
+# create package for openbox
+# deb files will be located in /root/packages/$(uname -m) directory 
+# patched with openbox.title.patch for abcdesktop
+FROM ${BASE_IMAGE}:${TAG} as openbox_ubuntu_builder
+ENV DEBEMAIL nobody@abcdesktop.io
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+RUN sed -i '/deb-src/s/^# //' /etc/apt/sources.list
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends devscripts wget ca-certificates
+RUN apt-get build-dep -y openbox
+RUN mkdir -p /openbox/src
+WORKDIR /openbox
+RUN apt-get source openbox
+RUN wget https://raw.githubusercontent.com/abcdesktopio/openbox/main/openbox.title.patch 
+RUN cd openbox-3.6.1 && patch -p2 < ../openbox.title.patch
+RUN cd openbox-3.6.1 && dch -n abcdesktop_sig_usr
+RUN cd openbox-3.6.1 && EDITOR=/bin/true dpkg-source -q --commit . abcdesktop_sig_usr
+RUN cd openbox-3.6.1 && debuild -us -uc
+RUN ls *.deb
+
+
+#
 # install all nodejs modules
 # build nodejs module
 # create /composer/node
