@@ -68,7 +68,6 @@ RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 WORKDIR /composer/node/broadcast-service
 RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 
-
 # RUN git clone https://github.com/abcdesktopio/run-service.git /composer/node/ocrun
 WORKDIR /composer/node/ocrun
 RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
