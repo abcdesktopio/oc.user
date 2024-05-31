@@ -193,29 +193,6 @@ async function generateDesktopFiles(list = []) {
 
     }
   }
-
-
-  for ( let { name, launch, desktopfile, showinview } of list) {
-    console.log(`application name=${name}`);
-    if ( launch ) {
-      if ( showinview != 'dock' )
-	      continue;
-      // check if desktopfile has been define
-      if (!desktopfile) {
-            // if the desktopfile is not defined by the application metadata, we create a new one
-            desktopfile = `${launch}.desktop`;
-      }
-      const desktopfilepath = `${roothomedir}/.local/share/applications/${desktopfile}`;
-      const deskitemfilepath =  `${roothomedir}/.config/plank/dock1/launchers/${launch}.dockitem`;
-      console.log(`creating a new dockitem file ${deskitemfilepath} for desktopfile ${desktopfilepath}` );
-      const contentdeskitem = {};
-      contentdeskitem.Launcher = `file://${desktopfilepath}`;
-      fs.promises.writeFile(	deskitemfilepath, 
-	      			ini.stringify(contentdeskitem, { section: 'PlankDockItemPreferences'})
-      );
-    }
-  }
-
   
   // All desktop files are created in ${roothomedir}/.local/share/applications 
   // run update-desktop-database 
