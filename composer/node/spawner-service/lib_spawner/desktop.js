@@ -32,7 +32,7 @@ const asyncHandler = require('express-async-handler');
 const ini = require('./ini');
 const middlewares = require('./middlewares');
 const { set, get } = require('./utils');
-const { roothomedir } = require('../global-values');
+const { roothomedir, abcdesktoprundir } = require('../global-values');
 
 const magic = new Magic(MAGIC_MIME_TYPE);
 
@@ -119,7 +119,9 @@ function getmimeforfile(_filename) {
  */
 async function generateDesktopFiles(list = []) {
   console.log('generateDesktopFiles');
-  console.log(`list of application len is ${list.length}`);	
+  console.log(`list of application len is ${list.length}`);
+  const applistfilepath = `${abcdesktoprundir}/dockstat.json' ;
+  fs.promises.writeFile( applistfilepath, JSON.stringify(list) );
   const ocrunpath = '/composer/node/ocrun/ocrun.js';
   for ( let {
     mimetype,
@@ -133,16 +135,15 @@ async function generateDesktopFiles(list = []) {
     desktopfile,
   } of list) {
     console.log(`application name=${name}`);
-    if ( path
-      && executablefilename
-      && icon
-      && name
-      && launch ) {
-
+    if ( icon && launch ) {
       // check if desktopfile has been define
       if (!desktopfile) {
-	    // if the desktopfile is not defined by the application metadata, we create a new one
-	    desktopfile = `${launch}.desktop`;
+	// if the desktopfile is not defined by the application metadata, we create a new one
+	desktopfile = `${launch}.desktop`;
+      }
+      // check if name has been define
+      if (!name) {
+      	name=launch;
       }
       const filepath = `${roothomedir}/.local/share/applications/${desktopfile}`;
       console.log(`creating a new desktop file ${filepath} for application name=${name}` ); 
