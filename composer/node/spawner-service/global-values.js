@@ -1,5 +1,6 @@
 const process = require('process');
 const roothomedir = `${process.env.HOME}`;
+const abcdesktoprundir= `${process.env.ABCDESKTOP_RUN_DIR}`;
 const pathVersion = '/composer/version.json';
 const applist = [ { key: 'xeyes.XEyes', path: '/usr/bin/xeyes' } ];
 
