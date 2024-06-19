@@ -92,7 +92,12 @@ if [ -d /proc/driver/nvidia ]; then
        if [ -x /usr/bin/nvidia-smi ]; then
                 # command line /usr/bin/nvidia-smi found
                 # nvidia-smi read gpu_uuid
-		gpu_uuid=$(nvidia-smi --query-gpu=gpu_uuid --format=csv,noheader)
+		uuid=$(nvidia-smi -L | grep "UUID: MIG" | grep -oP '(?<=UUID: ).*?(?=\))')
+		if [ -z "$uuid" ]; then
+			gpu_uuid=$(nvidia-smi --query-gpu=gpu_uuid --format=csv,noheader)
+   		else
+     			gpu_uuid=$uuid
+		fi
              	NVIDIA_GPU="{ \"NVIDIA_VISIBLE_DEVICES\" : \"$gpu_uuid\" }"  
         fi
 fi
