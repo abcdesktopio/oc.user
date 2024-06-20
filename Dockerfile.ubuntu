@@ -204,7 +204,6 @@ RUN apt-get update && \
 	adwaita-qt \
 	xclip \
 	openbox \
-	plank \	
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
