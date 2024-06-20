@@ -4,6 +4,8 @@ ARG BUILDPLATFORM
 ARG TAG=latest
 # Default base image 
 ARG BASE_IMAGE=ubuntu
+# BASE_IMAGE_RELEASE
+ARG BASE_IMAGE_RELEASE=22.04
 
 # ABCDESKTOP_LOCALACCOUNT_DIR arg
 # use in ENV ABCDESKTOP_LOCALACCOUNT_DIR=$ABCDESKTOP_LOCALACCOUNT_DIR
@@ -35,7 +37,7 @@ RUN cd openbox-3.6.1 && debuild -us -uc
 RUN ls *.deb
 
 
-#####
+#
 # install all nodejs modules
 # build nodejs module
 # create /composer/node
@@ -83,12 +85,15 @@ RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 # yarn install --production[=true|false]
 # yarn will not install any package listed in devDependencies if the NODE_ENV environment variable is set to production. 
 # Use this flag to instruct Yarn to ignore NODE_ENV and take its production-or-not status from this flag instead.
+# RUN git clone https://github.com/abcdesktopio/oc.user.libraries.git /composer/node/common-libraries
 WORKDIR /composer/node/common-libraries
 RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 
 WORKDIR /composer/node/broadcast-service
 RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 
+
+# RUN git clone https://github.com/abcdesktopio/run-service.git /composer/node/ocrun
 WORKDIR /composer/node/ocrun
 RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 
@@ -171,7 +176,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # tigervncserver_1.13.1-1ubuntu1_arm64.deb    
 # but replace by curl command to support dpkg --print-architecture for amd64 and arm64
 RUN apt-get update  && \  
-    tigervncdeburl="https://raw.githubusercontent.com/abcdesktopio/oc.user/main/tigervncserver_1.13.1-1ubuntu1_$(dpkg --print-architecture).deb" && \
+    tigervncdeburl="https://github.com/abcdesktopio/oc.user/raw/3.3/tigervncserver_1.13.1-1ubuntu1_$(dpkg --print-architecture).deb" && \
     echo Downloading $tigervncdeburl && \
     curl -sL --output /tmp/tigervncserver.deb "$tigervncdeburl" && \  
     apt-get install -y --no-install-recommends /tmp/tigervncserver.deb && \
@@ -199,17 +204,9 @@ RUN apt-get update && \
 	adwaita-icon-theme \
 	adwaita-qt \
 	xclip \
-        gsetroot \
+	openbox \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-
-# install openbox custome packages 
-RUN mkdir -p /tmp/packages
-COPY --from=openbox_ubuntu_builder /openbox/libobt* /openbox/openbox_3.6.1* /openbox/libobrender* /tmp/packages/
-RUN apt-get update  && \
-        apt-get install -y --no-install-recommends -f /tmp/packages/*.deb  && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*        
 
 # Uncommant lines to add picom compositor and watermarking support 
 #
