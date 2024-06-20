@@ -125,6 +125,7 @@ async function generateDesktopFiles(list = []) {
     mimetype,
     path,
     executablefilename,
+    execmode,
     icon,
     icondata,
     icon_url,
@@ -141,8 +142,14 @@ async function generateDesktopFiles(list = []) {
 
       // check if desktopfile has been define
       if (!desktopfile) {
-	    // if the desktopfile is not defined by the application metadata, we create a new one
-	    desktopfile = `${launch}.desktop`;
+	// if the desktopfile is not defined by the application metadata, we create a new one
+	desktopfile = `${launch}.desktop`;
+      }
+      if (!name) {
+        name = launch;
+      }
+      if (!execmode) {
+        execmode = 'container';
       }
       const filepath = `${roothomedir}/.local/share/applications/${desktopfile}`;
       console.log(`creating a new desktop file ${filepath} for application name=${name}` ); 
@@ -197,18 +204,20 @@ async function generateDesktopFiles(list = []) {
   // All desktop files are created in ${roothomedir}/.local/share/applications 
   // run update-desktop-database 
   const updateproc = spawn('update-desktop-database', [`${roothomedir}/.local/share/applications`]);
+  
+  // log error
   updateproc.stderr.on('data', (data) => {
     console.log(`ps stderr: ${data}`);
   });
 
-  return new Promise((resolve) => {
-    updateproc.on('close', (code) => {
-      if (code !== 0) {
+  // log exit code
+  updateproc.on('close', (code) => {
         console.log(`ps process exited with code ${code}`);
-      }
-      resolve({ code: 200, data: 'OK' });
-    });
   });
+
+  // don't wait for updateproc
+  // return 200 asap
+  return Promise.resolve({ code: 200, data: 'OK' });
 }
 
 /**
