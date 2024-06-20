@@ -4,7 +4,7 @@ ARG BUILDPLATFORM
 ARG TAG=latest
 # Default base image 
 ARG BASE_IMAGE=ubuntu
-# BASE_IMAGE_RELEASE deprecated
+# BASE_IMAGE_RELEASE
 ARG BASE_IMAGE_RELEASE=22.04
 
 # ABCDESKTOP_LOCALACCOUNT_DIR arg
@@ -18,7 +18,7 @@ ARG ABCDESKTOP_LOCALACCOUNT_DIR
 # create package for openbox
 # deb files will be located in /root/packages/$(uname -m) directory 
 # patched with openbox.title.patch for abcdesktop
-FROM ${BASE_IMAGE}:${TAG} as openbox_ubuntu_builder
+FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} as openbox_ubuntu_builder
 ENV DEBEMAIL nobody@abcdesktop.io
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 RUN sed -i '/deb-src/s/^# //' /etc/apt/sources.list
@@ -42,7 +42,7 @@ RUN ls *.deb
 # create /composer/node
 # use FROM BASE_IMAGE
 # define FROM before use ENV command
-FROM ${BASE_IMAGE}:${TAG} as ubuntu_node_modules_builder
+FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} as ubuntu_node_modules_builder
 
 # define arg
 ARG TARGET_MODE
@@ -133,7 +133,7 @@ COPY composer/version.json /composer/version.json
 #
 # The main oc.user start here
 #
-FROM ${BASE_IMAGE}:${TAG}
+FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE}
 
 # define arg
 ARG ABCDESKTOP_LOCALACCOUNT_DIR
