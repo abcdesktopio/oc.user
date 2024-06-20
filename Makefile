@@ -1,4 +1,4 @@
-all: version default sudo 
+all: version default sudo ssh
 registry: all push
 NOCACHE ?= false
 
@@ -72,6 +72,18 @@ default:
 	    --build-arg LINK_LOCALACCOUNT=true \
             --file Dockerfile.ubuntu .
 
+elementaryos:
+	docker pull ghcr.io/elementary/docker
+	docker build \
+            --no-cache=$(NOCACHE) \
+            --build-arg TARGET_MODE=ubuntu \
+            --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
+            --build-arg BASE_IMAGE_RELEASE=stable \
+            --build-arg BASE_IMAGE=ghcr.io/elementary/docker \
+            --tag abcdesktopio/oc.user.ubuntu.elementaryos:stable \
+            --build-arg LINK_LOCALACCOUNT=true \
+            --file Dockerfile.ubuntu .
+
 sudo:
 	docker build \
             --no-cache=$(NOCACHE) \
@@ -81,7 +93,14 @@ sudo:
             --tag abcdesktopio/oc.user.sudo:$(TAG) \
             --file Dockerfile.sudo .
 
-
+ssh:
+	docker build \
+            --no-cache=$(NOCACHE) \
+            --build-arg TARGET_MODE=ubuntu \
+            --build-arg TAG=$(TAG)  \
+            --build-arg BASE_IMAGE=abcdesktopio/oc.user.default \
+            --tag abcdesktopio/oc.user.ssh:$(TAG) \
+            --file Dockerfile.ssh .
 
 selkies:
 	docker pull ghcr.io/selkies-project/selkies-gstreamer/py-build:master
@@ -107,12 +126,13 @@ nvidia:
 	docker pull ubuntu:22.04
 	docker build \
             --no-cache=$(NOCACHE) \
+	    --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
             --build-arg BASE_IMAGE_RELEASE=22.04 \
             --build-arg BASE_IMAGE=ubuntu \
-	    --build-arg CUDA_VERSION=12.1.0 \
+	    --build-arg CUDA_VERSION=12.4.1 \
 	    --build-arg UBUNTU_RELEASE=22.04 \
             --tag abcdesktopio/oc.user.ubuntu.nvidia:$(TAG) \
-            --file Dockerfile.nvidia .
+            --file Dockerfile.ubuntu.nvidia .
 
 citrix:
 	docker build 			\
