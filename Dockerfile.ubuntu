@@ -22,6 +22,7 @@ FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} as openbox_ubuntu_builder
 ENV DEBEMAIL nobody@abcdesktop.io
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 RUN sed -i '/deb-src/s/^# //' /etc/apt/sources.list
+RUN cat /etc/apt/sources.list
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends devscripts wget ca-certificates
 RUN apt-get build-dep -y openbox
