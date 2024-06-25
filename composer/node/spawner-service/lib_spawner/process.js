@@ -176,7 +176,6 @@ function spawnBroadwayProcess(
     };
   }
 
-  console.log('spawnBroadwayProcess :');
   console.log(`return ret.code : ${ret.code}`);
   console.log(`return ret.data : ${ret.data}`);
   return ret;
