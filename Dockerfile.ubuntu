@@ -185,6 +185,15 @@ RUN apt-get update  && \
 
 
 
+# install openbox custome packages 
+RUN mkdir -p /tmp/packages
+COPY --from=openbox_ubuntu_builder /openbox/libobt* /openbox/openbox_3.6.1* /openbox/libobrender* /tmp/packages/
+RUN apt-get update  && \
+        apt-get install -y --no-install-recommends -f /tmp/packages/*.deb  && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*  
+
+
 #  x11-xserver-utils
 #    - xsetroot, a tool for tailoring the appearance of the root window;
 #
@@ -204,7 +213,6 @@ RUN apt-get update && \
 	adwaita-icon-theme \
 	adwaita-qt \
 	xclip \
-	openbox \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
