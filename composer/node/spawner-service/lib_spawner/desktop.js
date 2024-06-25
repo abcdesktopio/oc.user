@@ -205,14 +205,14 @@ async function generateDesktopFiles(list = []) {
   // run update-desktop-database 
   const updateproc = spawn('update-desktop-database', [`${roothomedir}/.local/share/applications`]);
   
-  // log error
+  // on stderr log error
   updateproc.stderr.on('data', (data) => {
-    console.log(`ps stderr: ${data}`);
+    console.log(`update-desktop-database stderr: ${data}`);
   });
 
-  // log exit code
+  // on exit log exit code
   updateproc.on('close', (code) => {
-        console.log(`ps process exited with code ${code}`);
+        console.log(`update-desktop-database process exited with code ${code}`);
   });
 
   // don't wait for updateproc
