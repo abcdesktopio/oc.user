@@ -24,13 +24,38 @@ const exec = util.promisify(childProcess.exec);
 
 const currentWallpaper = `${roothomedir}/.config/current_wallpaper`;
 
+
+/**
+ * 
+ * convert a hexa string color '#RRGGBB' to RGBPercent dictionary 
+ *
+ * @param {string} hex
+ * @param {bool} alpha
+ */
+function hexToRGBPercent(hex, alpha) {
+    let r = parseInt(hex.slice(1, 3), 16),
+        g = parseInt(hex.slice(3, 5), 16),
+        b = parseInt(hex.slice(5, 7), 16);
+
+    r = r / 255;
+    g = g / 255;
+    b = b / 255;
+    if (alpha) {
+	let a = alpha / 255;
+        return { r:r, g:g, b:b, a:a };
+    } else {
+        return  { r:r, g:g, b:b };
+    }
+}
+
+
 /**
  *
  * @param {string} color
  */
 async function xsetroot(color) {
   const ret = { code: 500, data: '' };
-  const command = `/usr/bin/xsetroot -solid "${color}"`;
+  const command = `/composer/esetroot.sh "${color}"`;
   console.log(command);
   try {
     await exec(command);
@@ -69,12 +94,38 @@ async function esetroot(imgName, bgColor) {
 /**
  *
  * @param {string} imgName
+ * @param {string} bgColor
+ */
+async function xfce4_esetroot(bgColor, imgName) {
+  const ret = { code: 500, data: 'unknow error' };
+  // const command = `Esetroot -bg "${bgColor}" -center -fit  "${imgName}"`;
+  // const command = `/usr/bin/feh --bg-fill "${imgName}"`;
+  // const command = `/usr/bin/feh --fullscreen --borderless --image-bg "${bgColor}" --bg-fill "${imgName}"`;
+  const rgbPercent = hexToRGBPercent( bgColor );
+  const command = `/composer/xfce4-esetroot.sh "${rgbPercent.r}" "${rgbPercent.g}" "${rgbPercent.b}" "${imgName}"`;
+  console.log(command);
+  try {
+    await exec(command);
+    ret.code = 200;
+    ret.data = 'ok';
+  } catch (err) {
+    console.error(err);
+    ret.data = err;
+  }
+  return ret;
+}
+
+
+
+/**
+ *
+ * @param {string} imgName
  */
 async function changeBgImage(imgName = '') {
   const ret = { code: 500, data: '' };
   try {
     const color = await colorflow(imgName);
-    const { code, data } = await esetroot(imgName, color);
+    const { code, data } = await xfce4_esetroot( color, imgName );
     if (code === 200) {
       await set('currentImgColor', color);
       await broadcast.broadcastevent('display.setBackgroundBorderColor', color);
@@ -134,7 +185,7 @@ function routerInit(router) {
       await fs.promises.unlink(currentWallpaper);
     }
 
-    const { code, data } = await xsetroot(color);
+    const { code, data } = await xfce4_esetroot(color);
     ret.code = code;
     ret.data = data;
 
