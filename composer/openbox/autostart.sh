@@ -7,6 +7,9 @@ echo "$(date) $1" >> $STDOUT_LOGFILE
 
 log "Start autostart"
 
+# start X composite manager
+# /usr/bin/compton &
+
 # default BG_COLOR is #6ec6f0
 ABCDESKTOP_BG_COLOR=${ABCDESKTOP_BG_COLOR:-'#6ec6f0'}
 # Change default backgroup color in X11
@@ -44,5 +47,6 @@ fi
 
 # set fonts for Qt applications
 # [[ -f ~/.Xresources ]] && xrdb -merge $HOME/.Xresources 2>>$STDOUT_LOGFILE
+
 
 log "End autostart"
