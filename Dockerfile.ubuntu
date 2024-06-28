@@ -1,12 +1,10 @@
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 # Default release is 22.04
-ARG TAG=latest
+ARG TAG
 # Default base image 
 ARG BASE_IMAGE=ubuntu
-# BASE_IMAGE_RELEASE deprecated
-ARG BASE_IMAGE_RELEASE=22.04
-
+ARG BASE_IMAGE_RELEASE=24.04
 # ABCDESKTOP_LOCALACCOUNT_DIR arg
 # use in ENV ABCDESKTOP_LOCALACCOUNT_DIR=$ABCDESKTOP_LOCALACCOUNT_DIR
 # release >= 3.1 set value to "/etc/localaccount"
@@ -19,7 +17,7 @@ ARG ABCDESKTOP_LOCALACCOUNT_DIR
 # create /composer/node
 # use FROM BASE_IMAGE
 # define FROM before use ENV command
-FROM ${BASE_IMAGE}:${TAG} as ubuntu_node_modules_builder
+FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} as ubuntu_node_modules_builder
 
 # define arg
 ARG TARGET_MODE
@@ -61,14 +59,14 @@ RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 # yarn install --production[=true|false]
 # yarn will not install any package listed in devDependencies if the NODE_ENV environment variable is set to production. 
 # Use this flag to instruct Yarn to ignore NODE_ENV and take its production-or-not status from this flag instead.
-# RUN git clone https://github.com/abcdesktopio/oc.user.libraries.git /composer/node/common-libraries
+RUN git clone https://github.com/abcdesktopio/oc.user.libraries.git /composer/node/common-libraries
 WORKDIR /composer/node/common-libraries
 RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 
 WORKDIR /composer/node/broadcast-service
 RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 
-# RUN git clone https://github.com/abcdesktopio/run-service.git /composer/node/ocrun
+RUN git clone https://github.com/abcdesktopio/run-service.git /composer/node/ocrun
 WORKDIR /composer/node/ocrun
 RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 
@@ -109,7 +107,7 @@ COPY composer/version.json /composer/version.json
 #
 # The main oc.user start here
 #
-FROM ${BASE_IMAGE}:${TAG}
+FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE}
 
 # define arg
 ARG ABCDESKTOP_LOCALACCOUNT_DIR
@@ -150,8 +148,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # tigervncserver_1.13.1-1ubuntu1_amd64.deb
 # tigervncserver_1.13.1-1ubuntu1_arm64.deb    
 # but replace by curl command to support dpkg --print-architecture for amd64 and arm64
+# tigervncserver_1.14.80-1ubuntu1_amd64.deb
 RUN apt-get update  && \  
-    tigervncdeburl="https://github.com/abcdesktopio/oc.user/raw/3.3/tigervncserver_1.13.1-1ubuntu1_$(dpkg --print-architecture).deb" && \
+    tigervncdeburl="https://github.com/abcdesktopio/oc.user/raw/3.3/tigervncserver_1.14.80-1ubuntu1_$(dpkg --print-architecture).deb" && \
     echo Downloading $tigervncdeburl && \
     curl -sL --output /tmp/tigervncserver.deb "$tigervncdeburl" && \  
     apt-get install -y --no-install-recommends /tmp/tigervncserver.deb && \
@@ -180,7 +179,10 @@ RUN apt-get update && \
 	adwaita-qt \
 	xclip \
 	openbox \
-	plank \	
+	plank \
+	xfdesktop4 \
+	dbus-x11 \
+
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
@@ -250,7 +252,7 @@ RUN date > /etc/build.date
 # install qterminal xfonts-base
 RUN if [ "${TARGET_MODE}" != "hardening" ]; then \
 	apt-get update && \
-	apt-get install -y --no-install-recommends qterminal xfonts-base && \
+	apt-get install -y --no-install-recommends qterminal xfonts-base vim && \
 	apt-get clean && rm -rf /var/lib/apt/lists/*; \
     fi
 
