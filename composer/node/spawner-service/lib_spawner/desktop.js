@@ -32,8 +32,7 @@ const asyncHandler = require('express-async-handler');
 const ini = require('./ini');
 const middlewares = require('./middlewares');
 const { set, get } = require('./utils');
-const { roothomedir, abcdesktoprundir } = require('../global-values');
-
+const { roothomedir, abcdesktoprundir, abcdesktoplogdir } = require('../global-values');
 const magic = new Magic(MAGIC_MIME_TYPE);
 
 /**
@@ -78,6 +77,28 @@ async function* filesearch(root = '', keywords = '') {
   }
 }
 
+function supervisorctl( method, service_name )
+{
+  let command = '/usr/bin/supervisorctl';
+  let args = [ method, service_name ];
+  console.log( command, method, service_name );
+  cmd = spawn(command, args );
+  cmd.stdout.on('data', (data) => {
+  	console.log(`${command} stdout: ${data}`);
+  });
+
+  cmd.stderr.on('data', (data) => {
+  	console.error(`${command} stderr: ${data}`);
+  });
+
+  cmd.on('close', (code) => {
+  	console.log(`${command} child process exited with code ${code}`);
+  }); 
+  
+}
+
+
+
 /**
  *
  * @param {string} _filename
@@ -112,6 +133,66 @@ function getmimeforfile(_filename) {
   });
 }
 
+
+async function generateDockitemfile( name, launch, desktopfile, showinview ) {
+  // filter to only showinview dock application
+  if ( showinview !== 'dock' ) return;
+  // create new dockitem file
+  const desktopfilepath  = `${roothomedir}/.local/share/applications/${desktopfile}`;
+  const deskitemfilepath = `${roothomedir}/.config/plank/dock1/launchers/${launch}.dockitem`;
+  const contentdeskitem = {};
+  contentdeskitem.Launcher = `file://${desktopfilepath}`;
+  const datadeskitem = ini.stringify(contentdeskitem, {section: 'PlankDockItemPreferences'});
+  console.log(`creating a new dockitem file ${deskitemfilepath} for desktopfile ${desktopfilepath}` );  
+  fs.promises.writeFile( deskitemfilepath, datadeskitem )
+    .catch( (err) => { console.log(`promises.writeFile error ${err}`); } );
+}
+
+async function generateIconfile( contentdesktop, icondata ) {  
+  fs.access(contentdesktop.Icon, fs.F_OK, (err) => {
+     // file does not exists
+     // decode base64 data it
+     if (err) {
+       if (icondata) {
+           console.log( `writing new icon file ${contentdesktop.Icon}` );
+           fs.writeFile(   contentdesktop.Icon,
+                           icondata,
+                           'base64',
+                           (err) => {
+                               if (err)
+                                 console.log( `error in write icon file ${contentdesktop.Icon} ${err}` );
+			       else
+				 console.log( `create a new file ${contentdesktop.Icon}` );
+                            }
+           );
+       }
+       else
+            console.log( `Icon data is null for file ${contentdesktop.Icon}` );
+     }
+ });
+}
+
+function checkifneedtostartservices( i, max )
+{
+      console.log( 'checkifneedtostartservices',  i, max );
+      if (i === max) {
+           supervisorctl( 'start', 'plank' );
+	   
+	   // All desktop files are created in ${roothomedir}/.local/share/applications
+  	   // run update-desktop-database
+           const command = spawn('update-desktop-database', [`${roothomedir}/.local/share/applications`]);
+           command.stderr.on('data', (data) => {
+    		console.log(`update-desktop-database: stderr ${data}`);
+  	   });
+           command.stdout.on('data', (data) => {
+                console.log(`update-desktop-database: stdout ${data}`);
+           });
+  	   command.on('close', (code) => {
+    		console.log(`update-desktop-database process exited with code ${code}`);
+  	   });
+      } 
+}
+
 /**
  * @param {Array<File>} list
  * @param {Function} callback
@@ -119,112 +200,142 @@ function getmimeforfile(_filename) {
  */
 async function generateDesktopFiles(list = []) {
   console.log('generateDesktopFiles');
-  console.log(`list of application len is ${list.length}`);
-  const applistfilepath = `${abcdesktoprundir}/dockstat.json' ;
-  fs.promises.writeFile( applistfilepath, JSON.stringify(list) );
+  console.log(`list of application len is ${list.length}`);	
   const ocrunpath = '/composer/node/ocrun/ocrun.js';
-  for ( let {
-    mimetype,
-    path,
-    executablefilename,
-    icon,
-    icondata,
-    icon_url,
-    name,
-    launch,
-    desktopfile,
-  } of list) {
-    console.log(`application name=${name}`);
-    if ( icon && launch ) {
-      // check if desktopfile has been define
-      if (!desktopfile) {
-	// if the desktopfile is not defined by the application metadata, we create a new one
-	desktopfile = `${launch}.desktop`;
+
+  console.log('generateDesktopFiles start');
+
+  // stop plank
+  supervisorctl( 'stop', 'plank' );
+
+  // dump applist.json file 
+  fs.promises.writeFile( `${abcdesktoplogdir}/applist.json`, JSON.stringify(list, null, 2) )
+    .catch( (err) => { console.log(`promises.writeFile error ${err}`); } );
+
+  // remove entry if launch key is not set
+  let i = list.length-1;
+  while (i >= 0) {
+    if ( !list[i].icon   || list[i].icon.length === 0 ||
+         !list[i].launch || list[i].launch.length === 0 ) {
+	    // launch is undefined, and this is an error
+	    // or icon is undefined 
+            // remove the entry
+	    console.log( `removing bad app entry in applist ${list[i]}` );
+            list.splice(i,1);
+    }
+    --i;
+  }
+
+  // check that the list is safe for async call
+  // the desktopfile must be unique
+  // only one desktopfile per application
+  let desktopfileflag = {};
+
+  i = 0;
+  // create a safe list with desktopfile for each entry
+  // make sure that desktopfile name execmode are defined 
+  // else create entry using launch value 
+  while (i < list.length) {
+    if (!list[i].desktopfile) {
+            // if the desktopfile is not defined by the application metadata, we create a new one
+            list[i].desktopfile = `${list[i].launch}.desktop`;
+    }
+    if (!list[i].name) 
+	  list[i].name = list[i].launch;
+    if (!list[i].execmode) 
+	  list[i].execmode = 'container';
+    ++i;
+  }
+
+  i = list.length-1;
+  // create a safe list with desktopfile for each entry
+  while (i >= 0) {
+    if (desktopfileflag[ list[i].desktopfile ]) {
+            // if the desktopfile is already defined
+	    // this is an error
+	    // remove the entry
+	    console.log( `removing double desktopfile ${list[i].desktopfile }`);
+            list.splice(i,1);
+    }
+    else {
+	desktopfileflag[ list[i].desktopfile ] = true; 
+    }
+    --i;
+  }
+
+  // now the list is safe for async call
+  i=0;
+  while (i < list.length) {
+      let mimetype = list[i].mimetype;
+      let showinview = list[i].showinview;
+      let path = list[i].path;
+      let executablefilename = list[i].executablefilename;
+      let execmode = list[i].execmode;
+      let icon = list[i].icon;
+      let icondata = list[i].icondata;
+      let icon_url = list[i].icon_url;
+      let name = list[i].name;
+      let launch = list[i].launch;
+      let displayname = list[i].displayname;
+      let cat = list[i].cat;
+      let desktopfile = list[i].desktopfile;
+
+      /*
+      if (processedDesktopFile.get(desktopfile)) {
+	      console.log( `error ${desktopfile} is defined twice` );
+	      const newdesktopfile = `${launch}.${Math.random().toString(36).substr(2, 5)}.desktop`;
+	      console.log( `rename new file ${desktopfile} as newdesktopfile` );
+	      desktopfile = newdesktopfile;
       }
-      // check if name has been define
-      if (!name) {
-      	name=launch;
-      }
+      */
       const filepath = `${roothomedir}/.local/share/applications/${desktopfile}`;
       console.log(`creating a new desktop file ${filepath} for application name=${name}` ); 
+      
+      // create contentdesktop	    
       const contentdesktop = {};
-      contentdesktop.Name = name;
-      contentdesktop.Exec = `${roothomedir}/.local/share/applications/bin/${launch} %U`;
+      const execcommand = `${roothomedir}/.local/share/applications/bin/${launch}`;
+      contentdesktop.Name = displayname;
+      contentdesktop.Exec = `${execcommand} %U`;
       if (mimetype && mimetype.length > 0)
         contentdesktop.MimeType = `${mimetype.join(';')};`;
       contentdesktop.Type = 'Application';
       contentdesktop.Icon = `${roothomedir}/.local/share/icons/${icon}`;
-      try {
-        fs.symlink(ocrunpath, `${roothomedir}/.local/share/applications/bin/${launch}`, () => {});
-        await fs.promises.writeFile(filepath, ini.stringify(contentdesktop, {
-          section: 'Desktop Entry',
-        }));
-
-        // Add a quick file name based on the seconde part of the launch key
-        // const binaryFilename = launch.split('.');
-        // if (Array.isArray(binaryFilename) && binaryFilename.length > 1) {
-        //  const binf = binaryFilename[1].toLowerCase();
-        //  // a char or more must exists
-        //  if (binf.length > 0) { fs.symlink(ocrunpath, `/home/balloon/.local/share/applications/bin/${binf}`, () => { }); }
-        // }
-      } catch (e) {
-        console.log(e);
-      }
+      if (cat)
+        contentdesktop.Categories = cat;
       
-      fs.access(contentdesktop.Icon, fs.F_OK, (err) => {
-        // console.log(err);
-        // file does not exists
-        // decode base64 data it
-        if (err) {
-        if (icondata) {
-            console.log( 'writing new icon file ' + contentdesktop.Icon );
-            fs.writeFile(   contentdesktop.Icon, 
-                            icondata,
-                            'base64',
-                            (err) => {
-                                if (err)
-                                    console.log('error in write icon file ' + contentdesktop.Icon + ' ' + err);
-                            } 
-            );
-        }
-        else
-            console.log( 'Icon data is null for file ' + contentdesktop.Icon );
-        }
-      });
+      generateIconfile( contentdesktop, icondata );
 
-    }
-  }
-
-
-  for ( let { name, launch, desktopfile, showinview } of list) {
-    console.log(`application name=${name}`);
-    if ( launch ) {
-      if ( showinview != 'dock' )
-	      continue;
-      // check if desktopfile has been define
-      if (!desktopfile) {
-            // if the desktopfile is not defined by the application metadata, we create a new one
-            desktopfile = `${launch}.desktop`;
+      //    .then( () => { processedDesktopFile[desktopfile] = true; } )
+      fs.promises.writeFile( filepath, ini.stringify(contentdesktop, { section: "Desktop Entry" }) )
+      .then( fs.symlink( ocrunpath, 
+	                 execcommand,
+	      		 'file',
+	      		 (err) => {
+				if (err) 
+				{
+				  // skip errno EEXIST
+  				  if (err.errno && err.errno === -17)
+				     console.log( `Symlink already exists ${execcommand}` );
+				  else
+    				     console.log(err);
+				}
+  				else 
+				  console.log( `Symlink created ${execcommand}` );
+			 }
+             ))
+      .then( generateDockitemfile( name, launch, desktopfile, showinview ) )
+      .then( checkifneedtostartservices( i, list.length -1 ) ) 
+      .catch(err => { console.log('promises.writeFile error' + err);} );
+ 
+      if (i === list.length -1) { 
+	   supervisorctl( 'start', 'plank' );
       }
-      const desktopfilepath = `${roothomedir}/.local/share/applications/${desktopfile}`;
-      const deskitemfilepath =  `${roothomedir}/.config/plank/dock1/launchers/${launch}.dockitem`;
-      console.log(`creating a new dockitem file ${deskitemfilepath} for desktopfile ${desktopfilepath}` );
-      const contentdeskitem = {};
-      contentdeskitem.Launcher = `file://${desktopfilepath}`;
-      fs.promises.writeFile(	deskitemfilepath, 
-	      			ini.stringify(contentdeskitem, { section: 'PlankDockItemPreferences'})
-      );
-    }
+      ++i;
   }
-
   
-  // All desktop files are created in ${roothomedir}/.local/share/applications 
-  // run update-desktop-database 
-  const updateproc = spawn('update-desktop-database', [`${roothomedir}/.local/share/applications`]);
-  updateproc.stderr.on('data', (data) => {
-    console.log(`ps stderr: ${data}`);
-  });
+  return Promise.resolve({ code: 200, data: 'OK' });
 
+  /*
   return new Promise((resolve) => {
     updateproc.on('close', (code) => {
       if (code !== 0) {
@@ -233,6 +344,7 @@ async function generateDesktopFiles(list = []) {
       resolve({ code: 200, data: 'OK' });
     });
   });
+  */
 }
 
 /**
