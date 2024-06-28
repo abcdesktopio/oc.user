@@ -12,23 +12,23 @@ WALLPAPER_PATH=~/.wallpapers
 
 ## Export Var
 export NAMESPACE=${POD_NAMESPACE:-'abcdesktop'}
-echo   NAMESPACE=${NAMESPACE}
 export LIBOVERLAY_SCROLLBAR=0
 export UBUNTU_MENUPROXY=
 export DISPLAY=${DISPLAY:-':0'}
 export X11LISTEN=${X11LISTEN:-'udp'}
-echo   X11LISTEN=${X11LISTEN}
 export USER=${USER:-'balloon'}
 export HOME=${HOME:-'/home/balloon'}
 export LOGNAME=${LOGNAME:-'balloon'}
 export PATH="$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:$HOME/.local/share/applications/bin/"
 export ABCDESKTOP_RUN_DIR=${ABCDESKTOP_RUN_DIR:-'/var/run/desktop'}
 export ABCDESKTOP_SECRETS_DIR="/var/secrets/$NAMESPACE"
+export ABCDESKTOP_LOG_DIR=${ABCDESKTOP_LOG_DIR:-'/var/log/desktop'}
 export DISABLE_REMOTEIP_FILTERING=${DISABLE_REMOTEIP_FILTERING:-'disabled'}
 export BROADCAST_COOKIE=${BROADCAST_COOKIE:-$ABCDESKTOP_SESSION}
 export SUPERVISOR_PID_FILE=/var/run/desktop/supervisord.pid
 export X11_SIZE_WIDTH=${X11_SIZE_WIDTH:-1920}
 export X11_SIZE_HEIGHT=${X11_SIZE_HEIGHT:-1080}
+export XDG_SESSION_TYPE=${XDG_SESSION_TYPE:-x11}
 
 # TRAP for container signal SIGINT SIGQUIT SIGHUP SIGTERM
 stop() {
@@ -45,7 +45,11 @@ trap stop SIGINT SIGQUIT SIGHUP SIGTERM
 
 # Read first $POD_IP if not set get from hostname -i ip addr
 export CONTAINER_IP_ADDR=${POD_IP:-$(hostname -i)}
+
+# dump vars
+echo NAMESPACE=${NAMESPACE}
 echo "Container local ip addr is $CONTAINER_IP_ADDR"
+echo X11LISTEN=${X11LISTEN}
 
 # export DBUS_SESSION_BUS_ADDRESS=tcp:host=localhost,bind=*,port=55556,family=ipv4
 
@@ -66,20 +70,44 @@ id
 # Clean lock 
 rm -rf /tmp/.X0-lock
 
+
+
 # get VNC_PASSWORD 
 # use vncpasswd command line to create a vnc passwd file
 mkdir -p ${ABCDESKTOP_RUN_DIR}/.vnc
 # read the vnc password from the kubernetes secret
 if [ -f ${ABCDESKTOP_SECRETS_DIR}/vnc/password ]; then
         echo 'vnc password use kubernetes secret'
-	cat ${ABCDESKTOP_SECRETS_DIR}/vnc/password | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
+        cat ${ABCDESKTOP_SECRETS_DIR}/vnc/password | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
 else
-	echo 'error not vnc password has been set, everything is going wrong'
-	echo "run a ls -la ${ABCDESKTOP_SECRETS_DIR}/vnc to help troubleshooting"
-	ls -la ${ABCDESKTOP_SECRETS_DIR}/vnc
-	echo 'fix use changemeplease as vncpassword'
-	echo changemeplease | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
+        echo 'error not vnc password has been set, everything is going wrong'
+        echo "run a ls -la ${ABCDESKTOP_SECRETS_DIR}/vnc to help troubleshooting"
+        ls -la ${ABCDESKTOP_SECRETS_DIR}/vnc
+        echo 'fix use changemeplease as vncpassword'
+        echo changemeplease | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
 fi
+
+
+
+
+## get VNC_PASSWORD 
+## use vncpasswd command line to create a vnc passwd file
+#mkdir -p ${ABCDESKTOP_RUN_DIR}/.vnc
+## read the vnc password from the kubernetes secret
+#if [ -f ${ABCDESKTOP_SECRETS_DIR}/vnc/password ]; then
+#        echo 'vnc password use kubernetes secret'
+#	VNCPASSWORD=$(cat ${ABCDESKTOP_SECRETS_DIR}/vnc/password)
+#	# use printf instead of echo 
+#	# with echo ecommand getpass error: Inappropriate ioctl for device
+#	printf "$VNCPASSWORD\n$VNCPASSWORD\n" | vncpasswd -u $USER -rw ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
+#	# cat ${ABCDESKTOP_SECRETS_DIR}/vnc/password | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
+#else
+#	echo 'error not vnc password has been set, everything is going wrong'
+#	echo "run a ls -la ${ABCDESKTOP_SECRETS_DIR}/vnc to help troubleshooting"
+#	ls -la ${ABCDESKTOP_SECRETS_DIR}/vnc
+#	echo 'fix use changemeplease as vncpassword'
+#	echo changemeplease | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
+#fi
 
 
 # create a MIT-MAGIC-COOKIE-1 entry in .Xauthority
@@ -134,8 +162,6 @@ if [ ! -d ~/.config/nautilus ]; then
 	echo "create ~/.config/nautilus directory"
         mkdir -p ~/.config/nautilus
 fi
-
-
 if [ ! -d ~/.config/plank/dock1/launchers ]; then
         echo "create ~/.config/plank/dock1/launchers directory"
         mkdir -p ~/.config/plank/dock1/launchers
@@ -213,7 +239,11 @@ if [ -d ~/.local/share/applications ]; then
 fi
 
 # always create ~/.local/share/applications/bin
-mkdir -p ~/.local/share/mime ~/.local/share/applications/bin
+mkdir -p ~/.local/share/mime ~/.local/share/applications/bin ~/.local/share/xfce4/helpers
+
+if [ -x /usr/bin/xfce4-session ]; then 
+	mkdir -p ~/.local/share/xfce4/helpers
+fi 
 
 if [ ! -d ~/.local/share/icons ]; then
   	cp -rp /composer/icons ~/.local/share &
@@ -312,6 +342,10 @@ export EXTERNAL_DESKTOP_DOMAIN
 #   fi
 #fi
 
+
+if [ -x /usr/bin/dbus-launch ]; then
+	export $(/usr/bin/dbus-launch)
+fi
 
 ## KERBEROS SECTION
 if [ -f ${ABCDESKTOP_SECRETS_DIR}/kerberos/keytab ]; then
