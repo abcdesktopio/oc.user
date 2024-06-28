@@ -18,5 +18,5 @@ if [ -d /proc/driver/nvidia ]; then
 fi
 
 # fallback to tigervnc
-exec /composer/tigervnc.sh
+exec /composer/xvnc.sh
  
