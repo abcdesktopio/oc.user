@@ -102,6 +102,10 @@ do
 done
 echo "Container services are started TRY_COUNT=$TRY_COUNT SERVICE_COUNT=$SERVICE_COUNT/$MAX_SERVICE_COUNT"
 
+# start plank
+docker exec ${CONTAINER_ID} /usr/bin/supervisorctl start plank
+
+
 # run tests
 echo "Run tests..."
 docker exec ${CONTAINER_ID} bash -e /composer/node/run-tests.sh
