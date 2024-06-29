@@ -102,7 +102,9 @@ async function xfce4_esetroot(bgColor, imgName) {
   // const command = `/usr/bin/feh --bg-fill "${imgName}"`;
   // const command = `/usr/bin/feh --fullscreen --borderless --image-bg "${bgColor}" --bg-fill "${imgName}"`;
   const rgbPercent = hexToRGBPercent( bgColor );
-  const command = `/composer/xfce4-esetroot.sh "${rgbPercent.r}" "${rgbPercent.g}" "${rgbPercent.b}" "${imgName}"`;
+  const command = `/composer/xfce4-esetroot.sh ${rgbPercent.r} ${rgbPercent.g} ${rgbPercent.b}"`;
+  if (imgName)
+  	command += command + ` ${imgName}`;
   console.log(command);
   try {
     await exec(command);
