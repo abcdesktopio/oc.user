@@ -10,8 +10,7 @@ ESETROOT_LOGFILE=$ABCDESKTOP_LOG_DIR/esetroot.log
 echo "bgColor=$RrbgColor $GrbgColor $BrbgColor" &>> $ESETROOT_LOGFILE
 echo "imgName=$imgName" &>> $ESETROOT_LOGFILE
 
-/usr/bin/xfconf-query --create -c xfce4-desktop -p /backdrop/screen0/monitorVNC-0/workspace0/rgba1
-/usr/bin/xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorVNC-0/workspace0/rgba1 -t double -t double -t double -t double -s $RrbgColor -s $GrbgColor -s $BrbgColor -s 1
+/usr/bin/xfconf-query --create -c xfce4-desktop -p /backdrop/screen0/monitorVNC-0/workspace0/rgba1 -t double -t double -t double -t double -s $RrbgColor -s $GrbgColor -s $BrbgColor -s 1
 
 
 if [ ! -z "$imgName" ]; then
