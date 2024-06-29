@@ -112,7 +112,7 @@ async function xfce4_esetroot(bgColor, imgName) {
     ret.data = 'ok';
   } catch (err) {
     console.error(err);
-    ret.data = err;
+    ret.data = 'Internal server error';
   }
   return ret;
 }
