@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref_name }}
-          submodules: true
+          submodules: false
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -41,8 +41,7 @@ jobs:
           build-args: |
             TARGET_MODE=${{ matrix.target_mode }}
             ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount
-            TAG=22.04
-            BASE_IMAGE_RELEASE=22.04
+            BASE_IMAGE_RELEASE=24.04
             BASE_IMAGE=ubuntu
           tags: abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ env.imagetag }}
 
@@ -51,7 +50,7 @@ jobs:
           TARGET_MODE=${{ matrix.target_mode }} ./make-test.sh abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ env.imagetag }}
     
       - name: Build and push image oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile.ubuntu
@@ -60,8 +59,7 @@ jobs:
           build-args: |
             TARGET_MODE=${{ matrix.target_mode }}
             ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount
-            TAG=22.04
-            BASE_IMAGE_RELEASE=22.04
+            BASE_IMAGE_RELEASE=24.04
             BASE_IMAGE=ubuntu
           tags: abcdesktopio/oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
       
