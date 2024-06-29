@@ -12,6 +12,42 @@ ARG BASE_IMAGE_RELEASE=24.04
 ARG ABCDESKTOP_LOCALACCOUNT_DIR
 # ="/etc/localaccount"
 
+
+
+#
+# create package for openbox
+# deb files will be located in /root/packages/$(uname -m) directory 
+# patched with openbox.title.patch for abcdesktop
+# script run commands step by step 
+# this dockerfile scetion is used to generate .deb file
+# gnome-panel-control_3.6.1-12build5.1_amd64.deb  
+# libobt2v5_3.6.1-12build5.1_amd64.deb    
+# openbox-gnome-session_3.6.1-12build5.1_all.deb  
+# openbox_3.6.1-12build5.1_amd64.deb
+# libobrender32v5_3.6.1-12build5.1_amd64.deb      
+# openbox-dev_3.6.1-12build5.1_amd64.deb  
+# openbox-kde-session_3.6.1-12build5.1_all.deb
+FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} as openbox_ubuntu_builder
+ENV DEBEMAIL dev@abcdesktop.io
+ENV EMAIL    dev@abcdesktop.io
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+RUN sed -Ei 's/^Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources 
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends devscripts wget ca-certificates
+RUN apt-get build-dep -y openbox
+RUN mkdir -p /openbox/src
+WORKDIR /openbox
+RUN apt-get source openbox
+RUN wget https://raw.githubusercontent.com/abcdesktopio/openbox/main/openbox.title.patch
+RUN cd openbox-3.6.1 && patch -p2 < ../openbox.title.patch
+RUN cd openbox-3.6.1 && dch -n abcdesktop_sig_usr
+RUN cd openbox-3.6.1 && EDITOR=/bin/true dpkg-source -q --commit . abcdesktop_sig_usr
+RUN cd openbox-3.6.1 && debuild -us -uc
+RUN ls *.deb
+
+
+
+
 # install all nodejs modules
 # build nodejs module
 # create /composer/node
@@ -178,12 +214,19 @@ RUN apt-get update && \
 	adwaita-icon-theme \
 	adwaita-qt \
 	xclip \
-	openbox \
 	plank \
 	xfdesktop4 \
 	dbus-x11 \
-
     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
+# install openbox custome packages 
+RUN mkdir -p /tmp/packages
+COPY --from=openbox_ubuntu_builder /openbox/libobt* /openbox/openbox_3.6.1* /openbox/libobrender* /tmp/packages/
+RUN apt-get update  && \
+        apt-get install -y --no-install-recommends -f /tmp/packages/*.deb  && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 
 # Uncommant lines to add picom compositor and watermarking support 
