@@ -130,12 +130,11 @@ async function changeBgImage(imgName = '') {
     if (code === 200) {
       await set('currentImgColor', color);
       await broadcast.broadcastevent('display.setBackgroundBorderColor', color);
-
       ret.code = code;
       ret.data = { color: color, subData: data };
     }
   } catch (err) {
-    ret.data = err;
+    console.error(err);
   }
   return ret;
 }
