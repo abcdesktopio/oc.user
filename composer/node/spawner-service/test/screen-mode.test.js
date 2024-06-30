@@ -155,7 +155,6 @@ describe('Test screen-mode endpoints', () => {
   });
 
 
-/*
   describe('Tests for setDefaultImage', () => {
     beforeAll(() => { // Remove the current wallpaper builded by the previous setBackgroundImage
       fs.unlinkSync(`${roothomedir}/.config/current_wallpaper`);
@@ -190,9 +189,7 @@ describe('Test screen-mode endpoints', () => {
 
     for (const imgName of wallpapers) {
       it(`Should setDefaultImage and check broadcast event for img [${imgName}]`, () => {
-        const ws = new WebSocketClient(buri, {
-          host: process.env.CONTAINER_IP,
-        });
+        const ws = new WebSocketClient(buri, [],{host: process.env.CONTAINER_IP });
 
         return new Promise(async (resolve, reject) => {
           try {
@@ -224,6 +221,5 @@ describe('Test screen-mode endpoints', () => {
       }, 20000);
     }
   });
-  */
 
 });
