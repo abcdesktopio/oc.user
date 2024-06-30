@@ -97,12 +97,12 @@ async function esetroot(imgName, bgColor) {
  * @param {string} bgColor
  */
 async function xfce4_esetroot(bgColor, imgName) {
-  const ret = { code: 500, data: 'unknow error' };
+  const ret = { code: 500, data: 'Internal server error' };
   // const command = `Esetroot -bg "${bgColor}" -center -fit  "${imgName}"`;
   // const command = `/usr/bin/feh --bg-fill "${imgName}"`;
   // const command = `/usr/bin/feh --fullscreen --borderless --image-bg "${bgColor}" --bg-fill "${imgName}"`;
   const rgbPercent = hexToRGBPercent( bgColor );
-  const command = `/composer/xfce4-esetroot.sh ${rgbPercent.r} ${rgbPercent.g} ${rgbPercent.b}"`;
+  const command = `/composer/xfce4-esetroot.sh ${rgbPercent.r} ${rgbPercent.g} ${rgbPercent.b}`;
   if (imgName)
   	command += command + ` ${imgName}`;
   console.log(command);
@@ -112,7 +112,6 @@ async function xfce4_esetroot(bgColor, imgName) {
     ret.data = 'ok';
   } catch (err) {
     console.error(err);
-    ret.data = 'Internal server error';
   }
   return ret;
 }
@@ -124,7 +123,7 @@ async function xfce4_esetroot(bgColor, imgName) {
  * @param {string} imgName
  */
 async function changeBgImage(imgName = '') {
-  const ret = { code: 500, data: '' };
+  const ret = { code: 500, data: 'Internal server error' };
   try {
     const color = await colorflow(imgName);
     const { code, data } = await xfce4_esetroot( color, imgName );
@@ -176,7 +175,7 @@ function routerInit(router) {
    */
   router.post('/setBackgroundColor', middlewares.get('setBackgroundColor'), asyncHandler(async (req, res) => {
     const { color = '' } = req.body;
-    const ret = { code: 500, data: '' };
+    const ret = { code: 500, data: 'Internal server error' };
     let currentWallPaperExist = false;
     try {
       await fs.promises.access(currentWallpaper, fs.constants.F_OK);
@@ -242,7 +241,7 @@ function routerInit(router) {
   router.post('/setBackgroundImage', middlewares.get('setBackgroundImage'), asyncHandler(async (req, res) => {
     const { imgName = '' } = req.body;
     const imgFullpath = `${roothomedir}/.wallpapers/${imgName}`;
-    const ret = { code: 500, data: '' };
+    const ret = { code: 500, data: 'Internal server error' };
     let imageExist = false;
     try {
       await fs.promises.access(imgFullpath, fs.constants.F_OK);
