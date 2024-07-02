@@ -169,8 +169,6 @@ describe('Test screen-mode endpoints', () => {
 
     for (const imgName of wallpapers) {
 
-      console.log( `${roothomedir}/.wallpapers/${imgName}` );
-
       it(`Should setDefaultImage for img [${imgName}]`, async () => {
         const color = await colorflow(`${roothomedir}/.wallpapers/${imgName}`);
 	console.log( `using ${imgName} return ${color}` );
