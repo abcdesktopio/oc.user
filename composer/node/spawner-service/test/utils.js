@@ -60,7 +60,7 @@ const callbackExpectOk = (res) => {
   const { body } = res;
   if (res.status === 500) {
     expect(body).toEqual({ code: 500, data: 'Internal server error' });
-    console.warn('Internal server error but it was handled');
+    // console.warn('Internal server error but it was handled');
   } else {
     expect(body).toEqual({ code: 200, data: 'ok' });
   }
@@ -81,7 +81,7 @@ const callBackExpect = (expected, expectedStatus = 200) => (res) => {
 	console.log( 'body.data:', body.data );
     	expect(body).toEqual({ code: 500, data: 'Internal server error' });
     }
-    console.warn('Internal server error but it was handled');
+    // console.warn('Internal server error but it was handled');
   } else {
     expect(expectedStatus).toBe(res.status);
     expect(body).toEqual(expected);
@@ -100,7 +100,7 @@ const callBackExpectOnly = (expected, expectedStatus = 200) => (res) => {
         console.log( body );
         expect(body).toEqual({ code: 500, data: 'Internal server error' });
     }
-    console.warn('Internal server error but it was handled');
+    // console.warn('Internal server error but it was handled');
   } else {
     expect(expectedStatus).toBe(res.status);
     expectedkeys = Object.keys(expected);
