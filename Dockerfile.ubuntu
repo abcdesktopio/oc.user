@@ -33,7 +33,7 @@ ENV EMAIL    dev@abcdesktop.io
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 RUN sed -Ei 's/^Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources 
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends devscripts wget ca-certificates
+RUN apt-get install -y --no-install-recommends devscripts wget ca-certificates cmake
 RUN apt-get build-dep -y openbox
 RUN mkdir -p /openbox/src
 WORKDIR /openbox
@@ -45,6 +45,24 @@ RUN cd openbox-3.6.1 && EDITOR=/bin/true dpkg-source -q --commit . abcdesktop_si
 RUN cd openbox-3.6.1 && debuild -us -uc
 RUN ls *.deb
 
+
+#
+# create picom-11.2
+#
+FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} as picom_ubuntu_builder
+ENV DEBEMAIL dev@abcdesktop.io
+ENV EMAIL    dev@abcdesktop.io
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+RUN sed -Ei 's/^Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends  devscripts wget ca-certificates 
+RUN apt-get install -y --no-install-recommends devscripts wget ca-certificates libconfig-dev libdbus-1-dev libegl-dev libev-dev libgl-dev libepoxy-dev libpcre2-dev libpixman-1-dev libx11-xcb-dev libxcb1-dev libxcb-composite0-dev libxcb-damage0-dev libxcb-dpms0-dev libxcb-glx0-dev libxcb-image0-dev libxcb-present-dev libxcb-randr0-dev libxcb-render0-dev libxcb-render-util0-dev libxcb-shape0-dev libxcb-util-dev libxcb-xfixes0-dev libxext-dev meson ninja-build uthash-dev
+RUN apt-get build-dep -y picom
+RUN wget https://github.com/yshui/picom/archive/refs/tags/v11.2.tar.gz
+RUN tar -xvf v11.2.tar.gz
+WORKDIR /picom-11.2
+RUN meson setup --reconfigure -Dcompton=false --buildtype=release build
+RUN ninja -C build install
 
 
 
@@ -228,7 +246,17 @@ RUN apt-get update  && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+# install picom-11.2
+COPY --from=picom_ubuntu_builder /picom-11.2/build/src/picom /usr/bin
+COPY --from=picom_ubuntu_builder /picom-11.2/bin/picom-trans /usr/bin
+COPY --from=picom_ubuntu_builder /picom-11.2/picom.desktop /usr/share/applications
+RUN apt-get update  && \
+    apt-get install -y --no-install-recommends \
+          libdbus-1-3 libegl1  libev4t64 libgl1 libepoxy0 libpixman-1-0 libx11-xcb1 libxcb1 libxcb-composite0 libxcb-damage0 libxcb-dpms0 libconfig9 libxcb-glx0 libxcb-image0 libxcb-present0 libxcb-randr0 libxcb-render0 libxcb-render-util0 libxcb-shape0 libxcb-util1 libxcb-xfixes0 libxext6 libxcb-xinerama0 && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
+#
 # Uncommant lines to add picom compositor and watermarking support 
 #
 # to add compositor ( this option takes more memory in user's pod )
