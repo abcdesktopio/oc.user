@@ -134,7 +134,7 @@ function getmimeforfile(_filename) {
 }
 
 
-async function generateDockitemfile( name, launch, desktopfile, showinview ) {
+function generateDockitemfile( name, launch, desktopfile, showinview ) {
   // filter to only showinview dock application
   if ( showinview !== 'dock' ) return;
   // create new dockitem file
@@ -144,53 +144,68 @@ async function generateDockitemfile( name, launch, desktopfile, showinview ) {
   contentdeskitem.Launcher = `file://${desktopfilepath}`;
   const datadeskitem = ini.stringify(contentdeskitem, {section: 'PlankDockItemPreferences'});
   console.log(`creating a new dockitem file ${deskitemfilepath} for desktopfile ${desktopfilepath}` );  
-  fs.promises.writeFile( deskitemfilepath, datadeskitem )
-    .catch( (err) => { console.log(`promises.writeFile error ${err}`); } );
+  return fs.promises.writeFile( deskitemfilepath, datadeskitem )
 }
 
-async function generateIconfile( contentdesktop, icondata ) {  
-  fs.access(contentdesktop.Icon, fs.F_OK, (err) => {
-     // file does not exists
-     // decode base64 data it
-     if (err) {
-       if (icondata) {
-           console.log( `writing new icon file ${contentdesktop.Icon}` );
-           fs.writeFile(   contentdesktop.Icon,
-                           icondata,
-                           'base64',
-                           (err) => {
-                               if (err)
-                                 console.log( `error in write icon file ${contentdesktop.Icon} ${err}` );
-			       else
-				 console.log( `create a new file ${contentdesktop.Icon}` );
-                            }
-           );
-       }
-       else
-            console.log( `Icon data is null for file ${contentdesktop.Icon}` );
-     }
- });
+function generateIconfile( contentdesktop, icondata ) {  
+  let iconpromise = fs.promises.writeFile(   
+	   		contentdesktop.Icon,
+                      	icondata,
+                       	'base64',
+                       	(err) => {
+                    		if (err)
+                              		console.log( `error in write icon file ${contentdesktop.Icon} ${err}` );
+		       		else
+			 		console.log( `create a new file ${contentdesktop.Icon}` );
+                            	}
+  );
+  return iconpromise;
+}
+
+function startservices() {
+	   supervisorctl( 'start', 'plank' );
+
+           // All desktop files are created in ${roothomedir}/.local/share/applications
+           // run update-desktop-database
+           const command = spawn('update-desktop-database', [`${roothomedir}/.local/share/applications`]);
+           command.stderr.on('data', (data) => {
+                console.log(`update-desktop-database: stderr ${data}`);
+           });
+           command.stdout.on('data', (data) => {
+                console.log(`update-desktop-database: stdout ${data}`);
+           });
+           command.on('close', (code) => {
+                console.log(`update-desktop-database process exited with code ${code}`);
+           });
 }
 
 function checkifneedtostartservices( i, max )
 {
       console.log( 'checkifneedtostartservices',  i, max );
       if (i === max) {
-           supervisorctl( 'start', 'plank' );
-	   
-	   // All desktop files are created in ${roothomedir}/.local/share/applications
-  	   // run update-desktop-database
-           const command = spawn('update-desktop-database', [`${roothomedir}/.local/share/applications`]);
-           command.stderr.on('data', (data) => {
-    		console.log(`update-desktop-database: stderr ${data}`);
-  	   });
-           command.stdout.on('data', (data) => {
-                console.log(`update-desktop-database: stdout ${data}`);
-           });
-  	   command.on('close', (code) => {
-    		console.log(`update-desktop-database process exited with code ${code}`);
-  	   });
-      } 
+	   startservices();
+      }
+}
+
+
+function symlinkPromise( ocrunpath, execcommand)
+{
+  let symlink = fs.promises.symlink( ocrunpath, execcommand, 'file',
+                         (err) => {
+                                if (err)
+                                {
+                                  // skip errno EEXIST
+                                  if (err.errno && err.errno === -17) {
+                                     console.log( `Symlink already exists ${execcommand}` );
+                                  }
+                                  else
+                                     console.log(err);
+                                }
+                                else
+                                  console.log( `Symlink created ${execcommand}` );
+                         }
+   ).catch( (err) => { console.log(`fs.promises.symlink error ${err}`); } );
+   return symlink;
 }
 
 /**
@@ -263,6 +278,8 @@ async function generateDesktopFiles(list = []) {
     --i;
   }
 
+
+  let allPromises = [];
   // now the list is safe for async call
   i=0;
   while (i < list.length) {
@@ -280,14 +297,6 @@ async function generateDesktopFiles(list = []) {
       let cat = list[i].cat;
       let desktopfile = list[i].desktopfile;
 
-      /*
-      if (processedDesktopFile.get(desktopfile)) {
-	      console.log( `error ${desktopfile} is defined twice` );
-	      const newdesktopfile = `${launch}.${Math.random().toString(36).substr(2, 5)}.desktop`;
-	      console.log( `rename new file ${desktopfile} as newdesktopfile` );
-	      desktopfile = newdesktopfile;
-      }
-      */
       const filepath = `${roothomedir}/.local/share/applications/${desktopfile}`;
       console.log(`creating a new desktop file ${filepath} for application name=${name}` ); 
       
@@ -303,48 +312,26 @@ async function generateDesktopFiles(list = []) {
       if (cat)
         contentdesktop.Categories = cat;
       
-      generateIconfile( contentdesktop, icondata );
-
-      //    .then( () => { processedDesktopFile[desktopfile] = true; } )
-      fs.promises.writeFile( filepath, ini.stringify(contentdesktop, { section: "Desktop Entry" }) )
-      .then( fs.symlink( ocrunpath, 
-	                 execcommand,
-	      		 'file',
-	      		 (err) => {
-				if (err) 
-				{
-				  // skip errno EEXIST
-  				  if (err.errno && err.errno === -17)
-				     console.log( `Symlink already exists ${execcommand}` );
-				  else
-    				     console.log(err);
-				}
-  				else 
-				  console.log( `Symlink created ${execcommand}` );
-			 }
-             ))
-      .then( generateDockitemfile( name, launch, desktopfile, showinview ) )
-      .then( checkifneedtostartservices( i, list.length -1 ) ) 
-      .catch(err => { console.log('promises.writeFile error' + err);} );
- 
-      if (i === list.length -1) { 
-	   supervisorctl( 'start', 'plank' );
-      }
+      // this call is sync 
+      // make sure that the desktopfile exists for next promise
+      fs.writeFileSync( filepath, ini.stringify(contentdesktop, { section: "Desktop Entry" }) );
+      if (icon && icondata)
+      	allPromises.push( generateIconfile( contentdesktop, icondata ) );
+      allPromises.push( symlinkPromise( ocrunpath, execcommand ) );
+      allPromises.push( generateDockitemfile( name, launch, desktopfile, showinview ) );
       ++i;
   }
-  
+
+  Promise.all( allPromises )
+  .then((values) => {})
+  .catch(err => { console.log('allpromises.writeFile error' + err);} )
+  .finally(() => {
+    startservices();
+    console.log('allPromises completed');
+  });
+  console.log('return Promise');
   return Promise.resolve({ code: 200, data: 'OK' });
 
-  /*
-  return new Promise((resolve) => {
-    updateproc.on('close', (code) => {
-      if (code !== 0) {
-        console.log(`ps process exited with code ${code}`);
-      }
-      resolve({ code: 200, data: 'OK' });
-    });
-  });
-  */
 }
 
 /**
