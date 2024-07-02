@@ -12,17 +12,12 @@
 */
 
 const fs = require('fs');
-const {
-  spawn,
-  spawnSync
-} = require('child_process');
+const { spawn, spawnSync } = require('child_process');
 const process = require('process');
-
 const os = require('os');
 const geoip = require('geoip-lite');
 const asyncHandler = require('express-async-handler');
-
-const parser = require('accept-language-parser');
+const resolveAcceptLanguage = require('resolve-accept-language');
 const globalValues = require('../global-values');
 
 /**
@@ -200,6 +195,7 @@ async function about(clientIpAddr) {
   jsonres.clientipaddr = clientIpAddr;
   jsonres.country = country || 'default value';
   jsonres.language = globalValues.language || 'default value';
+  jsonres.allsupportedlanguages = globalValues.supportedLanguages;
 
   try {
     jsonres.build = await fs.promises.readFile('/etc/build.date', 'utf8');
@@ -264,25 +260,23 @@ function callbackExec(err, command, args) {
  * @param {*} httpHeaderAcceptLanguage
  */
 function setCultureInfo(httpHeaderAcceptLanguage) {
-  if (!httpHeaderAcceptLanguage) {
-    return;
-  }
+  let language = 'en-US'; // default value 
 
+  if (!httpHeaderAcceptLanguage) {
+    return language;
+  }
+  console.log( 'httpHeaderAcceptLanguage:', httpHeaderAcceptLanguage);
+  console.log( 'globalValues.supportedLanguages:', globalValues.supportedLanguages );
   try {
-    const parserlanguage = parser.parse(httpHeaderAcceptLanguage);
-    for (const pl of parserlanguage) {
-      const { code, region } = pl;
-      if (code && region) {
-        for (const suportedLanguage of globalValues.supportedLanguages) {
-          if (suportedLanguage === code) {
-            globalValues.language = `${code}_${region}`;
-            console.log(`setCultureInfo${globalValues.language}`);
-            return;
-          }
-        }
-      }
-    }
+   language = resolveAcceptLanguage.resolveAcceptLanguage(
+    	httpHeaderAcceptLanguage, // The HTTP accept-language header.
+    	globalValues.supportedLanguages, // The available locales (they must contain the default locale).
+    	'en-US' // The default locale.
+   );
+   console.log( 'resolveAcceptLanguage.resolveAcceptLanguage language:', language);
+   globalValues.language = language;
   } catch (e) { console.error(e); }
+  return language; 
 }
 
 /**

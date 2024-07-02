@@ -16,11 +16,9 @@ const express = require('express');
 const npid = require('npid');
 
 const router = require('./lib_spawner/router');
+const globalValues = require('./global-values');
 const { broadcastwindowslist } = require('./lib_spawner/broadcast');
-const {
-  listenDaemonOnContainerIpAddr,
-} = require('oc.user.libraries');
-
+const { listenDaemonOnContainerIpAddr } = require('oc.user.libraries');
 const PORT = process.env.SPAWNER_SERVICE_TCP_PORT || 29786;
 const app = express();
 
@@ -37,6 +35,40 @@ try {
   // exit now
   process.exit(1);
 }
+
+
+///
+// Load all install language package 
+//
+const localessupportedFolder = '/var/lib/locales/supported.d/';
+const fs = require('fs');
+console.log( 'Listing language files in:', localessupportedFolder );
+
+fs.readdir( localessupportedFolder, (err, files) => {
+  files.forEach(file => {
+    let fullPath = localessupportedFolder + file;
+    console.log(fullPath);
+    fs.readFile( fullPath, 'utf8', (err, data) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      // console.log(data);
+      let lines = data.split('\n');
+      let i=0;
+      while( lines[i].length > 0 ) {
+        let result = lines[i].substring(0, 5);
+        if (result.length > 0 ) {
+	  let lang = result.replace('_','-');
+          globalValues.supportedLanguages.push( lang );
+          console.log( 'add new supported Languages:', lang );
+          ++i;
+        }
+      }
+    });
+  });
+});
+
 
 function handleSignal(signal = '') {
   return () => {
