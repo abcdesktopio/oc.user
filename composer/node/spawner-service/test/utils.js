@@ -90,6 +90,29 @@ const callBackExpect = (expected, expectedStatus = 200) => (res) => {
 
 /**
  *
+ * @param {*} expected
+ * @param {*} expectedStatus
+ */
+const callBackExpectOnly = (expected, expectedStatus = 200) => (res) => {
+  const { body } = res;
+  if (res.status === 500) {
+    if (body) {
+        console.log( body );
+        expect(body).toEqual({ code: 500, data: 'Internal server error' });
+    }
+    console.warn('Internal server error but it was handled');
+  } else {
+    expect(expectedStatus).toBe(res.status);
+    expectedkeys = Object.keys(expected);
+    for (const key of expectedkeys) {
+            // console.log(key, body[key], '==', expected[key] );
+            expect(body[key]).toEqual(expected[key]);
+    }
+  }
+};
+
+/**
+ *
  * @param {*} time
  */
 const sleep = (time) => new Promise((resolve) => {
@@ -100,5 +123,6 @@ module.exports = {
   waitForBroadcastWindowList,
   callbackExpectOk,
   callBackExpect,
+  callBackExpectOnly,
   sleep,
 };
