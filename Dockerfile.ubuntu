@@ -212,10 +212,7 @@ RUN apt-get update  && \
     apt-get clean && rm -rf /var/lib/apt/lists/* 
 
 
-
-#  x11-xserver-utils
-#    - xsetroot, a tool for tailoring the appearance of the root window;
-#
+# install core packages
 RUN apt-get update && \    
     apt-get install -y --no-install-recommends -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
         supervisor \
@@ -228,13 +225,18 @@ RUN apt-get update && \
 	krb5-user \
 	desktop-file-utils \
 	xdg-user-dirs \
-	x11-xserver-utils \
 	adwaita-icon-theme \
 	adwaita-qt \
 	xclip \
-	plank \
-	xfdesktop4 \
-	dbus-x11 \
+	libglib2.0-bin \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# install 3.3 packages
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        plank \
+        xfdesktop4 \
+        dbus-x11 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
@@ -243,6 +245,7 @@ RUN mkdir -p /tmp/packages
 COPY --from=openbox_ubuntu_builder /openbox/libobt* /openbox/openbox_3.6.1* /openbox/libobrender* /tmp/packages/
 RUN apt-get update  && \
         apt-get install -y --no-install-recommends -f /tmp/packages/*.deb  && \
+    rm -rf /tmp/packages && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
