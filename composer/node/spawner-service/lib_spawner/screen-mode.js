@@ -33,6 +33,7 @@ const currentWallpaper = `${roothomedir}/.config/current_wallpaper`;
  * @param {bool} alpha
  */
 function hexToRGBPercent(hex, alpha) {
+    const MAX_FIXED = 3; // up to 256
     let r = parseInt(hex.slice(1, 3), 16),
         g = parseInt(hex.slice(3, 5), 16),
         b = parseInt(hex.slice(5, 7), 16);
@@ -40,6 +41,9 @@ function hexToRGBPercent(hex, alpha) {
     r = r / 255;
     g = g / 255;
     b = b / 255;
+    r = Number.parseFloat(r).toFixed(MAX_FIXED);
+    g = Number.parseFloat(g).toFixed(MAX_FIXED);
+    b = Number.parseFloat(b).toFixed(MAX_FIXED);
     if (alpha) {
 	let a = alpha / 255;
         return { r:r, g:g, b:b, a:a };
