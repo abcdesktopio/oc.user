@@ -77,10 +77,8 @@ function broadcastevent(method = '', data) {
     try {
       const broadcastTcpPort = process.env.BROADCAST_SERVICE_TCP_PORT || 29784;
       const buri = `ws://${process.env.CONTAINER_IP_ADDR}:${broadcastTcpPort}`;
-
-      const ws = new WebSocketClient(buri, {
-        host: process.env.CONTAINER_IP_ADDR,
-      });
+      const protocols = [];
+      const ws = new WebSocketClient(buri, protocols, { host: process.env.CONTAINER_IP_ADDR });
       let dataSent = false;
 
       ws.on('open', () => {
