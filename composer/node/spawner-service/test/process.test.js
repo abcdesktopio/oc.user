@@ -1,7 +1,7 @@
 const os = require('os');
 const fs = require('fs');
 const supertest = require('supertest');
-
+const { callBackExpectOnly, callBackExpect } = require('./utils');
 const request = supertest(`http://${process.env.CONTAINER_IP}:29786`);
 
 
@@ -9,7 +9,6 @@ const request = supertest(`http://${process.env.CONTAINER_IP}:29786`);
  *
  * @param {*} expected
  * @param {*} expectedStatus
- */
 const callBackExpect = (expected, expectedStatus = 200) => (res) => {
   const { body } = res;
 
@@ -27,6 +26,7 @@ const callBackExpect = (expected, expectedStatus = 200) => (res) => {
     expect(body).toEqual(expected);
   }
 };
+ */
 
 describe('Test process endpoints', () => {
   it('Should has response with about', () => {
