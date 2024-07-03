@@ -45,28 +45,33 @@ const fs = require('fs');
 console.log( 'Listing language files in:', localessupportedFolder );
 
 fs.readdir( localessupportedFolder, (err, files) => {
-  files.forEach(file => {
-    let fullPath = localessupportedFolder + file;
-    console.log(fullPath);
-    fs.readFile( fullPath, 'utf8', (err, data) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      // console.log(data);
-      let lines = data.split('\n');
-      let i=0;
-      while( lines[i].length > 0 ) {
-        let result = lines[i].substring(0, 5);
-        if (result.length > 0 ) {
-	  let lang = result.replace('_','-');
-          globalValues.supportedLanguages.push( lang );
-          console.log( 'add new supported Languages:', lang );
-          ++i;
-        }
-      }
+  if (files) { 
+    files.forEach(file => {
+    	let fullPath = localessupportedFolder + file;
+    	console.log(fullPath);
+   	fs.readFile( fullPath, 'utf8', (err, data) => {
+      		if (err) {
+        		console.error(err);
+        		return;
+      		}
+      		// console.log(data);
+      		let lines = data.split('\n');
+      		let i=0;
+      		while( lines[i].length > 0 ) {
+        		let result = lines[i].substring(0, 5);
+        		if (result.length > 0 ) {
+	  			let lang = result.replace('_','-');
+          			globalValues.supportedLanguages.push( lang );
+          			console.log( 'add new supported Languages:', lang );
+          			++i;
+        		}
+      		}
+    	});
     });
-  });
+  }
+  else {
+	console.log( 'not locales files in', localessupportedFolder );
+  } 
 });
 
 
