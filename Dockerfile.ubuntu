@@ -11,7 +11,8 @@ ARG BASE_IMAGE_RELEASE=24.04
 # release <  3.1 set value to "/var/secrets/abcdesktop/localaccount"
 ARG ABCDESKTOP_LOCALACCOUNT_DIR
 # ="/etc/localaccount"
-
+# only to build from nvidia image 
+ARG CUDA_VERSION=12.4.1 
 
 
 #
@@ -31,7 +32,13 @@ FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} as openbox_ubuntu_builder
 ENV DEBEMAIL dev@abcdesktop.io
 ENV EMAIL    dev@abcdesktop.io
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-RUN sed -Ei 's/^Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources 
+
+# add src in sources.list
+# for <= 22.04
+RUN if [ -f /etc/apt/sources.list ]; then sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list; fi
+# for >= 24.04
+RUN if [ -f /etc/apt/sources.list.d/ubuntu.sources ]; then sed -Ei 's/^Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources; fi
+RUN if [ -f /etc/apt/sources.list.d/debian.sources ]; then sed -Ei 's/^Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/debian.sources; fi
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends devscripts wget ca-certificates cmake
 RUN apt-get build-dep -y openbox
@@ -53,15 +60,19 @@ FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} as picom_ubuntu_builder
 ENV DEBEMAIL dev@abcdesktop.io
 ENV EMAIL    dev@abcdesktop.io
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-RUN sed -Ei 's/^Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources
+# add src in sources.list
+# for <= 22.04
+RUN if [ -f /etc/apt/sources.list ]; then sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list; fi
+# for >= 24.04
+RUN if [ -f /etc/apt/sources.list.d/ubuntu.sources ]; then sed -Ei 's/^Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources; fi
+RUN if [ -f /etc/apt/sources.list.d/debian.sources ]; then sed -Ei 's/^Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/debian.sources; fi
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends  devscripts wget ca-certificates 
-RUN apt-get install -y --no-install-recommends devscripts wget ca-certificates libconfig-dev libdbus-1-dev libegl-dev libev-dev libgl-dev libepoxy-dev libpcre2-dev libpixman-1-dev libx11-xcb-dev libxcb1-dev libxcb-composite0-dev libxcb-damage0-dev libxcb-dpms0-dev libxcb-glx0-dev libxcb-image0-dev libxcb-present-dev libxcb-randr0-dev libxcb-render0-dev libxcb-render-util0-dev libxcb-shape0-dev libxcb-util-dev libxcb-xfixes0-dev libxext-dev meson ninja-build uthash-dev
+RUN apt-get install -y --no-install-recommends cmake devscripts wget ca-certificates libconfig-dev libdbus-1-dev libegl-dev libev-dev libgl-dev libepoxy-dev libpcre2-dev libpixman-1-dev libx11-xcb-dev libxcb1-dev libxcb-composite0-dev libxcb-damage0-dev libxcb-dpms0-dev libxcb-glx0-dev libxcb-image0-dev libxcb-present-dev libxcb-randr0-dev libxcb-render0-dev libxcb-render-util0-dev libxcb-shape0-dev libxcb-util-dev libxcb-xfixes0-dev libxext-dev meson ninja-build uthash-dev
 RUN apt-get build-dep -y picom
 RUN wget https://github.com/yshui/picom/archive/refs/tags/v11.2.tar.gz
 RUN tar -xvf v11.2.tar.gz
 WORKDIR /picom-11.2
-RUN meson setup --reconfigure -Dcompton=false --buildtype=release build
+RUN meson setup -Dcompton=false --buildtype=release build
 RUN ninja -C build install
 
 
@@ -163,6 +174,9 @@ COPY composer/version.json /composer/version.json
 #
 FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE}
 
+# use bash
+SHELL ["/bin/bash", "-c"]
+
 # define arg
 ARG ABCDESKTOP_LOCALACCOUNT_DIR
 ARG TARGET_MODE
@@ -202,9 +216,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # tigervncserver_1.13.1-1ubuntu1_amd64.deb
 # tigervncserver_1.13.1-1ubuntu1_arm64.deb    
 # but replace by curl command to support dpkg --print-architecture for amd64 and arm64
-# tigervncserver_1.14.80-1ubuntu1_amd64.deb
-RUN apt-get update  && \  
-    tigervncdeburl="https://github.com/abcdesktopio/oc.user/raw/3.3/tigervncserver_1.14.80-1ubuntu1_$(dpkg --print-architecture).deb" && \
+# tigervncserver_1.14.80-1ubuntu1_22.04_amd64.deb
+ENV TIGERVNC_RELEASE=14.80
+RUN apt-get update  && \
+    source /etc/lsb-release && \
+    echo DISTRIB_RELEASE=$DISTRIB_RELEASE && \
+    tigervncdeburl="https://github.com/abcdesktopio/oc.user/raw/3.3/tigervncserver_1.$TIGERVNC_RELEASE-1ubuntu1_$DISTRIB_RELEASE_$(dpkg --print-architecture).deb" && \
     echo Downloading $tigervncdeburl && \
     curl -sL --output /tmp/tigervncserver.deb "$tigervncdeburl" && \  
     apt-get install -y --no-install-recommends /tmp/tigervncserver.deb && \
