@@ -4,7 +4,6 @@
 #Set Script Name variable
 SCRIPT=`basename ${BASH_SOURCE[0]}`
 
-OPT_LOCAL=""
 WALLPAPER_PATH=~/.wallpapers
 # ABCDESKTOP_SESSION is a random value 
 # unique for each desktop
@@ -36,7 +35,7 @@ stop() {
    echo "$(date +'%F %T,%3N') stopping all services"
    /usr/bin/supervisorctl stop all
    if [ -f "${SUPERVISOR_PID_FILE}" ]; then 
-	kill -9 $(cat "${SUPERVISOR_PID_FILE}")
+	kill -9 $(cat ${SUPERVISOR_PID_FILE})
    fi 
    echo "$(date +'%F %T,%3N') this is the end..."
 }
@@ -241,8 +240,8 @@ fi
 # always create ~/.local/share/applications/bin
 mkdir -p ~/.local/share/mime ~/.local/share/applications/bin ~/.local/share/xfce4/helpers
 
-if [ -x /usr/bin/xfce4-session ]; then 
-	mkdir -p ~/.local/share/xfce4/helpers
+if [ ! -f ~/.local/share/xfce4/helpers/custom-FileManager.desktop   ]; then 
+	cp /composer/.local/share/xfce4/helpers/custom-FileManager.desktop  ~/.local/share/xfce4/helpers/ 
 fi 
 
 if [ ! -d ~/.local/share/icons ]; then
