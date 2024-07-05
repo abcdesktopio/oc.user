@@ -3,16 +3,15 @@
   "version": "1.0.0",
   "description": "Backend for desktop xterm",
   "dependencies": {
-    "xterm": "^5.1.0",
-    "xterm-addon-attach": "^0.8.0",
-    "xterm-addon-fit": "^0.7.0",
-    "xterm-addon-search": "^0.11.0",
-    "xterm-addon-web-links": "^0.8.0",
+    "@xterm/addon-attach": "^0.11.0",
+    "@xterm/addon-fit": "^0.10.0",
+    "@xterm/addon-web-links": "^0.11.0",
+    "@xterm/addon-webgl": "^0.18.0",
+    "@xterm/xterm": "^5.5.0",
     "express": "^4.18.2",
     "express-validator": "^6.15.0 ",
     "express-ws": "^5.0.2",
     "helmet": "^6.0.1",
-    "jest": "^29.4.3",
     "node-pty": "^0.10.1",
     "oc.user.libraries": "^1.0.1",
     "supertest": "^6.3.3",
@@ -24,8 +23,10 @@
     "test": "jest --bail"
   },
   "devDependencies": {
+    "jest": "^29.7.0",
     "@types/express": "^4.17.17",
     "@types/express-ws": "^3.0.1",
     "@types/node": "^18.14.4"
   }
 }
+
