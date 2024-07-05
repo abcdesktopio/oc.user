@@ -12,7 +12,8 @@
   "dependencies": {
     "oc.user.libraries": "^1.0.1",
     "ws": "^8.17.1"
-  }
+  },
   "devDependencies": {
     "jest": "29.7.0"
+  }
 }
