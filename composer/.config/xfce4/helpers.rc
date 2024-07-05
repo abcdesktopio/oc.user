@@ -1,0 +1,4 @@
+WebBrowser=firefox
+MailReader=sylpheed-claws
+FileManager=org.gnome.Nautilus.Org.gnome.Nautilus
+TerminalEmulator=qterminal.qterminal
