@@ -81,6 +81,11 @@ function supervisorctl( method, service_name )
 {
   let command = '/usr/bin/supervisorctl';
   let args = [ method, service_name ];
+  if (!process.env[service_name]) {
+	console.log( `ENV ${service_name} is not set` );
+	console.log( `${command} ${method} ${service_name} is canceled` );
+	return;
+  }
   console.log( command, method, service_name );
   cmd = spawn(command, args );
   cmd.stdout.on('data', (data) => {
@@ -217,7 +222,8 @@ async function generateDesktopFiles(list = []) {
   console.log('generateDesktopFiles');
   console.log(`list of application len is ${list.length}`);	
   const ocrunpath = '/composer/node/ocrun/ocrun.js';
-
+  const ocrunpath_builtin    = '/composer/node/ocrun/ocrun.builtin.js';
+  const ocrunpath_frontendjs = '/composer/node/ocrun/ocrun.frontendjs.js';
   console.log('generateDesktopFiles start');
 
   // stop plank
@@ -253,6 +259,7 @@ async function generateDesktopFiles(list = []) {
   while (i < list.length) {
     if (!list[i].desktopfile) {
             // if the desktopfile is not defined by the application metadata, we create a new one
+	    console.log( `desktopfile is missing for ${list[i].launch}` );
             list[i].desktopfile = `${list[i].launch}.desktop`;
     }
     if (!list[i].name) 
@@ -312,12 +319,16 @@ async function generateDesktopFiles(list = []) {
       if (cat)
         contentdesktop.Categories = cat;
       
+      let linktargetfile = ocrunpath;
+      if (execmode === 'builtin') linktargetfile=ocrunpath_builtin;
+      if (execmode === 'frontendjs') linktargetfile=ocrunpath_frontendjs;
+
       // this call is sync 
       // make sure that the desktopfile exists for next promise
       fs.writeFileSync( filepath, ini.stringify(contentdesktop, { section: "Desktop Entry" }) );
       if (icon && icondata)
       	allPromises.push( generateIconfile( contentdesktop, icondata ) );
-      allPromises.push( symlinkPromise( ocrunpath, execcommand ) );
+      allPromises.push( symlinkPromise( linktargetfile, execcommand ) );
       allPromises.push( generateDockitemfile( name, launch, desktopfile, showinview ) );
       ++i;
   }
