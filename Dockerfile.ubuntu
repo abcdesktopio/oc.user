@@ -12,7 +12,6 @@ ARG BASE_IMAGE_RELEASE=24.04
 ARG ABCDESKTOP_LOCALACCOUNT_DIR
 # ="/etc/localaccount"
 # only to build from nvidia image 
-ARG CUDA_VERSION=12.4.1 
 
 
 #
@@ -37,8 +36,8 @@ RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selectio
 # for <= 22.04
 RUN if [ -f /etc/apt/sources.list ]; then sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list; fi
 # for >= 24.04
-RUN if [ -f /etc/apt/sources.list.d/ubuntu.sources ]; then sed -Ei 's/^Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources; fi
-RUN if [ -f /etc/apt/sources.list.d/debian.sources ]; then sed -Ei 's/^Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/debian.sources; fi
+RUN sed -Ei 's/^Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources ||true
+RUN sed -Ei 's/^Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/debian.sources ||true
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends devscripts wget ca-certificates cmake
 RUN apt-get build-dep -y openbox
@@ -62,12 +61,12 @@ ENV EMAIL    dev@abcdesktop.io
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 # add src in sources.list
 # for <= 22.04
-RUN if [ -f /etc/apt/sources.list ]; then sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list; fi
+RUN sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list ||true
 # for >= 24.04
-RUN if [ -f /etc/apt/sources.list.d/ubuntu.sources ]; then sed -Ei 's/^Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources; fi
-RUN if [ -f /etc/apt/sources.list.d/debian.sources ]; then sed -Ei 's/^Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/debian.sources; fi
+RUN sed -Ei 's/^Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources ||true
+RUN sed -Ei 's/^Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/debian.sources ||true
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends cmake devscripts wget ca-certificates libconfig-dev libdbus-1-dev libegl-dev libev-dev libgl-dev libepoxy-dev libpcre2-dev libpixman-1-dev libx11-xcb-dev libxcb1-dev libxcb-composite0-dev libxcb-damage0-dev libxcb-dpms0-dev libxcb-glx0-dev libxcb-image0-dev libxcb-present-dev libxcb-randr0-dev libxcb-render0-dev libxcb-render-util0-dev libxcb-shape0-dev libxcb-util-dev libxcb-xfixes0-dev libxext-dev meson ninja-build uthash-dev
+RUN apt-get install -y --no-install-recommends cmake devscripts wget ca-certificates libconfig-dev libdbus-1-dev libegl-dev libev-dev libgl-dev libepoxy-dev libpcre2-dev libpixman-1-dev libx11-xcb-dev libxcb1-dev libxcb-composite0-dev libxcb-damage0-dev libxcb-dpms0-dev libxcb-glx0-dev libxcb-image0-dev libxcb-present-dev libxcb-randr0-dev libxcb-render0-dev libxcb-render-util0-dev libxcb-shape0-dev libxcb-util-dev libxcb-xfixes0-dev libxext-dev meson ninja-build uthash-dev 
 RUN apt-get build-dep -y picom
 RUN wget https://github.com/yshui/picom/archive/refs/tags/v11.2.tar.gz
 RUN tar -xvf v11.2.tar.gz
@@ -108,58 +107,53 @@ RUN apt-get update && apt-get install -y  --no-install-recommends \
         gnupg \
         dpkg
 
-# install yarn npm nodejs 
+# install npm nodejs 
 RUN  mkdir -p /etc/apt/keyrings && \
      curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
-     echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list && apt-get update && apt-get install -y --no-install-recommends nodejs && npm -g install yarn
+     echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list && apt-get update && apt-get install -y --no-install-recommends nodejs && npm install -g npm
 
 
 COPY composer /composer
 
 # add wait-port
 WORKDIR /composer/node/wait-port 
-RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
+RUN npm install --save-prod && npm audit fix
 
 # Add nodejs service
-# yarn install --production[=true|false]
-# yarn will not install any package listed in devDependencies if the NODE_ENV environment variable is set to production. 
-# Use this flag to instruct Yarn to ignore NODE_ENV and take its production-or-not status from this flag instead.
 RUN git clone https://github.com/abcdesktopio/oc.user.libraries.git /composer/node/common-libraries
 WORKDIR /composer/node/common-libraries
-RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
+RUN npm install --save-prod && npm audit fix
 
 WORKDIR /composer/node/broadcast-service
-RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
+RUN npm install --save-prod && npm audit fix
 
-RUN git clone https://github.com/abcdesktopio/run-service.git /composer/node/ocrun
+RUN mkdir -p aa && git clone https://github.com/abcdesktopio/run-service.git /composer/node/ocrun 
 WORKDIR /composer/node/ocrun
-RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
+RUN npm install --save-prod && npm audit fix
+RUN cp ocrun.js ocrun.builtin.js && sed -Ei 's/^let DEFAULT_EXECMODE;/let DEFAULT_EXECMODE="builtin";/' ocrun.builtin.js 
+RUN cp ocrun.js ocrun.frontendjs.js && sed -Ei 's/^let DEFAULT_EXECMODE;/let DEFAULT_EXECMODE="frontendjs";/' ocrun.frontendjs.js    
 
 WORKDIR /composer/node/ocdownload
-RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
+RUN npm install --save-prod && npm audit fix
 
 WORKDIR /composer/node/occall
-RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
+RUN npm install --save-prod && npm audit fix
 
 WORKDIR /composer/node/spawner-service/lib_spawner/colorflow
-RUN yarn install --production=true
+RUN npm install --save-prod && npm audit fix
 
 WORKDIR /composer/node/spawner-service
 # install node-gyp to build spawner-service
-RUN yarn global add node-gyp
-RUN yarn install --production=true 
-# && npm i --package-lock-only && npm audit fix
+RUN npm install --save-prod --global node-gyp
+RUN npm install --save-prod
 
-# WORKDIR /composer/node/xterm.js
+WORKDIR /
 RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
         rm -rf /composer/node/xterm.js; \
-        ls -la /composer/node; \
     else \
-        cd /composer/node/xterm.js; \
-        yarn install --production=true; \
-        npm i --package-lock-only; \
+        cd /composer/node/xterm.js && \
+        npm install --save-prod  && \
         npm audit fix; \
-        ls -la /composer/node/xterm.js; \
     fi
 
 # version.json must be created by mkversion.sh bash script
@@ -221,7 +215,7 @@ ENV TIGERVNC_RELEASE=14.80
 RUN apt-get update  && \
     source /etc/lsb-release && \
     echo DISTRIB_RELEASE=$DISTRIB_RELEASE && \
-    tigervncdeburl="https://github.com/abcdesktopio/oc.user/raw/3.3/tigervncserver_1.$TIGERVNC_RELEASE-1ubuntu1_$DISTRIB_RELEASE_$(dpkg --print-architecture).deb" && \
+    tigervncdeburl="https://github.com/abcdesktopio/oc.user/raw/3.3/tigervncserver_1.${TIGERVNC_RELEASE}-1ubuntu1_${DISTRIB_RELEASE}_$(dpkg --print-architecture).deb" && \
     echo Downloading $tigervncdeburl && \
     curl -sL --output /tmp/tigervncserver.deb "$tigervncdeburl" && \  
     apt-get install -y --no-install-recommends /tmp/tigervncserver.deb && \
@@ -272,7 +266,7 @@ COPY --from=picom_ubuntu_builder /picom-11.2/bin/picom-trans /usr/bin
 COPY --from=picom_ubuntu_builder /picom-11.2/picom.desktop /usr/share/applications
 RUN apt-get update  && \
     apt-get install -y --no-install-recommends \
-          libdbus-1-3 libegl1  libev4t64 libgl1 libepoxy0 libpixman-1-0 libx11-xcb1 libxcb1 libxcb-composite0 libxcb-damage0 libxcb-dpms0 libconfig9 libxcb-glx0 libxcb-image0 libxcb-present0 libxcb-randr0 libxcb-render0 libxcb-render-util0 libxcb-shape0 libxcb-util1 libxcb-xfixes0 libxext6 libxcb-xinerama0 && \
+          libdbus-1-3 libegl1 libgl1 libepoxy0 libpixman-1-0 libx11-xcb1 libxcb1 libxcb-composite0 libxcb-damage0 libxcb-dpms0 libconfig9 libxcb-glx0 libxcb-image0 libxcb-present0 libxcb-randr0 libxcb-render0 libxcb-render-util0 libxcb-shape0 libxcb-util1 libxcb-xfixes0 libxext6 libxcb-xinerama0 libev4 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -319,7 +313,7 @@ ADD usr/share/sounds/alsa /usr/share/sounds/alsa
 RUN mkdir -p /var/log/desktop /var/run/desktop && chmod 777 /var/log/desktop /var/run/desktop
 
 # remove /etc/supervisor/conf.d/xterm.conf in hardening
-RUN if [ "${TARGET_MODE}" = "hardening" ] ; then rm -f /etc/supervisor/conf.d/xterm.conf; echo "supervisor xterm.conf has been removed"; fi
+RUN if [ "$TARGET_MODE" = "hardening" ] ; then rm -f /etc/supervisor/conf.d/xterm.conf; echo "supervisor xterm.conf has been removed"; fi
 
 #
 # create account balloon for compatility with 2.0
