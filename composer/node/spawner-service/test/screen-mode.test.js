@@ -192,7 +192,7 @@ describe('Test screen-mode endpoints', () => {
         return new Promise(async (resolve, reject) => {
           try {
             const color = await colorflow(`${roothomedir}/.wallpapers/${imgName}`);
-	    console.log( `using ${imgName} return ${color}` );
+	    // console.log( `using ${imgName} return ${color}` );
             const expected = { code: 200, data: { color: color, subData: 'ok' } };
 
             await request
