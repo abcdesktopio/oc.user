@@ -51,8 +51,9 @@ jobs:
           tags: abcdesktopio/oc.user.ubuntu.nvidia:3.3
           push: true
           build-args: |
-	    BASE_IMAGE_RELEASE=build.${{ env.imagetag }}
+            BASE_IMAGE_RELEASE=build.${{ env.imagetag }}
             ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount
-	    BASE_IMAGE=abcdesktopio/oc.user.ubuntu.nvidia
+            BASE_IMAGE=abcdesktopio/oc.user.ubuntu.nvidia
             UBUNTU_RELEASE=22.04
-	    DRIVER_VERSION=550.90.07
+            DRIVER_VERSION=550.90.07
+
