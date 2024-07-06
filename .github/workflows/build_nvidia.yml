@@ -1,8 +1,10 @@
 name: Build nvidia image
 
+
 on:
-  push:
-  
+  repository_dispatch:
+    types: dispatch-from-test
+
 env: 
   imagetag: ${{ github.head_ref || github.ref_name || 'dev' }}
     

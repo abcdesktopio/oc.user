@@ -86,3 +86,14 @@ jobs:
             TAG=${{ env.imagetag }}
             BASE_IMAGE=abcdesktopio/oc.user.${{ matrix.target_mode }}
           tags: abcdesktopio/oc.user.${{ matrix.target_mode }}.sudo:${{ env.imagetag }}
+  notify:
+    needs: build_matrix
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.TOKEN_DISPATCH }}
+          repository: abcdesktopio/oc.user
+          event-type: dispatch-from-test
+          client-payload: '{"ref": "${{ github.ref_name }}", "sha": "${{ github.sha }}"}'
