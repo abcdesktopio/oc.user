@@ -46,11 +46,12 @@ jobs:
           context: .
           file: ./Dockerfile.ubuntu.addons-nvidia
           platforms: linux/amd64
+          tags: abcdesktopio/oc.user.ubuntu.nvidia:3.3
           push: true
           build-args: |
-            ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
-            BASE_IMAGE_RELEASE=build.${{ env.imagetag }} \
-            BASE_IMAGE=abcdesktopio/oc.user.ubuntu.nvidia \
-            UBUNTU_RELEASE=22.04 \
-	    DRIVER_VERSION=550.90.07 \
-          tags: abcdesktopio/oc.user.ubuntu.nvidia:3.3 \
+            ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount
+            BASE_IMAGE_RELEASE=build.${{ env.imagetag }}
+            BASE_IMAGE=abcdesktopio/oc.user.ubuntu.nvidia
+            UBUNTU_RELEASE=22.04
+	    DRIVER_VERSION=550.90.07
+
