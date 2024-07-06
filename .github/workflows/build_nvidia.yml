@@ -1,0 +1,56 @@
+name: Build nvidia image
+
+on:
+  push:
+  
+env: 
+  imagetag: ${{ github.head_ref || github.ref_name || 'dev' }}
+    
+jobs:
+  build_matrix: 
+    strategy:
+      matrix:
+        target_mode: [ubuntu]
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # runs-on: self-hosted
+    steps: 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}   
+      - name: Build and push image oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile.ubuntu
+          platforms: linux/amd64
+          push: true
+          build-args: |
+            ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount
+            BASE_IMAGE_RELEASE=12.4.1-runtime-ubuntu22.04
+            BASE_IMAGE=nvcr.io/nvidia/cuda
+            UBUNTU_RELEASE=22.04
+            TARGET_MODE=${{ matrix.target_mode }}
+            BASE_IMAGE=ubuntu
+          tags: abcdesktopio/oc.user.ubuntu.nvidia:build.${{ env.imagetag }}
+      
+      - name: Build and push image oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile.ubuntu.addons-nvidia
+          platforms: linux/amd64
+          push: true
+          build-args: |
+            ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
+            BASE_IMAGE_RELEASE=build.${{ env.imagetag }} \
+            BASE_IMAGE=abcdesktopio/oc.user.ubuntu.nvidia \
+            UBUNTU_RELEASE=22.04 \
+	    DRIVER_VERSION=550.90.07 \
+          tags: abcdesktopio/oc.user.ubuntu.nvidia:3.3 \
