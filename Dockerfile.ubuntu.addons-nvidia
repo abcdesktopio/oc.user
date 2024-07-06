@@ -1,0 +1,109 @@
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+# Default release is 22.04
+ARG TAG=latest
+# Default base image 
+ARG BASE_IMAGE=ubuntu
+ARG BASE_IMAGE_RELEASE=22.04
+ARG DRIVER_VERSION
+
+# ABCDESKTOP_LOCALACCOUNT_DIR arg
+# use in ENV ABCDESKTOP_LOCALACCOUNT_DIR=$ABCDESKTOP_LOCALACCOUNT_DIR
+# release >= 3.1 set value to "/etc/localaccount"
+# release <  3.1 set value to "/var/secrets/abcdesktop/localaccount"
+ARG ABCDESKTOP_LOCALACCOUNT_DIR
+# ="/etc/localaccount"
+
+#
+# The main oc.user start here
+#
+FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE}
+
+USER 0
+
+# define arg
+ARG ABCDESKTOP_LOCALACCOUNT_DIR
+ARG TARGET_MODE
+ARG DRIVER_VERSION
+
+# convert ARG to ENV with same name
+ENV ABCDESKTOP_LOCALACCOUNT_DIR=$ABCDESKTOP_LOCALACCOUNT_DIR
+ENV TARGET_MODE=$TARGET_MODE
+ENV DRIVER_VERSION=$DRIVER_VERSION
+
+# Make all NVIDIA GPUs visible by default
+ENV NVIDIA_VISIBLE_DEVICES all
+# All NVIDIA driver capabilities should preferably be used, check `NVIDIA_DRIVER_CAPABILITIES` inside the container if things do not work
+ENV NVIDIA_DRIVER_CAPABILITIES all
+# Disable VSYNC for NVIDIA GPUs
+
+# Install operating system libraries or packages
+RUN apt-get update && apt-get install --no-install-recommends -y \
+      vulkan-tools \
+      mesa-utils \
+      kmod \
+      drm-info && \
+    rm -rf /var/lib/apt/lists/*
+
+ENV TERM=linux
+# install nvidia modules
+RUN cd /tmp && \ 
+  echo DRIVER_VERSION=\"$DRIVER_VERSION\" && \
+  curl -fsL -O "https://us.download.nvidia.com/XFree86/Linux-x86_64/$DRIVER_VERSION/NVIDIA-Linux-x86_64-$DRIVER_VERSION.run" || curl -fsL -O "https://us.download.nvidia.com/tesla/$DRIVER_VERSION/NVIDIA-Linux-x86_64-$DRIVER_VERSION.run" || { echo "Failed NVIDIA GPU driver download. Exiting."; exit 1; } && \
+  chmod 755 "NVIDIA-Linux-x86_64-$DRIVER_VERSION.run" && \
+  ./NVIDIA-Linux-x86_64-$DRIVER_VERSION.run -x && \
+  ls -la && \
+  cd "NVIDIA-Linux-x86_64-$DRIVER_VERSION" && \
+  ./nvidia-installer --silent \
+		    --no-systemd \
+                    --no-kernel-module \
+                    --no-nouveau-check \
+                    --no-nvidia-modprobe \
+                    --no-rpms \
+                    --no-backup \
+                    --no-check-for-alternate-installs && \
+  rm -rf /tmp/NVIDIA*
+
+# Configure EGL manually
+RUN mkdir -p /usr/share/glvnd/egl_vendor.d/ && \
+    echo "{\n\
+             \"file_format_version\" : \"1.0.0\",\n\
+             \"ICD\": {\n\"library_path\": \"libEGL_nvidia.so.0\"\n }\n \
+    }" > /usr/share/glvnd/egl_vendor.d/10_nvidia.json
+
+RUN if [ "${TARGET_MODE}" != "hardening" ]; then \
+	apt-get update && \
+	apt-get install -y --no-install-recommends sudo && \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/* && \
+	echo "ALL ALL=(ALL:ALL) ALL" > /etc/sudoers.d/all; \
+    fi
+
+ENV __GL_SYNC_TO_VBLANK 0
+
+# set build date
+RUN date > /etc/build.date
+
+# set command
+CMD [ "/composer/docker-entrypoint.sh" ]
+
+####################################################
+# SERVICE                           #   TCP PORT   #
+####################################################
+# XTERM_TCP_PORT                        29781
+# BROADCAST_SERVICE_TCP_PORT            29784
+# SPAWNER_SERVICE_TCP_PORT              29786
+# WS_TCP_BRIDGE_SERVICE_TCP_PORT         6081
+# DBUS_SESSION_TCP_PORT                 55556
+# DBUS_SYSTEM_TCP_PORT                  55557
+####################################################
+
+## RESERVED TCP PORT 29782 for pulseaudio
+## RESERVED TCP PORT 29785 for cupsd
+
+# VOLUME /home/$BUSER
+# Set for compatibility 2.0
+WORKDIR /home/$BUSER
+USER $BUSER
+
+EXPOSE 6081 29781 29784 29786
