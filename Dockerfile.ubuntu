@@ -9,7 +9,7 @@ ARG BASE_IMAGE_RELEASE=24.04
 # use in ENV ABCDESKTOP_LOCALACCOUNT_DIR=$ABCDESKTOP_LOCALACCOUNT_DIR
 # release >= 3.1 set value to "/etc/localaccount"
 # release <  3.1 set value to "/var/secrets/abcdesktop/localaccount"
-ARG ABCDESKTOP_LOCALACCOUNT_DIR
+# ARG ABCDESKTOP_LOCALACCOUNT_DIR
 # ="/etc/localaccount"
 # only to build from nvidia image 
 
@@ -31,10 +31,9 @@ FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} as openbox_ubuntu_builder
 ENV DEBEMAIL dev@abcdesktop.io
 ENV EMAIL    dev@abcdesktop.io
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-
 # add src in sources.list
 # for <= 22.04
-RUN if [ -f /etc/apt/sources.list ]; then sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list; fi
+RUN sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list ||true
 # for >= 24.04
 RUN sed -Ei 's/^Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources ||true
 RUN sed -Ei 's/^Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/debian.sources ||true
