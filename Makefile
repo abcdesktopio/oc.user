@@ -1,4 +1,4 @@
-all: version default sudo 
+all: version ubuntu2404  
 registry: all push
 NOCACHE ?= false
 
@@ -50,7 +50,8 @@ hardening31:
             --tag abcdesktopio/oc.user.hardening:3.1 \
             --file Dockerfile.ubuntu .
 
-default:
+
+ubuntu2204:
 	docker pull ubuntu:22.04
 	docker build \
             --no-cache=$(NOCACHE) \
@@ -58,17 +59,78 @@ default:
             --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
             --build-arg BASE_IMAGE_RELEASE=22.04 \
             --build-arg BASE_IMAGE=ubuntu \
-            --tag abcdesktopio/oc.user.default:$(TAG) \
-	    --build-arg LINK_LOCALACCOUNT=true \
+            --tag abcdesktopio/oc.user.ubuntu.22.04:$(TAG) \
             --file Dockerfile.ubuntu .
+
+elementary:
+	docker pull ghcr.io/elementary/docker:stable
+	docker build \
+            --no-cache=$(NOCACHE) \
+            --build-arg TARGET_MODE=ubuntu \
+            --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
+            --build-arg BASE_IMAGE_RELEASE=stable \
+            --build-arg BASE_IMAGE=ghcr.io/elementary/docker \
+            --tag abcdesktopio/oc.user.elementary.stable:$(TAG) \
+            --file Dockerfile.ubuntu .
+	docker build \
+            --no-cache=$(NOCACHE) \
+            --build-arg TARGET_MODE=ubuntu \
+            --build-arg TAG=$(TAG)  \
+            --build-arg BASE_IMAGE=abcdesktopio/oc.user.elementary.stable \
+	    --build-arg BASE_IMAGE_RELEASE=$(TAG) \
+            --tag abcdesktopio/oc.user.elementary.stable.sudo:$(TAG) \
+            --file Dockerfile.sudo .
+
+ubuntu2404:
+	docker pull ubuntu:24.04
+	docker build \
+            --no-cache=$(NOCACHE) \
+            --build-arg TARGET_MODE=ubuntu \
+            --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
+            --build-arg BASE_IMAGE_RELEASE=24.04 \
+            --build-arg BASE_IMAGE=ubuntu \
+            --tag abcdesktopio/oc.user.ubuntu.24.04:$(TAG) \
+            --file Dockerfile.ubuntu .
+	docker build \
+            --no-cache=$(NOCACHE) \
+            --build-arg TARGET_MODE=ubuntu \
+            --build-arg TAG=$(TAG)  \
+	    --build-arg BASE_IMAGE_RELEASE=$(TAG) \
+            --build-arg BASE_IMAGE=abcdesktopio/oc.user.ubuntu.24.04 \
+            --tag abcdesktopio/oc.user.ubuntu.sudo.24.04:$(TAG) \
+            --file Dockerfile.sudo .
+
+
+debian:
+	docker pull debian 
+	docker build \
+            --no-cache=$(NOCACHE) \
+            --build-arg TARGET_MODE=ubuntu \
+            --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
+            --build-arg BASE_IMAGE_RELEASE=12.6 \
+            --build-arg BASE_IMAGE=debian \
+            --tag abcdesktopio/oc.user.debian.12.6:$(TAG) \
+            --file Dockerfile.ubuntu .
+
+kasm:
+	docker pull ubuntu:22.04
+	docker build \
+            --no-cache=$(NOCACHE) \
+            --build-arg TARGET_MODE=ubuntu \
+            --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
+            --build-arg TAG=22.04 \
+            --build-arg BASE_IMAGE=ubuntu \
+            --tag abcdesktopio/oc.user.default.kasm:$(TAG) \
+            --file Dockerfile.ubuntu.kasm .
+
 
 sudo:
 	docker build \
             --no-cache=$(NOCACHE) \
             --build-arg TARGET_MODE=ubuntu \
 	    --build-arg TAG=$(TAG)  \
-	    --build-arg BASE_IMAGE=abcdesktopio/oc.user.default \
-            --tag abcdesktopio/oc.user.sudo:$(TAG) \
+	    --build-arg BASE_IMAGE=abcdesktopio/oc.user.ubuntu.24.04:$(TAG) \
+            --tag abcdesktopio/oc.user.ubuntu.sudo.24.04:$(TAG) \
             --file Dockerfile.sudo .
 
 
@@ -90,19 +152,41 @@ ubuntu_noaccount:
             --no-cache=$(NOCACHE) \
             --build-arg BASE_IMAGE_RELEASE=22.04 \
             --build-arg BASE_IMAGE=ubuntu \
-	    --build-arg LINK_LOCALACCOUNT=false \
             --tag abcdesktopio/oc.user.ubuntu:$(TAG) \
             --file Dockerfile.ubuntu .
+
 nvidia:
-	docker pull ubuntu:22.04
+	# 
+	# nvcr.io/nvidia/cuda:${CUDA_VERSION}-runtime-ubuntu${BASE_IMAGE_RELEASE}
+	docker pull nvcr.io/nvidia/cuda:12.4.1-runtime-ubuntu22.04
 	docker build \
             --no-cache=$(NOCACHE) \
-            --build-arg BASE_IMAGE_RELEASE=22.04 \
-            --build-arg BASE_IMAGE=ubuntu \
-	    --build-arg CUDA_VERSION=12.1.0 \
-	    --build-arg UBUNTU_RELEASE=22.04 \
-            --tag abcdesktopio/oc.user.ubuntu.nvidia:$(TAG) \
-            --file Dockerfile.nvidia .
+	    --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
+            --build-arg BASE_IMAGE_RELEASE=12.4.1-runtime-ubuntu22.04 \
+            --build-arg BASE_IMAGE=nvcr.io/nvidia/cuda \
+            --build-arg UBUNTU_RELEASE=22.04 \
+            --tag abcdesktopio/oc.user.ubuntu.nvidia:build \
+            --file Dockerfile.ubuntu .
+	docker build \
+            --no-cache=$(NOCACHE) \
+            --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
+            --build-arg BASE_IMAGE_RELEASE=build \
+            --build-arg BASE_IMAGE=abcdesktopio/oc.user.ubuntu.nvidia \
+            --build-arg UBUNTU_RELEASE=22.04 \
+	    --build-arg DRIVER_VERSION=550.90.07 \
+            --tag abcdesktopio/oc.user.ubuntu.nvidia:3.3 \
+            --file Dockerfile.ubuntu.addons-nvidia .
+
+#nvidia:
+#	docker pull ubuntu:22.04
+#	docker build \
+#            --no-cache=$(NOCACHE) \
+#            --build-arg BASE_IMAGE_RELEASE=22.04 \
+#            --build-arg BASE_IMAGE=ubuntu \
+#	    --build-arg CUDA_VERSION=12.1.0 \
+#	    --build-arg UBUNTU_RELEASE=22.04 \
+#            --tag abcdesktopio/oc.user.ubuntu.nvidia:$(TAG) \
+#            --file Dockerfile.nvidia .
 
 citrix:
 	docker build 			\
@@ -116,7 +200,8 @@ ubuntu.hardening:
 	echo hardening > TARGET_MODE
 	docker build \
             --no-cache=$(NOCACHE) \
-            --build-arg BASE_IMAGE_RELEASE=22.04 \
+	    --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
+            --build-arg BASE_IMAGE_RELEASE=24.04 \
             --build-arg BASE_IMAGE=ubuntu \
             --tag abcdesktopio/oc.user.ubuntu.hardening:$(TAG) \
             --file ./Dockerfile.ubuntu .
