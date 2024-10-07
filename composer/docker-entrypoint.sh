@@ -5,9 +5,14 @@
 SCRIPT=`basename ${BASH_SOURCE[0]}`
 
 WALLPAPER_PATH=~/.wallpapers
+
 # ABCDESKTOP_SESSION is a random value 
 # unique for each desktop
 ((ABCDESKTOP_SESSION=((RANDOM<<15|RANDOM)<<15|RANDOM)<<15|RANDOM))
+
+# BROADCAST_COOKIE is a random value 
+# unique for each desktop
+((BROADCAST_COOKIE=((RANDOM<<15|RANDOM)<<15|RANDOM)<<15|RANDOM))
 
 ## Export Var
 export NAMESPACE=${POD_NAMESPACE:-'abcdesktop'}
@@ -25,9 +30,9 @@ export ABCDESKTOP_LOG_DIR=${ABCDESKTOP_LOG_DIR:-'/var/log/desktop'}
 export DISABLE_REMOTEIP_FILTERING=${DISABLE_REMOTEIP_FILTERING:-'disabled'}
 export BROADCAST_COOKIE=${BROADCAST_COOKIE:-$ABCDESKTOP_SESSION}
 export SUPERVISOR_PID_FILE=/var/run/desktop/supervisord.pid
-export X11_SIZE_WIDTH=${X11_SIZE_WIDTH:-1920}
-export X11_SIZE_HEIGHT=${X11_SIZE_HEIGHT:-1080}
 export XDG_SESSION_TYPE=${XDG_SESSION_TYPE:-x11}
+export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-${HOME}/.runtime}
+
 
 # TRAP for container signal SIGINT SIGQUIT SIGHUP SIGTERM
 stop() {
@@ -79,8 +84,9 @@ if [ -f ${ABCDESKTOP_SECRETS_DIR}/vnc/password ]; then
         echo 'vnc password use kubernetes secret'
         cat ${ABCDESKTOP_SECRETS_DIR}/vnc/password | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
 else
-        echo 'error not vnc password has been set, everything is going wrong'
-        echo "run a ls -la ${ABCDESKTOP_SECRETS_DIR}/vnc to help troubleshooting"
+	echo file ${ABCDESKTOP_SECRETS_DIR}/vnc/password DOES NOT EXIST
+        echo THIS IS AN ERROR error: no vnc password has been set
+        echo run a ls -la ${ABCDESKTOP_SECRETS_DIR}/vnc command for you to help troubleshooting
         ls -la ${ABCDESKTOP_SECRETS_DIR}/vnc
         echo 'fix use changemeplease as vncpassword'
         echo changemeplease | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
@@ -171,6 +177,15 @@ fi
 #	echo "create ~/.themes directory"
 #	cp -rp /composer/.themes ~ &
 # fi
+
+# XDG_RUNTIME_DIR
+# XDG_RUNTIME_DIR
+if [ ! -d ${XDG_RUNTIME_DIR} ]; then
+	mkdir -p ${XDG_RUNTIME_DIR}
+	# Unix access mode MUST be 0700.
+	chmod 0700 ${XDG_RUNTIME_DIR}
+fi
+
 
 
 #
@@ -395,12 +410,6 @@ else
    echo 'fix KUBERNETES_SERVICE_HOST=localhost as dummy value' 
    export KUBERNETES_SERVICE_HOST=localhost
 fi
-
-if  [ ! -z "$ABCDESKTOP_DEMO_ENABLE" ]; then
-   sleep 530 && zenity --info --ellipsize --text="Your session will expire in few seconds" &
-fi
-
-
 
 # export VAR to running procces
 export KUBERNETES_SERVICE_HOST
