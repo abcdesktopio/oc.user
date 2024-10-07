@@ -151,8 +151,7 @@ RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
         rm -rf /composer/node/xterm.js; \
     else \
         cd /composer/node/xterm.js && \
-        npm install --save-prod  && \
-        npm audit fix; \
+        npm install --save-prod; \  
     fi
 
 # version.json must be created by mkversion.sh bash script
@@ -210,7 +209,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # tigervncserver_1.13.1-1ubuntu1_arm64.deb    
 # but replace by curl command to support dpkg --print-architecture for amd64 and arm64
 # tigervncserver_1.14.80-1ubuntu1_22.04_amd64.deb
-ENV TIGERVNC_RELEASE=14.80
+ENV TIGERVNC_RELEASE=14.0
 RUN apt-get update  && \
     source /etc/lsb-release && \
     echo DISTRIB_RELEASE=$DISTRIB_RELEASE && \
