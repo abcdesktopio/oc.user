@@ -6,6 +6,6 @@
   "description": "Node.js Open Desktop warapper to run app in container",
   "author": "Alexandre DEVELY",
   "dependencies": {
-    "ws": "*"
+    "ws": "8.18.0"
   }
 }
