@@ -19,7 +19,7 @@ ARG BASE_IMAGE_RELEASE=22.04
 # deb files will be located in /root/packages/$(uname -m) directory 
 # patched with openbox.title.patch for abcdesktop
 FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} as openbox_ubuntu_builder
-ENV DEBEMAIL nobody@abcdesktop.io
+ENV DEBEMAIL=nobody@abcdesktop.io
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 RUN sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
 RUN cat /etc/apt/sources.list
@@ -266,7 +266,7 @@ RUN if [ "${TARGET_MODE}" = "hardening" ] ; then rm -f /etc/supervisor/conf.d/xt
 # this is the default user if no user defined
 # create group, user, set password
 # fix home dir owner
-ENV BUSER balloon
+ENV BUSER=balloon
 RUN groupadd --gid 4096 $BUSER && \
     useradd --create-home --shell /bin/bash --uid 4096 -g $BUSER $BUSER && \
     echo "balloon:lmdpocpetit" | chpasswd $BUSER &&\
