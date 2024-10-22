@@ -318,8 +318,13 @@ if [ -f ${ABCDESKTOP_SECRETS_DIR}/kerberos/keytab ]; then
 	export KRB5_CLIENT_KTNAME=${ABCDESKTOP_SECRETS_DIR}/kerberos/keytab
 fi
 
+# support kerberos/krb5.conf or kerberos/krb5_conf for compatibility
 if [ -f ${ABCDESKTOP_SECRETS_DIR}/kerberos/krb5.conf ]; then
         export KRB5_CONFIG=${ABCDESKTOP_SECRETS_DIR}/kerberos/krb5.conf
+fi
+
+if [ -f ${ABCDESKTOP_SECRETS_DIR}/kerberos/krb5_conf ]; then
+        export KRB5_CONFIG=${ABCDESKTOP_SECRETS_DIR}/kerberos/krb5_conf
 fi
 
 if [ -f ${ABCDESKTOP_SECRETS_DIR}/kerberos/PRINCIPAL ]; then
@@ -330,8 +335,9 @@ if [ -f ${ABCDESKTOP_SECRETS_DIR}/kerberos/REALM ]; then
         export REALM=$(cat ${ABCDESKTOP_SECRETS_DIR}/kerberos/REALM)
 fi
 
-# Now run kinit if all vars are set 
-if [ ! -z "$USERPRINCIPALNAME" ] && [ ! -z "$REALM" ] && [ ! -z "$KRB5_CONFIG" ] && [ ! -z "$KRB5_CLIENT_KTNAME" ]; then
+# run kinit if vars $USERPRINCIPALNAME $REALM $KRB5_CLIENT_KTNAME are set
+# if it is run kinit command in background
+if [ ! -z "$USERPRINCIPALNAME" ] && [ ! -z "$REALM" ]  && [ ! -z "$KRB5_CLIENT_KTNAME" ]; then
 echo "/usr/bin/kinit $USERPRINCIPALNAME@$REALM -k -t $KRB5_CLIENT_KTNAME" > /tmp/krb5.log
 /usr/bin/kinit "$USERPRINCIPALNAME@$REALM" -k -t "$KRB5_CLIENT_KTNAME" &
 fi 
