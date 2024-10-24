@@ -100,8 +100,8 @@ wss.on('connection', async (ws, req) => {
   console.log( "broadcast_cookie=" + broadcast_cookie );
   console.log( "process.env.CONTAINER_IP_ADDR=" + process.env.CONTAINER_IP_ADDR );
   console.log( "process.env.BROADCAST_COOKIE=" + process.env.BROADCAST_COOKIE );
-  console.log( "dump req.headers" ); 
-  console.log( JSON.stringify(req.headers, null, 4) ); 
+  // console.log( "dump req.headers" ); 
+  // console.log( JSON.stringify(req.headers, null, 4) ); 
 
   if ( remoteAddress !== process.env.CONTAINER_IP_ADDR && broadcast_cookie !== process.env.BROADCAST_COOKIE ) {
       try {
