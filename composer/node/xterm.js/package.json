@@ -13,7 +13,7 @@
     "express-ws": "^5.0.2",
     "helmet": "^8.0.0",
     "node-pty": "^1.0.0",
-    "oc.user.libraries": "^1.0.3",
+    "oc.user.libraries": "^1.0.5",
     "supertest": "^7.0.0",
     "json5": "^2.2.3",
     "qs": "^6.13.0"
