@@ -10,7 +10,7 @@
     "test": "jest --bail"
   },
   "dependencies": {
-    "oc.user.libraries": "^1.0.3",
+    "oc.user.libraries": "^1.0.4",
     "ws": "^8.18.0"
   },
   "devDependencies": {
