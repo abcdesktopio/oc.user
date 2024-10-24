@@ -6,7 +6,7 @@ imgName=$4
 
 imgParam=''
 ABCDESKTOP_LOG_DIR=${ABCDESKTOP_LOG_DIR:-'/var/log/desktop'}
-ESETROOT_LOGFILE=$ABCDESKTOP_LOG_DIR/esetroot.log
+ESETROOT_LOGFILE=$ABCDESKTOP_LOG_DIR/xfce4-esetroot.log
 echo "bgColor=$RrbgColor $GrbgColor $BrbgColor" &>> $ESETROOT_LOGFILE
 echo "imgName=$imgName" &>> $ESETROOT_LOGFILE
 
