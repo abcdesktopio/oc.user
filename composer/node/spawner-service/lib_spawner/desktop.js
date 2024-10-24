@@ -168,7 +168,7 @@ function generateIconfile( contentdesktop, icondata ) {
 }
 
 function startservices() {
-	   supervisorctl( 'start', 'plank' );
+	   // supervisorctl( 'start', 'plank' );
 
            // All desktop files are created in ${roothomedir}/.local/share/applications
            // run update-desktop-database
@@ -227,7 +227,7 @@ async function generateDesktopFiles(list = []) {
   console.log('generateDesktopFiles start');
 
   // stop plank
-  supervisorctl( 'stop', 'plank' );
+  // supervisorctl( 'stop', 'plank' );
 
   // dump applist.json file 
   fs.promises.writeFile( `${abcdesktoplogdir}/applist.json`, JSON.stringify(list, null, 2) )
