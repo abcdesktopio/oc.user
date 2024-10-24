@@ -26,8 +26,8 @@
     "node-addon-api": "^8.1.0",
     "node-gyp-build": "^4.8.2",
     "npid": "0.4.0",
-    "oc.user.libraries": "^1.0.3",
-    "which": "5.0.0",
+    "oc.user.libraries": "^1.0.4",
+    "which": "^5.0.0",
     "wmctrljs": "^1.2.8",
     "ws": "^8.17.1"
   },
