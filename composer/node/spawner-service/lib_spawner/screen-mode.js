@@ -77,7 +77,7 @@ async function xsetroot(color) {
  * @param {string} imgName
  * @param {string} bgColor
  */
-async function esetroot(imgName, bgColor) {
+async function esetroot(bgColor, imgName) {
   const ret = { code: 500, data: 'unknow error' };
   // const command = `Esetroot -bg "${bgColor}" -center -fit  "${imgName}"`;
   // const command = `/usr/bin/feh --bg-fill "${imgName}"`;
@@ -130,7 +130,8 @@ async function changeBgImage(imgName = '') {
   const ret = { code: 500, data: 'Internal server error' };
   try {
     const color = await colorflow(imgName);
-    const { code, data } = await xfce4_esetroot( color, imgName );
+    // const { code, data } = await xfce4_esetroot( color, imgName );
+    const { code, data } = await esetroot( color, imgName );
     if (code === 200) {
       await set('currentImgColor', color);
       await broadcast.broadcastevent('display.setBackgroundBorderColor', color);
@@ -189,7 +190,8 @@ function routerInit(router) {
       await fs.promises.unlink(currentWallpaper);
     }
 
-    const { code, data } = await xfce4_esetroot(color);
+    // const { code, data } = await xfce4_esetroot(color);
+    const { code, data } = await esetroot(color);
     ret.code = code;
     ret.data = data;
 
