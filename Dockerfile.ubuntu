@@ -86,7 +86,7 @@ FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} as ubuntu_node_modules_builder
 ARG TARGET_MODE
 # convert ARG to ENV with same name
 ENV TARGET_MODE=$TARGET_MODE
-ENV NODE_MAJOR=18
+ENV NODE_MAJOR=20
 
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 RUN apt-get update && apt-get install -y  --no-install-recommends \
@@ -119,9 +119,9 @@ WORKDIR /composer/node/wait-port
 RUN npm install --save-prod && npm audit fix
 
 # Add nodejs service
-RUN git clone https://github.com/abcdesktopio/oc.user.libraries.git /composer/node/common-libraries
-WORKDIR /composer/node/common-libraries
-RUN npm install --save-prod && npm audit fix
+# RUN git clone https://github.com/abcdesktopio/oc.user.libraries.git /composer/node/common-libraries
+# WORKDIR /composer/node/common-libraries
+# RUN npm install --save-prod && npm audit fix
 
 WORKDIR /composer/node/broadcast-service
 RUN npm install --save-prod && npm audit fix
@@ -176,7 +176,7 @@ ARG TARGET_MODE
 ENV ABCDESKTOP_LOCALACCOUNT_DIR=$ABCDESKTOP_LOCALACCOUNT_DIR
 ENV TARGET_MODE=$TARGET_MODE
 # set node release
-ENV NODE_MAJOR=18
+ENV NODE_MAJOR=20
 
 COPY etc /etc
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
@@ -241,32 +241,32 @@ RUN apt-get update && \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # install 3.3 packages
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        plank \
-        xfdesktop4 \
-        dbus-x11 \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && \
+#    apt-get install -y --no-install-recommends \
+#        plank \
+#        xfdesktop4 \
+#        dbus-x11 \
+#    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
-# install openbox custome packages 
+# install openbox custom packages 
 RUN mkdir -p /tmp/packages
 COPY --from=openbox_ubuntu_builder /openbox/libobt* /openbox/openbox_3.6.1* /openbox/libobrender* /tmp/packages/
 RUN apt-get update  && \
-        apt-get install -y --no-install-recommends -f /tmp/packages/*.deb  && \
+    apt-get install -y --no-install-recommends -f /tmp/packages/*.deb  && \
     rm -rf /tmp/packages && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # install picom-11.2
-COPY --from=picom_ubuntu_builder /picom-11.2/build/src/picom /usr/bin
-COPY --from=picom_ubuntu_builder /picom-11.2/bin/picom-trans /usr/bin
-COPY --from=picom_ubuntu_builder /picom-11.2/picom.desktop /usr/share/applications
-RUN apt-get update  && \
-    apt-get install -y --no-install-recommends \
-          libdbus-1-3 libegl1 libgl1 libepoxy0 libpixman-1-0 libx11-xcb1 libxcb1 libxcb-composite0 libxcb-damage0 libxcb-dpms0 libconfig9 libxcb-glx0 libxcb-image0 libxcb-present0 libxcb-randr0 libxcb-render0 libxcb-render-util0 libxcb-shape0 libxcb-util1 libxcb-xfixes0 libxext6 libxcb-xinerama0 libev4 && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# COPY --from=picom_ubuntu_builder /picom-11.2/build/src/picom /usr/bin
+# COPY --from=picom_ubuntu_builder /picom-11.2/bin/picom-trans /usr/bin
+# COPY --from=picom_ubuntu_builder /picom-11.2/picom.desktop /usr/share/applications
+# RUN apt-get update  && \
+#    apt-get install -y --no-install-recommends \
+#          libdbus-1-3 libegl1 libgl1 libepoxy0 libpixman-1-0 libx11-xcb1 libxcb1 libxcb-composite0 libxcb-damage0 libxcb-dpms0 libconfig9 libxcb-glx0 libxcb-image0 libxcb-present0 libxcb-randr0 libxcb-render0 libxcb-render-util0 libxcb-shape0 libxcb-util1 libxcb-xfixes0 libxext6 libxcb-xinerama0 libev4 && \
+#    apt-get clean && \
+#    rm -rf /var/lib/apt/lists/*
 
 #
 # Uncommant lines to add picom compositor and watermarking support 
@@ -281,6 +281,22 @@ RUN apt-get update  && \
 #    apt-get clean && \
 #    rm -rf /var/lib/apt/lists/*
 #
+#
+
+
+
+#
+# do not install xsetroot 
+# deps is: cpp cpp-13 cpp-13-x86-64-linux-gnu cpp-x86-64-linux-gnu gcc-13-base libisl23 libmpc3 libmpfr6 x11-xserver-utils
+# use hsetroot 
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+       hsetroot \
+       feh && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+
 
 # install composer
 COPY --from=ubuntu_node_modules_builder /composer /composer
@@ -337,6 +353,13 @@ RUN if [ "${TARGET_MODE}" != "hardening" ]; then \
 	apt-get update && \
 	apt-get install -y --no-install-recommends qterminal xfonts-base vim && \
 	apt-get clean && rm -rf /var/lib/apt/lists/*; \
+    fi
+
+
+# WORKDIR /composer/node/xterm.js
+RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
+        apt-get remove -y --allow-remove-essential apt && \
+        rm -rf /var/lib/dpkg /bin/dpkg* /sbin/dpkg-* /var/log/apt /var/log/*.log /etc/apt ; \
     fi
 
 # set command
