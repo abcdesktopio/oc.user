@@ -1,18 +1,10 @@
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
-# Default release is 22.04
 ARG TAG
 # Default base image 
 ARG BASE_IMAGE=ubuntu
+# Default release is 24.04
 ARG BASE_IMAGE_RELEASE=24.04
-# ABCDESKTOP_LOCALACCOUNT_DIR arg
-# use in ENV ABCDESKTOP_LOCALACCOUNT_DIR=$ABCDESKTOP_LOCALACCOUNT_DIR
-# release >= 3.1 set value to "/etc/localaccount"
-# release <  3.1 set value to "/var/secrets/abcdesktop/localaccount"
-# ARG ABCDESKTOP_LOCALACCOUNT_DIR
-# ="/etc/localaccount"
-# only to build from nvidia image 
-
 
 #
 # create package for openbox
@@ -54,25 +46,25 @@ RUN ls *.deb
 #
 # create picom-11.2
 #
-FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} as picom_ubuntu_builder
-ENV DEBEMAIL dev@abcdesktop.io
-ENV EMAIL    dev@abcdesktop.io
-RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-# add src in sources.list
-# for <= 22.04
-RUN sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list ||true
-# for >= 24.04
-RUN sed -Ei 's/^Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources ||true
-RUN sed -Ei 's/^Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/debian.sources ||true
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends cmake devscripts wget ca-certificates libconfig-dev libdbus-1-dev libegl-dev libev-dev libgl-dev libepoxy-dev libpcre2-dev libpixman-1-dev libx11-xcb-dev libxcb1-dev libxcb-composite0-dev libxcb-damage0-dev libxcb-dpms0-dev libxcb-glx0-dev libxcb-image0-dev libxcb-present-dev libxcb-randr0-dev libxcb-render0-dev libxcb-render-util0-dev libxcb-shape0-dev libxcb-util-dev libxcb-xfixes0-dev libxext-dev meson ninja-build uthash-dev 
-RUN apt-get build-dep -y picom
-RUN wget https://github.com/yshui/picom/archive/refs/tags/v11.2.tar.gz
-RUN tar -xvf v11.2.tar.gz
-WORKDIR /picom-11.2
-RUN meson setup -Dcompton=false --buildtype=release build
-RUN ninja -C build install
-
+# FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} as picom_ubuntu_builder
+# ENV DEBEMAIL dev@abcdesktop.io
+# ENV EMAIL    dev@abcdesktop.io
+# RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+# # add src in sources.list
+# # for <= 22.04
+# RUN sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list ||true
+# # for >= 24.04
+# RUN sed -Ei 's/^Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources ||true
+# RUN sed -Ei 's/^Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/debian.sources ||true
+# RUN apt-get update
+# RUN apt-get install -y --no-install-recommends cmake devscripts wget ca-certificates libconfig-dev libdbus-1-dev libegl-dev libev-dev libgl-dev libepoxy-dev libpcre2-dev libpixman-1-dev libx11-xcb-dev libxcb1-dev libxcb-composite0-dev libxcb-damage0-dev libxcb-dpms0-dev libxcb-glx0-dev libxcb-image0-dev libxcb-present-dev libxcb-randr0-dev libxcb-render0-dev libxcb-render-util0-dev libxcb-shape0-dev libxcb-util-dev libxcb-xfixes0-dev libxext-dev meson ninja-build uthash-dev 
+# RUN apt-get build-dep -y picom
+# RUN wget https://github.com/yshui/picom/archive/refs/tags/v11.2.tar.gz
+# RUN tar -xvf v11.2.tar.gz
+# WORKDIR /picom-11.2
+# RUN meson setup -Dcompton=false --buildtype=release build
+# RUN ninja -C build install
+# 
 
 
 # install all nodejs modules
@@ -118,18 +110,13 @@ COPY composer /composer
 WORKDIR /composer/node/wait-port 
 RUN npm install --save-prod && npm audit fix
 
-# Add nodejs service
-# RUN git clone https://github.com/abcdesktopio/oc.user.libraries.git /composer/node/common-libraries
-# WORKDIR /composer/node/common-libraries
-# RUN npm install --save-prod && npm audit fix
-
 WORKDIR /composer/node/broadcast-service
 RUN npm install --save-prod && npm audit fix
 
-RUN mkdir -p aa && git clone https://github.com/abcdesktopio/run-service.git /composer/node/ocrun 
+RUN git clone https://github.com/abcdesktopio/run-service.git /composer/node/ocrun 
 WORKDIR /composer/node/ocrun
 RUN npm install --save-prod && npm audit fix
-RUN cp ocrun.js ocrun.builtin.js && sed -Ei 's/^let DEFAULT_EXECMODE;/let DEFAULT_EXECMODE="builtin";/' ocrun.builtin.js 
+RUN cp ocrun.js ocrun.builtin.js    && sed -Ei 's/^let DEFAULT_EXECMODE;/let DEFAULT_EXECMODE="builtin";/'    ocrun.builtin.js 
 RUN cp ocrun.js ocrun.frontendjs.js && sed -Ei 's/^let DEFAULT_EXECMODE;/let DEFAULT_EXECMODE="frontendjs";/' ocrun.frontendjs.js    
 
 WORKDIR /composer/node/ocdownload
