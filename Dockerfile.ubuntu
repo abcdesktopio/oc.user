@@ -92,7 +92,6 @@ RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 WORKDIR /composer/node/broadcast-service
 RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
 
-
 # RUN git clone https://github.com/abcdesktopio/run-service.git /composer/node/ocrun
 WORKDIR /composer/node/ocrun
 RUN yarn install --production=true && npm i --package-lock-only && npm audit fix
@@ -115,7 +114,6 @@ RUN yarn install --production=true
 # WORKDIR /composer/node/xterm.js
 RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
         rm -rf /composer/node/xterm.js; \
-        ls -la /composer/node; \
     else \
         cd /composer/node/xterm.js; \
         yarn install --production=true; \
@@ -285,6 +283,13 @@ RUN if [ "${TARGET_MODE}" != "hardening" ]; then \
 	apt-get install -y --no-install-recommends qterminal xfonts-base vim && \
 	apt-get clean && rm -rf /var/lib/apt/lists/*; \
     fi
+
+# WORKDIR /composer/node/xterm.js
+RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
+        apt-get remove -y --allow-remove-essential apt && \
+        rm -rf /var/lib/dpkg /bin/dpkg* /sbin/dpkg-* /var/log/apt /var/log/*.log /etc/apt ; \
+    fi
+
 
 # set command
 CMD [ "/composer/docker-entrypoint.sh" ]
