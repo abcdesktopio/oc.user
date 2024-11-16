@@ -20,6 +20,10 @@ jobs:
         with:
           ref: ${{ github.ref_name }}
           submodules: true
+      - name: Git Submodule Update references
+        run: |
+          git pull --recurse-submodules
+          git submodule update --remote --recursive
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
