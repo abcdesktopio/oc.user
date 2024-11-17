@@ -284,11 +284,11 @@ RUN if [ "${TARGET_MODE}" != "hardening" ]; then \
 	apt-get clean && rm -rf /var/lib/apt/lists/*; \
     fi
 
-# WORKDIR /composer/node/xterm.js
-RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
-        apt-get remove -y --allow-remove-essential apt && \
-        rm -rf /var/lib/dpkg /bin/dpkg* /sbin/dpkg-* /var/log/apt /var/log/*.log /etc/apt ; \
-    fi
+# # WORKDIR /composer/node/xterm.js
+# RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
+#         apt-get remove -y --allow-remove-essential apt && \
+#        rm -rf /var/lib/dpkg /bin/dpkg* /sbin/dpkg-* /var/log/apt /var/log/*.log /etc/apt ; \
+#    fi
 
 
 # set command
