@@ -196,11 +196,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # tigervncserver_1.13.1-1ubuntu1_arm64.deb    
 # but replace by curl command to support dpkg --print-architecture for amd64 and arm64
 # tigervncserver_1.14.80-1ubuntu1_22.04_amd64.deb
-ENV TIGERVNC_RELEASE=14.0
+# tigervncserver_1.14.1-1ubuntu1_22.04.amd64.deb
+# tigervncserver_1.14.1-1ubuntu1_24.04.amd64.deb
+ENV TIGERVNC_RELEASE=1.14.1
 RUN apt-get update  && \
     source /etc/lsb-release && \
     echo DISTRIB_RELEASE=$DISTRIB_RELEASE && \
-    tigervncdeburl="https://github.com/abcdesktopio/oc.user/raw/3.3/tigervncserver_1.${TIGERVNC_RELEASE}-1ubuntu1_${DISTRIB_RELEASE}_$(dpkg --print-architecture).deb" && \
+    tigervncdeburl="https://github.com/abcdesktopio/oc.user/raw/3.3/tigervncserver_${TIGERVNC_RELEASE}-1ubuntu1_${DISTRIB_RELEASE}.$(dpkg --print-architecture).deb" && \
     echo Downloading $tigervncdeburl && \
     curl -sL --output /tmp/tigervncserver.deb "$tigervncdeburl" && \  
     apt-get install -y --no-install-recommends /tmp/tigervncserver.deb && \
@@ -226,6 +228,16 @@ RUN apt-get update && \
 	xclip \
 	libglib2.0-bin \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
+# install for nvidia
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends 
+	mesa-utils \       
+	drm-info \
+	libglvnd0 \
+    && apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # install 3.3 packages
 # RUN apt-get update && \
