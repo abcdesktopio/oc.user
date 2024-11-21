@@ -9,7 +9,7 @@ export CDEPTH=${CDEPTH:-24}
 export VIDEO_PORT=${VIDEO_PORT:-DFP}
 export ABCDESKTOP_RUN_DIR=${ABCDESKTOP_RUN_DIR:-'/var/run/desktop'}
 export NOVNC_ENABLE=${NOVNC_ENABLE:-true}
-export DISPLAY=:0 
+export DISPLAY=${DISPLAY:-:0}
 export WIDTH=${WIDTH:-1024}
 export HEIGHT=${HEIGHT:-768}
 export MAX_WIDTH=${MAX_WIDTH:-1920}
@@ -86,7 +86,7 @@ sed -i '/Section\s\+"Screen"/a\    '"Option \"UseDisplayDevice\" \"none\"" /etc/
 
 # Default display is :0 across the container
 # Run Xorg server with required extensions
-Xorg vt7 -noreset -novtswitch -sharevts -dpi "${DPI}" +extension "GLX" +extension "RANDR" +extension "RENDER" +extension "MIT-SHM" ${X11_PARAMS} "${DISPLAY}" &
+Xorg ${DISPLAY} vt7 -noreset -novtswitch -sharevts -dpi "${DPI}" +extension "GLX" +extension "RANDR" +extension "RENDER" +extension "MIT-SHM" ${X11_PARAMS} "${DISPLAY}" &
 
 # Wait for X11 to start
 echo "Waiting for X socket"
@@ -101,4 +101,4 @@ fi
 
 # Run the x11vnc + noVNC fallback web interface if enabled
 # -rfbauth "$ABCDESKTOP_RUN_DIR"/.vnc/passwd
-exec x0vncserver -display :0 -AcceptSetDesktopSize=1 -Log *:stdout:100 -rfbport=-1 -rfbunixpath /tmp/.x11vnc -rfbauth /var/run/desktop/.vnc/passwd | grep --line-buffered 'VNCSConnST:  Got request for framebuffer resize to' | awk -W interactive '{print $8}' | xargs -I{} xrandr --fb {}
+exec x0vncserver -display ${DISPLAY} -AcceptSetDesktopSize=1 -Log *:stdout:100 -rfbport=-1 -rfbunixpath /tmp/.x11vnc -rfbauth /var/run/desktop/.vnc/passwd | grep --line-buffered 'VNCSConnST:  Got request for framebuffer resize to' | awk -W interactive '{print $8}' | xargs -I{} xrandr --fb {}
