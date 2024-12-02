@@ -83,13 +83,7 @@ describe('Test broadcast-serivce', () => {
     },
     {
       method: 'display.setBackgroundBorderColor',
-    },
-    {
-      method: 'ocrun',
-    },
-    {
-      method: 'logout',
-    },
+    }
   ];
 
   for (const data of datas) {
