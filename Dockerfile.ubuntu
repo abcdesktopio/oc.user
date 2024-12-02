@@ -114,30 +114,30 @@ COPY composer /composer
 
 # add wait-port
 WORKDIR /composer/node/wait-port 
-RUN npm install --save-prod && npm audit fix
+RUN npm install && npm audit fix
 
 WORKDIR /composer/node/broadcast-service
-RUN npm install --save-prod && npm audit fix
+RUN npm install && npm audit fix
 
 RUN git clone https://github.com/abcdesktopio/run-service.git /composer/node/ocrun 
 WORKDIR /composer/node/ocrun
-RUN npm install --save-prod && npm audit fix
+RUN npm install && npm audit fix
 RUN cp ocrun.js ocrun.builtin.js    && sed -Ei 's/^let DEFAULT_EXECMODE;/let DEFAULT_EXECMODE="builtin";/'    ocrun.builtin.js 
 RUN cp ocrun.js ocrun.frontendjs.js && sed -Ei 's/^let DEFAULT_EXECMODE;/let DEFAULT_EXECMODE="frontendjs";/' ocrun.frontendjs.js    
 
 WORKDIR /composer/node/ocdownload
-RUN npm install --save-prod && npm audit fix
+RUN npm install && npm audit fix
 
 WORKDIR /composer/node/occall
-RUN npm install --save-prod && npm audit fix
+RUN npm install && npm audit fix
 
 WORKDIR /composer/node/spawner-service/lib_spawner/colorflow
 RUN npm install --save-prod && npm audit fix
 
 WORKDIR /composer/node/spawner-service
 # install node-gyp to build spawner-service
-RUN npm install --save-prod --global node-gyp
-RUN npm install --save-prod
+RUN npm install --global node-gyp
+RUN npm install
 
 WORKDIR /
 RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
