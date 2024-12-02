@@ -50,6 +50,8 @@ trap stop SIGINT SIGQUIT SIGHUP SIGTERM
 # Read first $POD_IP if not set get from hostname -i ip addr
 export CONTAINER_IP_ADDR=${POD_IP:-$(hostname -i)}
 
+
+echo "== stage init == "
 # dump vars
 echo NAMESPACE=${NAMESPACE}
 echo "Container local ip addr is $CONTAINER_IP_ADDR"
@@ -75,6 +77,7 @@ id
 rm -rf /tmp/.X0-lock
 
 
+echo "== stage vnc == "
 
 # get VNC_PASSWORD 
 # use vncpasswd command line to create a vnc passwd file
@@ -114,6 +117,8 @@ fi
 #	echo changemeplease | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
 #fi
 
+
+echo "== stage env == "
 
 # create a MIT-MAGIC-COOKIE-1 entry in .Xauthority
 if [ ! -z "$XAUTH_KEY" ]; then
@@ -293,6 +298,8 @@ fi
 #fi
 
 
+echo "== stage cert == "
+
 # check if user bind local interface
 # mode bridge and need to build a new x509 certificat USE_CERTBOT_CERTONLY
 if [ "$USE_CERTBOT_CERTONLY" == "enabled" ]; then
@@ -361,6 +368,8 @@ if [ -x /usr/bin/dbus-launch ]; then
 	export $(/usr/bin/dbus-launch)
 fi
 
+echo "== stage KERBEROS == "
+
 ## KERBEROS SECTION
 if [ -f ${ABCDESKTOP_SECRETS_DIR}/kerberos/keytab ]; then
         export KRB5_CLIENT_KTNAME=${ABCDESKTOP_SECRETS_DIR}/kerberos/keytab
@@ -410,6 +419,8 @@ echo `date` > ${ABCDESKTOP_RUN_DIR}/start.txt
 # fi
 
 
+echo "== stage KUBERNETES == "
+
 if [ ! -z "$KUBERNETES_SERVICE_HOST" ]; then
    echo "starting in kubernetes mode " >> /var/log/desktop/config.log
    echo "starting KUBERNETES_SERVICE_HOST is set to $KUBERNETES_SERVICE_HOST" >> /var/log/desktop/config.log
@@ -422,6 +433,9 @@ fi
 # export VAR to running procces
 export KUBERNETES_SERVICE_HOST
 
+
+
+echo "== stage wallpaper == "
 
 # set wallpaper default
 # file in .store
@@ -455,6 +469,8 @@ else
 fi
 
 
+echo "== stage backgroundcolor == "
+
 # set colord default
 # file in .store
 # currentColor
@@ -475,6 +491,9 @@ if [ ! -z "$SET_DEFAULT_COLOR" ]; then
 else
         echo "SET_DEFAULT_COLOR is not defined, keep default value"
 fi
+
+
+echo "== stage gpu == "
 
 # nvidia test
 if [ -d /proc/driver/nvidia ]; then
@@ -497,9 +516,13 @@ echo "DISABLE_REMOTEIP_FILTERING=$DISABLE_REMOTEIP_FILTERING" >> /var/log/deskto
 echo "BROADCAST_COOKIE=$BROADCAST_COOKIE" >> /var/log/desktop/config.log
 
 
+echo "== stage gsettings == "
+
 # update gsettings
 gsettings set net.launchpad.plank.dock.settings:/net/launchpad/plank/docks/dock1/ zoom-percent 200
 gsettings set net.launchpad.plank.dock.settings:/net/launchpad/plank/docks/dock1/ zoom-enabled true
 
+
+echo "== stage supervisord == "
 # start supervisord
 /usr/bin/supervisord --pidfile /var/run/desktop/supervisord.pid --nodaemon --configuration /etc/supervisord.conf
