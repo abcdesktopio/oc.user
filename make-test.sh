@@ -3,7 +3,7 @@
 
 echo args is $1 
 # set default IMAGE_RELEASE to run test
-DEFAULT_IMAGE=abcdesktopio/oc.user.ubuntu:3.2
+DEFAULT_IMAGE=abcdesktopio/oc.user.ubuntu.24.04:3.3
 IMAGE_RELEASE=${1:-$DEFAULT_IMAGE}
 
 # show used IMAGE_RELEASE
@@ -103,8 +103,7 @@ done
 echo "Container services are started TRY_COUNT=$TRY_COUNT SERVICE_COUNT=$SERVICE_COUNT/$MAX_SERVICE_COUNT"
 
 # start plank
-docker exec ${CONTAINER_ID} /usr/bin/supervisorctl start plank
-
+# docker exec ${CONTAINER_ID} /usr/bin/supervisorctl start plank
 
 # run tests
 echo "Run tests..."
