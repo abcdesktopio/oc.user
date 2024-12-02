@@ -31,12 +31,14 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}   
       - name: Run Buildx oc.user
         run: ./mkversion.sh ${{ matrix.target_mode }}
+
+      # test only on linux/amd64
       - name: Build test image abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ env.imagetag }}
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./Dockerfile.ubuntu
-          platforms: linux/amd64, linux/arm64
+          platforms: linux/amd64
           push: true
           build-args: |
             TARGET_MODE=${{ matrix.target_mode }}
