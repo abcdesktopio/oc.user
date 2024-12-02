@@ -8,19 +8,17 @@ echo "TARGET_MODE=$TARGET_MODE"
 echo "netstat dump"
 netstat -anp 
 
-echo supervisorctl status
-/usr/bin/supervisorctl status
-
 echo 'testing spawner-service'
 cd /composer/node/spawner-service 
-CONTAINER_IP=${CONTAINER_IP} yarn test
+CONTAINER_IP=${CONTAINER_IP} npm test
 
 echo 'testing broadcast-service'
 cd /composer/node/broadcast-service 
-CONTAINER_IP=${CONTAINER_IP} yarn test
+CONTAINER_IP=${CONTAINER_IP} npm test
 
 # xterm exists only in 'ubuntu' ( the default configuration )
 if [ "$TARGET_MODE" == "ubuntu" ]; then
+	echo 'testing xterm-service'
 	cd /composer/node/xterm.js 
-	CONTAINER_IP=${CONTAINER_IP} yarn test
+	CONTAINER_IP=${CONTAINER_IP} npm test
 fi
