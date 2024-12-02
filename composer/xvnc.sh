@@ -1,6 +1,10 @@
 #!/bin/bash
-
+DISPLAY=${DISPLAY:-':0'}
+ABCDESKTOP_RUN_DIR=${ABCDESKTOP_RUN_DIR:-'/var/run/desktop'}
+ABCDESKTOP_LOG_DIR=${ABCDESKTOP_LOG_DIR:-'/var/log/desktop'}
 XVNC_PARAMS=""
+
+
 echo "X11LISTEN=${X11LISTEN}"
 # add -listen $X11LISTEN if $X11LISTEN is set to tcp
 if [ "${X11LISTEN}" == "tcp" ]; then
@@ -25,22 +29,16 @@ else
         echo "Accept clipboard updates from clients"
 fi
 
-
+# add parameter -interface ${CONTAINER_IP_ADDR}
+CONTAINER_IP_ADDR=${CONTAINER_IP_ADDR:-$(hostname -i)}
+echo "CONTAINER_IP_ADDR=${CONTAINER_IP_ADDR}"
 if [ -z "${CONTAINER_IP_ADDR}" ]; then
-	echo "this is wrong CONTAINER_IP_ADDR is not set"
-	echo "try to read again" 
-	CONTAINER_IP_ADDR=$(hostname -i)
-	if [ -z "${CONTAINER_IP_ADDR}" ]; then
-		echo "This should be a fatal error listening on all interface"
-	else
-		XVNC_PARAMS="${XVNC_PARAMS} -interface ${CONTAINER_IP_ADDR}"
-	fi
+	echo "This should be a fatal error listening on all interface"
 else
 	XVNC_PARAMS="${XVNC_PARAMS} -interface ${CONTAINER_IP_ADDR}"
 fi
 
 echo "XVNC_PARAMS=${XVNC_PARAMS}"
-echo "CONTAINER_IP_ADDR=${CONTAINER_IP_ADDR}"
 
 ##
 # this section code try to find a render device
@@ -84,6 +82,8 @@ if [ -d /dev/dri ]; then
 	fi
 fi
 
+echo "RENDER_PARAM=${RENDER_PARAM}"
+
 # force geometry if ABCDESKTOP_GEOMETRY is defined
 # format 3840x2160
 GEOMETRY_PARAM=''
@@ -103,5 +103,5 @@ fi
 env>${ABCDESKTOP_LOG_DIR}/xserver.env
 
 # start the Xvnc server 
-exec /usr/bin/Xvnc :0 -auth ~/.Xauthority ${GEOMETRY_PARAM} -SendPrimary=0 -depth 24 -rfbport=-1 -rfbunixpath /tmp/.x11vnc -pn -rfbauth ${ABCDESKTOP_RUN_DIR}/.vnc/passwd ${XVNC_PARAMS} +extension GLX +extension RANDR +extension MIT-SHM ${RENDER_PARAM}
+exec /usr/bin/Xvnc ${DISPLAY} -auth ~/.Xauthority ${GEOMETRY_PARAM} -SendPrimary=0 -depth 24 -rfbport=-1 -rfbunixpath /tmp/.x11vnc -pn -rfbauth ${ABCDESKTOP_RUN_DIR}/.vnc/passwd ${XVNC_PARAMS} +extension GLX +extension RANDR +extension MIT-SHM ${RENDER_PARAM}
 
