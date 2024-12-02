@@ -19,7 +19,7 @@ ARG BASE_IMAGE_RELEASE=24.04
 # libobrender32v5_3.6.1-12build5.1_amd64.deb      
 # openbox-dev_3.6.1-12build5.1_amd64.deb  
 # openbox-kde-session_3.6.1-12build5.1_all.deb
-FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} as openbox_ubuntu_builder
+FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} AS openbox_ubuntu_builder
 ENV DEBEMAIL dev@abcdesktop.io
 ENV EMAIL    dev@abcdesktop.io
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
@@ -46,7 +46,7 @@ RUN ls *.deb
 #
 # create picom-11.2
 #
-# FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} as picom_ubuntu_builder
+# FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} AS picom_ubuntu_builder
 # ENV DEBEMAIL dev@abcdesktop.io
 # ENV EMAIL    dev@abcdesktop.io
 # RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
@@ -72,7 +72,7 @@ RUN ls *.deb
 # create /composer/node
 # use FROM BASE_IMAGE
 # define FROM before use ENV command
-FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} as ubuntu_node_modules_builder
+FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} AS ubuntu_node_modules_builder
 
 # define arg
 ARG TARGET_MODE
