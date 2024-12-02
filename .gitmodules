@@ -6,10 +6,6 @@
 	path = etc/pulse
 	url = https://github.com/abcdesktopio/pulse
 	branch = main
-[submodule "composer/node/common-libraries"]
-	path = composer/node/common-libraries
-	url = https://github.com/abcdesktopio/oc.user.libraries.git
-	branch = main
 [submodule "composer/node/ocrun"]
 	path = composer/node/ocrun
 	url = https://github.com/abcdesktopio/run-service.git
