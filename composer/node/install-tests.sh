@@ -29,7 +29,7 @@ if [[ ${distrib} == "ubuntu" ]]; then
 fi
 
 # install yarn with npm install
-# npm install -g yarn
+npm install -g yarn
 # install full options without production
 
 echo "install /composer/node/spawner-service/lib_spawner/colorflow"
