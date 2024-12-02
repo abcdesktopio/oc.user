@@ -15,17 +15,18 @@ fi
 
 if [ -x /usr/bin/Esetroot ]; then
         if [ ! -z "$imgName" ]; then
-                imgParam="-center -fit ${imgName}"
-        fi
-        exec /usr/bin/Esetroot -bg "${bgColor}" $imgParam &>> $ESETROOT_LOGFILE
+		exec /usr/bin/Esetroot -bg "${bgColor}" -center -fit "${imgName}" &>> $ESETROOT_LOGFILE
+	else
+        	exec /usr/bin/Esetroot -bg "${bgColor}" &>> $ESETROOT_LOGFILE
+	fi
 fi
 
 if [ -x /usr/bin/hsetroot ]; then
         if [ ! -z "$imgName" ]; then
-                echo "set imgParam"
-                imgParam="-center ${imgName}"
-        fi
-        exec  /usr/bin/hsetroot -solid "${bgColor}" $imgParam &>> $ESETROOT_LOGFILE
+		exec  /usr/bin/hsetroot -solid "${bgColor}" -center "${imgName}" &>> $ESETROOT_LOGFILE
+	else
+        	exec  /usr/bin/hsetroot -solid "${bgColor}" &>> $ESETROOT_LOGFILE
+	fi
 fi
 
 if [ ! -z "$imgName" ]; then
