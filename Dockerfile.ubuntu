@@ -80,10 +80,15 @@ RUN ls *.deb
 # define FROM before use ENV command
 FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} AS ubuntu_node_modules_builder
 
+# use bash
+SHELL ["/bin/bash", "-c"]
+
 # define arg
 ARG TARGET_MODE
+ARG TARGET_PRUNE
 # convert ARG to ENV with same name
 ENV TARGET_MODE=$TARGET_MODE
+ENV TARGET_PRUNE=$TARGET_PRUNE
 ENV NODE_MAJOR=20
 
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
@@ -112,39 +117,51 @@ RUN  mkdir -p /etc/apt/keyrings && \
 
 COPY composer /composer
 
+RUN npm install --global node-gyp
+RUN echo target_prune="$TARGET_PRUNE"
+RUN if [ -z "$TARGET_PRUNE" ] ; then echo "TARGET_PRUNE is not defined, build with dev" ; else echo "TARGET_PRUNE is defined, NO DEV options" ; fi
+
 # add wait-port
 WORKDIR /composer/node/wait-port 
-RUN npm install && npm audit fix
+RUN npm install --omit=dev && npm audit fix
 
 WORKDIR /composer/node/broadcast-service
-RUN npm install && npm audit fix
+RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
+RUN npm i --package-lock-only && npm audit fix
 
 RUN git clone https://github.com/abcdesktopio/run-service.git /composer/node/ocrun 
 WORKDIR /composer/node/ocrun
-RUN npm install && npm audit fix
+RUN if [ ! -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
 RUN cp ocrun.js ocrun.builtin.js    && sed -Ei 's/^let DEFAULT_EXECMODE;/let DEFAULT_EXECMODE="builtin";/'    ocrun.builtin.js 
 RUN cp ocrun.js ocrun.frontendjs.js && sed -Ei 's/^let DEFAULT_EXECMODE;/let DEFAULT_EXECMODE="frontendjs";/' ocrun.frontendjs.js    
+RUN npm i --package-lock-only && npm audit fix
 
 WORKDIR /composer/node/ocdownload
-RUN npm install && npm audit fix
+RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
+RUN npm audit fix
 
 WORKDIR /composer/node/occall
-RUN npm install && npm audit fix
+RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
+RUN npm audit fix
 
 WORKDIR /composer/node/spawner-service/lib_spawner/colorflow
-RUN npm install --save-prod && npm audit fix
+RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
+RUN npm audit fix
 
 WORKDIR /composer/node/spawner-service
 # install node-gyp to build spawner-service
-RUN npm install --global node-gyp
-RUN npm install
+RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
+
+WORKDIR /composer/node/spawner-service/lib_spawner/colorflow
+RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; npm run build;  fi
+RUN npm audit fix
 
 WORKDIR /
 RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
         rm -rf /composer/node/xterm.js; \
     else \
-        cd /composer/node/xterm.js && \
-        npm install --save-prod; \  
+        cd /composer/node/xterm.js ;\
+	if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi ;\ 
     fi
 
 # version.json must be created by mkversion.sh bash script
@@ -174,7 +191,7 @@ ENV NODE_MAJOR=20
 COPY etc /etc
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
     apt-get update  && \
-    apt-get upgrade -y --no-install-recommends && \
+    apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
         ca-certificates \
         curl \
@@ -217,6 +234,7 @@ RUN apt-get update  && \
 
 
 # install core packages
+# x11-apps is need to install xeyes xeyes is a test application
 RUN apt-get update && \    
     apt-get install -y --no-install-recommends -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
         supervisor \
@@ -232,6 +250,7 @@ RUN apt-get update && \
 	adwaita-icon-theme \
 	adwaita-qt \
 	xclip \
+	x11-apps \
 	libglib2.0-bin \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -304,8 +323,7 @@ RUN mkdir -p /etc/apt/keyrings && \
     apt-get update && \
     apt-get install -y --no-install-recommends nodejs && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    node --version
+    rm -rf /var/lib/apt/lists/*
 
 #
 # themes section
