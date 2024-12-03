@@ -51,7 +51,8 @@ jobs:
       - name: Run and test docker image abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ env.imagetag }}
         run: |
           TARGET_MODE=${{ matrix.target_mode }} ./make-test.sh abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ env.imagetag }}
-    
+
+      # TARGET_PRUNE=true build without dev and test files
       - name: Build and push image oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
         uses: docker/build-push-action@v6
         with:
@@ -61,6 +62,7 @@ jobs:
           push: true
           build-args: |
             TARGET_MODE=${{ matrix.target_mode }}
+            TARGET_PRUNE=true
             ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount
             BASE_IMAGE_RELEASE=24.04
             BASE_IMAGE=ubuntu
