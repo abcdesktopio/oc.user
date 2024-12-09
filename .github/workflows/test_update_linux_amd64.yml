@@ -5,6 +5,7 @@ on:
   
 env: 
   imagetag: ${{ github.head_ref || github.ref_name || 'dev' }}
+  base_image_release: '24.04'
     
 jobs:
   build_matrix: 
@@ -44,9 +45,9 @@ jobs:
           build-args: |
             TARGET_MODE=${{ matrix.target_mode }}
             ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount
-            BASE_IMAGE_RELEASE=24.04
+            BASE_IMAGE_RELEASE=${{ env.base_image_release }}
             BASE_IMAGE=ubuntu
-          tags: abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ env.imagetag }}
+          tags: abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}:test.${{ env.imagetag }}
 
       - name: Run and test docker image abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ env.imagetag }}
         run: |
@@ -64,14 +65,14 @@ jobs:
             TARGET_MODE=${{ matrix.target_mode }}
             TARGET_PRUNE=true
             ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount
-            BASE_IMAGE_RELEASE=24.04
+            BASE_IMAGE_RELEASE=${{ env.base_image_release }}
             BASE_IMAGE=ubuntu
-          tags: abcdesktopio/oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
+          tags: abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}:${{ env.imagetag }}
       
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: abcdesktopio/oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
+          image-ref: abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}:${{ env.imagetag }}
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
@@ -89,8 +90,8 @@ jobs:
             TARGET_MODE=${{ matrix.target_mode }}
             ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount
             TAG=${{ env.imagetag }}
-            BASE_IMAGE=abcdesktopio/oc.user.${{ matrix.target_mode }}
-          tags: abcdesktopio/oc.user.${{ matrix.target_mode }}.sudo:${{ env.imagetag }}
+            BASE_IMAGE=abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}
+          tags: abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}.sudo:${{ env.imagetag }}
   notify:
     needs: build_matrix
     runs-on: ubuntu-latest
