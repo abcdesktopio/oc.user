@@ -79,8 +79,8 @@ jobs:
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
 
-      - name: Build and push sudo image oc.user.${{ matrix.target_mode }}.sudo:${{ env.imagetag }} from abcdesktopio/oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
-        uses: docker/build-push-action@v5
+      - name: Build and push sudo image oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}.sudo:${{ env.imagetag }} from abcdesktopio/oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile.ubuntu.sudo
@@ -91,15 +91,6 @@ jobs:
             ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount
             TAG=${{ env.imagetag }}
             BASE_IMAGE=abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}
+            BASE_IMAGE_RELEASE=${{ env.base_image_release }}
           tags: abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}.sudo:${{ env.imagetag }}
-  notify:
-    needs: build_matrix
-    runs-on: ubuntu-latest
-    steps:
-      - name: Repository Dispatch
-        uses: peter-evans/repository-dispatch@v3
-        with:
-          token: ${{ secrets.TOKEN_DISPATCH }}
-          repository: abcdesktopio/oc.user
-          event-type: dispatch-from-test
-          client-payload: '{"ref": "${{ github.ref_name }}", "sha": "${{ github.sha }}"}'
+ 
