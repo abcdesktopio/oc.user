@@ -91,6 +91,6 @@ jobs:
             ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount
             TAG=${{ env.imagetag }}
             BASE_IMAGE=abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}
-            BASE_IMAGE_RELEASE=${{ env.base_image_release }}
+            BASE_IMAGE_RELEASE=${{ env.imagetag }}
           tags: abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}.sudo:${{ env.imagetag }}
  
