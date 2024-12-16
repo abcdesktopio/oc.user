@@ -163,6 +163,7 @@ watchForASocket(pathPulseSocket, async function handlerForPulseaudioSocket () {
   console.log( 'handlerForPulseaudioSocket is starting' );
   global.audioConf.pulseAudioSocketIsUp = true;
   try {
+    console.log( 'sending broadcastevent(speaker.available, true)');
     await broadcastevent('speaker.available', true);
     //await global.audioConf.configureWebRTCStream('handlerForPulseaudioSocket');
   } catch(e) {
@@ -173,6 +174,7 @@ watchForASocket(pathPulseSocket, async function handlerForPulseaudioSocket () {
   console.log( 'handlerForPulseaudioSocket has failed' );
   global.audioConf.pulseAudioSocketIsUp = false;
   try {
+    console.log( 'sending broadcastevent(speaker.available, false)');
     await broadcastevent('speaker.available', false);
   } catch(e) {
     console.error(e);
