@@ -158,21 +158,17 @@ function routerInit(router) {
   }));
 }
 
-watchForASocket(pathPulseSocket, async function handlerForPulseaudioSocket () {
+watchForASocket(pathPulseSocket, async () => {
   //Name the callback to be able of identify the caller of [configureWebRTCStream] function
   console.log( 'handlerForPulseaudioSocket is starting' );
-  global.audioConf.pulseAudioSocketIsUp = true;
   try {
     console.log( 'sending broadcastevent(speaker.available, true)');
     await broadcastevent('speaker.available', true);
-    //await global.audioConf.configureWebRTCStream('handlerForPulseaudioSocket');
   } catch(e) {
     console.error(e);
   }
-
 }, async () => {
   console.log( 'handlerForPulseaudioSocket has failed' );
-  global.audioConf.pulseAudioSocketIsUp = false;
   try {
     console.log( 'sending broadcastevent(speaker.available, false)');
     await broadcastevent('speaker.available', false);
