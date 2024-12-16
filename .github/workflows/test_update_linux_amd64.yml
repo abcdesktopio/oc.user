@@ -5,6 +5,7 @@ on:
   
 env: 
   imagetag: ${{ github.head_ref || github.ref_name || 'dev' }}
+  base_image_release: '24.04'
     
 jobs:
   build_matrix: 
@@ -44,9 +45,9 @@ jobs:
           build-args: |
             TARGET_MODE=${{ matrix.target_mode }}
             ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount
-            BASE_IMAGE_RELEASE=24.04
+            BASE_IMAGE_RELEASE=${{ env.base_image_release }}
             BASE_IMAGE=ubuntu
-          tags: abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ env.imagetag }}
+          tags: abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}:test.${{ env.imagetag }}
 
       - name: Run and test docker image abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ env.imagetag }}
         run: |
@@ -64,22 +65,22 @@ jobs:
             TARGET_MODE=${{ matrix.target_mode }}
             TARGET_PRUNE=true
             ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount
-            BASE_IMAGE_RELEASE=24.04
+            BASE_IMAGE_RELEASE=${{ env.base_image_release }}
             BASE_IMAGE=ubuntu
-          tags: abcdesktopio/oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
+          tags: abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}:${{ env.imagetag }}
       
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: abcdesktopio/oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
+          image-ref: abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}:${{ env.imagetag }}
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
 
-      - name: Build and push sudo image oc.user.${{ matrix.target_mode }}.sudo:${{ env.imagetag }} from abcdesktopio/oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
-        uses: docker/build-push-action@v5
+      - name: Build and push sudo image oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}.sudo:${{ env.imagetag }} from abcdesktopio/oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile.ubuntu.sudo
@@ -89,16 +90,7 @@ jobs:
             TARGET_MODE=${{ matrix.target_mode }}
             ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount
             TAG=${{ env.imagetag }}
-            BASE_IMAGE=abcdesktopio/oc.user.${{ matrix.target_mode }}
-          tags: abcdesktopio/oc.user.${{ matrix.target_mode }}.sudo:${{ env.imagetag }}
-  notify:
-    needs: build_matrix
-    runs-on: ubuntu-latest
-    steps:
-      - name: Repository Dispatch
-        uses: peter-evans/repository-dispatch@v3
-        with:
-          token: ${{ secrets.TOKEN_DISPATCH }}
-          repository: abcdesktopio/oc.user
-          event-type: dispatch-from-test
-          client-payload: '{"ref": "${{ github.ref_name }}", "sha": "${{ github.sha }}"}'
+            BASE_IMAGE=abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}
+            BASE_IMAGE_RELEASE=${{ env.imagetag }}
+          tags: abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}.sudo:${{ env.imagetag }}
+ 
