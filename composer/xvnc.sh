@@ -42,8 +42,8 @@ echo "XVNC_PARAMS=${XVNC_PARAMS}"
 
 ##
 # this section code try to find a render device
-RENDER_PARAM=''
-
+# and set RENDER_NODE value
+RENDER_NODE='' # default value
 if [ -d /dev/dri ]; then
 	# try to run /usr/bin/nvidia-smi -L
 	# to check if a nvidia device is present
@@ -66,23 +66,15 @@ if [ -d /dev/dri ]; then
 	  		gpu_bus_id=${gpu_bus_id:4:12}
         	fi
 
-		rendernode="/dev/dri/by-path/pci-${gpu_bus_id}-render"
-		if [ -c "${rendernode}" ]; then 
-	        	echo "$rendernode is a character device."	
-        		RENDER_PARAM="-rendernode ${rendernode}"
-		fi
+		RENDER_NODE="/dev/dri/by-path/pci-${gpu_bus_id}-render"
 	else
 		# read the first render device entry in /dev/dri
-		rendernode=$(ls /dev/dri/render* |head -1)
-		if [ -c "${rendernode}" ]; then
-                        echo "${rendernode} is a character device."       
-                        RENDER_PARAM="-rendernode ${rendernode}"
-                fi
-
+		RENDER_NODE=$(ls /dev/dri/render* |head -1)
 	fi
+
+	echo "RENDER_NODE is found value ${RENDER_NODE}"
 fi
 
-echo "RENDER_PARAM=${RENDER_PARAM}"
 
 # force geometry if ABCDESKTOP_GEOMETRY is defined
 # format 3840x2160
@@ -103,9 +95,19 @@ fi
 env>${ABCDESKTOP_LOG_DIR}/xserver.env
 
 if dpkg -l kasmvncserver; then
-exec /usr/bin/Xvnc ${DISPLAY} \
+	echo "we are using kasmvnc"
+
+	# create RENDER_PARAM
+	RENDER_PARAM=''
+	if [ -c "${RENDER_NODE}" ]; then
+                        echo "${RENDER_NODE} is a character device."
+                        RENDER_PARAM="-drinode ${RENDER_NODE}"
+        fi
+
+	exec /usr/bin/Xvnc ${DISPLAY} \
 	-auth ~/.Xauthority \
 	${XVNC_PARAMS} \
+	-hw3d \
 	-FrameRate=24 \
 	-depth 24 \
 	-rfbport=-1 \
@@ -118,10 +120,9 @@ exec /usr/bin/Xvnc ${DISPLAY} \
 	-websocketPort=6081 \
 	-DisableBasicAuth=1 \
 	-BlacklistThreshold=0 \
-	-BlacklistTimeout 10 \
 	-FreeKeyMappings \
 	-PreferBandwidth \
-	-DynamicQualityMin=4 \
+	-DynamicQualityMin=2 \
 	-DynamicQualityMax=8 \
 	-DLP_ClipDelay=0 \
 	-DLP_ClipAcceptMax 0 \
@@ -136,7 +137,6 @@ exec /usr/bin/Xvnc ${DISPLAY} \
 	-DisconnectClients 0 \
 	-Log *:stdout:100 \
 	-geometry 1024x768 \
-	-VideoScaling 2 \
 	-DLP_ClipDelay 0 \
 	-DLP_ClipSendMax 0 \
        	-IdleTimeout 0 \
@@ -146,13 +146,17 @@ exec /usr/bin/Xvnc ${DISPLAY} \
 	-udpFullFrameFrequency 0 \
 	-publicIP 127.0.0.1 \
 	-AvoidShiftNumLock 0 \
-	-MaxVideoResolution 1920x1080 \
-	-RawKeyboard 0 \
 	-MaxConnectionTime 0 \
 	-DLP_ClipTypes chromium/x-web-custom-data,text/html,image/png \
 	-AcceptPointerEvents 1 \
-	-fp /usr/share/fonts/X11//misc,/usr/share/fonts/X11/Type1 -TreatLossless 8 
+	-fp /usr/share/fonts/X11//misc,/usr/share/fonts/X11/Type1 ${RENDER_PARAM} 
 else
-# start the Xvnc server 
-exec /usr/bin/Xvnc ${DISPLAY} -auth ~/.Xauthority ${GEOMETRY_PARAM} -SendPrimary=0 -depth 24 -rfbport=-1 -rfbunixpath /tmp/.x11vnc -pn -rfbauth "${ABCDESKTOP_RUN_DIR}/.vnc/passwd" ${XVNC_PARAMS} +extension GLX +extension RANDR +extension MIT-SHM ${RENDER_PARAM}
+	RENDER_PARAM=''
+	# start the Xvnc server 
+	# create RENDER_PARAM
+	if [ -c "${RENDER_NODE}" ]; then
+                        echo "${RENDER_NODE} is a character device."
+                        RENDER_PARAM="-rendernode ${RENDER_NODE}"
+        fi
+	exec /usr/bin/Xvnc ${DISPLAY} -auth ~/.Xauthority ${GEOMETRY_PARAM} -SendPrimary=0 -depth 24 -rfbport=-1 -rfbunixpath /tmp/.x11vnc -pn -rfbauth "${ABCDESKTOP_RUN_DIR}/.vnc/passwd" ${XVNC_PARAMS} +extension GLX +extension RANDR +extension MIT-SHM ${RENDER_PARAM}
 fi
