@@ -102,12 +102,12 @@ if dpkg -l kasmvncserver; then
 	if [ -c "${RENDER_NODE}" ]; then
                         echo "${RENDER_NODE} is a character device."
                         RENDER_PARAM="-drinode ${RENDER_NODE}"
+			# add -hw3d 
         fi
 
 	exec /usr/bin/Xvnc ${DISPLAY} \
 	-auth ~/.Xauthority \
 	${XVNC_PARAMS} \
-	-hw3d \
 	-FrameRate=24 \
 	-depth 24 \
 	-rfbport=-1 \
