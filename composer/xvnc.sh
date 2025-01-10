@@ -102,6 +102,57 @@ fi
 # dump env
 env>${ABCDESKTOP_LOG_DIR}/xserver.env
 
+if dpkg -l kasmvncserver; then
+exec /usr/bin/Xvnc ${DISPLAY} \
+	-auth ~/.Xauthority \
+	${XVNC_PARAMS} \
+	-FrameRate=24 \
+	-depth 24 \
+	-rfbport=-1 \
+	-pn \
+	-rfbauth "${ABCDESKTOP_RUN_DIR}/.vnc/passwd" \
+	+extension GLX \
+	+extension RANDR \
+	+extension MIT-SHM \
+	-SecurityTypes=None \
+	-websocketPort=6081 \
+	-DisableBasicAuth=1 \
+	-BlacklistThreshold=0 \
+	-BlacklistTimeout 10 \
+	-FreeKeyMappings \
+	-PreferBandwidth \
+	-DynamicQualityMin=4 \
+	-DynamicQualityMax=8 \
+	-DLP_ClipDelay=0 \
+	-DLP_ClipAcceptMax 0 \
+	-AcceptSetDesktopSize 1 \
+	-AllowOverride AcceptPointerEvents \
+	-DLP_Log off\
+	-IgnoreClientSettingsKasm 0 \
+	-SendPrimary 0 \
+	-QueryConnectTimeout 10 \
+	-DLP_RegionAllowClick 0 \
+	-AcceptKeyEvents 1 \
+	-DisconnectClients 0 \
+	-Log *:stdout:100 \
+	-geometry 1024x768 \
+	-VideoScaling 2 \
+	-DLP_ClipDelay 0 \
+	-DLP_ClipSendMax 0 \
+       	-IdleTimeout 0 \
+	-MaxIdleTime 0 \
+	-VideoOutTime 3 \
+	-DLP_RegionAllowRelease 0 \
+	-udpFullFrameFrequency 0 \
+	-publicIP 127.0.0.1 \
+	-AvoidShiftNumLock 0 \
+	-MaxVideoResolution 1920x1080 \
+	-RawKeyboard 0 \
+	-MaxConnectionTime 0 \
+	-DLP_ClipTypes chromium/x-web-custom-data,text/html,image/png \
+	-AcceptPointerEvents 1 \
+	-fp /usr/share/fonts/X11//misc,/usr/share/fonts/X11/Type1 -TreatLossless 8 
+else
 # start the Xvnc server 
-exec /usr/bin/Xvnc ${DISPLAY} -auth ~/.Xauthority ${GEOMETRY_PARAM} -SendPrimary=0 -depth 24 -rfbport=-1 -rfbunixpath /tmp/.x11vnc -pn -rfbauth ${ABCDESKTOP_RUN_DIR}/.vnc/passwd ${XVNC_PARAMS} +extension GLX +extension RANDR +extension MIT-SHM ${RENDER_PARAM}
-
+exec /usr/bin/Xvnc ${DISPLAY} -auth ~/.Xauthority ${GEOMETRY_PARAM} -SendPrimary=0 -depth 24 -rfbport=-1 -rfbunixpath /tmp/.x11vnc -pn -rfbauth "${ABCDESKTOP_RUN_DIR}/.vnc/passwd" ${XVNC_PARAMS} +extension GLX +extension RANDR +extension MIT-SHM ${RENDER_PARAM}
+fi

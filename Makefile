@@ -98,7 +98,7 @@ ubuntu2404:
 	    --build-arg BASE_IMAGE_RELEASE=$(TAG) \
             --build-arg BASE_IMAGE=abcdesktopio/oc.user.ubuntu.24.04 \
             --tag abcdesktopio/oc.user.ubuntu.sudo.24.04:$(TAG) \
-            --file Dockerfile.sudo .
+            --file Dockerfile.ubuntu.sudo .
 
 
 debian:

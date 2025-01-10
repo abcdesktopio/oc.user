@@ -221,16 +221,32 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # tigervncserver_1.14.80-1ubuntu1_22.04_amd64.deb
 # tigervncserver_1.14.1-1ubuntu1_22.04.amd64.deb
 # tigervncserver_1.14.1-1ubuntu1_24.04.amd64.deb
-ENV TIGERVNC_RELEASE=1.14.1
+# ENV TIGERVNC_RELEASE=1.14.1
+#RUN apt-get update  && \
+#    source /etc/lsb-release && \
+#    echo DISTRIB_RELEASE=$DISTRIB_RELEASE && \
+#    tigervncdeburl="https://github.com/abcdesktopio/oc.user/raw/3.3/tigervncserver_${TIGERVNC_RELEASE}-1ubuntu1_${DISTRIB_RELEASE}.$(dpkg --print-architecture).deb" && \
+#    echo Downloading $tigervncdeburl && \
+#    curl -sL --output /tmp/tigervncserver.deb "$tigervncdeburl" && \  
+#    apt-get install -y --no-install-recommends /tmp/tigervncserver.deb && \
+#    rm -f /tmp/*.deb && \
+#    apt-get clean && rm -rf /var/lib/apt/lists/* 
+
+
+ENV KASM_RELEASE=1.3.3
+
+# install kasmvncserver
+# kasm need libdatetime-perl 
 RUN apt-get update  && \
-    source /etc/lsb-release && \
-    echo DISTRIB_RELEASE=$DISTRIB_RELEASE && \
-    tigervncdeburl="https://github.com/abcdesktopio/oc.user/raw/3.3/tigervncserver_${TIGERVNC_RELEASE}-1ubuntu1_${DISTRIB_RELEASE}.$(dpkg --print-architecture).deb" && \
-    echo Downloading $tigervncdeburl && \
-    curl -sL --output /tmp/tigervncserver.deb "$tigervncdeburl" && \  
-    apt-get install -y --no-install-recommends /tmp/tigervncserver.deb && \
+    apt-get install -y --no-install-recommends libdatetime-perl && \
+    source /etc/os-release && \ 
+    echo VERSION_CODENAME=$VERSION_CODENAME && \
+    kasmvncserverdeburl="https://github.com/kasmtech/KasmVNC/releases/download/v${KASM_RELEASE}/kasmvncserver_${VERSION_CODENAME}_${KASM_RELEASE}_$(dpkg --print-architecture).deb" && \
+    echo Downloading $kasmvncserverdeburl && \
+    curl -sL --output /tmp/kasmvncserver.deb "$kasmvncserverdeburl" && \
+    apt-get install -y --no-install-recommends -o Dpkg::Options::="--force-confold" /tmp/kasmvncserver.deb && \
     rm -f /tmp/*.deb && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* 
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
 # install core packages

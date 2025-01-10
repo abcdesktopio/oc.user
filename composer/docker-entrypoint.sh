@@ -84,8 +84,14 @@ echo "== stage vnc == "
 mkdir -p ${ABCDESKTOP_RUN_DIR}/.vnc
 # read the vnc password from the kubernetes secret
 if [ -f ${ABCDESKTOP_SECRETS_DIR}/vnc/password ]; then
-        echo 'vnc password use kubernetes secret'
-        cat ${ABCDESKTOP_SECRETS_DIR}/vnc/password | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
+        echo "vnc password use kubernetes secret, create ${ABCDESKTOP_RUN_DIR}/.vnc/passwd"
+	if dpkg -l kasmvncserver; then
+		echo 'vncserver is a kasmvncserver'
+		VNCPASSWORD=$(cat ${ABCDESKTOP_SECRETS_DIR}/vnc/password)
+		printf "$VNCPASSWORD\n$VNCPASSWORD\n" | vncpasswd -u $USER -rw ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
+	else
+        	cat ${ABCDESKTOP_SECRETS_DIR}/vnc/password | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
+	fi
 else
 	echo file ${ABCDESKTOP_SECRETS_DIR}/vnc/password DOES NOT EXIST
         echo THIS IS AN ERROR error: no vnc password has been set
