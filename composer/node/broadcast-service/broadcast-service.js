@@ -67,7 +67,7 @@ wss.broadcast = (data) => {
 };
 
 wss.broadcast_keepalive = () => {
-  console.log('broadcast keep_alive');
+  // console.log('broadcast keep_alive');
   wss.broadcast(getstrJSONstatus());
   setTimeout(wss.broadcast_keepalive, KEEPALIVE_TIMEOUT);
 };
@@ -75,16 +75,17 @@ wss.broadcast_keepalive = () => {
 wss.unicast = (data) => {
   let bSendDone = false;
   for (const client of wss.clients) {
+
     if (bSendDone) {
       continue;
     }
 
     try {
-      console.log('unicat try to send');
-      console.log(data);
+      // console.log('unicat try to send');
+      // console.log(data);
       client.send(data);
       bSendDone = true;
-      console.log('unicat done');
+      // console.log('unicat done');
     } catch (err) {
       console.error(err);
     }
@@ -93,7 +94,7 @@ wss.unicast = (data) => {
 
 wss.on('connection', async (ws, req) => {
 
-  console.log('connection');
+  console.log('new connection');
   const { remoteAddress }    = req.connection;
   const { broadcast_cookie } = req.headers;
   console.log( "remoteAddress=" + remoteAddress );
@@ -105,7 +106,7 @@ wss.on('connection', async (ws, req) => {
 
   if ( remoteAddress !== process.env.CONTAINER_IP_ADDR && broadcast_cookie !== process.env.BROADCAST_COOKIE ) {
       try {
-	console.log( 'call assertIp(' + remoteAddress + ')' );
+	// console.log( 'call assertIp(' + remoteAddress + ')' );
         await assertIp(remoteAddress);
       } catch (e) {
         console.log(e);
@@ -113,7 +114,7 @@ wss.on('connection', async (ws, req) => {
         ws.close();
         return;
       }
-      console.log(`assertIp:connection permit for ip ${remoteAddress}`);
+      // console.log(`assertIp:connection permit for ip ${remoteAddress}`);
 
       // first connection
       // send a broadcast connection list 
@@ -127,7 +128,7 @@ wss.on('connection', async (ws, req) => {
   }
   
   ws.on('message', async (message) => {
-    console.log('received: %s', message);
+    console.log('received:', message);
     let json;
     try {
       json = JSON.parse(message);
@@ -147,7 +148,7 @@ wss.on('connection', async (ws, req) => {
       || json.method === 'display.setBackgroundBorderColor'
       || json.method === 'speaker.available'
       || json.method === 'printer.available') {
-      console.log('sending: %s', message);
+      console.log('sending broadcast: ', message);
       wss.broadcast(message);
     }
 
@@ -160,7 +161,7 @@ wss.on('connection', async (ws, req) => {
       || json.method === 'logout'
       || json.method === 'container'
       || json.method === 'download') {
-      console.log('Unicast send msg: %s', message);
+      console.log('sending unicast:', message);
       wss.unicast(message);
     }
   });
