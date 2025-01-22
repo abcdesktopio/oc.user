@@ -20,8 +20,8 @@ ARG BASE_IMAGE_RELEASE=24.04
 # openbox-dev_3.6.1-12build5.1_amd64.deb  
 # openbox-kde-session_3.6.1-12build5.1_all.deb
 FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} AS openbox_ubuntu_builder
-ENV DEBEMAIL dev@abcdesktop.io
-ENV EMAIL    dev@abcdesktop.io
+ENV DEBEMAIL=dev@abcdesktop.io
+ENV EMAIL=dev@abcdesktop.io
 SHELL [ "/bin/bash", "-c" ]
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 # add src in sources.list
@@ -349,7 +349,7 @@ RUN if [ "$TARGET_MODE" = "hardening" ] ; then rm -f /etc/supervisor/conf.d/xter
 # this is the default user if no user defined
 # create group, user, set password
 # fix home dir owner
-ENV BUSER balloon
+ENV BUSER=balloon
 RUN groupadd --gid 4096 $BUSER && \
     useradd --create-home --shell /bin/bash --uid 4096 -g $BUSER $BUSER && \
     echo "balloon:lmdpocpetit" | chpasswd $BUSER &&\
