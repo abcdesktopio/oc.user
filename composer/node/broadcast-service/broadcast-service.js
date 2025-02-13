@@ -158,6 +158,7 @@ wss.on('connection', async (ws, req) => {
     // unicast send
     if ( json.method === 'ocrun'
       || json.method === 'logout'
+      || json.method === 'disconnect'
       || json.method === 'container'
       || json.method === 'download') {
       console.log('Unicast send msg: %s', message);
