@@ -222,11 +222,12 @@ RUN apt-get update && \
 
 
 # install Selawik fonts
-ADD fonts/SegoeUI.tar /usr/share/fonts/Microsoft/TrueType/SegoeUI/ 
+# comment for licencing
+# ADD fonts/SegoeUI.tar /usr/share/fonts/Microsoft/TrueType/SegoeUI/ 
+#  fc-cache -f /usr/share/fonts/Microsoft/TrueType/SegoeUI/ && \
 ADD fonts/Selawik.tar /usr/share/fonts/Microsoft/TrueType/Selawik/
 RUN apt-get update && \
     apt-get install -y --no-install-recommends fontconfig && \
-    fc-cache -f /usr/share/fonts/Microsoft/TrueType/SegoeUI/ && \
     fc-cache -f /usr/share/fonts/Microsoft/TrueType/Selawik/ && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
