@@ -34,6 +34,9 @@ if [ ! -z "$imgName" ]; then
                 killall /usr/bin/feh &>> $ESETROOT_LOGFILE
                 exec /usr/bin/feh --no-fehbg --bg-center --borderless --image-bg "${bgColor}" "${imgName}" &>> $ESETROOT_LOGFILE
         fi
+	if [ -x /usr/bin/plasma-apply-wallpaperimage  ]; then
+		exec /usr/bin/plasma-apply-wallpaperimage "${imgName}"
+	fi
 fi
 
 if [ ! -z "$bgColor" ]; then
