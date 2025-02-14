@@ -29,12 +29,11 @@ const mime = require('mime-types');
 const { extname } = require('path');
 const { Magic, MAGIC_MIME_TYPE } = require('mmmagic');
 const asyncHandler = require('express-async-handler');
-const ini = require('./ini');
 const middlewares = require('./middlewares');
 const { set, get } = require('./utils');
 const { roothomedir, abcdesktoprundir, abcdesktoplogdir } = require('../global-values');
 const magic = new Magic(MAGIC_MIME_TYPE);
-
+const ini = require('./ini');
 /**
  * 
  * @param {string} root 
@@ -138,37 +137,23 @@ function getmimeforfile(_filename) {
   });
 }
 
-
-function generateDockitemfile( name, launch, desktopfile, showinview ) {
-  // filter to only showinview dock application
-  if ( showinview !== 'dock' ) return;
-  // create new dockitem file
-  const desktopfilepath  = `${roothomedir}/.local/share/applications/${desktopfile}`;
-  const deskitemfilepath = `${roothomedir}/.config/plank/dock1/launchers/${launch}.dockitem`;
-  const contentdeskitem = {};
-  contentdeskitem.Launcher = `file://${desktopfilepath}`;
-  const datadeskitem = ini.stringify(contentdeskitem, {section: 'PlankDockItemPreferences'});
-  console.log(`creating a new dockitem file ${deskitemfilepath} for desktopfile ${desktopfilepath}` );  
-  return fs.promises.writeFile( deskitemfilepath, datadeskitem )
-}
-
 function generateIconfile( contentdesktop, icondata ) {  
   let iconpromise = fs.promises.writeFile(   
-	   		contentdesktop.Icon,
-                      	icondata,
-                       	'base64',
-                       	(err) => {
-                    		if (err)
-                              		console.log( `error in write icon file ${contentdesktop.Icon} ${err}` );
-		       		else
-			 		console.log( `create a new file ${contentdesktop.Icon}` );
-                            	}
+	contentdesktop.Icon,
+        icondata,
+        'base64',
+        (err) => {
+          if (err)
+            console.log( `error in write icon file ${contentdesktop.Icon} ${err}` );
+	  else
+	    console.log( `create a new file ${contentdesktop.Icon}` );
+        }
   );
   return iconpromise;
 }
 
 function startservices() {
-	   // supervisorctl( 'start', 'plank' );
+	   supervisorctl( 'start', 'plasmashell' );
 
            // All desktop files are created in ${roothomedir}/.local/share/applications
            // run update-desktop-database
@@ -213,6 +198,32 @@ function symlinkPromise( ocrunpath, execcommand)
    return symlink;
 }
 
+
+async function updateplasma_org_kde_plasma_desktop_appletsrc( launchers_list = []) {
+        // convert launchers_list to string launchers
+        let launchers = "launchers=";
+        //launchers=applications:firefox.desktop,applications:org.gnome.Nautilus.desktop,applications:frontendjs.webshell.desktop
+        launchers_list.forEach( (app,index) => {
+                launchers += `applications:${app}`;
+                if (index+1 < launchers_list.length)
+                 launchers += `,`;
+        });
+        console.log( launchers );
+
+        // open .config/plasma-org.kde.plasma.desktop-appletsrc
+        const appletsrc_filename = `${roothomedir}/.config/plasma-org.kde.plasma.desktop-appletsrc`;
+        let appletsrc_content = fs.readFileSync( appletsrc_filename, { encoding : 'utf-8' });
+        let newfile_content = "";
+        appletsrc_content.split(/\r?\n/).forEach(line =>  {
+          if (line.startsWith('launchers=')) {
+                  line = launchers;
+          }
+          newfile_content = newfile_content + line + '\n';
+        });
+        fs.writeFileSync( appletsrc_filename, newfile_content, { encoding : 'utf-8' } );
+}
+
+
 /**
  * @param {Array<File>} list
  * @param {Function} callback
@@ -226,8 +237,8 @@ async function generateDesktopFiles(list = []) {
   const ocrunpath_frontendjs = '/composer/node/ocrun/ocrun.frontendjs.js';
   console.log('generateDesktopFiles start');
 
-  // stop plank
-  // supervisorctl( 'stop', 'plank' );
+  // stop plasmashell
+  supervisorctl( 'stop', 'plasmashell' );
 
   // dump applist.json file 
   fs.promises.writeFile( `${abcdesktoplogdir}/applist.json`, JSON.stringify(list, null, 2) )
@@ -289,6 +300,7 @@ async function generateDesktopFiles(list = []) {
   let allPromises = [];
   // now the list is safe for async call
   i=0;
+  let dockapplicationlist = []
   while (i < list.length) {
       let mimetype = list[i].mimetype;
       let showinview = list[i].showinview;
@@ -303,9 +315,8 @@ async function generateDesktopFiles(list = []) {
       let displayname = list[i].displayname;
       let cat = list[i].cat;
       let desktopfile = list[i].desktopfile;
-
-      const filepath = `${roothomedir}/.local/share/applications/${desktopfile}`;
-      console.log(`creating a new desktop file ${filepath} for application name=${name}` ); 
+      const desktopfilepath  = `${roothomedir}/.local/share/applications/${desktopfile}`;
+      console.log(`creating a new desktop file ${desktopfilepath} for application name=${name}` ); 
       
       // create contentdesktop	    
       const contentdesktop = {};
@@ -325,11 +336,14 @@ async function generateDesktopFiles(list = []) {
 
       // this call is sync 
       // make sure that the desktopfile exists for next promise
-      fs.writeFileSync( filepath, ini.stringify(contentdesktop, { section: "Desktop Entry" }) );
+      fs.writeFileSync( desktopfilepath, ini.stringify(contentdesktop, { section: "Desktop Entry" }) );
       if (icon && icondata)
       	allPromises.push( generateIconfile( contentdesktop, icondata ) );
       allPromises.push( symlinkPromise( linktargetfile, execcommand ) );
-      allPromises.push( generateDockitemfile( name, launch, desktopfile, showinview ) );
+
+      // if this application must be show in dock
+      if (showinview === 'dock') 
+	dockapplicationlist.push( desktopfile );
       ++i;
   }
 
@@ -337,6 +351,7 @@ async function generateDesktopFiles(list = []) {
   .then((values) => {})
   .catch(err => { console.log('allpromises.writeFile error' + err);} )
   .finally(() => {
+    updateplasma_org_kde_plasma_desktop_appletsrc( dockapplicationlist );
     startservices();
     console.log('allPromises completed');
   });

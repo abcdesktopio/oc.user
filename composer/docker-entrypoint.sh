@@ -32,7 +32,7 @@ export BROADCAST_COOKIE=${BROADCAST_COOKIE:-$ABCDESKTOP_SESSION}
 export SUPERVISOR_PID_FILE=/var/run/desktop/supervisord.pid
 export XDG_SESSION_TYPE=${XDG_SESSION_TYPE:-x11}
 export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-${HOME}/.runtime}
-
+export DESKTOPTHEME=${DESKTOPTHEME:-'Win11OS-light'}
 
 # TRAP for container signal SIGINT SIGQUIT SIGHUP SIGTERM
 stop() {
@@ -157,25 +157,26 @@ if [ ! -z "$PULSEAUDIO_COOKIE" ]; then
  	echo "error PULSEAUDIO_COOKIE is not defined, sound goes wrong"
 fi
 
-if [ ! -d ~/.config/gtk-3.0 ]; then
-	echo "create  ~/.config/gtk-3.0 directory"
-        mkdir -p ~/.config/gtk-3.0
-        cp -r /composer/.config/gtk-3.0 ~/.config &
-fi
+#if [ ! -d ~/.config/gtk-3.0 ]; then
+#	echo "create  ~/.config/gtk-3.0 directory"
+#        mkdir -p ~/.config/gtk-3.0
+#        cp -r /composer/.config/gtk-3.0 ~/.config &
+#fi
 
-if [ ! -f ~/.config/gtk-3.0/settings.ini ]; then
-	echo "copy ~/.config/gtk-3.0/settings.ini file"
-        cp /composer/.config/gtk-3.0/settings.ini ~/.config/gtk-3.0 &
-fi
+#if [ ! -f ~/.config/gtk-3.0/settings.ini ]; then
+#	echo "copy ~/.config/gtk-3.0/settings.ini file"
+#        cp /composer/.config/gtk-3.0/settings.ini ~/.config/gtk-3.0 &
+#fi
 
 if [ ! -d ~/.config/nautilus ]; then
 	echo "create ~/.config/nautilus directory"
         mkdir -p ~/.config/nautilus
 fi
-if [ ! -d ~/.config/plank/dock1/launchers ]; then
-        echo "create ~/.config/plank/dock1/launchers directory"
-        mkdir -p ~/.config/plank/dock1/launchers
-fi
+
+#if [ ! -d ~/.config/plank/dock1/launchers ]; then
+#        echo "create ~/.config/plank/dock1/launchers directory"
+#        mkdir -p ~/.config/plank/dock1/launchers
+#fi
 
 
 # if [ ! -d ~/.themes ]; then
@@ -183,22 +184,13 @@ fi
 #	cp -rp /composer/.themes ~ &
 # fi
 
-# XDG_RUNTIME_DIR
-# XDG_RUNTIME_DIR
-if [ ! -d ${XDG_RUNTIME_DIR} ]; then
-	mkdir -p ${XDG_RUNTIME_DIR}
-	# Unix access mode MUST be 0700.
-	chmod 0700 ${XDG_RUNTIME_DIR}
-fi
-
-
 
 #
 # read https://wiki.archlinux.org/title/GTK#:~:text=Depending%20on%20GTK%20version%2C%20these,etc%2Fgtk%2D2.0%2Fgtkrc
-if [ ! -f ~/.gtkrc-2.0 ]; then
-	echo "create ~/.gtkrc-2.0 file"
-	cp -rp /composer/.gtkrc-2.0 ~
-fi
+#if [ ! -f ~/.gtkrc-2.0 ]; then
+#	echo "create ~/.gtkrc-2.0 file"
+#	cp -rp /composer/.gtkrc-2.0 ~
+#fi
 
 
 if [ ! -f ~/.gtk-bookmarks ]; then
@@ -218,9 +210,9 @@ if [ ! -d ~/.gconf/apps ]; then
        	chmod -R 700 ~/.gconf/apps
 fi
 
-if [ ! -f ~/.Xresources ];  then
-	cp -p /composer/.Xresources ~
-fi
+#if [ ! -f ~/.Xresources ];  then
+#	cp -p /composer/.Xresources ~
+#fi
 
 if [ ! -d ~/.wallpapers ]; then
   	# add default wallpapers 
@@ -363,7 +355,13 @@ export EXTERNAL_DESKTOP_DOMAIN
 #   fi
 #fi
 
+echo "== stage XDG_RUNTIME_DIR == "
+if [ ! -d "${XDG_RUNTIME_DIR}" ]; then
+  mkdir "${XDG_RUNTIME_DIR}"
+  chmod 0700 "${XDG_RUNTIME_DIR}"
+fi
 
+echo "== stage DBUS == "
 if [ -x /usr/bin/dbus-launch ]; then
 	export $(/usr/bin/dbus-launch)
 fi
@@ -519,8 +517,8 @@ echo "BROADCAST_COOKIE=$BROADCAST_COOKIE" >> /var/log/desktop/config.log
 echo "== stage gsettings == "
 
 # update gsettings
-gsettings set net.launchpad.plank.dock.settings:/net/launchpad/plank/docks/dock1/ zoom-percent 200
-gsettings set net.launchpad.plank.dock.settings:/net/launchpad/plank/docks/dock1/ zoom-enabled true
+#gsettings set net.launchpad.plank.dock.settings:/net/launchpad/plank/docks/dock1/ zoom-percent 200
+#gsettings set net.launchpad.plank.dock.settings:/net/launchpad/plank/docks/dock1/ zoom-enabled true
 
 
 echo "== stage supervisord == "
