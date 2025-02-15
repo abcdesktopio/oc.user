@@ -1,2 +1,2 @@
 #!/bin/bash
-nodejs /composer/node/occall/occall.js diconnect
+nodejs /composer/node/occall/occall.js disconnect
