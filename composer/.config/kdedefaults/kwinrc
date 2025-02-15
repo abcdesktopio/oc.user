@@ -1,0 +1,12 @@
+[TabBox]
+DesktopLayout=org.kde.breeze.desktop
+DesktopListLayout=org.kde.breeze.desktop
+LayoutName=org.kde.breeze.desktop
+
+[Windows]
+Placement=Maximizing
+
+[org.kde.kdecoration2]
+NoPlugin=false
+library=org.kde.kwin.aurorae
+theme=__aurorae__svg__Win11OS-dark

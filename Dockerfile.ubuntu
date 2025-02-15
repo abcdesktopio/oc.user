@@ -227,7 +227,7 @@ RUN apt-get update && \
 #  fc-cache -f /usr/share/fonts/Microsoft/TrueType/SegoeUI/ && \
 ADD fonts/Selawik.tar /usr/share/fonts/Microsoft/TrueType/Selawik/
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends fontconfig && \
+    apt-get install -y --no-install-recommends fontconfig fonts-noto-core xfonts-base & \
     fc-cache -f /usr/share/fonts/Microsoft/TrueType/Selawik/ && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -284,7 +284,7 @@ RUN date > /etc/build.date
 # install qterminal xfonts-base
 RUN if [ "${TARGET_MODE}" != "hardening" ]; then \
 	apt-get update && \
-	apt-get install -y --no-install-recommends qterminal xfonts-base vim && \
+	apt-get install -y --no-install-recommends qterminal vim && \
 	apt-get clean && rm -rf /var/lib/apt/lists/*; \
     fi
 
