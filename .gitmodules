@@ -10,9 +10,3 @@
 	path = composer/node/ocrun
 	url = https://github.com/abcdesktopio/run-service.git
 	branch = main
-[submodule "themes/Win11OS-kde"]
-	path = themes/Win11OS-kde
-	url = git@github.com:abcdesktopio/Win11OS-kde.git
-[submodule "themes/Win11-icon-theme"]
-	path = themes/Win11-icon-theme
-	url = git@github.com:abcdesktopio/Win11-icon-theme.git
