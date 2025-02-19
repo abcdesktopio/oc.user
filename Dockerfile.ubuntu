@@ -102,7 +102,6 @@ COPY composer/version.json /composer/version.json
 
 
 
-# themes section
 # #
 # themes section
 # copy themes from abcdesktopio/oc.themes
@@ -115,6 +114,10 @@ COPY composer/version.json /composer/version.json
 # RUN git clone https://github.com/B00merang-Project/Windows-10 /usr/share/themes/Windows-10
 # RUN chmod -R 755 /usr/share/plasma/desktoptheme/*
 # RUN chmod -R 755 /usr/share/themes/*
+
+RUN git clone https://github.com/abcdesktopio/Win11OS-kde.git
+RUN git clone https://github.com/abcdesktopio/Win11-icon-theme.git
+
 
 #
 # The main oc.user start here
@@ -207,6 +210,8 @@ RUN apt-get update && \
       obconf \
       plasma-desktop \
       plasma-workspace \
+      plasma-systemmonitor \
+      plasma-mobile \
       libnotify-bin \
       libnotify4 \
       qml-module-org-kde-kcm && \
@@ -227,7 +232,7 @@ RUN apt-get update && \
 #  fc-cache -f /usr/share/fonts/Microsoft/TrueType/SegoeUI/ && \
 ADD fonts/Selawik.tar /usr/share/fonts/Microsoft/TrueType/Selawik/
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends fontconfig fonts-noto-core xfonts-base & \
+    apt-get install -y --no-install-recommends fontconfig fonts-noto xfonts-base & \
     fc-cache -f /usr/share/fonts/Microsoft/TrueType/Selawik/ && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -237,9 +242,9 @@ COPY /usr/share/themes /usr/share/themes
 # COPY /usr/share/plasma/desktoptheme/Win11OS-light /usr/share/plasma/desktoptheme/Win11OS-light
 
 # Fix that
-COPY themes /tmp/themes
-RUN cd /tmp/themes/Win11-icon-theme  && ./install.sh -a && \
-    cd /tmp/themes/Win11OS-kde && ./install.sh
+COPY --from=ubuntu_node_modules_builder /Win11-icon-theme /Win11OS-kde /tmp
+RUN cd /tmp/Win11-icon-theme  && ./install.sh -a && \
+    cd /tmp/Win11OS-kde && ./install.sh
 
 
 # install nodejs
@@ -260,7 +265,10 @@ ADD usr/share/sounds/alsa /usr/share/sounds/alsa
 RUN mkdir -p /var/log/desktop /var/run/desktop && chmod 777 /var/log/desktop /var/run/desktop
 
 # remove /etc/supervisor/conf.d/xterm.conf in hardening
-RUN if [ "$TARGET_MODE" = "hardening" ] ; then rm -f /etc/supervisor/conf.d/xterm.conf; echo "supervisor xterm.conf has been removed"; fi
+RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
+	rm -f /etc/supervisor/conf.d/xterm.conf; \
+	echo "supervisor xterm.conf has been removed"; \
+    fi
 
 #
 # create account balloon for compatility with 2.0
