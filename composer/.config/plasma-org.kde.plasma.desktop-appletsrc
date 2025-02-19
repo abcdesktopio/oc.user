@@ -26,6 +26,7 @@ ToolBoxButtonState=topcenter
 ToolBoxButtonX=236
 
 [Containments][47][Wallpaper][org.kde.image][General]
+FillMode=0
 Image=/usr/share/wallpapers/Win11OS-light/
 SlidePaths=/usr/share/wallpapers/
 
