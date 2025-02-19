@@ -232,7 +232,7 @@ RUN apt-get update && \
 #  fc-cache -f /usr/share/fonts/Microsoft/TrueType/SegoeUI/ && \
 ADD fonts/Selawik.tar /usr/share/fonts/Microsoft/TrueType/Selawik/
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends fontconfig fonts-noto xfonts-base & \
+    apt-get install -y --no-install-recommends fontconfig fonts-noto xfonts-base && \
     fc-cache -f /usr/share/fonts/Microsoft/TrueType/Selawik/ && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
