@@ -76,15 +76,14 @@ async function* filesearch(root = '', keywords = '') {
   }
 }
 
-function supervisorctl( method, service_name )
-{
+function supervisorctl( method, service_name ) {
   let command = '/usr/bin/supervisorctl';
   let args = [ method, service_name ];
-  if (!process.env[service_name]) {
-	console.log( `ENV ${service_name} is not set` );
-	console.log( `${command} ${method} ${service_name} is canceled` );
-	return;
-  }
+  //if (!process.env[service_name]) {
+  //	console.log( `ENV ${service_name} is not set` );
+  //	console.log( `${command} ${method} ${service_name} is canceled` );
+  //	return;
+  //}
   console.log( command, method, service_name );
   cmd = spawn(command, args );
   cmd.stdout.on('data', (data) => {
@@ -98,10 +97,7 @@ function supervisorctl( method, service_name )
   cmd.on('close', (code) => {
   	console.log(`${command} child process exited with code ${code}`);
   }); 
-  
 }
-
-
 
 /**
  *
@@ -238,7 +234,7 @@ async function generateDesktopFiles(list = []) {
   console.log('generateDesktopFiles start');
 
   // stop plasmashell
-  supervisorctl( 'stop', 'plasmashell' );
+  // supervisorctl( 'stop', 'plasmashell' );
 
   // dump applist.json file 
   fs.promises.writeFile( `${abcdesktoplogdir}/applist.json`, JSON.stringify(list, null, 2) )
