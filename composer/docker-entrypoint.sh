@@ -179,12 +179,6 @@ fi
 #fi
 
 
-# if [ ! -d ~/.themes ]; then
-#	echo "create ~/.themes directory"
-#	cp -rp /composer/.themes ~ &
-# fi
-
-
 #
 # read https://wiki.archlinux.org/title/GTK#:~:text=Depending%20on%20GTK%20version%2C%20these,etc%2Fgtk%2D2.0%2Fgtkrc
 #if [ ! -f ~/.gtkrc-2.0 ]; then
@@ -209,6 +203,15 @@ if [ ! -d ~/.gconf/apps ]; then
        	cp -rp /composer/.gconf/apps ~/.gconf
        	chmod -R 700 ~/.gconf/apps
 fi
+
+THEME_DIR=/usr/share/themes/Windows-10
+if [ ! -d ~/.config/gtk-4.0 ]; then
+  mkdir -p "${HOME}/.config/gtk-4.0"
+  ln -sf "${THEME_DIR}/gtk-4.0/assets" "${HOME}/.config/gtk-4.0/assets"
+  ln -sf "${THEME_DIR}/gtk-4.0/gtk.css" "${HOME}/.config/gtk-4.0/gtk.css"
+  ln -sf "${THEME_DIR}/gtk-4.0/gtk-dark.css" "${HOME}/.config/gtk-4.0/gtk-dark.css"
+fi
+
 
 #if [ ! -f ~/.Xresources ];  then
 #	cp -p /composer/.Xresources ~
