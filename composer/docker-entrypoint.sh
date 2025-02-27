@@ -74,7 +74,7 @@ id
 
 # First start
 # Clean lock 
-rm -rf /tmp/.X0-lock
+rm -rf /tmp/.X0-lock &
 
 
 echo "== stage vnc == "
@@ -95,27 +95,6 @@ else
         echo changemeplease | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
 fi
 
-
-
-
-## get VNC_PASSWORD 
-## use vncpasswd command line to create a vnc passwd file
-#mkdir -p ${ABCDESKTOP_RUN_DIR}/.vnc
-## read the vnc password from the kubernetes secret
-#if [ -f ${ABCDESKTOP_SECRETS_DIR}/vnc/password ]; then
-#        echo 'vnc password use kubernetes secret'
-#	VNCPASSWORD=$(cat ${ABCDESKTOP_SECRETS_DIR}/vnc/password)
-#	# use printf instead of echo 
-#	# with echo ecommand getpass error: Inappropriate ioctl for device
-#	printf "$VNCPASSWORD\n$VNCPASSWORD\n" | vncpasswd -u $USER -rw ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
-#	# cat ${ABCDESKTOP_SECRETS_DIR}/vnc/password | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
-#else
-#	echo 'error not vnc password has been set, everything is going wrong'
-#	echo "run a ls -la ${ABCDESKTOP_SECRETS_DIR}/vnc to help troubleshooting"
-#	ls -la ${ABCDESKTOP_SECRETS_DIR}/vnc
-#	echo 'fix use changemeplease as vncpassword'
-#	echo changemeplease | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
-#fi
 
 
 echo "== stage env == "
@@ -173,12 +152,6 @@ if [ ! -d ~/.config/nautilus ]; then
         mkdir -p ~/.config/nautilus
 fi
 
-#if [ ! -d ~/.config/plank/dock1/launchers ]; then
-#        echo "create ~/.config/plank/dock1/launchers directory"
-#        mkdir -p ~/.config/plank/dock1/launchers
-#fi
-
-
 #
 # read https://wiki.archlinux.org/title/GTK#:~:text=Depending%20on%20GTK%20version%2C%20these,etc%2Fgtk%2D2.0%2Fgtkrc
 #if [ ! -f ~/.gtkrc-2.0 ]; then
@@ -206,10 +179,10 @@ fi
 
 THEME_DIR=/usr/share/themes/Windows-10
 if [ ! -d ~/.config/gtk-4.0 ]; then
-  mkdir -p "${HOME}/.config/gtk-4.0"
-  ln -sf "${THEME_DIR}/gtk-4.0/assets" "${HOME}/.config/gtk-4.0/assets"
-  ln -sf "${THEME_DIR}/gtk-4.0/gtk.css" "${HOME}/.config/gtk-4.0/gtk.css"
-  ln -sf "${THEME_DIR}/gtk-4.0/gtk-dark.css" "${HOME}/.config/gtk-4.0/gtk-dark.css"
+  mkdir -p ~/.config/gtk-4.0
+  cp -R -u -p "${THEME_DIR}/gtk-4.0/assets" ~/.config/gtk-4.0 &
+  cp -u -p "${THEME_DIR}/gtk-4.0/gtk.css" ~/.config/gtk-4.0/gtk.css &
+  cp -u -p "${THEME_DIR}/gtk-4.0/gtk-dark.css" ~/.config/gtk-4.0/gtk-dark.css &
 fi
 
 

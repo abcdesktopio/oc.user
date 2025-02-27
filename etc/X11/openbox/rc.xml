@@ -45,7 +45,7 @@
     <filenamepid>/var/run/desktop/spawner.pid</filenamepid>
   </notify>
   <theme>
-    <name>Win10</name>
+    <name>Windows-10</name>
     <titleLayout>NLIMC</titleLayout>
     <!--
       available characters are NDSLIMC, each can occur at most once.
