@@ -101,24 +101,6 @@ RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
 COPY composer/version.json /composer/version.json
 
 
-
-# #
-# themes section
-# copy themes from abcdesktopio/oc.themes
-# COPY themes /usr/share/themes
-# COPY --from=abcdesktopio/oc.themes      /usr/share/icons        /usr/share/icons
-# COPY --from=abcdesktopio/oc.themes      /usr/share/themes       /usr/share/themes
-# COPY --from=theme_builder /usr/share/themes /usr/share/themes
-# ADD Win10.tar /usr/share/themes
-# ADD Win11OS-light.tar /usr/share/plasma/desktoptheme
-# RUN git clone https://github.com/B00merang-Project/Windows-10 /usr/share/themes/Windows-10
-# RUN chmod -R 755 /usr/share/plasma/desktoptheme/*
-# RUN chmod -R 755 /usr/share/themes/*
-
-RUN git clone https://github.com/abcdesktopio/Win11OS-kde.git
-RUN git clone https://github.com/abcdesktopio/Win11-icon-theme.git
-
-
 #
 # The main oc.user start here
 #
@@ -208,12 +190,22 @@ RUN apt-get update && \
       xfwm4 && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# RUN apt-get update && \
-#    apt-get install -y x11-utils && \
+#RUN apt-get update && \
 #    apt-get install -y --no-install-recommends \
-#      openbox \
-#      obconf && \ 
+#      task-french-kde-desktop \
+#      task-romanian-kde-desktop \
+#      task-german-kde-desktop && \
 #    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
+RUN apt-get update && \
+    apt-get install -y x11-utils && \
+    apt-get install -y --no-install-recommends \
+      openbox \
+      obconf \
+      lxappearance \
+      lxappearance-obconf && \ 
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -252,16 +244,26 @@ RUN apt-get update && \
 
 # install composer
 COPY --from=ubuntu_node_modules_builder /composer /composer
-COPY /usr/share/themes /usr/share/themes
-# COPY /usr/share/plasma/desktoptheme/Win11OS-light /usr/share/plasma/desktoptheme/Win11OS-light
 
-# Fix that
-COPY --from=ubuntu_node_modules_builder /Win11-icon-theme /tmp/Win11-icon-theme/
-COPY --from=ubuntu_node_modules_builder /Win11OS-kde /tmp/Win11OS-kde/
-RUN cd /tmp/Win11-icon-theme  && ./install.sh -a && \
-    cd /tmp/Win11OS-kde && ./install.sh
+# copy themes from abcdesktopio/oc.themes:4.0
+COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/themes /usr/share/themes
+# COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/icons /usr/share/icons 
+COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/aurorae/themes /usr/share/aurorae/themes
+COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/color-schemes /usr/share/color-schemes
+COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/plasma/desktoptheme /usr/share/plasma/desktoptheme
+# COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/plasma/layout-templates /usr/share/plasma/layout-templates
+COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/plasma/look-and-feel /usr/share/plasma/look-and-feel
+COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/Kvantum /usr/share/Kvantum 
+COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/wallpapers /usr/share/wallpapers
 
-
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        gtk-update-icon-cache && \
+    gtk-update-icon-cache && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* 
+    
+ 
 # install nodejs
 RUN mkdir -p /etc/apt/keyrings && \
     curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
