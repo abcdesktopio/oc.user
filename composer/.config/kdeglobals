@@ -108,7 +108,7 @@ ForegroundPositive=39,174,96
 ForegroundVisited=250,250,250
 
 [KDE]
-LookAndFeelPackage=com.github.yeyushengfan258.Win11OS-dark
+LookAndFeelPackage=com.github.yeyushengfan258.Win11OS-light
 
 [WM]
 activeBackground=51,51,51

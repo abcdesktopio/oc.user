@@ -7,7 +7,6 @@ wheel:Vertical;NoModifier=org.kde.switchdesktop
 RightButton;NoModifier=org.kde.contextmenu
 
 [Containments][47]
-ItemGeometries-1440x788=
 ItemGeometries-1440x876=
 ItemGeometriesHorizontal=
 activityId=120f6434-298f-4da3-b474-9b69ab1d0483
@@ -24,7 +23,7 @@ DialogWidth=680
 
 [Containments][47][General]
 ToolBoxButtonState=topcenter
-ToolBoxButtonX=319
+ToolBoxButtonX=236
 
 [Containments][47][Wallpaper][org.kde.image][General]
 FillMode=0
@@ -64,7 +63,7 @@ immutability=1
 plugin=org.kde.plasma.icontasks
 
 [Containments][48][Applets][51][Configuration][General]
-launchers=
+launchers=preferred://browser
 
 [Containments][48][Applets][52]
 immutability=1
@@ -73,10 +72,9 @@ plugin=org.kde.plasma.marginsseparator
 [Containments][48][Applets][53]
 immutability=1
 plugin=org.kde.plasma.systemtray
-transient=true
 
 [Containments][48][Applets][53][Configuration]
-PreloadWeight=80
+PreloadWeight=60
 SystrayContainmentId=54
 
 [Containments][48][Applets][55]
@@ -87,25 +85,12 @@ plugin=org.kde.plasma.panelspacer
 immutability=1
 plugin=org.kde.plasma.panelspacer
 
-[Containments][48][Applets][58]
-immutability=1
-plugin=org.kde.plasma.panelspacer
-transient=true
-
-[Containments][48][Applets][59]
-immutability=1
-plugin=org.kde.plasma.panelspacer
-
-[Containments][48][Applets][60]
-immutability=1
-plugin=org.kde.plasma.panelspacer
-
 [Containments][48][ConfigDialog]
-DialogHeight=74
+DialogHeight=84
 DialogWidth=1440
 
 [Containments][48][General]
-AppletOrder=60;59;49;50;51;52;55;56
+AppletOrder=56,49;50;51;52;53,55
 
 [Containments][54]
 activityId=
@@ -124,12 +109,8 @@ PreloadWeight=42
 [Containments][54][Applets][56][Configuration]
 PreloadWeight=42
 
-[Containments][54][Applets][57]
-immutability=1
-plugin=org.kde.plasma.devicenotifier
-
 [Containments][54][Applets][57][Configuration]
-PreloadWeight=52
+PreloadWeight=42
 
 [Containments][54][Applets][58][Configuration]
 PreloadWeight=42
@@ -145,9 +126,7 @@ DialogHeight=510
 DialogWidth=680
 
 [Containments][54][General]
-extraItems=org.kde.plasma.devicenotifier,org.kde.plasma.battery,org.kde.plasma.bluetooth,org.kde.plasma.networkmanagement
-knownItems=org.kde.plasma.manage-inputmethod,org.kde.plasma.clipboard,org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.mediacontroller,org.kde.plasma.volume,org.kde.plasma.devicenotifier,org.kde.plasma.battery,org.kde.plasma.bluetooth,org.kde.plasma.networkmanagement
-scaleIconsToFit=true
+knownItems=org.kde.plasma.manage-inputmethod,org.kde.plasma.clipboard,org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.mediacontroller,org.kde.plasma.volume
 
 [ScreenMapping]
 itemsOnDisabledScreens=
