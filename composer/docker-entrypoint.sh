@@ -331,6 +331,10 @@ export EXTERNAL_DESKTOP_DOMAIN
 #   fi
 #fi
 
+# Starting system dbus 
+dbus-daemon --config-file=/usr/share/dbus-1/system.conf --print-address  --fork --nosyslog
+# export ${dbus_system}
+
 echo "== stage XDG_RUNTIME_DIR == "
 if [ ! -d "${XDG_RUNTIME_DIR}" ]; then
   mkdir "${XDG_RUNTIME_DIR}"
@@ -373,8 +377,13 @@ echo "/usr/bin/kinit $USERPRINCIPALNAME@$REALM -k -t $KRB5_CLIENT_KTNAME" > /tmp
 fi 
 ## END OF KERBEROS
 
-
-
+# copy ${ABCDESKTOP_SECRETS_DIR}/ldif/jpegPhoto to ~/.face.icon if need
+if [ ! -f ~/.face.icon ]; then
+  # if the jpegPhoto file from ldap exist
+  if [ -f ${ABCDESKTOP_SECRETS_DIR}/ldif/jpegPhoto ]; then
+    cp ${ABCDESKTOP_SECRETS_DIR}/ldif/jpegPhoto ~/.face.icon &
+  fi
+fi
 
 
 # add file start info timedate data
