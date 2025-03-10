@@ -105,12 +105,20 @@ debian:
 	docker pull debian 
 	docker build \
             --no-cache=$(NOCACHE) \
-            --build-arg TARGET_MODE=ubuntu \
+            --build-arg TARGET_MODE=debian \
             --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
-            --build-arg BASE_IMAGE_RELEASE=12.6 \
+            --build-arg BASE_IMAGE_RELEASE=trixie \
             --build-arg BASE_IMAGE=debian \
-            --tag abcdesktopio/oc.user.debian.12.6:$(TAG) \
-            --file Dockerfile.ubuntu .
+            --tag abcdesktopio/oc.user.debian.trixie:$(TAG) \
+            --file Dockerfile.debian .
+	docker build \
+            --no-cache=$(NOCACHE) \
+            --build-arg TARGET_MODE=debian \
+            --build-arg TAG=$(TAG)  \
+            --build-arg BASE_IMAGE_RELEASE=$(TAG) \
+            --build-arg BASE_IMAGE=abcdesktopio/oc.user.debian.trixie \
+            --tag abcdesktopio/oc.user.debian.sudo.trixie:$(TAG) \
+            --file Dockerfile.debian.sudo .
 
 kasm:
 	docker pull ubuntu:22.04
