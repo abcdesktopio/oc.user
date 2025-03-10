@@ -1,0 +1,341 @@
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+ARG TAG
+# Default base image 
+ARG BASE_IMAGE=ubuntu
+# Default release is 24.04
+ARG BASE_IMAGE_RELEASE=24.04
+
+# install all nodejs modules
+# build nodejs module
+# create /composer/node
+# use FROM BASE_IMAGE
+# define FROM before use ENV command
+FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} AS ubuntu_node_modules_builder
+
+# use bash
+SHELL ["/bin/bash", "-c"]
+
+# define arg
+ARG TARGET_MODE
+ARG TARGET_PRUNE
+# convert ARG to ENV with same name
+ENV TARGET_MODE=$TARGET_MODE
+ENV TARGET_PRUNE=$TARGET_PRUNE
+ENV NODE_MAJOR=20
+
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+RUN apt-get update && apt-get install -y  --no-install-recommends \
+        gcc \
+        g++ \
+        make                        
+
+# to make install wmctrljs nodejs components
+# add build dev package 
+RUN apt-get update && apt-get install -y  --no-install-recommends \
+        ca-certificates \
+        libx11-dev \
+        libxmu-dev \
+	libimlib2-dev \
+        git \
+        curl \
+        gnupg \
+        dpkg
+
+# install npm nodejs 
+RUN  mkdir -p /etc/apt/keyrings && \
+     curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
+     echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+
+RUN apt-get update && apt-get install -y --no-install-recommends nodejs npm && npm install -g npm
+
+
+COPY composer /composer
+
+RUN npm install --global node-gyp
+RUN echo target_prune="$TARGET_PRUNE"
+RUN if [ -z "$TARGET_PRUNE" ] ; then echo "TARGET_PRUNE is not defined, build with dev" ; else echo "TARGET_PRUNE is defined, NO DEV options" ; fi
+
+# add wait-port
+WORKDIR /composer/node/wait-port 
+RUN npm install --omit=dev && npm audit fix
+
+WORKDIR /composer/node/broadcast-service
+RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
+RUN npm i --package-lock-only && npm audit fix
+
+RUN git clone https://github.com/abcdesktopio/run-service.git /composer/node/ocrun 
+WORKDIR /composer/node/ocrun
+RUN if [ ! -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
+RUN cp ocrun.js ocrun.builtin.js    && sed -Ei 's/^let DEFAULT_EXECMODE;/let DEFAULT_EXECMODE="builtin";/'    ocrun.builtin.js 
+RUN cp ocrun.js ocrun.frontendjs.js && sed -Ei 's/^let DEFAULT_EXECMODE;/let DEFAULT_EXECMODE="frontendjs";/' ocrun.frontendjs.js    
+RUN npm i --package-lock-only && npm audit fix
+
+WORKDIR /composer/node/ocdownload
+RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
+RUN npm audit fix
+
+WORKDIR /composer/node/occall
+RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
+RUN npm audit fix
+
+WORKDIR /composer/node/spawner-service/lib_spawner/colorflow
+RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
+RUN npm audit fix
+
+WORKDIR /composer/node/spawner-service
+# install node-gyp to build spawner-service
+RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
+
+WORKDIR /composer/node/spawner-service/lib_spawner/colorflow
+RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; npm run build;  fi
+RUN npm audit fix
+
+WORKDIR /
+RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
+        rm -rf /composer/node/xterm.js; \
+    else \
+        cd /composer/node/xterm.js ;\
+	if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi ;\ 
+    fi
+
+# version.json must be created by mkversion.sh bash script
+COPY composer/version.json /composer/version.json
+
+
+#
+# The main oc.user start here
+#
+FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE}
+
+# use bash
+SHELL ["/bin/bash", "-c"]
+
+# define arg
+ARG ABCDESKTOP_LOCALACCOUNT_DIR
+ARG TARGET_MODE
+# convert ARG to ENV with same name
+ENV ABCDESKTOP_LOCALACCOUNT_DIR=$ABCDESKTOP_LOCALACCOUNT_DIR
+ENV TARGET_MODE=$TARGET_MODE
+# set node release
+ENV NODE_MAJOR=20
+
+COPY etc /etc
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
+    apt-get update  && \
+    apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+	gnupg \
+        net-tools \
+        bash && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# add languages 
+# locales for locale-gen command
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	locales && \
+    	echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
+        locale-gen && \
+        apt-get clean && \
+        rm -rf /var/lib/apt/lists/*
+
+# install
+# Do not use 
+# COPY tigervncserver_1.13.1-1ubuntu1_amd64.deb /tmp to install
+# tigervncserver_1.13.1-1ubuntu1_amd64.deb
+# tigervncserver_1.13.1-1ubuntu1_arm64.deb    
+# but replace by curl command to support dpkg --print-architecture for amd64 and arm64
+# tigervncserver_1.14.80-1ubuntu1_22.04_amd64.deb
+# tigervncserver_1.14.1-1ubuntu1_22.04.amd64.deb
+# tigervncserver_1.14.1-1ubuntu1_24.04.amd64.deb
+ENV TIGERVNC_RELEASE=1.15.0
+RUN apt-get update  && \
+    apt-get install -y --no-install-recommends \
+	tigervnc-standalone-server \
+	tigervnc-tools && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* 
+
+
+# install core packages
+# x11-apps is need to install xeyes xeyes is a test application
+RUN apt-get update && \    
+    apt-get install -y --no-install-recommends -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+        supervisor \
+        wmctrl \
+        cups-client \
+        pulseaudio-utils \
+        xauth \
+        websockify \
+	krb5-user \
+	desktop-file-utils \
+	xdg-user-dirs \
+	xclip \
+	x11-apps \
+	libimlib2t64 \
+	libglib2.0-bin \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && \
+    apt-get install -y x11-utils && \
+    apt-get install -y --no-install-recommends \
+      dbus-x11 \
+      xfwm4 && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+#RUN apt-get update && \
+#    apt-get install -y --no-install-recommends \
+#      task-french-kde-desktop \
+#      task-romanian-kde-desktop \
+#      task-german-kde-desktop && \
+#    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
+RUN apt-get update && \
+    apt-get install -y x11-utils && \
+    apt-get install -y --no-install-recommends \
+      openbox \
+      obconf \
+      lxappearance \
+      lxappearance-obconf && \ 
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      plasma-desktop \
+      qml-module-org-kde-kcm && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
+# RUN apt-get update && \
+#    apt-get install -y x11-utils && \
+#    apt-get install -y --no-install-recommends \
+#      plasma-workspace \
+#      plasma-systemmonitor \
+#      plasma-mobile \
+#      libnotify-bin \
+#      libnotify4 && \
+#    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
+## install MS fonts
+#RUN apt-get update && \
+#    echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
+#    apt-get install -y --no-install-recommends fontconfig ttf-mscorefonts-installer && \
+#    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
+# install Selawik fonts
+# comment for licencing
+# ADD fonts/SegoeUI.tar /usr/share/fonts/Microsoft/TrueType/SegoeUI/ 
+#  fc-cache -f /usr/share/fonts/Microsoft/TrueType/SegoeUI/ && \
+ADD fonts/Selawik.tar /usr/share/fonts/Microsoft/TrueType/Selawik/
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends fontconfig fonts-noto xfonts-base && \
+    fc-cache -f /usr/share/fonts/Microsoft/TrueType/Selawik/ && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# install composer
+COPY --from=ubuntu_node_modules_builder /composer /composer
+
+# copy themes from abcdesktopio/oc.themes:4.0
+COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/themes /usr/share/themes
+# COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/icons /usr/share/icons 
+COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/aurorae/themes /usr/share/aurorae/themes
+COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/color-schemes /usr/share/color-schemes
+COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/plasma/desktoptheme /usr/share/plasma/desktoptheme
+# COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/plasma/layout-templates /usr/share/plasma/layout-templates
+COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/plasma/look-and-feel /usr/share/plasma/look-and-feel
+COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/Kvantum /usr/share/Kvantum 
+COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/wallpapers /usr/share/wallpapers
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        gtk-update-icon-cache && \
+    gtk-update-icon-cache && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* 
+    
+ 
+# install nodejs
+RUN mkdir -p /etc/apt/keyrings && \
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends nodejs && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+
+# add sound files from ubuntu alsa package alsa-utils
+ADD usr/share/sounds/alsa /usr/share/sounds/alsa
+
+# RUN chmod -R 755 /usr/share/plasma/desktoptheme/Win11OS-light/*
+# LOG AND PID SECTION
+RUN mkdir -p /var/log/desktop /var/run/desktop && chmod 777 /var/log/desktop /var/run/desktop
+
+# remove /etc/supervisor/conf.d/xterm.conf in hardening
+RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
+	rm -f /etc/supervisor/conf.d/xterm.conf; \
+	echo "supervisor xterm.conf has been removed"; \
+    fi
+
+#
+# create account balloon for compatility with 2.0
+# Next command use $BUSER context
+# this is the default user if no user defined
+# create group, user, set password
+# fix home dir owner
+ENV BUSER=balloon
+RUN groupadd --gid 4096 $BUSER && \
+    useradd --create-home --shell /bin/bash --uid 4096 -g $BUSER $BUSER && \
+    echo "balloon:lmdpocpetit" | chpasswd $BUSER &&\
+    chown -R $BUSER:$BUSER /home/$BUSER
+
+# change passwd shadow group gshadow
+RUN mkdir -p $ABCDESKTOP_LOCALACCOUNT_DIR && \
+    for f in passwd shadow group gshadow ; do if [ -f /etc/$f ] ; then cp /etc/$f $ABCDESKTOP_LOCALACCOUNT_DIR ; rm -f /etc/$f; ln -s $ABCDESKTOP_LOCALACCOUNT_DIR/$f /etc/$f; fi; done
+
+# set build date
+RUN date > /etc/build.date
+
+# install qterminal xfonts-base
+RUN if [ "${TARGET_MODE}" != "hardening" ]; then \
+	apt-get update && \
+	apt-get install -y --no-install-recommends qterminal vim && \
+	apt-get clean && rm -rf /var/lib/apt/lists/*; \
+    fi
+
+
+# fun but not a good idea
+# RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
+#        apt-get remove -y --allow-remove-essential apt && \
+#        rm -rf /var/lib/dpkg /bin/dpkg* /sbin/dpkg-* /var/log/apt /var/log/*.log /etc/apt ; \
+#    fi
+
+# set command
+CMD [ "/composer/docker-entrypoint.sh" ]
+
+####################################################
+# SERVICE                           #   TCP PORT   #
+####################################################
+# XTERM_TCP_PORT                        29781
+# BROADCAST_SERVICE_TCP_PORT            29784
+# SPAWNER_SERVICE_TCP_PORT              29786
+# WS_TCP_BRIDGE_SERVICE_TCP_PORT         6081
+# DBUS_SESSION_TCP_PORT                 55556
+# DBUS_SYSTEM_TCP_PORT                  55557
+####################################################
+
+## RESERVED TCP PORT 29782 for pulseaudio
+## RESERVED TCP PORT 29785 for cupsd
+
+# VOLUME /home/$BUSER
+# Set for compatibility 2.0
+WORKDIR /home/$BUSER
+USER $BUSER
+
+EXPOSE 6081 29781 29784 29786
