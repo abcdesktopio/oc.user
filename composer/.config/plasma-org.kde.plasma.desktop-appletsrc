@@ -1,7 +1,6 @@
 [ActionPlugins][0]
 MiddleButton;NoModifier=org.kde.paste
 RightButton;NoModifier=org.kde.contextmenu
-wheel:Vertical;NoModifier=org.kde.switchdesktop
 
 [ActionPlugins][1]
 RightButton;NoModifier=org.kde.contextmenu
@@ -51,6 +50,9 @@ popupWidth=637
 
 [Containments][48][Applets][49][Configuration][General]
 favoritesPortedToKAstats=true
+primaryActions=3
+showActionButtonCaptions=true
+systemFavorites=lock-screen\\,logout
 
 [Containments][48][Applets][49][Configuration][Shortcuts]
 global=Alt+F1

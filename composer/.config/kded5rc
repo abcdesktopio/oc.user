@@ -1,8 +1,11 @@
 [Module-appmenu]
-autoload=true
+autoload=false
+
+[Module-bluedevil]
+autoload=false
 
 [Module-colorcorrectlocationupdater]
-autoload=false
+autoload=true
 
 [Module-device_automounter]
 autoload=false
@@ -20,10 +23,13 @@ autoload=false
 autoload=false
 
 [Module-ktimezoned]
+autoload=true
+
+[Module-networkmanagement]
 autoload=false
 
 [Module-plasma_accentcolor_service]
-autoload=true
+autoload=false
 
 [Module-proxyscout]
 autoload=false
