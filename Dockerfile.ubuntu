@@ -6,6 +6,44 @@ ARG BASE_IMAGE=ubuntu
 # Default release is 24.04
 ARG BASE_IMAGE_RELEASE=24.04
 
+
+
+
+FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} AS plasmaworkspace_ubuntu_builder
+ENV DEBEMAIL=dev@abcdesktop.io
+ENV EMAIL=dev@abcdesktop.io
+SHELL [ "/bin/bash", "-c" ]
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+# add src in sources.list
+# for <= 22.04
+RUN source /etc/os-release ; echo "$ID $VERSION"
+RUN if [ -f /etc/apt/sources.list ] ; then \
+      sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list ||true ;\
+    fi
+# for >= 24.04
+RUN source /etc/os-release ; \
+    if [ -f "/etc/apt/sources.list.d/$ID.sources" ] ; then \
+      sed -Ei 's/^Types: deb/Types: deb deb-src/' "/etc/apt/sources.list.d/$ID.sources" ||true ;\
+    fi
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends devscripts wget ca-certificates cmake
+RUN apt-get build-dep -y plasma-workspace
+RUN mkdir -p /plasma-workspace/src
+WORKDIR /plasma-workspace
+RUN apt-get source plasma-workspace
+COPY splashwindow.cpp //plasma-workspace/plasma-workspace-5.27.12/ksplash/ksplashqml
+COPY splashapp.cpp //plasma-workspace/plasma-workspace-5.27.12/ksplash/ksplashqml
+RUN cd plasma-workspace-5.27.12 && dch -n timeout3s
+RUN cd plasma-workspace-5.27.12 && EDITOR=/bin/true dpkg-source -q --commit . timeout3s
+RUN cd plasma-workspace-5.27.12 && debuild -us -uc
+RUN ls *.deb
+
+
+
+
+
+
+
 # install all nodejs modules
 # build nodejs module
 # create /composer/node
@@ -207,11 +245,44 @@ RUN apt-get update && \
       lxappearance-obconf && \ 
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+
+# install openbox custom packages 
+RUN mkdir -p /tmp/packages
+COPY --from=plasmaworkspace_ubuntu_builder \
+      /plasma-workspace/libcolorcorrect5_5.27.12-0ubuntu0.2_amd64.deb \ 
+      /plasma-workspace/libkfontinst5_5.27.12-0ubuntu0.2_amd64.deb \                   
+      /plasma-workspace/libkfontinstui5_5.27.12-0ubuntu0.2_amd64.deb \                     
+      /plasma-workspace/libkworkspace5-5_5.27.12-0ubuntu0.2_amd64.deb \                    
+      /plasma-workspace/libnotificationmanager1_5.27.12-0ubuntu0.2_amd64.deb \              
+      /plasma-workspace/libplasma-geolocation-interface5_5.27.12-0ubuntu0.2_amd64.deb \     
+      /plasma-workspace/libtaskmanager6_5.27.12-0ubuntu0.2_amd64.deb \   
+      /plasma-workspace/libweather-ion7_5.27.12-0ubuntu0.2_amd64.deb \                     
+      /plasma-workspace/plasma-workspace-data_5.27.12-0ubuntu0.2_all.deb \                 
+      /plasma-workspace/plasma-workspace_5.27.12-0ubuntu0.2_amd64.deb \                
+      /tmp/packages/
+
+RUN apt-get update  && \
+    apt-get install -y --no-install-recommends -f /tmp/packages/*.deb  && \
+    apt-get install -y --no-install-recommends plasma-desktop && \
+    rm -rf /tmp/packages && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/packages/*
+
 RUN apt-get update && \
+    apt-get install -y x11-utils && \
     apt-get install -y --no-install-recommends \
-      plasma-desktop \
+      libnotify-bin \
+      libnotify4 \
       qml-module-org-kde-kcm && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# RUN apt-get update && \
+#    apt-get install -y --no-install-recommends \
+#      plasma-desktop \
+#      libnotify-bin \
+#      libnotify4 \
+#      qml-module-org-kde-kcm && \
+#    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
 # RUN apt-get update && \
