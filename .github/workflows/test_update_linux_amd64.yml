@@ -11,8 +11,7 @@ jobs:
   build_matrix: 
     strategy:
       matrix:
-        target_mode: [ubuntu]
-        # target_mode: [ubuntu, hardening]
+        target_mode: [ubuntu, hardening]
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     # runs-on: self-hosted
@@ -44,15 +43,15 @@ jobs:
           platforms: linux/amd64
           push: true
           build-args: |
-            TARGET_MODE=${{ matrix.target_mode }}
+            TARGET_MODE=ubuntu
             ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount
             BASE_IMAGE_RELEASE=${{ env.base_image_release }}
             BASE_IMAGE=ubuntu
-          tags: ghcr.io/abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}:test.${{ env.imagetag }}
+          tags: ghcr.io/abcdesktopio/oc.user.ubuntu.${{ env.base_image_release }}:test.${{ env.imagetag }}
 
-      - name: Run and test docker image abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ env.imagetag }}
+      - name: Run and test docker image abcdesktopio/oc.user.ubuntu.${{ env.base_image_release }}:test.${{ env.imagetag }}
         run: |
-          TARGET_MODE=${{ matrix.target_mode }} ./make-test.sh ghcr.io/abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}:test.${{ env.imagetag }}
+          TARGET_MODE=${{ matrix.target_mode }} ./make-test.sh ghcr.io/abcdesktopio/oc.user.ubuntu.${{ env.base_image_release }}:test.${{ env.imagetag }}
       
       - name: Build and push image oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
         uses: docker/build-push-action@v6
@@ -64,6 +63,7 @@ jobs:
           build-args: |
             TARGET_MODE=${{ matrix.target_mode }}
             TARGET_PRUNE=true
+            TARGET_MODE=${{ matrix.target_mode }}
             ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount
             BASE_IMAGE_RELEASE=${{ env.base_image_release }}
             BASE_IMAGE=ubuntu
@@ -72,7 +72,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}:${{ env.imagetag }}
+          image-ref: ghcr.io/abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}:${{ env.imagetag }}
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
@@ -90,7 +90,7 @@ jobs:
             TARGET_MODE=${{ matrix.target_mode }}
             ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount
             TAG=${{ env.imagetag }}
-            BASE_IMAGE=abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}
+            BASE_IMAGE=ghcr.io/abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}
             BASE_IMAGE_RELEASE=${{ env.imagetag }}
-          tags: ghcr.io/abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}.sudo:${{ env.imagetag }}
+          tags: ghcr.io/abcdesktopio/oc.user.${{ matrix.target_mode }}.sudo.${{ env.base_image_release }}:${{ env.imagetag }}
  
