@@ -31,8 +31,8 @@ RUN apt-get build-dep -y plasma-workspace
 RUN mkdir -p /plasma-workspace/src
 WORKDIR /plasma-workspace
 RUN apt-get source plasma-workspace
-COPY splashwindow.cpp //plasma-workspace/plasma-workspace-5.27.12/ksplash/ksplashqml
-COPY splashapp.cpp //plasma-workspace/plasma-workspace-5.27.12/ksplash/ksplashqml
+COPY plasma-workspace/plasma-workspace-5.27.12/ksplash/ksplashqml/splashwindow.cpp //plasma-workspace/plasma-workspace-5.27.12/ksplash/ksplashqml
+COPY plasma-workspace/plasma-workspace-5.27.12/ksplash/ksplashqml/splashapp.cpp //plasma-workspace/plasma-workspace-5.27.12/ksplash/ksplashqml
 RUN cd plasma-workspace-5.27.12 && dch -n timeout3s
 RUN cd plasma-workspace-5.27.12 && EDITOR=/bin/true dpkg-source -q --commit . timeout3s
 RUN cd plasma-workspace-5.27.12 && debuild -us -uc
