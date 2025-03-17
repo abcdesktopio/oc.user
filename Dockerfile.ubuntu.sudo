@@ -25,7 +25,7 @@ USER 0
 # allow all users to run sudo commands
 # remove it if need
 RUN /composer/unaccount.sh
-RUN if [ "${TARGET_MODE}" != "hardening" ]; then apt-get update && apt-get install -y --no-install-recommends sudo nmapsi4 && apt-get clean && rm -rf /var/lib/apt/lists/* && echo "ALL ALL=(ALL:ALL) ALL" > /etc/sudoers.d/all; fi
+RUN if [ "${TARGET_MODE}" != "hardening" ]; then apt-get update && apt-get reinstall -y --no-install-recommends sudo nmapsi4 && apt-get clean && rm -rf /var/lib/apt/lists/* && echo "ALL ALL=(ALL:ALL) ALL" > /etc/sudoers.d/all; fi
 
 # change passwd shadow group gshadow
 RUN mkdir -p $ABCDESKTOP_LOCALACCOUNT_DIR && \

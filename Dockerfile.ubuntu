@@ -246,31 +246,39 @@ RUN apt-get update && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
+# install composer
+COPY --from=ubuntu_node_modules_builder /composer /composer
+
 # install openbox custom packages 
 RUN mkdir -p /tmp/packages
 COPY --from=plasmaworkspace_ubuntu_builder \
-      /plasma-workspace/libcolorcorrect5_5.27.12-0ubuntu0.2_amd64.deb \ 
-      /plasma-workspace/libkfontinst5_5.27.12-0ubuntu0.2_amd64.deb \                   
-      /plasma-workspace/libkfontinstui5_5.27.12-0ubuntu0.2_amd64.deb \                     
-      /plasma-workspace/libkworkspace5-5_5.27.12-0ubuntu0.2_amd64.deb \                    
-      /plasma-workspace/libnotificationmanager1_5.27.12-0ubuntu0.2_amd64.deb \              
-      /plasma-workspace/libplasma-geolocation-interface5_5.27.12-0ubuntu0.2_amd64.deb \     
-      /plasma-workspace/libtaskmanager6_5.27.12-0ubuntu0.2_amd64.deb \   
-      /plasma-workspace/libweather-ion7_5.27.12-0ubuntu0.2_amd64.deb \                     
-      /plasma-workspace/plasma-workspace-data_5.27.12-0ubuntu0.2_all.deb \                 
-      /plasma-workspace/plasma-workspace_5.27.12-0ubuntu0.2_amd64.deb \                
+      /plasma-workspace/libcolorcorrect5_5.27.12-0ubuntu0.2_amd64.deb \
+      /plasma-workspace/libkfontinst5_5.27.12-0ubuntu0.2_amd64.deb \
+      /plasma-workspace/libkfontinstui5_5.27.12-0ubuntu0.2_amd64.deb \
+      /plasma-workspace/libkworkspace5-5_5.27.12-0ubuntu0.2_amd64.deb \
+      /plasma-workspace/libnotificationmanager1_5.27.12-0ubuntu0.2_amd64.deb \
+      /plasma-workspace/libplasma-geolocation-interface5_5.27.12-0ubuntu0.2_amd64.deb \
+      /plasma-workspace/libtaskmanager6_5.27.12-0ubuntu0.2_amd64.deb \
+      /plasma-workspace/libweather-ion7_5.27.12-0ubuntu0.2_amd64.deb \
+      /plasma-workspace/plasma-workspace-data_5.27.12-0ubuntu0.2_all.deb \
+      /plasma-workspace/plasma-workspace_5.27.12-0ubuntu0.2_amd64.deb \
       /tmp/packages/
+
+# dpkg -L libkf5su5 | /composer/rmfol.sh && \
+# dpkg -L sudo | /composer/rmfol.sh && \
 
 RUN apt-get update  && \
     apt-get install -y --no-install-recommends -f /tmp/packages/*.deb  && \
     apt-get install -y --no-install-recommends plasma-desktop && \
+    if [ "$TARGET_MODE" = "hardening" ] ; then  dpkg -L libkf5su5 | /composer/rmfol.sh; fi && \
+    if [ "$TARGET_MODE" = "hardening" ] ; then  dpkg -L sudo | /composer/rmfol.sh; fi && \
     rm -rf /tmp/packages && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/packages/*
 
 RUN apt-get update && \
-    apt-get install -y x11-utils && \
     apt-get install -y --no-install-recommends \
+      x11-utils \
       libnotify-bin \
       libnotify4 \
       qml-module-org-kde-kcm && \
@@ -295,7 +303,6 @@ RUN apt-get update && \
 #      libnotify4 && \
 #    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-
 ## install MS fonts
 #RUN apt-get update && \
 #    echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
@@ -313,8 +320,6 @@ RUN apt-get update && \
     fc-cache -f /usr/share/fonts/Microsoft/TrueType/Selawik/ && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# install composer
-COPY --from=ubuntu_node_modules_builder /composer /composer
 
 # copy themes from abcdesktopio/oc.themes:4.0
 COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/themes /usr/share/themes
@@ -333,7 +338,12 @@ RUN apt-get update && \
     gtk-update-icon-cache && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* 
-    
+   
+
+
+
+
+ 
  
 # install nodejs
 RUN mkdir -p /etc/apt/keyrings && \
