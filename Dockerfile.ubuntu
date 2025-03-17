@@ -323,7 +323,7 @@ RUN apt-get update && \
 
 # copy themes from abcdesktopio/oc.themes:4.0
 COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/themes /usr/share/themes
-# COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/icons /usr/share/icons 
+COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/icons /usr/share/icons 
 COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/aurorae/themes /usr/share/aurorae/themes
 COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/color-schemes /usr/share/color-schemes
 COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/plasma/desktoptheme /usr/share/plasma/desktoptheme
