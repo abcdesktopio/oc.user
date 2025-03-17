@@ -49,6 +49,7 @@ popupHeight=504
 popupWidth=637
 
 [Containments][48][Applets][49][Configuration][General]
+alphaSort=true
 favoritesPortedToKAstats=true
 primaryActions=3
 showActionButtonCaptions=true
