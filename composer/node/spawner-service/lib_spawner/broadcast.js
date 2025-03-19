@@ -14,7 +14,6 @@
 const fs = require('fs');
 const path = require('path');
 const WebSocketClient = require('ws');
-const wmctrljs = require('wmctrljs');
 const asyncHandler = require('express-async-handler');
 const { delay } = require('./utils');
 
@@ -115,47 +114,10 @@ function broadcastevent(method = '', data) {
   });
 }
 
-/**
- *
- * @param {string} signal
- */
-async function broadcastwindowslist(signal = '') {
-  if (signal === 'SIGUSR2') {
-    await delay(1000); // Wait one second to be sur that X11 already close the window (dirty)
-  }
-  const windows = await wmctrljs.getWindowList();
-  const frontWindows = windows.map((win) => ({
-    id: win.win_id,
-    pid: win.win_pid,
-    wm_class: win.win_class,
-    title: win.win_name,
-    machine_name: win.win_client_machine,
-  }));
-
-  await broadcastevent('window.list', frontWindows);
-}
-
 function routerInit(router) {
   /**
    * @swagger
-   * /broadcastwindowslist:
-   *  post:
-   *      description: Emit a broadcast with window list as data
-   *      produces:
-   *          - application/json
-   *      responses:
-   *          '500':
-   *              schema:
-   *                  $ref: '#/definitions/InternalError'
-   *          '200':
-   *              schema:
-   *                  $ref: '#/definitions/Success'
    */
-  router.post('/broadcastwindowslist', asyncHandler(async (_, res) => {
-    const ret = { code: 200, data: 'ok' };
-    await broadcastwindowslist();
-    res.status(ret.code).send(ret);
-  }));
 }
 
 watchForASocket(pathPulseSocket, async () => {
@@ -192,4 +154,4 @@ watchForASocket(pathSocketCups, async () => {
   }
 });
 
-module.exports = { routerInit, broadcastevent, broadcastwindowslist };
+module.exports = { routerInit, broadcastevent };
