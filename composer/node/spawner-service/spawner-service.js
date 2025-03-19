@@ -17,7 +17,6 @@ const npid = require('npid');
 
 const router = require('./lib_spawner/router');
 const globalValues = require('./global-values');
-const { broadcastwindowslist } = require('./lib_spawner/broadcast');
 const { listenDaemonOnContainerIpAddr } = require('oc.user.libraries');
 const PORT = process.env.SPAWNER_SERVICE_TCP_PORT || 29786;
 const app = express();
@@ -74,20 +73,6 @@ fs.readdir( localessupportedFolder, (err, files) => {
   } 
 });
 
-
-function handleSignal(signal = '') {
-  return () => {
-    console.log(
-      `${signal} recieved (the windows manager send a window has been ${
-        signal === 'SIGUSR1' ? 'created' : 'closed'
-      })`,
-    );
-    broadcastwindowslist(signal).catch(console.error);
-  };
-}
-
-process.on('SIGUSR1', handleSignal('SIGUSR1'));
-process.on('SIGUSR2', handleSignal('SIGUSR2'));
 
 app.use(helmet());
 
