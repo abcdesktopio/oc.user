@@ -12,7 +12,6 @@
 */
 
 const { body, query } = require('express-validator');
-const wmctrljs = require('wmctrljs');
 const { getFinalMiddlewares } = require('oc.user.libraries/middlewares');
 const { applist } = require('../global-values');
 
@@ -31,65 +30,6 @@ const numberValidor = (value, properties) => {
   }
   return true;
 };
-
-const middlewareWindowPid = body('pid')
-  .exists({ checkNull: true })
-  .withMessage('No pid provided')
-  .bail()
-  .custom(numberValidor)
-  .withMessage('Pid must be a number')
-  .bail();
-
-const middlewareWindowid = body('windowid')
-  .exists({ checkNull: true })
-  .withMessage('No windowid provided')
-  .bail()
-  .custom(numberValidor)
-  .withMessage('Windowid must be a number')
-  .bail()
-  .custom((winId) => {
-    let lWinId;
-    try {
-      lWinId = wmctrljs.getWindowListSync().map((win) => win.win_id);
-    } catch (e) {
-      console.error(e);
-      lWinId = [];
-    }
-
-    if (!lWinId.includes(winId)) {
-      throw new Error('Unknow windowid');
-    }
-    return true;
-  });
-
-const middlewareWindowsid = body('windowsid')
-  .exists({ checkNull: true })
-  .withMessage('No windowsid provided')
-  .bail()
-  .isArray({ min: 1 })
-  .withMessage('Windowsid must be an array of windowid not empty')
-  .bail()
-  .custom((array) => {
-    if (array.some((v) => typeof v !== 'number')) {
-      throw new Error('All windowsid must be number');
-    }
-
-    let lWinId;
-    try {
-      lWinId = wmctrljs.getWindowListSync().map((win) => win.win_id);
-    } catch (e) {
-      console.error(e);
-      lWinId = [];
-    }
-
-    for (const wi of array) {
-      if (!lWinId.includes(wi)) {
-        throw new Error(`Unknow window_id [${wi}]`);
-      }
-    }
-
-    return true;
-  });
 
 const middlewareMail = body('mail')
   .exists({ checkNull: true })
@@ -282,9 +222,6 @@ dicoMiddlewares.set('filesearch', getFinalMiddlewares([middlewareKeywords, middl
 dicoMiddlewares.set('generateDesktopFiles', getFinalMiddlewares(middlewareList));
 dicoMiddlewares.set('getappforfile', getFinalMiddlewares(middlewareFilenameQuery));
 
-// -----PROCESS MODULE
-dicoMiddlewares.set('kill', getFinalMiddlewares(middlewareWindowPid));
-
 // -----SCREEN MODE MODULE
 dicoMiddlewares.set('setBackgroundColor', getFinalMiddlewares(middlewareColor));
 dicoMiddlewares.set('setBackgroundImage', getFinalMiddlewares(middlewareImgname));
@@ -294,9 +231,4 @@ dicoMiddlewares.set('setTheme', getFinalMiddlewares(middlewareTheme));
 dicoMiddlewares.set('getUserByMail', getFinalMiddlewares(middlewareMail));
 dicoMiddlewares.set('searchContactByName', getFinalMiddlewares(middlewareName));
 
-// -----WINDOW MODULE
-dicoMiddlewares.set('activatewindows', getFinalMiddlewares(middlewareWindowsid));
-dicoMiddlewares.set('closewindows', getFinalMiddlewares(middlewareWindowsid));
-dicoMiddlewares.set('minimizewindow', getFinalMiddlewares(middlewareWindowid));
-dicoMiddlewares.set('raisewindow', getFinalMiddlewares(middlewareWindowid));
 module.exports = dicoMiddlewares;
