@@ -236,14 +236,13 @@ RUN apt-get update && \
 #    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
-RUN apt-get update && \
-    apt-get install -y x11-utils && \
-    apt-get install -y --no-install-recommends \
-      openbox \
-      obconf \
-      lxappearance \
-      lxappearance-obconf && \ 
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && \
+#    apt-get install -y --no-install-recommends \
+#      openbox \
+#      obconf \
+#      lxappearance \
+#      lxappearance-obconf && \ 
+#    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
 # install composer
@@ -400,6 +399,12 @@ RUN if [ "${TARGET_MODE}" != "hardening" ]; then \
 #        apt-get remove -y --allow-remove-essential apt && \
 #        rm -rf /var/lib/dpkg /bin/dpkg* /sbin/dpkg-* /var/log/apt /var/log/*.log /etc/apt ; \
 #    fi
+
+
+# Make all NVIDIA GPUs visible by default
+ENV NVIDIA_VISIBLE_DEVICES=all
+# All NVIDIA driver capabilities should preferably be used, check `NVIDIA_DRIVER_CAPABILITIES` inside the container if things do not work
+ENV NVIDIA_DRIVER_CAPABILITIES=all
 
 # set command
 CMD [ "/composer/docker-entrypoint.sh" ]
