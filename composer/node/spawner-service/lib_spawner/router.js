@@ -47,7 +47,7 @@ const screen = require('./screen-mode');
 const app = require('./app');
 const audio = require('./audio');
 const clipboard = require('./clipboard');
-const window = require('./window');
+//const window = require('./window');
 const process = require('./process');
 const desktop = require('./desktop');
 const broadcast = require('./broadcast');
@@ -127,7 +127,7 @@ audio.routerInit(router);
 clipboard.routerInit(router);
 
 // Windows
-window.routerInit(router);
+// window.routerInit(router);
 
 // Process
 process.routerInit(router);
