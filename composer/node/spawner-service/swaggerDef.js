@@ -14,6 +14,5 @@ module.exports = {
     './lib_spawner/desktop.js',
     './lib_spawner/process.js',
     './lib_spawner/screen-mode.js',
-    './lib_spawner/window.js',
   ],
 };
