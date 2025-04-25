@@ -51,6 +51,7 @@ hardening31:
             --file Dockerfile.ubuntu .
 
 
+
 ubuntu2204:
 	docker pull ubuntu:22.04
 	docker build \
@@ -61,6 +62,15 @@ ubuntu2204:
             --build-arg BASE_IMAGE=ubuntu \
             --tag abcdesktopio/oc.user.ubuntu.22.04:$(TAG) \
             --file Dockerfile.ubuntu .
+	docker build \
+            --no-cache=$(NOCACHE) \
+            --build-arg TARGET_MODE=ubuntu \
+            --build-arg TAG=$(TAG)  \
+            --build-arg BASE_IMAGE_RELEASE=$(TAG) \
+            --build-arg BASE_IMAGE=abcdesktopio/oc.user.ubuntu.22.04 \
+            --tag abcdesktopio/oc.user.ubuntu.sudo.22.04:$(TAG) \
+            --file Dockerfile.ubuntu.sudo .
+
 
 elementary:
 	docker pull ghcr.io/elementary/docker:stable
@@ -100,6 +110,25 @@ ubuntu2404:
             --tag abcdesktopio/oc.user.ubuntu.sudo.24.04:$(TAG) \
             --file Dockerfile.ubuntu.sudo .
 
+
+ubuntu2410:
+	docker pull ubuntu:24.10
+	docker build \
+            --no-cache=$(NOCACHE) \
+            --build-arg TARGET_MODE=ubuntu \
+            --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
+            --build-arg BASE_IMAGE_RELEASE=24.10 \
+            --build-arg BASE_IMAGE=ubuntu \
+            --tag abcdesktopio/oc.user.ubuntu.24.10:$(TAG) \
+            --file Dockerfile.ubuntu.24.10 .
+	docker build \
+            --no-cache=$(NOCACHE) \
+            --build-arg TARGET_MODE=ubuntu \
+            --build-arg TAG=$(TAG)  \
+            --build-arg BASE_IMAGE_RELEASE=$(TAG) \
+            --build-arg BASE_IMAGE=abcdesktopio/oc.user.ubuntu.24.10 \
+            --tag abcdesktopio/oc.user.ubuntu.sudo.24.10:$(TAG) \
+            --file Dockerfile.ubuntu.sudo .
 
 debian:
 	docker pull debian 
