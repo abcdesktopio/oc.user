@@ -362,7 +362,10 @@ ADD usr/share/sounds/alsa /usr/share/sounds/alsa
 # RUN chmod -R 755 /usr/share/plasma/desktoptheme/Win11OS-light/*
 # LOG AND PID SECTION
 RUN mkdir -p /var/log/desktop /var/run/desktop && \
-    chmod 777 /var/log/desktop /var/run/desktop /etc/dbus-1 /etc/dbus-1/session.d /etc/dbus-1/system.d
+    chmod 777 /var/log/desktop /var/run/desktop 
+
+# add this for dbus if need
+# /etc/dbus-1 /etc/dbus-1/session.d /etc/dbus-1/system.d
 
 # remove /etc/supervisor/conf.d/xterm.conf in hardening
 RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
