@@ -103,12 +103,16 @@ plugin=org.kde.plasma.panelspacer
 immutability=1
 plugin=org.kde.plasma.panelspacer
 
+[Containments][48][Applets][64]
+immutability=1
+plugin=org.kde.milou
+
 [Containments][48][ConfigDialog]
 DialogHeight=74
 DialogWidth=1440
-
+<F2>
 [Containments][48][General]
-AppletOrder=60;59;49;50;51;52;55;56
+AppletOrder=60;59;49;50;51;52;55;56,64
 
 [Containments][54]
 activityId=
