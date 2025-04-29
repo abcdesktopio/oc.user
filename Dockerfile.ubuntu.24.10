@@ -271,7 +271,12 @@ RUN apt-get update && \
       x11-utils \
       libnotify-bin \
       libnotify4 \
+      systemsettings \
       plasma-widgets-addons \
+      language-pack-kde-en \
+      language-pack-kde-fr \
+      language-pack-kde-de \
+      language-pack-kde-ro \
       qml-module-org-kde-kcm && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
