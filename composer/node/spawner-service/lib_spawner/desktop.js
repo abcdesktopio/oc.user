@@ -210,12 +210,6 @@ async function updateplasma_org_kde_plasma_desktop_appletsrc( launchers_list = [
         fs.writeFileSync( appletsrc_filename, newfile_content, { encoding : 'utf-8' } );
 }
 
-
-async function updatedesktop_database() {
-}
-
-
-
 /**
  * @param {Array<File>} list
  * @param {Function} callback
@@ -292,7 +286,8 @@ async function generateDesktopFiles(list = []) {
   let allPromises = [];
   // now the list is safe for async call
   i=0;
-  let dockapplicationlist = []
+  let dockapplicationlist = [];
+  mimeappslist = [];
   while (i < list.length) {
       let mimetype = list[i].mimetype;
       let showinview = list[i].showinview;
@@ -315,8 +310,14 @@ async function generateDesktopFiles(list = []) {
       const execcommand = `${roothomedir}/.local/share/applications/bin/${launch}`;
       contentdesktop.Name = displayname;
       contentdesktop.Exec = `${execcommand} %U`;
-      if (mimetype && mimetype.length > 0)
+      if (mimetype && mimetype.length > 0) {
         contentdesktop.MimeType = `${mimetype.join(';')};`;
+	// associate each mimetype to the desktop file
+	mimetype.forEach((item) => {
+		let mimeapps = `${item}=${desktopfile};`;
+		mimeappslist.push(mimeapps);
+	});
+      }
       contentdesktop.Type = 'Application';
       contentdesktop.Icon = `${roothomedir}/.local/share/icons/${icon}`;
       if (cat)
@@ -337,6 +338,20 @@ async function generateDesktopFiles(list = []) {
       if (showinview === 'dock') 
 	dockapplicationlist.push( desktopfile );
       ++i;
+  }
+
+  // create .mimeapps.list if there is some items
+  if (mimeappslist.length > 0) {
+  	// write .config/mimeapps.list
+ 	console.log( 'create .config/mimeapps.list');
+  	console.log( mimeappslist.join('\n') );
+  	fs.writeFile( `${roothomedir}/.config/mimeapps.list`, 
+		mimeappslist.join('\n'), 
+	  	(err) => {
+            		if (err) throw err;
+            		console.log('mimeapps.list saved successful');
+        	}
+  	);
   }
 
   Promise.all( allPromises )
