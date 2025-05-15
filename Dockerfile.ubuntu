@@ -226,6 +226,8 @@ RUN apt-get update && \
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       dbus-x11 \
+      systemsettings \
+      qml-module-org-kde-kcm \
       x11-utils \
       xdg-utils \
       xfwm4 && \
@@ -400,6 +402,8 @@ RUN if [ "${TARGET_MODE}" != "hardening" ]; then \
 	apt-get clean && rm -rf /var/lib/apt/lists/*; \
     fi
 
+# remove bad cache mime entries
+RUN rm -f /usr/share/applications/mimeinfo.cache
 
 # fun but not a good idea
 # RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
