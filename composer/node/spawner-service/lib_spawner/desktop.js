@@ -149,30 +149,21 @@ function generateIconfile( contentdesktop, icondata ) {
 }
 
 function startservices() {
-	   supervisorctl( 'start', 'plasmashell' );
-
-           // All desktop files are created in ${roothomedir}/.local/share/applications
-           // run update-desktop-database
-           const command = spawn('update-desktop-database', [`${roothomedir}/.local/share/applications`]);
-           command.stderr.on('data', (data) => {
-                console.log(`update-desktop-database: stderr ${data}`);
-           });
-           command.stdout.on('data', (data) => {
-                console.log(`update-desktop-database: stdout ${data}`);
-           });
-           command.on('close', (code) => {
-                console.log(`update-desktop-database process exited with code ${code}`);
-           });
+  // All desktop files are created in ${roothomedir}/.local/share/applications
+  // run update-desktop-database
+  console.log(`update-desktop-database ${roothomedir}/.local/share/applications`);
+  const command = spawn('update-desktop-database', [`${roothomedir}/.local/share/applications`]);
+  command.stderr.on('data', (data) => {
+    console.log(`update-desktop-database: stderr ${data}`);
+  });
+  command.stdout.on('data', (data) => {
+    console.log(`update-desktop-database: stdout ${data}`);
+  });
+  command.on('close', (code) => {
+    console.log(`update-desktop-database process exited with code ${code}`);
+  });
+  supervisorctl( 'start', 'plasmashell' );
 }
-
-function checkifneedtostartservices( i, max )
-{
-      console.log( 'checkifneedtostartservices',  i, max );
-      if (i === max) {
-	   startservices();
-      }
-}
-
 
 function symlinkPromise( ocrunpath, execcommand)
 {
@@ -218,6 +209,11 @@ async function updateplasma_org_kde_plasma_desktop_appletsrc( launchers_list = [
         });
         fs.writeFileSync( appletsrc_filename, newfile_content, { encoding : 'utf-8' } );
 }
+
+
+async function updatedesktop_database() {
+}
+
 
 
 /**
@@ -348,12 +344,11 @@ async function generateDesktopFiles(list = []) {
   .catch(err => { console.log('allpromises.writeFile error' + err);} )
   .finally(() => {
     updateplasma_org_kde_plasma_desktop_appletsrc( dockapplicationlist );
+    console.log('updateplasma_org_kde_plasma_desktop_appletsrc completed');
     startservices();
-    console.log('allPromises completed');
+    console.log('startservices completed');
   });
-  console.log('return Promise');
   return Promise.resolve({ code: 200, data: 'OK' });
-
 }
 
 /**
