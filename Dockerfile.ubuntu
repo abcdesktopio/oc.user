@@ -227,6 +227,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       dbus-x11 \
       x11-utils \
+      xdg-utils \
       xfwm4 && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
