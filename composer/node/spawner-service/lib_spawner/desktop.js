@@ -354,8 +354,8 @@ async function generateDesktopFiles(list = []) {
 
   // create $HOME/.config/mimeapps.list 
   // if there is some items
-  if (mimeappslist.length > 0) {
-	// write file to .config/mimeapps.list
+  if (Object.keys(mimeappslist).length > 0) {
+      	// write file to .config/mimeapps.list
 	let mimeappsfilepath = `${roothomedir}/.config/mimeapps.list`;
 	console.log( `create file ${mimeappsfilepath}` );
 	// .config/mimeapps.list is an ini file like format
