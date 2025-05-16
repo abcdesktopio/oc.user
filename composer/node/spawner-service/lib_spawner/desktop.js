@@ -219,7 +219,7 @@ async function generateDesktopFiles(list = []) {
   console.log('generateDesktopFiles');
   console.log(`list of application len is ${list.length}`);	
   const ocrunpath = '/composer/node/ocrun/ocrun.js';
-  const ocrunpath_builtin    = '/composer/node/ocrun/ocrun.builtin.js';
+  const ocrunpath_builtin  = '/composer/node/ocrun/ocrun.builtin.js';
   const ocrunpath_frontendjs = '/composer/node/ocrun/ocrun.frontendjs.js';
   console.log('generateDesktopFiles start');
 
@@ -285,9 +285,10 @@ async function generateDesktopFiles(list = []) {
 
   let allPromises = [];
   // now the list is safe for async call
-  i=0;
   let dockapplicationlist = [];
-  mimeappslist = [];
+  mimeappslist = {};
+
+  i=0;
   while (i < list.length) {
       let mimetype = list[i].mimetype;
       let showinview = list[i].showinview;
@@ -302,6 +303,7 @@ async function generateDesktopFiles(list = []) {
       let displayname = list[i].displayname;
       let cat = list[i].cat;
       let desktopfile = list[i].desktopfile;
+      let usedefaultapplication = list[i].usedefaultapplication;
       const desktopfilepath  = `${roothomedir}/.local/share/applications/${desktopfile}`;
       console.log(`creating a new desktop file ${desktopfilepath} for application name=${name}` ); 
       
@@ -314,8 +316,12 @@ async function generateDesktopFiles(list = []) {
         contentdesktop.MimeType = `${mimetype.join(';')};`;
 	// associate each mimetype to the desktop file
 	mimetype.forEach((item) => {
-		let mimeapps = `${item}=${desktopfile};`;
-		mimeappslist.push(mimeapps);
+	  if (mimeappslist[item]) {
+	    mimeappslist[item] += ';' + desktopfile;
+	  }
+  	  else {
+	    mimeappslist[item] = desktopfile;
+          }
 	});
       }
       contentdesktop.Type = 'Application';
@@ -340,13 +346,21 @@ async function generateDesktopFiles(list = []) {
       ++i;
   }
 
-  // create .mimeapps.list if there is some items
+  // create $HOME/.config/mimeapps.list 
+  // if there is some items
   if (mimeappslist.length > 0) {
-	// write .config/mimeapps.list
+	// write file to .config/mimeapps.list
 	let mimeappsfilepath = `${roothomedir}/.config/mimeapps.list`;
 	console.log( `create file ${mimeappsfilepath}` );
+	// .config/mimeapps.list is an ini file like format
+	let filemimeappscontent = '[Default Applications]\n';
+	// add mimetype = desktop file
+	for (const [ key, value ] of Object.entries(mimeappslist)) {
+	  filemimeappscontent += `${key}=${value}\n`; 
+	}
+	// write file
   	fs.writeFile( 	mimeappsfilepath, 
-			mimeappslist.join('\n'), 
+			filemimeappscontent, 
 	  		(err) => {
             			if (err) 
 				  console.log( `error ${err}  ${mimeappsfilepath}`  );
