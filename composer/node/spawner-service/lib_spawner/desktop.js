@@ -148,11 +148,11 @@ function generateIconfile( contentdesktop, icondata ) {
   return iconpromise;
 }
 
-function startservices() {
+function update-desktop-database() {
   // All desktop files are created in ${roothomedir}/.local/share/applications
   // run update-desktop-database
   console.log(`update-desktop-database ${roothomedir}/.local/share/applications`);
-  const command = spawn('update-desktop-database', [`${roothomedir}/.local/share/applications`]);
+  const command = spawn('/usr/bin/update-desktop-database', [ '-v', `${roothomedir}/.local/share/applications`]);
   command.stderr.on('data', (data) => {
     console.log(`update-desktop-database: stderr ${data}`);
   });
@@ -162,7 +162,13 @@ function startservices() {
   command.on('close', (code) => {
     console.log(`update-desktop-database process exited with code ${code}`);
   });
-  supervisorctl( 'start', 'plasmashell' );
+}
+
+function startservices() {
+	// call update-desktop-database ${HOME}/.local/share/applications
+	update-desktop-database();
+	// call supervisorctl start plasmashell
+	supervisorctl( 'start', 'plasmashell' );
 }
 
 function symlinkPromise( ocrunpath, execcommand)
