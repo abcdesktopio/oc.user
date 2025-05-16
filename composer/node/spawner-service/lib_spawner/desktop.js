@@ -148,7 +148,7 @@ function generateIconfile( contentdesktop, icondata ) {
   return iconpromise;
 }
 
-function update-desktop-database() {
+function update_desktop_database() {
   // All desktop files are created in ${roothomedir}/.local/share/applications
   // run update-desktop-database
   console.log(`update-desktop-database ${roothomedir}/.local/share/applications`);
@@ -165,8 +165,8 @@ function update-desktop-database() {
 }
 
 function startservices() {
-	// call update-desktop-database ${HOME}/.local/share/applications
-	update-desktop-database();
+	// call update_desktop_database ${HOME}/.local/share/applications
+	update_desktop_database();
 	// call supervisorctl start plasmashell
 	supervisorctl( 'start', 'plasmashell' );
 }
