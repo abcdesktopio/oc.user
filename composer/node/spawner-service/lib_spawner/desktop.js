@@ -344,10 +344,16 @@ async function generateDesktopFiles(list = []) {
   if (mimeappslist.length > 0) {
 	// write .config/mimeapps.list
 	let mimeappsfilepath = `${roothomedir}/.config/mimeapps.list`;
-	let mimeappsfilecontent = ini.stringify( mimeappslist.join('\n'), { section: "Default Applications" })
- 	console.log( 'create .config/mimeapps.list');
-  	console.log( mimeappsfilecontent );
-	fs.writeFile( mimeappsfilepath, mimeappsfilecontent );
+	console.log( `create file ${mimeappsfilepath}` );
+  	fs.writeFile( 	mimeappsfilepath, 
+			mimeappslist.join('\n'), 
+	  		(err) => {
+            			if (err) 
+				  console.log( `error ${err}  ${mimeappsfilepath}`  );
+				else
+            			  console.log( `${mimeappsfilepath} saved successful`);
+        		}
+  	);
   }
 
   Promise.all( allPromises )
