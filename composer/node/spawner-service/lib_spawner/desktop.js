@@ -355,18 +355,19 @@ async function generateDesktopFiles(list = []) {
 	// .config/mimeapps.list is an ini file like format
 	let filemimeappscontent = '[Default Applications]\n';
 	// add mimetype = desktop file
-	for (const [ key, value ] of Object.entries(mimeappslist)) {
-	  filemimeappscontent += `${key}=${value}\n`; 
+	for (let mimekey in mimeappslist) {
+	  filemimeappscontent += `${mimekey}=${mimeappslist[mimekey]}\n`; 
 	}
 	// write file
-  	fs.writeFile( 	mimeappsfilepath, 
-			filemimeappscontent, 
-	  		(err) => {
-            			if (err) 
-				  console.log( `error ${err}  ${mimeappsfilepath}`  );
-				else
-            			  console.log( `${mimeappsfilepath} saved successful`);
-        		}
+  	fs.writeFile( 
+	  mimeappsfilepath, 
+	  filemimeappscontent, 
+	  (err) => {
+            if (err) 
+		  console.log( `error ${err}  ${mimeappsfilepath}`  );
+	    else
+           	  console.log( `${mimeappsfilepath} saved successful`);
+          }
   	);
   }
 
