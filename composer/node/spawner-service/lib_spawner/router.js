@@ -114,6 +114,12 @@ router.get('/version', asyncHandler(async (_req, res) => {
   res.status(ret.code).send(ret);
 }));
 
+router.get('/healtz', asyncHandler(async (_req, res) => {
+  const ret = { code: 200, data: 'OK' };
+  res.status(ret.code).send(ret);
+}));
+
+
 // Screen mode
 screen.routerInit(router);
 
