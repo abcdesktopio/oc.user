@@ -203,6 +203,10 @@ async function updateplasma_org_kde_plasma_desktop_appletsrc( launchers_list = [
         });
         console.log( launchers );
 
+
+	// same as 
+	// kwriteconfig5 --file ~/.config/plasma-org.kde.plasma.desktop-appletsrc --group Containments --group 48 --group Applets --group 51 --group Configuration --group General --key launchers data-launchers
+	//
         // open .config/plasma-org.kde.plasma.desktop-appletsrc
         const appletsrc_filename = `${roothomedir}/.config/plasma-org.kde.plasma.desktop-appletsrc`;
         let appletsrc_content = fs.readFileSync( appletsrc_filename, { encoding : 'utf-8' });
