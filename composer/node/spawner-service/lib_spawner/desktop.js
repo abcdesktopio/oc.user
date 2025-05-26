@@ -168,7 +168,7 @@ function startservices() {
 	// call update_desktop_database ${HOME}/.local/share/applications
 	update_desktop_database();
 	// call supervisorctl start plasmashell
-	supervisorctl( 'start', 'plasmashell' );
+	// supervisorctl( 'start', 'plasmashell' );
 }
 
 function symlinkPromise( ocrunpath, execcommand)
@@ -192,9 +192,28 @@ function symlinkPromise( ocrunpath, execcommand)
 }
 
 
+async function update_plasmashell_add_to_quicklaunch_command(launchers) {
+    console.log('update_plasmashell_add_to_quicklaunch_command is starting');
+    let env = process.env;
+    env.LAUNCHERS=launchers;
+    // start /composer/update-add-to-quicklaunch.sh
+    // put launchers as a env LAUNCHERS
+    const command = spawn( 'bash', [ '/composer/update-add-to-quicklaunch.sh'], {env: env} );
+    command.stderr.on('data', (data) => {
+    	console.log(`update_plasmashell_add_to_quicklaunch_command: stderr ${data}`);
+    });
+    command.stdout.on('data', (data) => {
+    	console.log(`update_plasmashell_add_to_quicklaunch_command: stdout ${data}`);
+    });
+    command.on('close', (code) => {
+    	console.log(`update_plasmashell_add_to_quicklaunch_command process exited with code ${code}`);
+    });
+    console.log('update_plasmashell_add_to_quicklaunch_command complete');
+}
+
 async function updateplasma_org_kde_plasma_desktop_appletsrc( launchers_list = []) {
-        // convert launchers_list to string launchers
-        let launchers = "launchers=";
+
+	let launchers = "";
         //launchers=applications:firefox.desktop,applications:org.gnome.Nautilus.desktop,applications:frontendjs.webshell.desktop
         launchers_list.forEach( (app,index) => {
                 launchers += `applications:${app}`;
@@ -203,21 +222,11 @@ async function updateplasma_org_kde_plasma_desktop_appletsrc( launchers_list = [
         });
         console.log( launchers );
 
-
-	// same as 
-	// kwriteconfig5 --file ~/.config/plasma-org.kde.plasma.desktop-appletsrc --group Containments --group 48 --group Applets --group 51 --group Configuration --group General --key launchers data-launchers
-	//
-        // open .config/plasma-org.kde.plasma.desktop-appletsrc
-        const appletsrc_filename = `${roothomedir}/.config/plasma-org.kde.plasma.desktop-appletsrc`;
-        let appletsrc_content = fs.readFileSync( appletsrc_filename, { encoding : 'utf-8' });
-        let newfile_content = "";
-        appletsrc_content.split(/\r?\n/).forEach(line =>  {
-          if (line.startsWith('launchers=')) {
-                  line = launchers;
-          }
-          newfile_content = newfile_content + line + '\n';
-        });
-        fs.writeFileSync( appletsrc_filename, newfile_content, { encoding : 'utf-8' } );
+        // convert launchers_list to string launchers
+	//let target_launcherfilename="/var/run/desktop/launchers.json";
+	//var json_data = JSON.stringify( launchers_list );
+	//fs.writeFile( target_launcherfilename, json_data, {encoding: 'utf-8'}, update_plasmashell_add_to_quicklaunch_command );
+	update_plasmashell_add_to_quicklaunch_command( launchers );
 }
 
 /**
