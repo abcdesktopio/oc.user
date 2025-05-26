@@ -489,22 +489,12 @@ if [ -d /proc/driver/nvidia ]; then
 	 	cat /tmp/gpu_uuid
 	fi
 fi
-
-
 # end of config setup 
 
 # run dump to log
 echo "KUBERNETES_SERVICE_HOST=$KUBERNETES_SERVICE_HOST" >> /var/log/desktop/config.log
 echo "DISABLE_REMOTEIP_FILTERING=$DISABLE_REMOTEIP_FILTERING" >> /var/log/desktop/config.log
 echo "BROADCAST_COOKIE=$BROADCAST_COOKIE" >> /var/log/desktop/config.log
-
-
-echo "== stage gsettings == "
-
-# update gsettings
-#gsettings set net.launchpad.plank.dock.settings:/net/launchpad/plank/docks/dock1/ zoom-percent 200
-#gsettings set net.launchpad.plank.dock.settings:/net/launchpad/plank/docks/dock1/ zoom-enabled true
-
 
 echo "== stage supervisord == "
 # start supervisord
