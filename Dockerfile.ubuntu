@@ -9,42 +9,6 @@ ARG BASE_IMAGE_RELEASE=24.04
 
 
 
-FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} AS plasmaworkspace_ubuntu_builder
-ENV DEBEMAIL=dev@abcdesktop.io
-ENV EMAIL=dev@abcdesktop.io
-SHELL [ "/bin/bash", "-c" ]
-RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-# add src in sources.list
-# for <= 22.04
-RUN source /etc/os-release ; echo "$ID $VERSION"
-RUN if [ -f /etc/apt/sources.list ] ; then \
-      sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list ||true ;\
-    fi
-# for >= 24.04
-RUN source /etc/os-release ; \
-    if [ -f "/etc/apt/sources.list.d/$ID.sources" ] ; then \
-      sed -Ei 's/^Types: deb/Types: deb deb-src/' "/etc/apt/sources.list.d/$ID.sources" ||true ;\
-    fi
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends devscripts wget ca-certificates cmake
-RUN apt-get build-dep -y plasma-workspace
-RUN mkdir -p /plasma-workspace/src
-WORKDIR /plasma-workspace
-RUN apt-get source plasma-workspace
-# COPY plasma-workspace/plasma-workspace-5.27.12/ksplash/ksplashqml/splashwindow.cpp / 
-# COPY plasma-workspace/plasma-workspace-5.27.12/ksplash/ksplashqml/splashapp.cpp /
-RUN cd plasma-workspace-*/ksplash/ksplashqml && sed -i -e 's/30000/10000/' splashwindow.cpp
-RUN cd plasma-workspace-* && dch -n timeout3s
-RUN cd plasma-workspace-* && EDITOR=/bin/true dpkg-source -q --commit . timeout3s
-RUN cd plasma-workspace-* && debuild -us -uc
-RUN ls *.deb
-
-
-
-
-
-
-
 # install all nodejs modules
 # build nodejs module
 # create /composer/node
@@ -181,6 +145,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         && apt-get clean \
         && rm -rf /var/lib/apt/lists/*
 
+# a good example is 
+# RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* \
+#	&& localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+# ENV LANG en_US.utf8
+
 # install
 # Do not use 
 # COPY tigervncserver_1.13.1-1ubuntu1_amd64.deb /tmp to install
@@ -208,7 +177,6 @@ RUN apt-get update  && \
 RUN apt-get update && \    
     apt-get install -y --no-install-recommends -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
         supervisor \
-        wmctrl \
         cups-client \
         pulseaudio-utils \
         pavumeter \
@@ -253,32 +221,20 @@ RUN apt-get update && \
 # install composer
 COPY --from=ubuntu_node_modules_builder /composer /composer
 
-# install openbox custom packages 
-RUN mkdir -p /tmp/packages
-COPY --from=plasmaworkspace_ubuntu_builder \
-      /plasma-workspace/libcolorcorrect5_5.27.12-0ubuntu0.2_amd64.deb \
-      /plasma-workspace/libkfontinst5_5.27.12-0ubuntu0.2_amd64.deb \
-      /plasma-workspace/libkfontinstui5_5.27.12-0ubuntu0.2_amd64.deb \
-      /plasma-workspace/libkworkspace5-5_5.27.12-0ubuntu0.2_amd64.deb \
-      /plasma-workspace/libnotificationmanager1_5.27.12-0ubuntu0.2_amd64.deb \
-      /plasma-workspace/libplasma-geolocation-interface5_5.27.12-0ubuntu0.2_amd64.deb \
-      /plasma-workspace/libtaskmanager6_5.27.12-0ubuntu0.2_amd64.deb \
-      /plasma-workspace/libweather-ion7_5.27.12-0ubuntu0.2_amd64.deb \
-      /plasma-workspace/plasma-workspace-data_5.27.12-0ubuntu0.2_all.deb \
-      /plasma-workspace/plasma-workspace_5.27.12-0ubuntu0.2_amd64.deb \
-      /tmp/packages/
-
-# dpkg -L libkf5su5 | /composer/rmfol.sh && \
-# dpkg -L sudo | /composer/rmfol.sh && \
-
 RUN apt-get update  && \
-    apt-get install -y --no-install-recommends -f /tmp/packages/*.deb  && \
-    apt-get install -y --no-install-recommends plasma-desktop && \
-    if [ "$TARGET_MODE" = "hardening" ] ; then  dpkg -L libkf5su5 | /composer/rmfol.sh; fi && \
-    if [ "$TARGET_MODE" = "hardening" ] ; then  dpkg -L sudo | /composer/rmfol.sh; fi && \
-    rm -rf /tmp/packages && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/packages/*
+    apt-get install -y --no-install-recommends \
+      plasma-desktop \
+      plasma-workspace \
+      plasma-workspace-data \
+      libplasma-geolocation-interface5 \
+      libkfontinst5 \
+      libnotificationmanager1 \
+      qml-module-org-kde-kwindowsystem && \
+    if [ "$TARGET_MODE" = "hardening" ] ; then  dpkg -L libkf5su5 | /composer/rmfol.sh; fi && \    
+    if [ "$TARGET_MODE" = "hardening" ] ; then  dpkg -L sudo      | /composer/rmfol.sh; fi && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -337,9 +293,8 @@ COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/Kvantum /usr/share/Kvantum
 COPY --from=abcdesktopio/oc.themes:4.0 /usr/share/wallpapers /usr/share/wallpapers
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        gtk-update-icon-cache && \
-    gtk-update-icon-cache && \
+    apt-get install -y --no-install-recommends gtk-update-icon-cache && \
+    gtk-update-icon-cache && \ 
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* 
    
@@ -376,21 +331,21 @@ RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
 	echo "supervisor xterm.conf has been removed"; \
     fi
 
-#
-# create account balloon for compatility with 2.0
-# Next command use $BUSER context
-# this is the default user if no user defined
-# create group, user, set password
-# fix home dir owner
-ENV BUSER=balloon
-RUN groupadd --gid 4096 $BUSER && \
-    useradd --create-home --shell /bin/bash --uid 4096 -g $BUSER $BUSER && \
-    echo "balloon:lmdpocpetit" | chpasswd $BUSER &&\
-    chown -R $BUSER:$BUSER /home/$BUSER
-
 # change passwd shadow group gshadow
-RUN mkdir -p $ABCDESKTOP_LOCALACCOUNT_DIR && \
-    for f in passwd shadow group gshadow ; do if [ -f /etc/$f ] ; then cp /etc/$f $ABCDESKTOP_LOCALACCOUNT_DIR ; rm -f /etc/$f; ln -s $ABCDESKTOP_LOCALACCOUNT_DIR/$f /etc/$f; fi; done
+# create a symlink for each files
+# target are provisioned in a dedicated volume 
+# to support ReadOnly, we can't update files /etc/passwd /etc/group /etc/shadow /etc/gshadow 
+RUN mkdir -p ${ABCDESKTOP_LOCALACCOUNT_DIR} ${ABCDESKTOP_LOCALACCOUNT_DIR}.shadow && \
+    for f in passwd group ; do \
+	cp /etc/${f} ${ABCDESKTOP_LOCALACCOUNT_DIR} ; \
+	rm -f /etc/${f}; \
+        ln -s ${ABCDESKTOP_LOCALACCOUNT_DIR}/${f} /etc/${f}; \
+    done && \
+    for f in shadow gshadow ; do \
+        cp /etc/${f} ${ABCDESKTOP_LOCALACCOUNT_DIR}.shadow ; \
+        rm -f /etc/${f}; \
+        ln -s ${ABCDESKTOP_LOCALACCOUNT_DIR}.shadow/${f} /etc/${f}; \
+    done
 
 # set build date
 RUN date > /etc/build.date
@@ -433,10 +388,4 @@ CMD [ "/composer/docker-entrypoint.sh" ]
 
 ## RESERVED TCP PORT 29782 for pulseaudio
 ## RESERVED TCP PORT 29785 for cupsd
-
-# VOLUME /home/$BUSER
-# Set for compatibility 2.0
-WORKDIR /home/$BUSER
-USER $BUSER
-
 EXPOSE 6081 29781 29784 29786
