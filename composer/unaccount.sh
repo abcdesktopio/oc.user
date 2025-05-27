@@ -10,6 +10,6 @@ done
 
 for f in shadow gshadow ; do
         rm -f /etc/${f};
-        echo "replace file /etc/$f by $ABCDESKTOP_LOCALACCOUNT_DIR/$f";
+        echo "replace file /etc/$f by ${ABCDESKTOP_LOCALACCOUNT_DIR}.shadow/$f";
         cp "${ABCDESKTOP_LOCALACCOUNT_DIR}.shadow/${f}" "/etc/${f}";
 done
