@@ -23,7 +23,6 @@
  */
 
 const fs = require('fs');
-const { remove: removeaccent } = require('diacritics');
 const { spawn } = require('child_process');
 const mime = require('mime-types');
 const { extname } = require('path');
@@ -34,47 +33,7 @@ const { set, get } = require('./utils');
 const { roothomedir, abcdesktoprundir, abcdesktoplogdir } = require('../global-values');
 const magic = new Magic(MAGIC_MIME_TYPE);
 const ini = require('./ini');
-/**
- * 
- * @param {string} root 
- * @param {string} keywords 
- */
-async function* filesearch(root = '', keywords = '') {
-  const dirents = await fs.promises.readdir(root, { withFileTypes: true });
-  const files = [];
-  const directories = [];
 
-  for (const dirent of dirents) {
-    if (dirent.isSymbolicLink() || dirent.name[0] === '.') {
-      continue;
-    }
-
-    if (dirent.isDirectory()) {
-      directories.push(dirent.name);
-    } else if (
-        dirent.isFile()
-        && dirent.name[0] !== '~'
-        && dirent.name !== 'jetty' // Disable Eclipse
-        ) {
-        const filenameWithoutAccent = removeaccent(dirent.name);
-        if (filenameWithoutAccent.search(keywords) !== -1) {
-          const filepath = `${root}/${dirent.name}`;
-          files.push({
-            file: filepath,
-            mime: mime.lookup(filepath),
-          });
-        }
-    }
-  }
-
-  // Render files to caller function item by item
-  yield* files;
-
-  for (const directory of directories) {
-    // Catch n+1 filesearch rendering
-    yield* filesearch(`${root}/${directory}`, keywords);
-  }
-}
 
 function supervisorctl( method, service_name ) {
   let command = '/usr/bin/supervisorctl';
@@ -565,68 +524,6 @@ function routerInit(router) {
     const result = await getmimeforfile(filename);
     ret.data = result;
     res.status(ret.code).send(ret.data);
-  }));
-
-  /**
-   * @swagger
-   *
-   * /filesearch:
-   *  get:
-   *    description: Used for list files by dock
-   *    produces:
-   *      - application/json
-   *    parameters:
-   *    - in: query
-   *      name: maxfile
-   *      type: integer
-   *      default: 64
-   *    - in: query
-   *      name: keywords
-   *      type: string
-   *      required: true
-   *    responses:
-   *      '500':
-   *        schema:
-   *          $ref: '#/definitions/InternalError'
-   *      '200':
-   *        schema:
-   *          type: object
-   *          properties:
-   *            code:
-   *              type: integer
-   *            data:
-   *              type: array
-   *              items:
-   *                type: object
-   *                properties:
-   *                  file:
-   *                    type: string
-   *                  mime:
-   *                    type: string
-   */
-  router.get('/filesearch', middlewares.get('filesearch'), asyncHandler(async (req, res) => {
-    const { maxfile = 64, keywords = '' } = req.query;
-    const ret = {
-      code: 200,
-      data: [],
-    };
-
-    const files = [];
-
-    for await (const filename of filesearch(roothomedir, removeaccent(keywords))) {
-      if (req.aborted) {
-        break;
-      }
-
-      files.push(filename);
-
-      if (files.length > maxfile) {
-        break;
-      }
-    }
-
-    ret.data = files;
-    res.status(ret.code).send(ret);
   }));
 
   /**
