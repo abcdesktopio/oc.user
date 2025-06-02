@@ -281,8 +281,8 @@ RUN apt-get update && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
-# Add /usr/share/themes/Windows-10 themes 
-COPY /usr/share/themes/Windows-10 /usr/share/themes/Windows-10
+# Add usr/share/themes/Windows-10 themes 
+COPY usr/share/themes/Windows-10 /usr/share/themes/Windows-10
 
 # install Win11-icon theme and Win11OS-kde theme
 RUN apt-get update && \
