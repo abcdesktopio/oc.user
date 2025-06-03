@@ -476,6 +476,20 @@ else
 fi
 
 
+echo "== stage plasmashell == "
+# should be $(/usr/bin/plasmashell --version |awk '{ print $2 }') 
+# /usr/bin/plasmashell --version failed if X11 is not running
+export PLASMASHELL_VERSION=6
+if [ -x /usr/bin/kded5 ]; then
+	export PLASMASHELL_VERSION=5
+fi
+
+if [ -x /usr/bin/kded6 ]; then
+        export PLASMASHELL_VERSION=6
+fi
+echo "PLASMASHELL_VERSION=$PLASMASHELL_VERSION"
+
+
 echo "== stage gpu == "
 
 # nvidia test

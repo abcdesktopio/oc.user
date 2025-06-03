@@ -92,6 +92,24 @@ function getmimeforfile(_filename) {
   });
 }
 
+
+function get_plasmashell_version() {
+  let plasmashell_release = 5;
+  let plasmashell_version = process.env['PLASMASHELL_VERSION'];
+  if (!plasmashell_version) {
+	  console.log('PLASMASHELL_VERSION is not defined');
+  }
+  else {
+	// let splitplasmashell_release = plasmashell_version.split(".");
+	// if ( splitplasmashell_release && splitplasmashell_release.length > 0 ) {
+	//	plasmashell_release = parseInt( splitplasmashell_release[0] );
+	// }
+        plasmashell_release = parseInt( plasmashell_version );
+  }
+  console.log( `get_plasmashell_version return ${plasmashell_release}` ); 
+  return plasmashell_release;
+}
+
 function generateIconfile( contentdesktop, icondata ) {  
   let iconpromise = fs.promises.writeFile(   
 	contentdesktop.Icon,
@@ -174,11 +192,33 @@ async function updateplasma_org_kde_plasma_desktop_appletsrc( launchers_list = [
 
 	let launchers = "";
         //launchers=applications:firefox.desktop,applications:org.gnome.Nautilus.desktop,applications:frontendjs.webshell.desktop
-        launchers_list.forEach( (app,index) => {
-                launchers += `applications:${app}`;
-                if (index+1 < launchers_list.length)
-                 launchers += `,`;
-        });
+	let plasmashell_version = get_plasmashell_version();
+	if (plasmashell_version >= 6) {
+		//
+		// sample
+		//
+		// [Containments][2][Applets][23][Configuration][General]
+		// launchers=file:///usr/share/applications/org.kde.kwrite.desktop,file:///usr/share/applications/org.kde.ksysguard.desktop,file:///usr/share/applications/org.kde.konsole.desktop,file:///usr/share/applications/firefox.desktop
+		//
+		launchers_list.forEach( (app,index) => {
+                        launchers += `file:///${app['desktoppath']}`;
+                        if (index+1 < launchers_list.length)
+                                launchers += `,`;
+                });
+	}
+	else {
+	 	//
+                // sample
+                //
+                // [Containments][2][Applets][23][Configuration][General]
+                // launchers=applicationse:org.kde.kwrite.desktop,applications:org.kde.ksysguard.desktop,applications:org.kde.konsole.desktop,applications:firefox.desktop
+                //
+        	launchers_list.forEach( (app,index) => {
+                	launchers += `applications:${app['desktop']}`;
+                	if (index+1 < launchers_list.length)
+                 		launchers += `,`;
+        	});
+	}
         console.log( launchers );
 
         // convert launchers_list to string launchers
@@ -320,7 +360,7 @@ async function generateDesktopFiles(list = []) {
 
       // if this application must be show in dock
       if (showinview === 'dock') 
-	dockapplicationlist.push( desktopfile );
+	dockapplicationlist.push( { 'desktop': desktopfile, 'desktoppath': desktopfilepath } );
       ++i;
   }
 
