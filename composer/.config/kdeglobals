@@ -110,6 +110,9 @@ ForegroundVisited=250,250,250
 [General]
 ColorSchemeHash=ba9311f915869482c95c7480ecdcbe907a961377
 
+[Icons]
+Theme=Win11-dark
+
 [KDE]
 AnimationDurationFactor=0
 LookAndFeelPackage=com.github.yeyushengfan258.Win11OS-light
