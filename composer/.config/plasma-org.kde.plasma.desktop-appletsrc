@@ -110,7 +110,6 @@ plugin=org.kde.milou
 [Containments][48][ConfigDialog]
 DialogHeight=74
 DialogWidth=1440
-<F2>
 [Containments][48][General]
 AppletOrder=60;59;49;50;51;52;55;56,64
 
@@ -156,5 +155,3 @@ extraItems=org.kde.plasma.devicenotifier,org.kde.plasma.battery,org.kde.plasma.b
 knownItems=org.kde.plasma.manage-inputmethod,org.kde.plasma.clipboard,org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.mediacontroller,org.kde.plasma.volume,org.kde.plasma.devicenotifier,org.kde.plasma.battery,org.kde.plasma.bluetooth,org.kde.plasma.networkmanagement
 scaleIconsToFit=true
 
-[ScreenMapping]
-itemsOnDisabledScreens=
