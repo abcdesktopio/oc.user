@@ -198,7 +198,7 @@ RUN apt-get update && \
       qml-module-org-kde-kcm \
       x11-utils \
       xdg-utils \
-      xfwm4 && \
+      kwin-x11 && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 #RUN apt-get update && \
@@ -280,6 +280,9 @@ RUN apt-get update && \
     fc-cache -f /usr/share/fonts/Microsoft/TrueType/Selawik/ && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Add usr/share/themes/Windows-10 themes 
+COPY usr/share/themes/Windows-10 /usr/share/themes/Windows-10
+
 # install Win11-icon theme and Win11OS-kde theme
 RUN apt-get update && \
     apt-get install -y --no-install-recommends git && \
@@ -292,11 +295,6 @@ RUN apt-get update && \
     apt-get remove -y git git-man liberror-perl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-
-# Add usr/share/themes/Windows-10 themes 
-COPY usr/share/themes/Windows-10 /usr/share/themes/Windows-10
-
-
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends gtk-update-icon-cache && \
