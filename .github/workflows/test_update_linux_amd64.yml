@@ -58,12 +58,11 @@ jobs:
         with:
           context: .
           file: ./Dockerfile.ubuntu
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           push: true
           build-args: |
             TARGET_MODE=${{ matrix.target_mode }}
             TARGET_PRUNE=true
-            TARGET_MODE=${{ matrix.target_mode }}
             ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount
             BASE_IMAGE_RELEASE=${{ env.base_image_release }}
             BASE_IMAGE=ubuntu
