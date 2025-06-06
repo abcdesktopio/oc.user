@@ -13,7 +13,6 @@
 
 const ChildProcess = require('child_process');
 const { Server: WebSocketServer } = require('ws');
-const { assertIp } = require('oc.user.libraries');
 
 const PORT = process.env.BROADCAST_SERVICE_TCP_PORT || 29784;
 const KEEPALIVE_TIMEOUT = 30000;
@@ -104,8 +103,12 @@ wss.on('connection', async (ws, req) => {
   // console.log( JSON.stringify(req.headers, null, 4) ); 
 
   if ( remoteAddress !== process.env.CONTAINER_IP_ADDR && broadcast_cookie !== process.env.BROADCAST_COOKIE ) {
+
+      console.log( 'incoming request from external(' + remoteAddress + ')' );
+
+      /*
       try {
-	console.log( 'call assertIp(' + remoteAddress + ')' );
+	console.log( 'incoming request from external(' + remoteAddress + ')' );
         await assertIp(remoteAddress);
       } catch (e) {
         console.log(e);
@@ -114,6 +117,7 @@ wss.on('connection', async (ws, req) => {
         return;
       }
       console.log(`assertIp:connection permit for ip ${remoteAddress}`);
+      */
 
       // first connection
       // send a broadcast connection list 
