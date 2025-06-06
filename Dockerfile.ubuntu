@@ -175,7 +175,7 @@ RUN apt-get update  && \
 # install core packages
 # x11-apps is need to install xeyes xeyes is a test application
 RUN apt-get update && \    
-    apt-get install -y --no-install-recommends -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+    apt-get install -y --no-install-recommends \
         supervisor \
         cups-client \
         pulseaudio-utils \
