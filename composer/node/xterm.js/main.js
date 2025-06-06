@@ -17,7 +17,6 @@ const helmet              = require('helmet');
 const Terminal            = require('./terminal') ;
 const { dicoMiddlewares } = require('./middlewares');
 const {
-  assertIp,
   listenDaemonOnContainerIpAddr 
 } = require('oc.user.libraries');
 
@@ -73,6 +72,8 @@ app.ws('/terminals/:pid', async (ws, req) => {
 
   console.log("Connection with client socketIp :" + socketIp);
   console.log("Connection with client requestIp :" + requestIp);
+
+  /*
   try {
       await assertIp(socketIp);
       await assertIp(requestIp.replace('::ffff:', ''));
@@ -81,6 +82,7 @@ app.ws('/terminals/:pid', async (ws, req) => {
     ws.close();
     return;
   }
+  */
 
   console.log('Connected to terminal ' + term.pid);
   term.regiterSocket(ws);
