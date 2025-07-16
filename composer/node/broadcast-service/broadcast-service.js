@@ -143,14 +143,8 @@ wss.on('connection', async (ws, req) => {
 
     // filter method
     // broadcast send
-    if ( json.method === 'hello'
-      || json.method === 'proc.killed'
-      || json.method === 'proc.started'
-      || json.method === 'window.list'
-      || json.method === 'printer.new'
-      || json.method === 'display.setBackgroundBorderColor'
-      || json.method === 'speaker.available'
-      || json.method === 'printer.available') {
+    let broadcast_methods = [ 'hello', 'proc.killed', 'proc.started', 'window.list', 'printer.new', 'printer.available', 'display.setBackgroundBorderColor', 'speaker.available', 'snapshot' ];
+    if (broadcast_methods.includes( json.method ) ) {
       console.log('sending: %s', message);
       wss.broadcast(message);
     }
@@ -160,11 +154,8 @@ wss.on('connection', async (ws, req) => {
     }
 
     // unicast send
-    if ( json.method === 'ocrun'
-      || json.method === 'logout'
-      || json.method === 'disconnect'
-      || json.method === 'container'
-      || json.method === 'download') {
+    let unicast_methods = [ 'ocrun', 'logout', 'disconnect', 'container', 'download' ];
+    if ( unicast_methods.includes( json.methodi ) ) {
       console.log('Unicast send msg: %s', message);
       wss.unicast(message);
     }
