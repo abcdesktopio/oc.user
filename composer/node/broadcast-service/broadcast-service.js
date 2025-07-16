@@ -155,7 +155,7 @@ wss.on('connection', async (ws, req) => {
 
     // unicast send
     let unicast_methods = [ 'ocrun', 'logout', 'disconnect', 'container', 'download' ];
-    if ( unicast_methods.includes( json.methodi ) ) {
+    if ( unicast_methods.includes( json.method ) ) {
       console.log('Unicast send msg: %s', message);
       wss.unicast(message);
     }
