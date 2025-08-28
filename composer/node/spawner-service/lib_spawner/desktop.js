@@ -318,6 +318,7 @@ async function generateDesktopFiles(list = []) {
       let icon_url = list[i].icon_url;
       let name = list[i].name;
       let launch = list[i].launch;
+      let wm_class = list[i].wm_class;
       let displayname = list[i].displayname;
       let cat = list[i].cat;
       let desktopfile = list[i].desktopfile;
@@ -352,6 +353,29 @@ async function generateDesktopFiles(list = []) {
       let linktargetfile = ocrunpath;
       if (execmode === 'builtin') linktargetfile=ocrunpath_builtin;
       if (execmode === 'frontendjs') linktargetfile=ocrunpath_frontendjs;
+
+      // set StartupWMClass in desktop file
+      // if wm_class is defined, it overwrites the launch values
+      if (wm_class) {
+	      contentdesktop.StartupWMClass=wm_class;
+      }
+      else {
+	      // add WM_CLASS
+      	      // $ wmctrl -lx
+              // Navigator.firefox-esr -> firefox-esr
+              // https://tronche.com/gui/x/xlib/ICC/client-to-window-manager/wm-class.html
+	      let arr_launch = launch.split('.');
+              let arr_index = arr_launch.length / 2;
+              wm_class = '';
+              for ( ; arr_index<arr_launch.length; ++arr_index) {
+                      if (wm_class.length > 0)
+                              wm_class += '.';
+                      wm_class += arr_launch[ arr_index ];
+              }
+              if (wm_class.length > 0) {
+                      contentdesktop.StartupWMClass=wm_class;
+              }
+      }
 
       // this call is sync 
       // make sure that the desktopfile exists for next promise
