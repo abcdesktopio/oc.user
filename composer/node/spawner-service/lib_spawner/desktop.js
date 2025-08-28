@@ -328,7 +328,10 @@ async function generateDesktopFiles(list = []) {
       // create contentdesktop	    
       const contentdesktop = {};
       const execcommand = `${roothomedir}/.local/share/applications/bin/${launch}`;
-      contentdesktop.Name = displayname;
+      contentdesktop.Version='1.0';
+      contentdesktop.Type = 'Application';
+      contentdesktop.Name = name;
+      contentdesktop.GenericName = displayname;
       contentdesktop.Exec = `${execcommand} %U`;
       if (mimetype && mimetype.length > 0) {
         contentdesktop.MimeType = `${mimetype.join(';')};`;
@@ -342,7 +345,6 @@ async function generateDesktopFiles(list = []) {
           }
 	});
       }
-      contentdesktop.Type = 'Application';
       contentdesktop.Icon = `${roothomedir}/.local/share/icons/${icon}`;
       if (cat)
         contentdesktop.Categories = cat;
