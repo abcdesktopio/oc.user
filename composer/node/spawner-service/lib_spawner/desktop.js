@@ -363,7 +363,17 @@ async function generateDesktopFiles(list = []) {
 	      // add WM_CLASS
       	      // $ wmctrl -lx
               // Navigator.firefox-esr -> firefox-esr
-              // https://tronche.com/gui/x/xlib/ICC/client-to-window-manager/wm-class.html
+              // 
+	      // https://tronche.com/gui/x/xlib/ICC/client-to-window-manager/wm-class.html
+	      // 
+	      // typedef struct {
+	      // 	char *res_name;
+	      // 	char *res_class;
+	      // } XClassHint;
+	      // 
+	      // - res_name member contains the application name
+	      // - res_class member contains the application class.
+	      //
 	      let arr_launch = launch.split('.');
               let arr_index = arr_launch.length / 2;
               wm_class = '';
