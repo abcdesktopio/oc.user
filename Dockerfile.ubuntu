@@ -244,6 +244,19 @@ RUN apt-get update && \
       qml-module-org-kde-kcm && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+
+# for gamepad
+#  python3-libevdev \
+#  libevdev2 
+#  libevdev-tools
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        python3-uinput \
+	python3-websockets \
+	jstest-gtk && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
 # RUN apt-get update && \
 #    apt-get install -y --no-install-recommends \
 #      plasma-desktop \
