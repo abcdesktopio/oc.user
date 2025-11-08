@@ -209,15 +209,6 @@ RUN apt-get update && \
 #    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
-# RUN apt-get update && \
-#    apt-get install -y --no-install-recommends \
-#      openbox \
-#      obconf \
-#      lxappearance \
-#      lxappearance-obconf && \ 
-#    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-
 # install composer
 COPY --from=ubuntu_node_modules_builder /composer /composer
 
@@ -282,6 +273,7 @@ RUN apt-get update && \
 
 # Add usr/share/themes/Windows-10 themes 
 COPY usr/share/themes/Windows-10 /usr/share/themes/Windows-10
+COPY usr/share/aurorae /usr/share/aurorae
 
 # install Win11-icon theme and Win11OS-kde theme
 RUN apt-get update && \
