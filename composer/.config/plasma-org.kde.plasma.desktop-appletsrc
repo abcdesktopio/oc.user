@@ -54,6 +54,7 @@ favoritesPortedToKAstats=true
 primaryActions=3
 showActionButtonCaptions=true
 systemFavorites=lock-screen\\,logout
+icon=/composer/icon/start-here-kde.svg
 
 [Containments][48][Applets][49][Configuration][Shortcuts]
 global=Alt+F1
