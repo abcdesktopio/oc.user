@@ -17,4 +17,4 @@ BorderSize=None
 BorderSizeAuto=false
 ButtonsOnLeft=M
 library=org.kde.kwin.aurorae
-theme=__aurorae__svg__Win11OS-light
+theme=__aurorae__svg__WillowLight
