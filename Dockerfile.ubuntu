@@ -177,6 +177,7 @@ RUN apt-get update  && \
 RUN apt-get update && \    
     apt-get install -y --no-install-recommends \
         supervisor \
+	libnss-extrausers \
         cups-client \
         pulseaudio-utils \
         pavumeter \
@@ -337,25 +338,8 @@ RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
 	echo "supervisor xterm.conf has been removed"; \
     fi
 
-# change passwd shadow group gshadow
-# create a symlink for each files
-# target are provisioned in a dedicated volume 
-# to support ReadOnly, we can't update files /etc/passwd /etc/group /etc/shadow /etc/gshadow 
-RUN mkdir -p ${ABCDESKTOP_LOCALACCOUNT_DIR} ${ABCDESKTOP_LOCALACCOUNT_DIR}.shadow && \
-    for f in passwd group ; do \
-	cp /etc/${f} ${ABCDESKTOP_LOCALACCOUNT_DIR} ; \
-	rm -f /etc/${f}; \
-        ln -s ${ABCDESKTOP_LOCALACCOUNT_DIR}/${f} /etc/${f}; \
-    done && \
-    for f in shadow gshadow ; do \
-        cp /etc/${f} ${ABCDESKTOP_LOCALACCOUNT_DIR}.shadow ; \
-        rm -f /etc/${f}; \
-        ln -s ${ABCDESKTOP_LOCALACCOUNT_DIR}.shadow/${f} /etc/${f}; \
-    done
-
 # set build date
 RUN date > /etc/build.date
-
 # install qterminal xfonts-base
 RUN if [ "${TARGET_MODE}" != "hardening" ]; then \
 	apt-get update && \
