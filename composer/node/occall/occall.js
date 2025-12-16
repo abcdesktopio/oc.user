@@ -20,7 +20,7 @@ const os = require('os');
 function logme( data )
 {
     console.log( data );	
-    fs.writeFileSync("/tmp/occall.debug", util.inspect(data));
+    fs.writeFileSync("/var/log/desktop/occall.log", util.inspect(data));
 }
 
 const networkInterfaces = os.networkInterfaces();
