@@ -171,7 +171,6 @@ RUN apt-get update  && \
     rm -f /tmp/*.deb && \
     apt-get clean && rm -rf /var/lib/apt/lists/* 
 
-
 # install core packages
 # x11-apps is need to install xeyes xeyes is a test application
 RUN apt-get update && \    
