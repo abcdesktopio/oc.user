@@ -41,15 +41,15 @@ Parameters:
  
 Examples:
     ./overwrite_environment_variable_for_application.sh
-    [ { "NVIDIA_VISIBLE_DEVICES": "GPU-38ab400c-8953-69b1-5460-f70aefd40f8b"}, { "MYVAR": "great"} ]}  
+    [ { "k8s.device-plugin.nvidia.com/gpu": "GPU-38ab400c-8953-69b1-5460-f70aefd40f8b"}, { "MYVAR": "great"} ]}  
 
     ./overwrite_environment_variable_for_application.sh --type=pod_application 
-    [ { "NVIDIA_VISIBLE_DEVICES": "GPU-38ab400c-8953-69b1-5460-f70aefd40f8b"}, { "MYVAR": "great"} ]}  
+    [ { "k8s.device-plugin.nvidia.com/gpu": "GPU-38ab400c-8953-69b1-5460-f70aefd40f8b"}, { "MYVAR": "great"} ]}  
 
 Notes:
   the output MUST be of JSON list  
   ./overwrite_environment_variable_for_application.sh
-  [ { "NVIDIA_VISIBLE_DEVICES": "GPU-b5aebea9-8a25-fb21-631b-7e5da5a60ccb" } ]
+  [ { "k8s.device-plugin.nvidia.com/gpu": "GPU-b5aebea9-8a25-fb21-631b-7e5da5a60ccb" } ]
 
 Exit status:
  0      if OK,
