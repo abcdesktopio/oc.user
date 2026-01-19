@@ -80,10 +80,6 @@ WORKDIR /composer/node/occall
 RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
 RUN npm audit fix
 
-WORKDIR /composer/node/spawner-service/lib_spawner/colorflow
-RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
-RUN npm audit fix
-
 WORKDIR /composer/node/spawner-service
 # install node-gyp to build spawner-service
 RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
