@@ -90,7 +90,7 @@ RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; 
 
 WORKDIR /composer/node/spawner-service/lib_spawner/colorflow
 RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; npm run build;  fi
-RUN npm audit fix
+RUN npm audit fix --force
 
 WORKDIR /
 RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
