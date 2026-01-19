@@ -88,12 +88,14 @@ NVIDIA_GPU="{ \"SAMPLEENV\" : \"samplevalue\" }"
 # nvidia test
 if [ -d /proc/driver/nvidia ]; then
        # /proc/driver/nvidia exists
-       # suppose there is a gpu 
+       # suppose there is a nvidia gpu
        if [ -x /usr/bin/nvidia-smi ]; then
                 # command line /usr/bin/nvidia-smi found
                 # nvidia-smi read gpu_uuid
-		gpu_uuid=$(nvidia-smi --query-gpu=gpu_uuid --format=csv,noheader)
-             	NVIDIA_GPU="{ \"NVIDIA_VISIBLE_DEVICES\" : \"$gpu_uuid\" }"  
+		        gpu_uuid=$(nvidia-smi --query-gpu=gpu_uuid --format=csv,noheader)
+				# NVIDIA_VISIBLE_DEVICES is also know as k8s.device-plugin.nvidia.com/gpu
+				# define the variable named k8s.device-plugin.nvidia.com/gpu to the $gpu_uuid value
+             	NVIDIA_GPU="{ \"k8s.device-plugin.nvidia.com/gpu\" : \"$gpu_uuid\" }"  
         fi
 fi
 
