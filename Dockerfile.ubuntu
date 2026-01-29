@@ -8,7 +8,6 @@ ARG BASE_IMAGE_RELEASE=24.04
 
 
 
-
 # install all nodejs modules
 # build nodejs module
 # create /composer/node
