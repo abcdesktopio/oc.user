@@ -238,9 +238,9 @@ RUN apt-get update && \
 #  libevdev-tools
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        python3-uinput \
-	python3-websockets \
-	jstest-gtk && \
+      python3-uinput \
+	  python3-websockets \
+	  jstest-gtk && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
@@ -338,8 +338,8 @@ RUN date > /etc/build.date
 # install qterminal xfonts-base
 RUN if [ "${TARGET_MODE}" != "hardening" ]; then \
 	apt-get update && \
-	apt-get install -y --no-install-recommends qterminal vim && \
-        rm -rf /usr/share/applications/qterminal-drop.desktop && \
+	apt-get install -y --no-install-recommends qterminal vim vim-gtk3 && \
+    rm -rf /usr/share/applications/qterminal-drop.desktop && \
 	apt-get clean && rm -rf /var/lib/apt/lists/*; \
     fi
 
