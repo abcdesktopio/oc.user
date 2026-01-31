@@ -83,10 +83,11 @@ RUN npm audit fix
 WORKDIR /composer/node/spawner-service
 # install node-gyp to build spawner-service
 RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
+# RUN npm audit fix 
 
 WORKDIR /composer/node/spawner-service/lib_spawner/colorflow
 RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; npm run build;  fi
-# RUN npm audit fix --force
+RUN npm audit fix 
 
 WORKDIR /
 RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
@@ -155,12 +156,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # tigervncserver_1.14.80-1ubuntu1_22.04_amd64.deb
 # tigervncserver_1.14.1-1ubuntu1_22.04.amd64.deb
 # tigervncserver_1.14.1-1ubuntu1_24.04.amd64.deb
-
-ENV TIGERVNC_RELEASE=1.15.0
+ENV TIGERVNC_RELEASE=1.16.0
 RUN apt-get update  && \
     source /etc/lsb-release && \
     echo DISTRIB_RELEASE=${DISTRIB_RELEASE} && \
-    tigervncdeburl="https://github.com/abcdesktopio/oc.user/raw/4.0/tigervncserver_${TIGERVNC_RELEASE}-1ubuntu1_${DISTRIB_RELEASE}_$(dpkg --print-architecture).deb" && \
+    tigervncdeburl="https://github.com/abcdesktopio/oc.user/raw/4.3/tigervncserver_${TIGERVNC_RELEASE}-1ubuntu1_${DISTRIB_RELEASE}_$(dpkg --print-architecture).deb" && \
     echo Downloading $tigervncdeburl && \
     curl -sL --output /tmp/tigervncserver.deb "$tigervncdeburl" && \  
     apt-get install -y --no-install-recommends /tmp/tigervncserver.deb && \
@@ -182,20 +182,29 @@ RUN apt-get update && \
 	desktop-file-utils \
 	xdg-user-dirs \
 	xclip \
-	x11-apps \
 	libimlib2t64 \
 	libglib2.0-bin \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       dbus-x11 \
-      systemsettings \
-      qml-module-org-kde-kcm \
       x11-utils \
       xdg-utils \
-      kwin-x11 && \
+      kwin-x11 \
+      x11-apps && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
+# for xwayland
+# RUN apt-get update && \
+#     apt-get install -y --no-install-recommends \
+#	weston \
+#    	xwayland \
+#	xterm \
+#    	mesa-utils && \
+#    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 #RUN apt-get update && \
 #    apt-get install -y --no-install-recommends \
@@ -215,7 +224,8 @@ RUN apt-get update  && \
       plasma-workspace-data \
       libplasma-geolocation-interface5 \
       libkfontinst5 \
-      libnotificationmanager1 \
+      systemsettings \
+      qml-module-org-kde-kcm \
       qml-module-org-kde-kwindowsystem && \
     if [ "$TARGET_MODE" = "hardening" ] ; then  dpkg -L libkf5su5 | /composer/rmfol.sh; fi && \    
     if [ "$TARGET_MODE" = "hardening" ] ; then  dpkg -L sudo      | /composer/rmfol.sh; fi && \
@@ -225,10 +235,9 @@ RUN apt-get update  && \
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-      x11-utils \
+      libnotificationmanager1 \
       libnotify-bin \
-      libnotify4 \
-      qml-module-org-kde-kcm && \
+      libnotify4 && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
@@ -236,34 +245,16 @@ RUN apt-get update && \
 #  python3-libevdev \
 #  libevdev2 
 #  libevdev-tools
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        python3-uinput \
-	python3-websockets \
-	jstest-gtk && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-
 # RUN apt-get update && \
 #    apt-get install -y --no-install-recommends \
-#      plasma-desktop \
-#      libnotify-bin \
-#      libnotify4 \
-#      qml-module-org-kde-kcm && \
+#        python3-uinput \
+#	python3-websockets \
+#	jstest-gtk && \
 #    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
-# RUN apt-get update && \
-#    apt-get install -y x11-utils && \
-#    apt-get install -y --no-install-recommends \
-#      plasma-workspace \
-#      plasma-systemmonitor \
-#      plasma-mobile \
-#      libnotify-bin \
-#      libnotify4 && \
-#    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-## install MS fonts
+## install MS fonts 
+## replace by install Selawik fonts this one is free
 #RUN apt-get update && \
 #    echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
 #    apt-get install -y --no-install-recommends fontconfig ttf-mscorefonts-installer && \
@@ -300,7 +291,7 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-
+# add breeze theme
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
 	breeze-gtk-theme \
