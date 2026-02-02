@@ -10,9 +10,9 @@
   "author": "matteo beghelli",
   "license": "ISC",
   "dependencies": {
+    "node-gyp": "^12.1.0"
   },
   "devDependencies": {
-    "node-gyp": "^10.0.1",
     "jest": "^29.7.0"
   }
 }
