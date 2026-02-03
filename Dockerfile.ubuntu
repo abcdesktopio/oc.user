@@ -80,9 +80,10 @@ WORKDIR /composer/node/occall
 RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
 RUN npm audit fix
 
-RUN git clone https://github.com/abcdesktopio/colorflow.git /composer/node/spawner-service/lib_spawner/colorflow
+RUN git clone https://github.com/abcdesktopio/colorflow.git /composer/node/spawner-service/lib_spawner/co lorflow
 WORKDIR /composer/node/spawner-service/lib_spawner/colorflow
 RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; npm run build;  fi
+RUN rm colorflow.test.js && rm -rf images/
 RUN npm audit fix 
 
 WORKDIR /composer/node/spawner-service
