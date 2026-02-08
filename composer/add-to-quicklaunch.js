@@ -32,8 +32,8 @@ for (var i = 0; i < panels.length; i++) {
         //print( "j=" + j + " -> " );
         print( widgets[j].type );
         print( "\n" ); 
-        if (widgets[j].type === "org.kde.plasma.icontasks") {
-            print("Quicklaunch is found.");
+        if (widgets[j].type === "org.kde.plasma.taskmanager") {
+            print("Quicklaunch org.kde.plasma.taskmanager is found.");
             addLaunchersToQuicklaunch(widgets[j]);
             quicklaunchFound = true;
             break;
