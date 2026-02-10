@@ -8,11 +8,9 @@
 source /etc/os-release 
 echo "distrib $ID $VERSION"
 
-for f in passwd shadow group gshadow ; do rm -f /etc/$f && cp $ABCDESKTOP_LOCALACCOUNT_DIR/$f /etc/$f; done
-
 if [[ ${ID} == "alpine" ]]; then
 	echo "install packages for $ID"
-	apk add git gcc make g++ bash build-base alpine-sdk sudo wget python3 libx11-dev yarn
+	apk add git gcc make g++ bash build-base alpine-sdk sudo wget python3 libx11-dev nodejs 
 	apk add xeyes net-tools
 fi
 
@@ -22,30 +20,33 @@ if [[ ${ID} == "ubuntu" ]]; then
 	echo "apt-get install -y curl libxmu-dev gcc g++ make libx11-dev libxmu-dev git libimlib2-dev libpng-dev"
 	apt-get install -y curl libxmu-dev gcc g++ make libx11-dev libxmu-dev git libimlib2-dev libpng-dev
 	apt-get install -y x11-apps net-tools
+	# install npm nodejs
+        curl -fsSL https://deb.nodesource.com/setup_$NODE_MAJOR.x | bash - 
+        apt-get update && apt-get install -y nodejs npm
+        npm install -g npm
 fi
 
-# install yarn with npm install
-echo "install yarn using npm"
-npm install -g yarn
-# install full options without production
 
 echo "install /composer/node/spawner-service/lib_spawner/colorflow"
 cd /composer/node/spawner-service/lib_spawner/colorflow
-yarn install  --production=false
+npm install
+# do not test color flow
+# already done 
+rm -rf /composer/node/spawner-service/lib_spawner/colorflow/test /composer/node/spawner-service/lib_spawner/colorflow/colorflow.test.js
 
 echo "install /composer/node/spawner-service"
 cd /composer/node/spawner-service
-yarn install --production=false
+npm install
 
 echo "install /composer/node/broadcast-service"
 cd /composer/node/broadcast-service
-yarn install --production=false
+npm install
 
 if [ -d /composer/node/xterm.js ]; then
   echo "install /composer/node/xterm.js"
   cd /composer/node/xterm.js
-  yarn install --production=false
+  npm install
 fi 
 
-echo "full install yarn done"
+echo "full install done"
 
