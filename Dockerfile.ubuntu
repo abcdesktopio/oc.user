@@ -111,10 +111,8 @@ FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE}
 SHELL ["/bin/bash", "-c"]
 
 # define arg
-ARG ABCDESKTOP_LOCALACCOUNT_DIR
 ARG TARGET_MODE
 # convert ARG to ENV with same name
-ENV ABCDESKTOP_LOCALACCOUNT_DIR=$ABCDESKTOP_LOCALACCOUNT_DIR
 ENV TARGET_MODE=$TARGET_MODE
 # set node release
 ENV NODE_MAJOR=22
@@ -320,6 +318,14 @@ RUN cd plasma-panel-colorizer/ && \
     cmake -B build/plugin -S . -DBUILD_PLUGIN=ON -DCMAKE_INSTALL_PREFIX=/usr && \
     cmake --build build/plugin && \
     cmake --install build/plugin > /composer/luisbocanegra.panel.colorizer.plugin.log 
+
+
+
+# install npm nodejs 
+# RUN curl -fsSL https://deb.nodesource.com/setup_$NODE_MAJOR.x | bash - && \
+#    apt-get update && apt-get install -y --no-install-recommends nodejs && \
+#    apt-get clean && \
+#    rm -rf /var/lib/apt/lists/*
 
 # install nodejs
 RUN mkdir -p /etc/apt/keyrings && \
