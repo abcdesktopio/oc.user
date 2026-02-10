@@ -216,6 +216,7 @@ RUN apt-get update  && \
       plasma-workspace \
       plasma-workspace-data \
       systemsettings \
+      libkf6kcmutils6 \
       gtk-update-icon-cache \
       qml-module-org-kde-kcm \
       qml-module-org-kde-kwindowsystem && \
