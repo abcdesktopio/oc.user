@@ -34,11 +34,11 @@ done;
 # echo "Dump test install scripts"
 # docker exec --user root ${CONTAINER_ID} cat /composer/node/install-tests.sh
 # echo
-echo "Dump test run scripts"
-docker exec --user root ${CONTAINER_ID} cat /composer/node/run-tests.sh
+# echo "Dump test run scripts"
+# docker exec --user root ${CONTAINER_ID} cat /composer/node/run-tests.sh
 # echo
-# echo "Install tests missing dev packages to run test as user root"
-# docker exec --user root ${CONTAINER_ID} /composer/node/install-tests.sh
+echo "Install tests missing dev packages to run test as user root"
+docker exec --user root ${CONTAINER_ID} /composer/node/install-tests.sh
 
 # get the ip addr of the container
 CONTAINER_IP=$(docker exec ${CONTAINER_ID} hostname -i)
@@ -101,9 +101,6 @@ do
     sleep $TRY_COUNT;
 done
 echo "Container services are started TRY_COUNT=$TRY_COUNT SERVICE_COUNT=$SERVICE_COUNT/$MAX_SERVICE_COUNT"
-
-# start plank
-# docker exec ${CONTAINER_ID} /usr/bin/supervisorctl start plank
 
 # run tests
 echo "Run tests..."
