@@ -5,7 +5,7 @@ on:
   
 env: 
   imagetag: ${{ github.head_ref || github.ref_name || 'dev' }}
-  base_image_release: '24.04'
+  base_image_release: '26.04'
     
 jobs:
   build_matrix: 
