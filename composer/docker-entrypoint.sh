@@ -31,8 +31,10 @@ export DISABLE_REMOTEIP_FILTERING=${DISABLE_REMOTEIP_FILTERING:-'disabled'}
 export BROADCAST_COOKIE=${BROADCAST_COOKIE:-$ABCDESKTOP_SESSION}
 export SUPERVISOR_PID_FILE=/var/run/desktop/supervisord.pid
 export XDG_SESSION_TYPE=${XDG_SESSION_TYPE:-x11}
-export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-${HOME}/.runtime}
-export DESKTOPTHEME=${DESKTOPTHEME:-'Win11OS-light'}
+# export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-${HOME}/.runtime}
+export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-'/tmp/runtime'}
+export ABCDESKTOP_WEBCLIENT_USERAGENT_OS_FAMILY=${ABCDESKTOP_WEBCLIENT_USERAGENT_OS_FAMILY:-'windows'}
+export ABCDESKTOP_FIRST_RUN=false
 
 # TRAP for container signal SIGINT SIGQUIT SIGHUP SIGTERM
 stop() {
@@ -117,9 +119,10 @@ if [ ! -d ~/Desktop ]; then
 fi
 
 if [ ! -d ~/.config ]; then
-	echo "create  ~/.config  directory"
+	export ABCDESKTOP_FIRST_RUN=true
+	echo "create  ~/.config  directory, use ${ABCDESKTOP_WEBCLIENT_USERAGENT_OS_FAMILY}"
         mkdir -p ~/.config
-        cp -r /composer/.config ~
+        cp -r /composer/.config.${ABCDESKTOP_WEBCLIENT_USERAGENT_OS_FAMILY}/* ~/.config
 fi
 
 if [ ! -z "$PULSEAUDIO_COOKIE" ]; then
@@ -337,7 +340,7 @@ dbus-daemon --config-file=/usr/share/dbus-1/system.conf --print-address  --fork 
 
 echo "== stage XDG_RUNTIME_DIR == "
 if [ ! -d "${XDG_RUNTIME_DIR}" ]; then
-  mkdir "${XDG_RUNTIME_DIR}"
+  mkdir -p "${XDG_RUNTIME_DIR}"
   chmod 0700 "${XDG_RUNTIME_DIR}"
 fi
 
@@ -488,7 +491,6 @@ if [ -x /usr/bin/kded6 ]; then
         export PLASMASHELL_VERSION=6
 fi
 echo "PLASMASHELL_VERSION=$PLASMASHELL_VERSION"
-
 
 echo "== stage gpu == "
 
