@@ -218,8 +218,7 @@ RUN apt-get update  && \
       systemsettings \
       gtk-update-icon-cache \
       qml-module-org-kde-kcm \
-      qml-module-org-kde-kwindowsystem \ 
-      libkf6kcmutils-bin && \
+      qml-module-org-kde-kwindowsystem && \
     if [ "$TARGET_MODE" = "hardening" ] ; then  dpkg -L libkf5su5 | /composer/rmfol.sh; fi && \    
     if [ "$TARGET_MODE" = "hardening" ] ; then  dpkg -L sudo      | /composer/rmfol.sh; fi && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
