@@ -1,0 +1,14 @@
+[Desktops]
+Id_1=55b68246-6f0a-4bc4-855b-ad38a804f9da
+Number=1
+Rows=1
+
+[Tiling]
+padding=4
+
+[Tiling][61a9cda2-c784-5476-9585-83eaed337290]
+tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
+
+[org.kde.kdecoration2]
+library=org.kde.kwin.aurorae
+theme=__aurorae__svg__WillowLight
