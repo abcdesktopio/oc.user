@@ -79,14 +79,16 @@ WORKDIR /composer/node/occall
 RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
 RUN npm audit fix
 
+RUN git clone https://github.com/abcdesktopio/colorflow.git /composer/node/spawner-service/lib_spawner/colorflow
+WORKDIR /composer/node/spawner-service/lib_spawner/colorflow
+RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; npm run build;  fi
+RUN npm audit fix 
+
 WORKDIR /composer/node/spawner-service
 # install node-gyp to build spawner-service
 RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
 # RUN npm audit fix 
 
-WORKDIR /composer/node/spawner-service/lib_spawner/colorflow
-RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; npm run build;  fi
-RUN npm audit fix 
 
 WORKDIR /
 RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
