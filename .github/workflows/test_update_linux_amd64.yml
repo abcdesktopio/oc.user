@@ -37,7 +37,7 @@ jobs:
 
       # test only on linux/amd64
       - name: Build test image abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ env.imagetag }}
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile.ubuntu
@@ -52,7 +52,11 @@ jobs:
       - name: Run and test docker image abcdesktopio/oc.user.ubuntu.${{ env.base_image_release }}:test.${{ env.imagetag }}
         run: |
           TARGET_MODE=${{ matrix.target_mode }} ./make-test.sh ghcr.io/abcdesktopio/oc.user.ubuntu.${{ env.base_image_release }}:test.${{ env.imagetag }}
-      
+
+      - name: Prune all images to get more space 
+        run: | 
+          docker image prune -f
+          
       - name: Build and push image oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
         uses: docker/build-push-action@v6
         with:
