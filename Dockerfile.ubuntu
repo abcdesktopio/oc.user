@@ -322,7 +322,7 @@ RUN apt-get update && \
 
 COPY --from=ubuntu_node_modules_builder /usr/share/plasma/plasmoids/luisbocanegra.panel.colorizer /usr/share/plasma/plasmoids/luisbocanegra.panel.colorizer
 COPY --from=ubuntu_node_modules_builder /usr/share/plasma/plasmoids/luisbocanegra.panel.colorizer /usr/share/plasma/plasmoids/luisbocanegra.panel.colorizer
-COPY --from=ubuntu_node_modules_builder /usr/lib/x86_64-linux-gnu/qt6/qml/org/kde/plasma/panelcolorizer /usr/lib/x86_64-linux-gnu/qt6/qml/org/kde/plasma/panelcolorizer
+COPY --from=ubuntu_node_modules_builder /usr/lib/*-linux-gnu/qt6/qml/org/kde/plasma/panelcolorizer /usr/lib/*-linux-gnu/qt6/qml/org/kde/plasma/panelcolorizer
 
 
 # install nodejs 
