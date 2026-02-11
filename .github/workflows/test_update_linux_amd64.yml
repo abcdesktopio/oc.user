@@ -42,7 +42,7 @@ jobs:
           context: .
           file: ./Dockerfile.ubuntu
           platforms: linux/amd64
-          push: true
+          load: true
           build-args: |
             TARGET_MODE=ubuntu
             BASE_IMAGE_RELEASE=${{ env.base_image_release }}
