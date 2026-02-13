@@ -25,7 +25,7 @@ ARG TARGET_PRUNE
 # convert ARG to ENV with same name
 ENV TARGET_MODE=$TARGET_MODE
 ENV TARGET_PRUNE=$TARGET_PRUNE
-ENV NODE_MAJOR=22
+ENV NODE_MAJOR=24
 
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 RUN apt-get update && apt-get install -y  --no-install-recommends \
