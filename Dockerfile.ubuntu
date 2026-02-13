@@ -129,7 +129,7 @@ ARG TARGET_MODE
 # convert ARG to ENV with same name
 ENV TARGET_MODE=$TARGET_MODE
 # set node release
-ENV NODE_MAJOR=22
+ENV NODE_MAJOR=24
 
 COPY etc /etc
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
