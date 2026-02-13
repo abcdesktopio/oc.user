@@ -60,9 +60,9 @@ RUN cd plasma-panel-colorizer/ && \
     cmake --install build/plugin > /luisbocanegra.panel.colorizer.plugin.log
 
 # install npm nodejs 
-RUN curl -fsSL https://deb.nodesource.com/setup_$NODE_MAJOR.x | bash - && \
-    apt-get update && apt-get install -y nodejs && \
-    /usr/share/nodejs/corepack/shims/npm install -g npm 
+RUN curl -fsSL https://deb.nodesource.com/setup_$NODE_MAJOR.x | bash - 
+RUN apt-get update && apt-get install -y nodejs
+RUN npm install -g npm 
 
 COPY composer /composer
 
