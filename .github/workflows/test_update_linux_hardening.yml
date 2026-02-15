@@ -45,6 +45,7 @@ jobs:
           push: true
           build-args: |
             TARGET_MODE=ubuntu
+            TARGET_PRUNE=true
             BASE_IMAGE_RELEASE=${{ env.base_image_release }}
             BASE_IMAGE=ubuntu
           tags: ghcr.io/abcdesktopio/oc.user.ubuntu.${{ env.base_image_release }}:${{ matrix.target_mode }}.test.${{ env.imagetag }}
