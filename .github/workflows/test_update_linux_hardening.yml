@@ -81,17 +81,17 @@ jobs:
       #    vuln-type: 'os,library'
       #    severity: 'CRITICAL,HIGH'
 
-      - name: Build and push sudo image oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}.sudo:${{ env.imagetag }} from abcdesktopio/oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ./Dockerfile.ubuntu.sudo
-          platforms: linux/amd64,linux/arm64
-          push: true
-          build-args: |
-            TARGET_MODE=${{ matrix.target_mode }}
-            TAG=${{ env.imagetag }}
-            BASE_IMAGE=ghcr.io/abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}
-            BASE_IMAGE_RELEASE=${{ env.imagetag }}
-          tags: ghcr.io/abcdesktopio/oc.user.${{ matrix.target_mode }}.sudo.${{ env.base_image_release }}:${{ env.imagetag }}
+      # - name: Build and push sudo image oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}.sudo:${{ env.imagetag }} from abcdesktopio/oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
+      #  uses: docker/build-push-action@v6
+      #  with:
+      #    context: .
+      #    file: ./Dockerfile.ubuntu.sudo
+      #    platforms: linux/amd64,linux/arm64
+      #    push: true
+      #    build-args: |
+      #      TARGET_MODE=${{ matrix.target_mode }}
+      #      TAG=${{ env.imagetag }}
+      #      BASE_IMAGE=ghcr.io/abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}
+      #      BASE_IMAGE_RELEASE=${{ env.imagetag }}
+      #    tags: ghcr.io/abcdesktopio/oc.user.${{ matrix.target_mode }}.sudo.${{ env.base_image_release }}:${{ env.imagetag }}
  
