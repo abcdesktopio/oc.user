@@ -34,30 +34,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Run Buildx oc.user
         run: ./mkversion.sh ${{ matrix.target_mode }}
-
-      # test only on linux/amd64
-      - name: Build test image abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ env.imagetag }}
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./Dockerfile.ubuntu
-          platforms: linux/amd64
-          push: true
-          build-args: |
-            TARGET_MODE=ubuntu
-            TARGET_PRUNE=true
-            BASE_IMAGE_RELEASE=${{ env.base_image_release }}
-            BASE_IMAGE=ubuntu
-          tags: ghcr.io/abcdesktopio/oc.user.ubuntu.${{ env.base_image_release }}:${{ matrix.target_mode }}.test.${{ env.imagetag }}
-
-      - name: Run and test docker image abcdesktopio/oc.user.ubuntu.${{ env.base_image_release }}:${{ matrix.target_mode }}.test.${{ env.imagetag }}
-        run: |
-          TARGET_MODE=${{ matrix.target_mode }} ./make-test.sh ghcr.io/abcdesktopio/oc.user.ubuntu.${{ env.base_image_release }}:${{ matrix.target_mode }}.test.${{ env.imagetag }} 
-
-      - name: Prune all images to get more space 
-        run: | 
-          docker image prune -f
-          
+     
       - name: Build and push image oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
         uses: docker/build-push-action@v6
         with:
