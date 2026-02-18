@@ -45,19 +45,19 @@ RUN apt-get update && apt-get install -y  --no-install-recommends \
         gnupg \
         dpkg
 
-# add plasma-panel-colorizer
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends libplasma-dev build-essential extra-cmake-modules gcc g++ make git cmake kde-spectacle python3 python3-dbus python3-gi && \
-    git clone https://github.com/luisbocanegra/plasma-panel-colorizer.git
-RUN cd plasma-panel-colorizer/ && \
-    cmake -B build/plasmoid -S . -DINSTALL_PLASMOID=ON -DCMAKE_INSTALL_PREFIX="/usr" && \
-    cmake --build build/plasmoid && \
-    cmake --install build/plasmoid > /luisbocanegra.panel.colorizer.log && \
-    chmod 755 "/usr/share/plasma/plasmoids/luisbocanegra.panel.colorizer/contents/ui/tools/list_presets.sh" && \
-    chmod 755 "/usr//share/plasma/plasmoids/luisbocanegra.panel.colorizer/contents/ui/tools/gdbus_get_signal.sh" && \
-    cmake -B build/plugin -S . -DBUILD_PLUGIN=ON -DCMAKE_INSTALL_PREFIX=/usr && \
-    cmake --build build/plugin && \
-    cmake --install build/plugin > /luisbocanegra.panel.colorizer.plugin.log
+## add plasma-panel-colorizer
+#RUN apt-get update && \
+#    apt-get install -y --no-install-recommends libplasma-dev build-essential extra-cmake-modules gcc g++ make git cmake kde-spectacle python3 python3-dbus python3-gi && \
+#    git clone https://github.com/luisbocanegra/plasma-panel-colorizer.git
+#RUN cd plasma-panel-colorizer/ && \
+#    cmake -B build/plasmoid -S . -DINSTALL_PLASMOID=ON -DCMAKE_INSTALL_PREFIX="/usr" && \
+#    cmake --build build/plasmoid && \
+#    cmake --install build/plasmoid > /luisbocanegra.panel.colorizer.log && \
+#    chmod 755 "/usr/share/plasma/plasmoids/luisbocanegra.panel.colorizer/contents/ui/tools/list_presets.sh" && \
+#    chmod 755 "/usr//share/plasma/plasmoids/luisbocanegra.panel.colorizer/contents/ui/tools/gdbus_get_signal.sh" && \
+#    cmake -B build/plugin -S . -DBUILD_PLUGIN=ON -DCMAKE_INSTALL_PREFIX=/usr && \
+#    cmake --build build/plugin && \
+#    cmake --install build/plugin > /luisbocanegra.panel.colorizer.plugin.log
 
 # install npm nodejs 
 RUN curl -fsSL https://deb.nodesource.com/setup_$NODE_MAJOR.x | bash - 
@@ -187,6 +187,7 @@ RUN apt-get update && \
 	libnss-extrausers \
         cups-client \
         pulseaudio-utils \
+        pipewire \
         xauth \
         websockify \
 	krb5-user \
@@ -319,9 +320,9 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* 
 
 
-COPY --from=ubuntu_node_modules_builder /usr/share/plasma/plasmoids/luisbocanegra.panel.colorizer /usr/share/plasma/plasmoids/luisbocanegra.panel.colorizer
-COPY --from=ubuntu_node_modules_builder /usr/share/plasma/plasmoids/luisbocanegra.panel.colorizer /usr/share/plasma/plasmoids/luisbocanegra.panel.colorizer
-COPY --from=ubuntu_node_modules_builder /usr/lib/*-linux-gnu/qt6/qml/org/kde/plasma/panelcolorizer /usr/lib/*-linux-gnu/qt6/qml/org/kde/plasma/panelcolorizer
+# COPY --from=ubuntu_node_modules_builder /usr/share/plasma/plasmoids/luisbocanegra.panel.colorizer /usr/share/plasma/plasmoids/luisbocanegra.panel.colorizer
+# COPY --from=ubuntu_node_modules_builder /usr/share/plasma/plasmoids/luisbocanegra.panel.colorizer /usr/share/plasma/plasmoids/luisbocanegra.panel.colorizer
+# COPY --from=ubuntu_node_modules_builder /usr/lib/*-linux-gnu/qt6/qml/org/kde/plasma/panelcolorizer /usr/lib/*-linux-gnu/qt6/qml/org/kde/plasma/panelcolorizer
 
 
 # install nodejs 
