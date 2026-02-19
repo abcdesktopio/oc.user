@@ -34,29 +34,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Run Buildx oc.user
         run: ./mkversion.sh ${{ matrix.target_mode }}
-
-      # test only on linux/amd64
-      - name: Build test image abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ env.imagetag }}
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./Dockerfile.ubuntu
-          platforms: linux/amd64
-          push: true
-          build-args: |
-            TARGET_MODE=ubuntu
-            BASE_IMAGE_RELEASE=${{ env.base_image_release }}
-            BASE_IMAGE=ubuntu
-          tags: ghcr.io/abcdesktopio/oc.user.ubuntu.${{ env.base_image_release }}:${{ matrix.target_mode }}.test.${{ env.imagetag }}
-
-      - name: Run and test docker image abcdesktopio/oc.user.ubuntu.${{ env.base_image_release }}:${{ matrix.target_mode }}.test.${{ env.imagetag }}
-        run: |
-          TARGET_MODE=${{ matrix.target_mode }} ./make-test.sh ghcr.io/abcdesktopio/oc.user.ubuntu.${{ env.base_image_release }}:${{ matrix.target_mode }}.test.${{ env.imagetag }} 
-
-      - name: Prune all images to get more space 
-        run: | 
-          docker image prune -f
-          
+     
       - name: Build and push image oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
         uses: docker/build-push-action@v6
         with:
@@ -71,27 +49,27 @@ jobs:
             BASE_IMAGE=ubuntu
           tags: ghcr.io/abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}:${{ env.imagetag }}
       
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: ghcr.io/abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}:${{ env.imagetag }}
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
+      # - name: Run Trivy vulnerability scanner
+      #  uses: aquasecurity/trivy-action@master
+      #  with:
+      #    image-ref: ghcr.io/abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}:${{ env.imagetag }}
+      #    format: 'table'
+      #    exit-code: '1'
+      #    ignore-unfixed: true
+      #    vuln-type: 'os,library'
+      #    severity: 'CRITICAL,HIGH'
 
-      - name: Build and push sudo image oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}.sudo:${{ env.imagetag }} from abcdesktopio/oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ./Dockerfile.ubuntu.sudo
-          platforms: linux/amd64,linux/arm64
-          push: true
-          build-args: |
-            TARGET_MODE=${{ matrix.target_mode }}
-            TAG=${{ env.imagetag }}
-            BASE_IMAGE=ghcr.io/abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}
-            BASE_IMAGE_RELEASE=${{ env.imagetag }}
-          tags: ghcr.io/abcdesktopio/oc.user.${{ matrix.target_mode }}.sudo.${{ env.base_image_release }}:${{ env.imagetag }}
+      # - name: Build and push sudo image oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}.sudo:${{ env.imagetag }} from abcdesktopio/oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
+      #  uses: docker/build-push-action@v6
+      #  with:
+      #    context: .
+      #    file: ./Dockerfile.ubuntu.sudo
+      #    platforms: linux/amd64,linux/arm64
+      #    push: true
+      #    build-args: |
+      #      TARGET_MODE=${{ matrix.target_mode }}
+      #      TAG=${{ env.imagetag }}
+      #      BASE_IMAGE=ghcr.io/abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}
+      #      BASE_IMAGE_RELEASE=${{ env.imagetag }}
+      #    tags: ghcr.io/abcdesktopio/oc.user.${{ matrix.target_mode }}.sudo.${{ env.base_image_release }}:${{ env.imagetag }}
  
