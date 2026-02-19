@@ -36,7 +36,7 @@ jobs:
         run: ./mkversion.sh ${{ matrix.target_mode }}
 
       # test only on linux/amd64
-      - name: Build test image abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ env.imagetag }}
+      - name: Build test image abcdesktopio/oc.user.${{ matrix.target_mode }}:${{ matrix.target_mode }}.test.${{ env.imagetag }}
         uses: docker/build-push-action@v6
         with:
           context: .

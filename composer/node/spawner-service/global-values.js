@@ -1,4 +1,5 @@
 const process = require('process');
+const path = require('path');
 const roothomedir = `${process.env.HOME}`;
 const abcdesktoprundir= `${process.env.ABCDESKTOP_RUN_DIR}`;
 const abcdesktoplogdir= `${process.env.ABCDESKTOP_LOG_DIR}`;
@@ -13,6 +14,14 @@ if (process.env.TARGET_MODE != "hardening" ) {
 if (!abcdesktoprundir) abcdesktoprundir= '/var/run/desktop';
 if (!abcdesktoplogdir) abcdesktoplogdir= '/var/log/desktop';
 
+
+// Socket Path for Cups
+const pathSocketCups = path.join('/', 'tmp', '.cups.sock');
+// Socket Path for Pulseaudio
+// should not start with the prefix unix:
+const pathSocketPulse = process.env.PULSE_SERVER || path.join('/', 'tmp', 'runtime', 'pulse', 'native' ); 
+
+
 ///
 // set when spawner-server starts
 // read all files in folder '/var/lib/locales/supported.d/'
@@ -26,4 +35,6 @@ module.exports = {
   abcdesktoplogdir,
   supportedLanguages,
   pathVersion,
+  pathSocketCups,
+  pathSocketPulse,
 };

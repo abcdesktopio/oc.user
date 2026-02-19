@@ -16,9 +16,9 @@ const path = require('path');
 const WebSocketClient = require('ws');
 const asyncHandler = require('express-async-handler');
 const { delay } = require('./utils');
-
-const pathSocketCups = path.join('/', 'tmp', '.cups.sock');
-const pathPulseSocket = path.join('/', 'tmp', '.pulse.sock');
+const globalValues = require('../global-values');
+const pathSocketCups = globalValues.pathSocketCups;
+const pathSocketPulse = globalValues.pathSocketPulse; 
 
 /**
  * @param {string} pathSoket
@@ -120,8 +120,7 @@ function routerInit(router) {
    */
 }
 
-watchForASocket(pathPulseSocket, async () => {
-  //Name the callback to be able of identify the caller of [configureWebRTCStream] function
+watchForASocket(pathSocketPulse, async () => {
   console.log( 'handlerForPulseaudioSocket is starting' );
   try {
     console.log( 'sending broadcastevent(speaker.available, true)');

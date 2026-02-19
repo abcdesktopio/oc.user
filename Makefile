@@ -96,7 +96,6 @@ ubuntu2604:
 	docker build \
             --no-cache=$(NOCACHE) \
             --build-arg TARGET_MODE=ubuntu \
-            --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
             --build-arg BASE_IMAGE_RELEASE=26.04 \
             --build-arg BASE_IMAGE=ubuntu \
             --tag abcdesktopio/oc.user.ubuntu.26.04:$(TAG) \
