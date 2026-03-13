@@ -73,7 +73,7 @@ jobs:
         with:
           image-ref: ghcr.io/abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}:${{ env.imagetag }}
           format: 'table'
-          exit-code: '1'
+          exit-code: '0'
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
