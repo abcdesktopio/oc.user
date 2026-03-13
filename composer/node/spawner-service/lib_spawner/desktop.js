@@ -32,7 +32,7 @@ const middlewares = require('./middlewares');
 const { set, get } = require('./utils');
 const { roothomedir, abcdesktoprundir, abcdesktoplogdir } = require('../global-values');
 const magic = new Magic(MAGIC_MIME_TYPE);
-const ini = require('./ini');
+const ini = require('ini');
 
 
 function supervisorctl( method, service_name ) {

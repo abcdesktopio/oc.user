@@ -19,7 +19,7 @@
     "express-validator": "^6.14.0",
     "geoip-lite": "^1.4.10",
     "helmet": "^8.0.0",
-    "ini": "^5.0.0",
+    "ini": "^6.0.0",
     "mime-types": "2.1.35",
     "mmmagic": "^0.5.3",
     "node-addon-api": "^8.1.0",
