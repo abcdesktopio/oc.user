@@ -57,16 +57,6 @@ echo NAMESPACE=${NAMESPACE}
 echo "Container local ip addr is $CONTAINER_IP_ADDR"
 echo X11LISTEN=${X11LISTEN}
 
-# export DBUS_SESSION_BUS_ADDRESS=tcp:host=localhost,bind=*,port=55556,family=ipv4
-
-# Note that '/home/balloon/.local/share' is not in the search path
-# set by the XDG_DATA_HOME and XDG_DATA_DIRS
-# environment variables, so applications may not be able to find it until you set them. The directories currently searched are:
-#
-# - /root/.local/share
-# - /usr/local/share/
-# - /usr/share/
-
 # set umask to 
 # make sur log file can not be read by everyone
 umask 027
@@ -101,28 +91,38 @@ echo "== stage env == "
 
 # create a MIT-MAGIC-COOKIE-1 entry in .Xauthority
 if [ ! -z "$XAUTH_KEY" ]; then
+	echo 'create XAUTH_KEY' 
  	# reset file content
  	true > ~/.Xauthority
 	xauth add :0 MIT-MAGIC-COOKIE-1 $XAUTH_KEY
 fi
 
-if [ ! -d ~/.store ]; then  
-	echo "create ~/.store directory"
-	mkdir -p ~/.store &
-fi
+# create directory in home directory 
+mkdir -p ~/.store ~/Desktop &
+# create ~/.config
+mkdir -p ~/.config
+mkdir -p ~/.config/nautilus &
 
-if [ ! -d ~/Desktop ]; then
-	echo "create ~/Desktop directory"
-        mkdir -p ~/Desktop &
-fi
+# Define file name for plasma kde5 
+files=(
+    "plasmashellrc"
+    "plasma-org.kde.plasma.desktop-appletsrc"
+    "kwinrc"
+    "plasmarc"
+    "kactivitymanagerdrc"
+    "kglobalshortcutsrc"
+)
 
-if [ ! -d ~/.config ]; then
-	echo "create  ~/.config  directory"
-        mkdir -p ~/.config
-        cp -r /composer/.config ~
-fi
+# loop to check if file doesn't exist, copy it
+for file in "${files[@]}"; do
+    if [ ! -f ~/.config/"$file" ] || [ ! -z "$ABCDESKTOP_FORCE_OVERWRITE_PLASMA_CONFIG" ]; then
+        echo "create $file"
+        cp "/composer/.config/$file" ~/.config/
+    fi
+done
 
 if [ ! -z "$PULSEAUDIO_COOKIE" ]; then
+	echo 'create PULSEAUDIO_COOKIE' 
 	# create ~/.config/pulse if not exist
 	mkdir -p ~/.config/pulse
  	# remove file content ~/.config/pulse/cookie 
@@ -147,11 +147,6 @@ fi
 #        cp /composer/.config/gtk-3.0/settings.ini ~/.config/gtk-3.0 &
 #fi
 
-if [ ! -d ~/.config/nautilus ]; then
-	echo "create ~/.config/nautilus directory"
-        mkdir -p ~/.config/nautilus
-fi
-
 #
 # read https://wiki.archlinux.org/title/GTK#:~:text=Depending%20on%20GTK%20version%2C%20these,etc%2Fgtk%2D2.0%2Fgtkrc
 #if [ ! -f ~/.gtkrc-2.0 ]; then
@@ -168,14 +163,14 @@ fi
 # 	cp -rp /composer/.xsettingsd ~
 # fi
 
-if [ ! -d ~/.gconf ]; then
-        cp -rp /composer/.gconf ~
-fi
+# if [ ! -d ~/.gconf ]; then
+#        cp -rp /composer/.gconf ~
+# fi
 
-if [ ! -d ~/.gconf/apps ]; then
-       	cp -rp /composer/.gconf/apps ~/.gconf
-       	chmod -R 700 ~/.gconf/apps
-fi
+# if [ ! -d ~/.gconf/apps ]; then
+#       	cp -rp /composer/.gconf/apps ~/.gconf
+#       	chmod -R 700 ~/.gconf/apps
+# fi
 
 THEME_DIR=/usr/share/themes/Windows-10
 if [ ! -d ~/.config/gtk-4.0 ]; then
@@ -226,11 +221,7 @@ if [ -d ~/.local/share/applications ]; then
 fi
 
 # always create ~/.local/share/applications/bin
-mkdir -p ~/.local/share/mime ~/.local/share/applications/bin ~/.local/share/xfce4/helpers
-
-if [ ! -f ~/.local/share/xfce4/helpers/custom-FileManager.desktop   ]; then 
-	cp /composer/.local/share/xfce4/helpers/custom-FileManager.desktop  ~/.local/share/xfce4/helpers/ 
-fi 
+mkdir -p ~/.local/share/mime ~/.local/share/applications/bin 
 
 if [ ! -d ~/.local/share/icons ]; then
   	cp -rp /composer/icons ~/.local/share &
@@ -337,7 +328,7 @@ dbus-daemon --config-file=/usr/share/dbus-1/system.conf --print-address  --fork 
 
 echo "== stage XDG_RUNTIME_DIR == "
 if [ ! -d "${XDG_RUNTIME_DIR}" ]; then
-  mkdir "${XDG_RUNTIME_DIR}"
+  mkdir -p "${XDG_RUNTIME_DIR}"
   chmod 0700 "${XDG_RUNTIME_DIR}"
 fi
 
