@@ -35,29 +35,6 @@ const magic = new Magic(MAGIC_MIME_TYPE);
 const ini = require('ini');
 
 
-function supervisorctl( method, service_name ) {
-  let command = '/usr/bin/supervisorctl';
-  let args = [ method, service_name ];
-  //if (!process.env[service_name]) {
-  //	console.log( `ENV ${service_name} is not set` );
-  //	console.log( `${command} ${method} ${service_name} is canceled` );
-  //	return;
-  //}
-  console.log( command, method, service_name );
-  cmd = spawn(command, args );
-  cmd.stdout.on('data', (data) => {
-  	console.log(`${command} stdout: ${data}`);
-  });
-
-  cmd.stderr.on('data', (data) => {
-  	console.error(`${command} stderr: ${data}`);
-  });
-
-  cmd.on('close', (code) => {
-  	console.log(`${command} child process exited with code ${code}`);
-  }); 
-}
-
 /**
  *
  * @param {string} _filename
@@ -144,8 +121,6 @@ function update_desktop_database() {
 function startservices() {
 	// call update_desktop_database ${HOME}/.local/share/applications
 	update_desktop_database();
-	// call supervisorctl start plasmashell
-	// supervisorctl( 'start', 'plasmashell' );
 }
 
 function symlinkPromise( ocrunpath, execcommand)
@@ -240,9 +215,6 @@ async function generateDesktopFiles(list = []) {
   const ocrunpath_builtin  = '/composer/node/ocrun/ocrun.builtin.js';
   const ocrunpath_frontendjs = '/composer/node/ocrun/ocrun.frontendjs.js';
   console.log('generateDesktopFiles start');
-
-  // stop plasmashell
-  // supervisorctl( 'stop', 'plasmashell' );
 
   // dump applist.json file 
   fs.promises.writeFile( `${abcdesktoplogdir}/applist.json`, JSON.stringify(list, null, 2) )
