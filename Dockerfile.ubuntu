@@ -303,9 +303,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # create a link to Win11OS-light wallpaper in /composer/wallpapers
-RUN cd /composer/wallpapers && \
-    ln -s /usr/share/wallpapers/Win11OS-light/contents/images/3840x2400.jpg Win11OS-light.jpg && \
-    ln -s /usr/share/wallpapers/Win11OS-dark/contents/images/3840x2400.jpg Win11OS-dark.jpg
+RUN cp /usr/share/wallpapers/Win11OS-light/contents/images/3840x2400.jpg /composer/wallpapers/Win11OS-light.jpg
 
 # add breeze theme
 RUN apt-get update && \
