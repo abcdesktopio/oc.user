@@ -300,7 +300,10 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# install Win11-icon theme and Win11OS-kde theme
+# create a link to Win11OS-light wallpaper in /composer/wallpapers
+RUN cp /usr/share/wallpapers/Win11OS-light/contents/images/3840x2400.jpg /composer/wallpapers/Win11OS-light.jpg
+
+# add breeze theme
 RUN apt-get update && \
     apt-get install -y --no-install-recommends git && \
     git clone https://github.com/vinceliuice/WhiteSur-kde && \
@@ -351,8 +354,8 @@ RUN date > /etc/build.date
 # install qterminal xfonts-base
 RUN if [ "${TARGET_MODE}" != "hardening" ]; then \
 	apt-get update && \
-	apt-get install -y --no-install-recommends qterminal vim && \
-    rm -rf /usr/share/applications/qterminal-drop.desktop && \
+	apt-get install -y --no-install-recommends qterminal vim-gtk3 && \
+        rm -rf /usr/share/applications/qterminal-drop.desktop && \
 	apt-get clean && rm -rf /var/lib/apt/lists/*; \
     fi
 
