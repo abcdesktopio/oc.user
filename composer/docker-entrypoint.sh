@@ -181,10 +181,9 @@ if [ ! -d ~/.config/gtk-4.0 ]; then
 fi
 
 
-#if [ ! -f ~/.Xresources ];  then
-#	cp -p /composer/.Xresources ~
-#fi
 
+# Wallpaper stage
+# echo "== stage wallpaper == "
 if [ ! -d ~/.wallpapers ]; then
   	# add default wallpapers 
   	# we can't run a link if home dir is configured as a dedicated volume
@@ -192,19 +191,18 @@ if [ ! -d ~/.wallpapers ]; then
 	echo create ~/.wallpapers
   	mkdir ~/.wallpapers
 	echo copy new wallpaper files in ~/.wallpapers
-	cp -rp /composer/wallpapers/* ~/.wallpapers
-  	# cp -rp /composer/wallpapers/* ~/.wallpapers &
-	# cp_pid=$!
-	# echo "TESTING_MODE=$TESTING_MODE"
-	# # if we are in testing mode wait for cp command finnish
-	# if [ ! -z "$TESTING_MODE" ]; then
-	# 	echo "We are in testing mode, waiting for cp command complete"
-	#	wait $cp_pid
-	#	echo "~/.wallpapers dump"
-	#	ls -la ~/.wallpapers
-	# fi
+  	cp -rp /composer/wallpapers/* ~/.wallpapers &
+	cp_pid=$!
+	echo "TESTING_MODE=$TESTING_MODE"
+	# if we are in testing mode wait for cp command finnish
+	if [ ! -z "$TESTING_MODE" ]; then
+	 	echo "We are in testing mode, waiting for cp command complete"
+		wait $cp_pid
+	fi
 fi
 
+
+echo "== stage xdg-user-dirs == "
 if [ ! -f ~/.config/user-dirs.dirs ]; then
 	echo "run xdg-user-dirs-update"
 	# xdg-user-dirs-update --force
