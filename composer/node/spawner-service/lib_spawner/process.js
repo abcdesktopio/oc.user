@@ -392,8 +392,8 @@ function routerInit(router) {
    *                      type: boolean
    */
   router.get('/getSettings', asyncHandler(async (_, res) => {
-    const pathPulseSock = '/tmp/.pulse.sock';
-    const pathCupsSock = '/tmp/.cups.sock';
+    const pathSocketPulse = globalValues.pathSocketPulse;
+    const pathSocketCups = globalValues.pathSocketCups;
     const ret = {
       code: 500,
       data: [
@@ -410,8 +410,8 @@ function routerInit(router) {
     const [audio, printers] = ret.data;
 
     try {
-      await fs.promises.access(pathPulseSock, fs.constants.F_OK);
-      const statPulseSock = await fs.promises.lstat(pathPulseSock);
+      await fs.promises.access(pathSocketPulse, fs.constants.F_OK);
+      const statPulseSock = await fs.promises.lstat(pathSocketPulse);
       if (statPulseSock.isSocket()) {
         audio.enabled = true;
       }
@@ -420,8 +420,8 @@ function routerInit(router) {
     }
 
     try {
-      await fs.promises.access(pathCupsSock, fs.constants.F_OK);
-      const statCupsSock = await fs.promises.lstat(pathCupsSock);
+      await fs.promises.access(pathSocketCups, fs.constants.F_OK);
+      const statCupsSock = await fs.promises.lstat(pathSocketCups);
       if (statCupsSock.isSocket()) {
         printers.enabled = true;
       }

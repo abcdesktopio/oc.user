@@ -1,6 +1,5 @@
 version.json
 **/node_modules
-composer/version.json
 composer/node/spawner-service/build
 
 composer/node/spawner-service/swaggerSpec.json

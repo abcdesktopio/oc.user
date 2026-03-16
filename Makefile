@@ -1,4 +1,4 @@
-all: version ubuntu2404  
+all: version ubuntu2604  
 registry: all push
 NOCACHE ?= false
 
@@ -91,23 +91,22 @@ elementary:
             --tag abcdesktopio/oc.user.elementary.stable.sudo:$(TAG) \
             --file Dockerfile.ubuntu.sudo .
 
-ubuntu2404:
-	docker pull ubuntu:24.04
+ubuntu2604:
+	docker pull ubuntu:26.04
 	docker build \
             --no-cache=$(NOCACHE) \
             --build-arg TARGET_MODE=ubuntu \
-            --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
-            --build-arg BASE_IMAGE_RELEASE=24.04 \
+            --build-arg BASE_IMAGE_RELEASE=26.04 \
             --build-arg BASE_IMAGE=ubuntu \
-            --tag abcdesktopio/oc.user.ubuntu.24.04:$(TAG) \
+            --tag abcdesktopio/oc.user.ubuntu.26.04:$(TAG) \
             --file Dockerfile.ubuntu .
 	docker build \
             --no-cache=$(NOCACHE) \
             --build-arg TARGET_MODE=ubuntu \
             --build-arg TAG=$(TAG)  \
 	    --build-arg BASE_IMAGE_RELEASE=$(TAG) \
-            --build-arg BASE_IMAGE=abcdesktopio/oc.user.ubuntu.24.04 \
-            --tag abcdesktopio/oc.user.ubuntu.sudo.24.04:$(TAG) \
+            --build-arg BASE_IMAGE=abcdesktopio/oc.user.ubuntu.26.04 \
+            --tag abcdesktopio/oc.user.ubuntu.sudo.26.04:$(TAG) \
             --file Dockerfile.ubuntu.sudo .
 
 

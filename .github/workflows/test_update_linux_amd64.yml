@@ -5,13 +5,14 @@ on:
   
 env: 
   imagetag: ${{ github.head_ref || github.ref_name || 'dev' }}
-  base_image_release: '24.04'
+  base_image_release: '26.04'
     
 jobs:
   build_matrix: 
     strategy:
       matrix:
-        target_mode: [ubuntu, hardening]
+        # target_mode: [ubuntu, hardening]
+        target_mode: [ubuntu]
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     # runs-on: self-hosted
@@ -35,8 +36,8 @@ jobs:
         run: ./mkversion.sh ${{ matrix.target_mode }}
 
       # test only on linux/amd64
-      - name: Build test image abcdesktopio/oc.user.${{ matrix.target_mode }}:test.${{ env.imagetag }}
-        uses: docker/build-push-action@v5
+      - name: Build test image abcdesktopio/oc.user.${{ matrix.target_mode }}:${{ matrix.target_mode }}.test.${{ env.imagetag }}
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile.ubuntu
@@ -44,15 +45,18 @@ jobs:
           push: true
           build-args: |
             TARGET_MODE=ubuntu
-            ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount
             BASE_IMAGE_RELEASE=${{ env.base_image_release }}
             BASE_IMAGE=ubuntu
-          tags: ghcr.io/abcdesktopio/oc.user.ubuntu.${{ env.base_image_release }}:test.${{ env.imagetag }}
+          tags: ghcr.io/abcdesktopio/oc.user.ubuntu.${{ env.base_image_release }}:${{ matrix.target_mode }}.test.${{ env.imagetag }}
 
-      - name: Run and test docker image abcdesktopio/oc.user.ubuntu.${{ env.base_image_release }}:test.${{ env.imagetag }}
+      - name: Run and test container image ghcr.io/abcdesktopio/oc.user.ubuntu.${{ env.base_image_release }}:${{ matrix.target_mode }}.test.${{ env.imagetag }}
         run: |
-          TARGET_MODE=${{ matrix.target_mode }} ./make-test.sh ghcr.io/abcdesktopio/oc.user.ubuntu.${{ env.base_image_release }}:test.${{ env.imagetag }}
-      
+          TARGET_MODE=${{ matrix.target_mode }} ./make-test.sh ghcr.io/abcdesktopio/oc.user.ubuntu.${{ env.base_image_release }}:${{ matrix.target_mode }}.test.${{ env.imagetag }}
+
+      - name: Prune all images to get more space 
+        run: | 
+          docker image prune -f
+          
       - name: Build and push image oc.user.${{ matrix.target_mode }}:${{ env.imagetag }}
         uses: docker/build-push-action@v6
         with:
@@ -63,7 +67,6 @@ jobs:
           build-args: |
             TARGET_MODE=${{ matrix.target_mode }}
             TARGET_PRUNE=true
-            ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount
             BASE_IMAGE_RELEASE=${{ env.base_image_release }}
             BASE_IMAGE=ubuntu
           tags: ghcr.io/abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}:${{ env.imagetag }}
@@ -87,7 +90,6 @@ jobs:
           push: true
           build-args: |
             TARGET_MODE=${{ matrix.target_mode }}
-            ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount
             TAG=${{ env.imagetag }}
             BASE_IMAGE=ghcr.io/abcdesktopio/oc.user.${{ matrix.target_mode }}.${{ env.base_image_release }}
             BASE_IMAGE_RELEASE=${{ env.imagetag }}

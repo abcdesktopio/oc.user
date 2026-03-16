@@ -3,8 +3,8 @@ ARG BUILDPLATFORM
 ARG TAG
 # Default base image 
 ARG BASE_IMAGE=ubuntu
-# Default release is 24.04
-ARG BASE_IMAGE_RELEASE=24.04
+# Default release is 26.04
+ARG BASE_IMAGE_RELEASE=26.04
 
 
 
@@ -25,7 +25,7 @@ ARG TARGET_PRUNE
 # convert ARG to ENV with same name
 ENV TARGET_MODE=$TARGET_MODE
 ENV TARGET_PRUNE=$TARGET_PRUNE
-ENV NODE_MAJOR=20
+ENV NODE_MAJOR=24
 
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 RUN apt-get update && apt-get install -y  --no-install-recommends \
@@ -45,11 +45,24 @@ RUN apt-get update && apt-get install -y  --no-install-recommends \
         gnupg \
         dpkg
 
-# install npm nodejs 
-RUN  mkdir -p /etc/apt/keyrings && \
-     curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
-     echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list && apt-get update && apt-get install -y --no-install-recommends nodejs && npm install -g npm
+## add plasma-panel-colorizer
+#RUN apt-get update && \
+#    apt-get install -y --no-install-recommends libplasma-dev build-essential extra-cmake-modules gcc g++ make git cmake kde-spectacle python3 python3-dbus python3-gi && \
+#    git clone https://github.com/luisbocanegra/plasma-panel-colorizer.git
+#RUN cd plasma-panel-colorizer/ && \
+#    cmake -B build/plasmoid -S . -DINSTALL_PLASMOID=ON -DCMAKE_INSTALL_PREFIX="/usr" && \
+#    cmake --build build/plasmoid && \
+#    cmake --install build/plasmoid > /luisbocanegra.panel.colorizer.log && \
+#    chmod 755 "/usr/share/plasma/plasmoids/luisbocanegra.panel.colorizer/contents/ui/tools/list_presets.sh" && \
+#    chmod 755 "/usr//share/plasma/plasmoids/luisbocanegra.panel.colorizer/contents/ui/tools/gdbus_get_signal.sh" && \
+#    cmake -B build/plugin -S . -DBUILD_PLUGIN=ON -DCMAKE_INSTALL_PREFIX=/usr && \
+#    cmake --build build/plugin && \
+#    cmake --install build/plugin > /luisbocanegra.panel.colorizer.plugin.log
 
+# install npm nodejs 
+RUN curl -fsSL https://deb.nodesource.com/setup_$NODE_MAJOR.x | bash - 
+RUN apt-get update && apt-get install -y --no-install-recommends nodejs
+RUN npm install -g npm 
 
 COPY composer /composer
 
@@ -63,7 +76,8 @@ RUN npm install --omit=dev && npm audit fix
 
 WORKDIR /composer/node/broadcast-service
 RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
-RUN npm i --package-lock-only && npm audit fix
+RUN npm i --package-lock-only 
+# && npm audit fix
 
 RUN git clone https://github.com/abcdesktopio/run-service.git /composer/node/ocrun 
 WORKDIR /composer/node/ocrun
@@ -83,8 +97,7 @@ RUN npm audit fix
 RUN git clone https://github.com/abcdesktopio/colorflow.git /composer/node/spawner-service/lib_spawner/colorflow
 WORKDIR /composer/node/spawner-service/lib_spawner/colorflow
 RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; npm run build;  fi
-RUN rm colorflow.test.js && rm -rf images/
-RUN npm audit fix 
+# RUN npm audit fix 
 
 WORKDIR /composer/node/spawner-service
 # install node-gyp to build spawner-service
@@ -113,13 +126,11 @@ FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE}
 SHELL ["/bin/bash", "-c"]
 
 # define arg
-ARG ABCDESKTOP_LOCALACCOUNT_DIR
 ARG TARGET_MODE
 # convert ARG to ENV with same name
-ENV ABCDESKTOP_LOCALACCOUNT_DIR=$ABCDESKTOP_LOCALACCOUNT_DIR
 ENV TARGET_MODE=$TARGET_MODE
 # set node release
-ENV NODE_MAJOR=20
+ENV NODE_MAJOR=24
 
 COPY etc /etc
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
@@ -161,9 +172,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # tigervncserver_1.14.1-1ubuntu1_24.04.amd64.deb
 ENV TIGERVNC_RELEASE=1.16.0
 RUN apt-get update  && \
-    source /etc/lsb-release && \
-    echo DISTRIB_RELEASE=${DISTRIB_RELEASE} && \
-    tigervncdeburl="https://github.com/abcdesktopio/oc.user/raw/4.3/tigervncserver_${TIGERVNC_RELEASE}-1ubuntu1_${DISTRIB_RELEASE}_$(dpkg --print-architecture).deb" && \
+    DISTRIB_RELEASE=24.04 && \
+    tigervncdeburl="https://github.com/abcdesktopio/oc.user/raw/4.3/tigervncserver_${TIGERVNC_RELEASE}-1ubuntu1_24.04_$(dpkg --print-architecture).deb" && \
     echo Downloading $tigervncdeburl && \
     curl -sL --output /tmp/tigervncserver.deb "$tigervncdeburl" && \  
     apt-get install -y --no-install-recommends /tmp/tigervncserver.deb && \
@@ -178,7 +188,7 @@ RUN apt-get update && \
 	libnss-extrausers \
         cups-client \
         pulseaudio-utils \
-        pavumeter \
+        pipewire \
         xauth \
         websockify \
 	krb5-user \
@@ -199,7 +209,7 @@ RUN apt-get update && \
       x11-apps && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-
+##############
 # for xwayland
 # RUN apt-get update && \
 #     apt-get install -y --no-install-recommends \
@@ -208,26 +218,21 @@ RUN apt-get update && \
 #	xterm \
 #    	mesa-utils && \
 #    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-#RUN apt-get update && \
-#    apt-get install -y --no-install-recommends \
-#      task-french-kde-desktop \
-#      task-romanian-kde-desktop \
-#      task-german-kde-desktop && \
-#    apt-get clean && rm -rf /var/lib/apt/lists/*
+##############
 
 
 # install composer
 COPY --from=ubuntu_node_modules_builder /composer /composer
+
 
 RUN apt-get update  && \
     apt-get install -y --no-install-recommends \
       plasma-desktop \
       plasma-workspace \
       plasma-workspace-data \
-      libplasma-geolocation-interface5 \
-      libkfontinst5 \
       systemsettings \
+      libkf6kcmutils6 \
+      gtk-update-icon-cache \
       qml-module-org-kde-kcm \
       qml-module-org-kde-kwindowsystem && \
     if [ "$TARGET_MODE" = "hardening" ] ; then  dpkg -L libkf5su5 | /composer/rmfol.sh; fi && \    
@@ -266,14 +271,10 @@ RUN apt-get update && \
 
 ## install MS fonts 
 ## replace by install Selawik fonts this one is free
-#RUN apt-get update && \
-#    echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
-#    apt-get install -y --no-install-recommends fontconfig ttf-mscorefonts-installer && \
-#    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-
-# install Selawik fonts
+# install Selawik fonts same as ttf-mscorefonts
 # comment for licencing
+# echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
+# apt-get install -y --no-install-recommends fontconfig ttf-mscorefonts-installer
 # ADD fonts/SegoeUI.tar /usr/share/fonts/Microsoft/TrueType/SegoeUI/ 
 #  fc-cache -f /usr/share/fonts/Microsoft/TrueType/SegoeUI/ && \
 ADD fonts/Selawik.tar /usr/share/fonts/Microsoft/TrueType/Selawik/
@@ -286,16 +287,13 @@ RUN apt-get update && \
 COPY usr/share/themes/Windows-10 /usr/share/themes/Windows-10
 COPY usr/share/aurorae /usr/share/aurorae
 
-# https://github.com/yeyushengfan258/Win11OS-kde
-# https://github.com/abcdesktopio/Win11OS-kde
-
 # install Win11-icon theme and Win11OS-kde theme
 RUN apt-get update && \
     apt-get install -y --no-install-recommends git && \
-    git clone https://github.com/abcdesktopio/Win11-icon-theme && \
+    git clone https://github.com/yeyushengfan258/Win11-icon-theme.git && \
     cd Win11-icon-theme && ./install.sh > /composer/Win11-icon-theme.install && cd .. && \
     rm -rf Win11-icon-theme && \
-    git clone https://github.com/abcdesktopio/Win11OS-kde && \
+    git clone https://github.com/yeyushengfan258/Win11OS-kde && \
     cd Win11OS-kde && ./install.sh > /composer/Win11OS-kde.install && cd .. && \
     rm -rf Win11OS-kde && \
     apt-get remove -y git git-man liberror-perl && \
@@ -307,20 +305,33 @@ RUN cp /usr/share/wallpapers/Win11OS-light/contents/images/3840x2400.jpg /compos
 
 # add breeze theme
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-	breeze-gtk-theme \
-	qml-module-org-kde-qqc2breezestyle \
-	gtk-update-icon-cache && \
-    gtk-update-icon-cache && \ 
+    apt-get install -y --no-install-recommends git && \
+    git clone https://github.com/vinceliuice/WhiteSur-kde && \
+    cd WhiteSur-kde && ./install.sh > /composer/WhiteSur-kde.install && cd .. && \
+    rm -rf WhiteSur-kde && \
+    git clone https://github.com/vinceliuice/WhiteSur-icon-theme && \
+    cd WhiteSur-icon-theme && ./install.sh -a > /composer/WhiteSur-icon-theme.install && cd .. && \
+    rm -rf WhiteSur-icon-theme && \
+    apt-get remove -y git git-man liberror-perl && \
     apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        qt6-style-kvantum \
+	kwin-style-aurorae \
+    && apt-get clean && \
     rm -rf /var/lib/apt/lists/* 
 
-# install nodejs
-RUN mkdir -p /etc/apt/keyrings && \
-    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
-    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends nodejs && \
+
+# COPY --from=ubuntu_node_modules_builder /usr/share/plasma/plasmoids/luisbocanegra.panel.colorizer /usr/share/plasma/plasmoids/luisbocanegra.panel.colorizer
+# COPY --from=ubuntu_node_modules_builder /usr/share/plasma/plasmoids/luisbocanegra.panel.colorizer /usr/share/plasma/plasmoids/luisbocanegra.panel.colorizer
+# COPY --from=ubuntu_node_modules_builder /usr/lib/*-linux-gnu/qt6/qml/org/kde/plasma/panelcolorizer /usr/lib/*-linux-gnu/qt6/qml/org/kde/plasma/panelcolorizer
+
+
+# install nodejs 
+RUN curl -fsSL https://deb.nodesource.com/setup_$NODE_MAJOR.x | bash - && \
+    apt-get update && apt-get install -y --no-install-recommends nodejs && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
