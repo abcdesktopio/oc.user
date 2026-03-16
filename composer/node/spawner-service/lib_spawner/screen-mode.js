@@ -60,7 +60,7 @@ function hexToRGBPercent(hex, alpha) {
  */
 async function plasmabackgroundimage(imgName) {
   const ret = { code: 500, data: 'unknow error' };
-  let command = `/composer/plasmabackgrounddimage.sh "${imgName}"`;
+  let command = `/composer/plasmabackgroundimage.sh "${imgName}"`;
   console.log(command);
   try {
     await exec(command);
