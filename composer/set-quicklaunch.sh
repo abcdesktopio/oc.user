@@ -1,7 +1,7 @@
 #!/bin/bash
 # 
 # this script add line "var launchers=\"${LAUNCHERS}\"; to add-to-quicklaunch.js and runs the javascript
-# javascript add-to-quicklaunch update the launcher ison for plasmashell without restarting it
+# javascript set-quicklaunch update the launcher for plasmashell without restarting it
 #
 #
 
