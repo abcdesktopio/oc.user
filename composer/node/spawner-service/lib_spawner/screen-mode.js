@@ -55,34 +55,12 @@ function hexToRGBPercent(hex, alpha) {
 
 /**
  *
- * @param {string} color
- */
-async function xsetroot(color) {
-  const ret = { code: 500, data: '' };
-  const command = `/composer/esetroot.sh "${color}"`;
-  console.log(command);
-  try {
-    await exec(command);
-    ret.code = 200;
-    ret.data = 'ok';
-  } catch (err) {
-    console.error(err);
-    ret.data = err;
-  }
-  return ret;
-}
-
-/**
- *
  * @param {string} imgName
  * @param {string} bgColor
  */
-async function esetroot(bgColor, imgName) {
+async function plasmabackgroundimage(imgName) {
   const ret = { code: 500, data: 'unknow error' };
-  // const command = `Esetroot -bg "${bgColor}" -center -fit  "${imgName}"`;
-  // const command = `/usr/bin/feh --bg-fill "${imgName}"`;
-  // const command = `/usr/bin/feh --fullscreen --borderless --image-bg "${bgColor}" --bg-fill "${imgName}"`;
-  const command = `/composer/esetroot.sh "${bgColor}" "${imgName}"`;
+  let command = `/composer/plasmabackgrounddimage.sh "${imgName}"`;
   console.log(command);
   try {
     await exec(command);
@@ -100,15 +78,9 @@ async function esetroot(bgColor, imgName) {
  * @param {string} imgName
  * @param {string} bgColor
  */
-async function xfce4_esetroot(bgColor, imgName) {
-  const ret = { code: 500, data: 'Internal server error' };
-  // const command = `Esetroot -bg "${bgColor}" -center -fit  "${imgName}"`;
-  // const command = `/usr/bin/feh --bg-fill "${imgName}"`;
-  // const command = `/usr/bin/feh --fullscreen --borderless --image-bg "${bgColor}" --bg-fill "${imgName}"`;
-  const rgbPercent = hexToRGBPercent( bgColor );
-  let command = `/composer/xfce4-esetroot.sh ${rgbPercent.r} ${rgbPercent.g} ${rgbPercent.b}`;
-  if (imgName)
-  	command += command + ` ${imgName}`;
+async function plasmabackgroundcolor(bgColor) {
+  const ret = { code: 500, data: 'unknow error' };
+  let command = `/composer/plasmabackgroundcolor.sh "${bgColor}"`;
   console.log(command);
   try {
     await exec(command);
@@ -116,11 +88,10 @@ async function xfce4_esetroot(bgColor, imgName) {
     ret.data = 'ok';
   } catch (err) {
     console.error(err);
+    ret.data = err;
   }
   return ret;
 }
-
-
 
 /**
  *
@@ -130,8 +101,7 @@ async function changeBgImage(imgName = '') {
   const ret = { code: 500, data: 'Internal server error' };
   try {
     const color = await colorflow(imgName);
-    // const { code, data } = await xfce4_esetroot( color, imgName );
-    const { code, data } = await esetroot( color, imgName );
+    const { code, data } = await plasmabackgroundimage( imgName );
     if (code === 200) {
       await set('currentImgColor', color);
       await broadcast.broadcastevent('display.setBackgroundBorderColor', color);
@@ -190,8 +160,7 @@ function routerInit(router) {
       await fs.promises.unlink(currentWallpaper);
     }
 
-    // const { code, data } = await xfce4_esetroot(color);
-    const { code, data } = await esetroot(color);
+    const { code, data } = await plasmabackgroundcolor(color);
     ret.code = code;
     ret.data = data;
 
