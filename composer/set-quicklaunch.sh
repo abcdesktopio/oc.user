@@ -25,4 +25,4 @@ do
     sleep 1
 done
 
-${qdbus} org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript "var launchers=\"${LAUNCHERS}\"; $(cat /composer/add-to-quicklaunch.js)"
+${qdbus} org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript "var launchers=\"${LAUNCHERS}\"; $(cat /composer/set-quicklaunch.js)"

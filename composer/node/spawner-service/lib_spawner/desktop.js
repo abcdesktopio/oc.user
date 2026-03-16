@@ -148,9 +148,9 @@ async function update_plasmashell_add_to_quicklaunch_command(launchers) {
     console.log('update_plasmashell_add_to_quicklaunch_command is starting');
     let env = process.env;
     env.LAUNCHERS=launchers;
-    // start /composer/update-add-to-quicklaunch.sh
+    // start /composer/set-quicklaunch.sh
     // put launchers as a env LAUNCHERS
-    const command = spawn( 'bash', [ '/composer/update-add-to-quicklaunch.sh'], {env: env} );
+    const command = spawn( 'bash', [ '/composer/set-quicklaunch.sh'], {env: env} );
     command.stderr.on('data', (data) => {
     	console.log(`update_plasmashell_add_to_quicklaunch_command: stderr ${data}`);
     });
