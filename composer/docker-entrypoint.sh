@@ -121,6 +121,10 @@ for file in "${files[@]}"; do
     fi
 done
 
+if [ ! -d ~/.config/plasma-workspace ] || [ ! -z "$ABCDESKTOP_FORCE_OVERWRITE_PLASMA_CONFIG" ]; then
+	cp -r -f /composer/.config/plasma-workspace ~/.config
+fi
+
 if [ ! -z "$PULSEAUDIO_COOKIE" ]; then
 	echo 'create PULSEAUDIO_COOKIE' 
 	# create ~/.config/pulse if not exist
