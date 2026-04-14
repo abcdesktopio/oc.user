@@ -188,7 +188,7 @@ fi
 # create ~/.ssh/authorized_keys with the ABCDESKTOP_AUTHORIZEDKEY content
 if [ ! -z "$ABCDESKTOP_AUTHORIZEDKEY" ]; then
   if [ ! -d ~/.ssh ]; then
-	  mkdir -mode=700 ~/.ssh
+	  mkdir --mode=700 ~/.ssh
   fi
   if [ ! -f ~/.ssh/authorized_keys ]; then
 	  echo $ABCDESKTOP_AUTHORIZEDKEY >~/.ssh/authorized_keys
