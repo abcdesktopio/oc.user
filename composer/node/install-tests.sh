@@ -8,8 +8,6 @@
 source /etc/os-release 
 echo "distrib $ID $VERSION"
 
-for f in passwd shadow group gshadow ; do rm -f /etc/$f && cp $ABCDESKTOP_LOCALACCOUNT_DIR/$f /etc/$f; done
-
 if [[ ${ID} == "alpine" ]]; then
 	echo "install packages for $ID"
 	apk add git gcc make g++ bash build-base alpine-sdk sudo wget python3 libx11-dev yarn
