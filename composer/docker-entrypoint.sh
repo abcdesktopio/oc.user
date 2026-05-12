@@ -421,6 +421,12 @@ export KUBERNETES_SERVICE_HOST
 
 
 
+echo "== stage bastion sshd == "
+if [ -x /usr/sbin/sshd ]; then
+  /composer/sshd-entrypoint.sh &
+fi
+
+
 echo "== stage wallpaper == "
 
 # set wallpaper default

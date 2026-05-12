@@ -113,10 +113,8 @@ FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE}
 SHELL ["/bin/bash", "-c"]
 
 # define arg
-ARG ABCDESKTOP_LOCALACCOUNT_DIR
 ARG TARGET_MODE
 # convert ARG to ENV with same name
-ENV ABCDESKTOP_LOCALACCOUNT_DIR=$ABCDESKTOP_LOCALACCOUNT_DIR
 ENV TARGET_MODE=$TARGET_MODE
 # set node release
 ENV NODE_MAJOR=20
@@ -243,6 +241,14 @@ RUN apt-get update && \
       libnotify4 && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+
+RUN apt-get update && \
+    mkdir -p /run/sshd && \
+    apt-get install -y --no-install-recommends \
+      openssh-client \
+      openssh-server \
+      keychain && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # for gamepad
 #  python3-libevdev \
