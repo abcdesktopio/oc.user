@@ -87,20 +87,12 @@ SystrayContainmentId=54
 immutability=1
 plugin=org.kde.plasma.panelspacer
 
-[Containments][48][Applets][56]
-immutability=1
-plugin=org.kde.plasma.panelspacer
-
 [Containments][48][Applets][58]
 immutability=1
 plugin=org.kde.plasma.panelspacer
 transient=true
 
 [Containments][48][Applets][59]
-immutability=1
-plugin=org.kde.plasma.panelspacer
-
-[Containments][48][Applets][60]
 immutability=1
 plugin=org.kde.plasma.panelspacer
 
@@ -111,8 +103,9 @@ plugin=org.kde.milou
 [Containments][48][ConfigDialog]
 DialogHeight=74
 DialogWidth=1440
+
 [Containments][48][General]
-AppletOrder=60;59;49;50;51;52;55;56,64
+AppletOrder=59;49;50;51;52;55;64
 
 [Containments][54]
 activityId=
