@@ -59,20 +59,12 @@ icon=/composer/icon/start-here-kde.svg
 [Containments][48][Applets][49][Configuration][Shortcuts]
 global=Alt+F1
 
-[Containments][48][Applets][50]
-immutability=1
-plugin=org.kde.plasma.pager
-
 [Containments][48][Applets][51]
 immutability=1
 plugin=org.kde.plasma.icontasks
 
 [Containments][48][Applets][51][Configuration][General]
 launchers=
-
-[Containments][48][Applets][52]
-immutability=1
-plugin=org.kde.plasma.marginsseparator
 
 [Containments][48][Applets][53]
 immutability=1
@@ -105,7 +97,7 @@ DialogHeight=74
 DialogWidth=1440
 
 [Containments][48][General]
-AppletOrder=59;49;50;51;52;55;64
+AppletOrder=59;49;51;55;64
 
 [Containments][54]
 activityId=
