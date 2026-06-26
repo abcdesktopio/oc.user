@@ -70,14 +70,20 @@ if [ -d /dev/dri ]; then
 		if [ -c "${rendernode}" ]; then 
 	        	echo "$rendernode is a character device."	
         		RENDER_PARAM="-rendernode ${rendernode}"
+		else
+			rendernode=$(ls /dev/dri/render* |head -1)
+			if [ -c "${rendernode}" ]; then
+				echo "${rendernode} is a character device."       
+				RENDER_PARAM="-rendernode ${rendernode}"
+			fi
 		fi
 	else
 		# read the first render device entry in /dev/dri
 		rendernode=$(ls /dev/dri/render* |head -1)
 		if [ -c "${rendernode}" ]; then
-                        echo "${rendernode} is a character device."       
-                        RENDER_PARAM="-rendernode ${rendernode}"
-                fi
+			echo "${rendernode} is a character device."       
+			RENDER_PARAM="-rendernode ${rendernode}"
+        fi
 
 	fi
 fi
