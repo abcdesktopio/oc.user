@@ -34,5 +34,8 @@
     "supertest": "^7.0.0",
     "swagger-jsdoc": "^6.2.8",
     "widdershins": "^4.0.1"
+  },
+  "overrides": {
+    "js-yaml": ">=4.2.0"
   }
 }
