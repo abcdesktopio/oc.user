@@ -94,7 +94,10 @@ if [ ! -z "$XAUTH_KEY" ]; then
 	echo 'create XAUTH_KEY' 
  	# reset file content
  	true > ~/.Xauthority
-	xauth add :0 MIT-MAGIC-COOKIE-1 $XAUTH_KEY
+	# add ${DISPLAY} to create .Xauthority
+	xauth add ${DISPLAY} MIT-MAGIC-COOKIE-1 $XAUTH_KEY
+	# add ${POD_IP}${DISPLAY} for pod application
+	xauth add ${POD_IP}${DISPLAY} MIT-MAGIC-COOKIE-1 $XAUTH_KEY
 fi
 
 # create directory in home directory 
