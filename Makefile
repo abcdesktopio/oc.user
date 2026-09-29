@@ -44,7 +44,6 @@ hardening31:
 	docker build \
             --no-cache=$(NOCACHE) \
 	    --build-arg TARGET_MODE=hardening \
-	    --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
             --build-arg BASE_IMAGE_RELEASE=22.04 \
             --build-arg BASE_IMAGE=ubuntu \
             --tag abcdesktopio/oc.user.hardening:3.1 \
@@ -57,7 +56,6 @@ ubuntu2204:
 	docker build \
             --no-cache=$(NOCACHE) \
             --build-arg TARGET_MODE=ubuntu \
-            --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
             --build-arg BASE_IMAGE_RELEASE=22.04 \
             --build-arg BASE_IMAGE=ubuntu \
             --tag abcdesktopio/oc.user.ubuntu.22.04:$(TAG) \
@@ -77,7 +75,6 @@ elementary:
 	docker build \
             --no-cache=$(NOCACHE) \
             --build-arg TARGET_MODE=ubuntu \
-            --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
             --build-arg BASE_IMAGE_RELEASE=stable \
             --build-arg BASE_IMAGE=ghcr.io/elementary/docker \
             --tag abcdesktopio/oc.user.elementary.stable:$(TAG) \
@@ -96,7 +93,6 @@ ubuntu2404:
 	docker build \
             --no-cache=$(NOCACHE) \
             --build-arg TARGET_MODE=ubuntu \
-            --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
             --build-arg BASE_IMAGE_RELEASE=24.04 \
             --build-arg BASE_IMAGE=ubuntu \
             --tag abcdesktopio/oc.user.ubuntu.24.04:$(TAG) \
@@ -116,7 +112,6 @@ ubuntu2410:
 	docker build \
             --no-cache=$(NOCACHE) \
             --build-arg TARGET_MODE=ubuntu \
-            --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
             --build-arg BASE_IMAGE_RELEASE=24.10 \
             --build-arg BASE_IMAGE=ubuntu \
             --tag abcdesktopio/oc.user.ubuntu.24.10:$(TAG) \
@@ -135,7 +130,6 @@ debian:
 	docker build \
             --no-cache=$(NOCACHE) \
             --build-arg TARGET_MODE=debian \
-            --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
             --build-arg BASE_IMAGE_RELEASE=trixie \
             --build-arg BASE_IMAGE=debian \
             --tag abcdesktopio/oc.user.debian.trixie:$(TAG) \
@@ -154,7 +148,6 @@ kasm:
 	docker build \
             --no-cache=$(NOCACHE) \
             --build-arg TARGET_MODE=ubuntu \
-            --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
             --build-arg TAG=22.04 \
             --build-arg BASE_IMAGE=ubuntu \
             --tag abcdesktopio/oc.user.default.kasm:$(TAG) \
@@ -198,7 +191,6 @@ nvidia:
 	docker pull nvcr.io/nvidia/cuda:12.4.1-runtime-ubuntu22.04
 	docker build \
             --no-cache=$(NOCACHE) \
-	    --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
             --build-arg BASE_IMAGE_RELEASE=12.4.1-runtime-ubuntu22.04 \
             --build-arg BASE_IMAGE=nvcr.io/nvidia/cuda \
             --build-arg UBUNTU_RELEASE=22.04 \
@@ -206,7 +198,6 @@ nvidia:
             --file Dockerfile.ubuntu .
 	docker build \
             --no-cache=$(NOCACHE) \
-            --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
             --build-arg BASE_IMAGE_RELEASE=build \
             --build-arg BASE_IMAGE=abcdesktopio/oc.user.ubuntu.nvidia \
             --build-arg UBUNTU_RELEASE=22.04 \
@@ -237,7 +228,6 @@ ubuntu.hardening:
 	echo hardening > TARGET_MODE
 	docker build \
             --no-cache=$(NOCACHE) \
-	    --build-arg ABCDESKTOP_LOCALACCOUNT_DIR=/etc/localaccount \
             --build-arg BASE_IMAGE_RELEASE=24.04 \
             --build-arg BASE_IMAGE=ubuntu \
             --tag abcdesktopio/oc.user.ubuntu.hardening:$(TAG) \
