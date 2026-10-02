@@ -24,33 +24,42 @@ const { spawn } = require('child_process');
 function clipboardsync() {
   // Read selected data from primary clipboard to standard output
   // Read the XA_PRIMARY clipboard
-  const xclip = spawn('/usr/bin/xclip', ['-selection', 'primary', '-o'], {
-    env: process.env,
-  });
+  try {
 
-  // write XA_PRIMARY clipboard data to XA_SECONDARY and to XA_CLIPBOARD
-  // 
-  xclip.stdout.on('data', (data) => {
-      
-    const xoutclip_xa_clipboard = spawn(
-        '/usr/bin/xclip', 
-        ['-selection', 'clipboard', '-i'], 
-        { env: process.env }
+    const xclip = spawn(
+      '/usr/bin/xclip', 
+      ['-selection', 'primary', '-o'], 
+      { env: process.env }
     );
-    // Write output from primary to clipboard
-    xoutclip_xa_clipboard.stdin.write(data);
-    xoutclip_xa_clipboard.stdin.end();
 
-    const xoutclip_xa_secondary = spawn(
-        '/usr/bin/xclip', 
-        ['-selection', 'secondary', '-i'], 
-        { env: process.env }
-    );
-    // Write output from primary to secondary
-    xoutclip_xa_secondary.stdin.write(data);
-    xoutclip_xa_secondary.stdin.end();
+    // write XA_PRIMARY clipboard data to XA_SECONDARY and to XA_CLIPBOARD
+    // 
+    xclip.stdout.on('data', (data) => {
+        
+      const xoutclip_xa_clipboard = spawn(
+          '/usr/bin/xclip', 
+          ['-selection', 'clipboard', '-i'], 
+          { env: process.env }
+      );
+      // Write output from primary to clipboard
+      xoutclip_xa_clipboard.stdin.write(data);
+      xoutclip_xa_clipboard.stdin.end();
+
+      const xoutclip_xa_secondary = spawn(
+          '/usr/bin/xclip', 
+          ['-selection', 'secondary', '-i'], 
+          { env: process.env }
+      );
       
-  });
+      // Write output from primary to secondary
+      xoutclip_xa_secondary.stdin.write(data);
+      xoutclip_xa_secondary.stdin.end();
+        
+    });
+  }
+  catch (err) {
+	  console.error( err );
+  }
 }
 
 /**
