@@ -143,17 +143,6 @@ debian:
             --tag abcdesktopio/oc.user.debian.sudo.trixie:$(TAG) \
             --file Dockerfile.debian.sudo .
 
-kasm:
-	docker pull ubuntu:22.04
-	docker build \
-            --no-cache=$(NOCACHE) \
-            --build-arg TARGET_MODE=ubuntu \
-            --build-arg TAG=22.04 \
-            --build-arg BASE_IMAGE=ubuntu \
-            --tag abcdesktopio/oc.user.default.kasm:$(TAG) \
-            --file Dockerfile.ubuntu.kasm .
-
-
 sudo:
 	docker build \
             --no-cache=$(NOCACHE) \
