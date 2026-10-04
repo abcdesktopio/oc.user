@@ -119,8 +119,9 @@ files=(
 # loop to check if file doesn't exist, copy it
 for file in "${files[@]}"; do
     if [ ! -f ~/.config/"$file" ] || [ ! -z "$ABCDESKTOP_FORCE_OVERWRITE_PLASMA_CONFIG" ]; then
-        echo "create $file"
-        cp "/composer/.config/$file" ~/.config/
+        echo "create $file with envsubst"
+	envsubst < /composer/.config/$file > ~/.config/$file
+        # cp "/composer/.config/$file" ~/.config/
     fi
 done
 
@@ -437,24 +438,27 @@ echo "== stage wallpaper == "
 # echo "ABCDESKTOP_LABEL_set_default_wallpaper is $ABCDESKTOP_LABEL_set_default_wallpaper"
 # echo "SET_DEFAULT_WALLPAPER=$SET_DEFAULT_WALLPAPER"
 DEFAULT_WALLPAPER=${ABCDESKTOP_LABEL_set_default_wallpaper:-$SET_DEFAULT_WALLPAPER}
+CURRENT_WALLPAPER_FILE=~/.config/current_wallpaper
 echo "DEFAULT_WALLPAPER=${DEFAULT_WALLPAPER}"
 if [ ! -z ${DEFAULT_WALLPAPER} ]; then
         CONFIGSTORE_PATH=~/.store
         # if $SET_DEFAULT_WALLPAPER file exists
         if [ -f "$WALLPAPER_PATH/$DEFAULT_WALLPAPER" ]; then
-		echo $WALLPAPER_PATH/$DEFAULT_WALLPAPER file exists
-                CURRENT_WALLPAPER_FILE=~/.config/current_wallpaper
-                if [ -f ${CURRENT_WALLPAPER_FILE} ]; then
-			echo Reset wallpaper file to ${WALLPAPER_PATH}/${DEFAULT_WALLPAPER}
-		fi
-                echo "Define wallpaper as $DEFAULT_WALLPAPER to $CURRENT_WALLPAPER_FILE"
-                cp "$WALLPAPER_PATH/$DEFAULT_WALLPAPER" "$CURRENT_WALLPAPER_FILE"
-                echo -n ${DEFAULT_WALLPAPER} > ${CONFIGSTORE_PATH}/currentImg
-        else
+			echo $WALLPAPER_PATH/$DEFAULT_WALLPAPER file exists
+			if [ -f ${CURRENT_WALLPAPER_FILE} ]; then
+				echo Reset wallpaper file to ${WALLPAPER_PATH}/${DEFAULT_WALLPAPER}
+			fi
+			echo "Define wallpaper as $DEFAULT_WALLPAPER to $CURRENT_WALLPAPER_FILE"
+			cp "$WALLPAPER_PATH/$DEFAULT_WALLPAPER" "$CURRENT_WALLPAPER_FILE"
+			echo -n ${DEFAULT_WALLPAPER} > ${CONFIGSTORE_PATH}/currentImg
+		else
                 echo "File $WALLPAPER_PATH/$DEFAULT_WALLPAPER does not exist skipping wallpaper"
         fi
 else
         echo "SET_DEFAULT_WALLPAPER is not defined, keep default wallpapers config"
+	if [ ! -f ${CURRENT_WALLPAPER_FILE} ]; then
+		cp /composer/wallpapers/Win11OS-light.jpg "$CURRENT_WALLPAPER_FILE"
+	fi
 fi
 
 
@@ -465,20 +469,20 @@ echo "== stage backgroundcolor == "
 # currentColor
 # currentImgColor
 if [ ! -z "$SET_DEFAULT_COLOR" ]; then
-        CONFIGSTORE_PATH=~/.store
-        # if $SET_DEFAULT_WALLPAPER file exists 
-        if [ ! -f "$CONFIGSTORE_PATH"/currentColor ]; then
-                echo -n "$SET_DEFAULT_COLOR" > "$CONFIGSTORE_PATH"/currentColor
-        else
-                echo "File $CONFIGSTORE_PATH/currentColor already exist skipping update value"
-        fi
-        if [ ! -f "$CONFIGSTORE_PATH/currentImgColor" ]; then
-                echo -n "$SET_DEFAULT_COLOR" > "$CONFIGSTORE_PATH"/currentImgColor
-        else
-                echo "File $CONFIGSTORE_PATH/currentImgColor already exist skipping update value"
-        fi
+	CONFIGSTORE_PATH=~/.store
+	# if $SET_DEFAULT_WALLPAPER file exists 
+	if [ ! -f "$CONFIGSTORE_PATH"/currentColor ]; then
+		echo -n "$SET_DEFAULT_COLOR" > "$CONFIGSTORE_PATH"/currentColor
+	else
+		echo "File $CONFIGSTORE_PATH/currentColor already exist skipping update value"
+	fi
+	if [ ! -f "$CONFIGSTORE_PATH/currentImgColor" ]; then
+		echo -n "$SET_DEFAULT_COLOR" > "$CONFIGSTORE_PATH"/currentImgColor
+	else
+		echo "File $CONFIGSTORE_PATH/currentImgColor already exist skipping update value"
+	fi
 else
-        echo "SET_DEFAULT_COLOR is not defined, keep default value"
+    echo "SET_DEFAULT_COLOR is not defined, keep default value"
 fi
 
 

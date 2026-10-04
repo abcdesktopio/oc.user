@@ -63,22 +63,22 @@ RUN npm install --omit=dev && npm audit fix
 
 WORKDIR /composer/node/broadcast-service
 RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
-RUN npm i --package-lock-only && npm audit fix
+RUN npm i --package-lock-only && npm audit fix --omit=dev
 
 RUN git clone https://github.com/abcdesktopio/run-service.git /composer/node/ocrun 
 WORKDIR /composer/node/ocrun
 RUN if [ ! -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
 RUN cp ocrun.js ocrun.builtin.js    && sed -Ei 's/^let DEFAULT_EXECMODE;/let DEFAULT_EXECMODE="builtin";/'    ocrun.builtin.js 
 RUN cp ocrun.js ocrun.frontendjs.js && sed -Ei 's/^let DEFAULT_EXECMODE;/let DEFAULT_EXECMODE="frontendjs";/' ocrun.frontendjs.js    
-RUN npm i --package-lock-only && npm audit fix
+RUN npm i --package-lock-only && npm audit fix --omit=dev
 
 WORKDIR /composer/node/ocdownload
 RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
-RUN npm audit fix
+RUN npm audit fix --omit=dev
 
 WORKDIR /composer/node/occall
 RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
-RUN npm audit fix
+RUN npm audit fix --omit=dev
 
 RUN git clone https://github.com/abcdesktopio/colorflow.git /composer/node/spawner-service/lib_spawner/colorflow
 WORKDIR /composer/node/spawner-service/lib_spawner/colorflow
@@ -87,7 +87,7 @@ RUN rm colorflow.test.js && rm -rf images/
 
 WORKDIR /composer/node/spawner-service
 # install node-gyp to build spawner-service
-RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
+RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; npm audit fix --omit=dev; fi
 # RUN npm audit fix 
 
 
@@ -96,7 +96,7 @@ RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
         rm -rf /composer/node/xterm.js; \
     else \
         cd /composer/node/xterm.js ;\
-	if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi ;\ 
+	if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; npm audit fix --omit=dev; fi ;\ 
     fi
 
 # version.json must be created by mkversion.sh bash script
@@ -169,21 +169,23 @@ RUN apt-get update  && \
 
 # install core packages
 # x11-apps is need to install xeyes xeyes is a test application
+# gettext for envsubst
 RUN apt-get update && \    
     apt-get install -y --no-install-recommends \
         supervisor \
-	libnss-extrausers \
+        libnss-extrausers \
         cups-client \
         pulseaudio-utils \
         pavumeter \
         xauth \
         websockify \
-	krb5-user \
-	desktop-file-utils \
-	xdg-user-dirs \
-	xclip \
-	libimlib2t64 \
-	libglib2.0-bin \
+        krb5-user \
+        desktop-file-utils \
+        xdg-user-dirs \
+        xclip \
+        libimlib2t64 \
+        libglib2.0-bin \
+        gettext \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
@@ -305,10 +307,10 @@ RUN cp /usr/share/wallpapers/Win11OS-light/contents/images/3840x2400.jpg /compos
 # add breeze theme
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-	breeze-gtk-theme \
-	qml-module-org-kde-qqc2breezestyle \
-	gtk-update-icon-cache && \
-    gtk-update-icon-cache && \ 
+        breeze-gtk-theme \
+        qml-module-org-kde-qqc2breezestyle \
+        gtk-update-icon-cache && \
+        gtk-update-icon-cache && \ 
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* 
 
