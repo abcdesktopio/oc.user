@@ -3,7 +3,7 @@
 
 echo args is $1 
 # set default IMAGE_RELEASE to run test
-DEFAULT_IMAGE=abcdesktopio/oc.user.ubuntu.24.04:3.3
+DEFAULT_IMAGE=abcdesktopio/oc.user.ubuntu.24.04:4.4
 IMAGE_RELEASE=${1:-$DEFAULT_IMAGE}
 
 # show used IMAGE_RELEASE
@@ -31,8 +31,8 @@ done;
 
 # install package before running tests
 # list files
-# echo "Dump test install scripts"
-# docker exec --user root ${CONTAINER_ID} cat /composer/node/install-tests.sh
+echo "run test install scripts"
+docker exec --user root ${CONTAINER_ID} bash /composer/node/install-tests.sh
 # echo
 echo "Dump test run scripts"
 docker exec --user root ${CONTAINER_ID} cat /composer/node/run-tests.sh
