@@ -16,8 +16,6 @@ WALLPAPER_PATH=~/.wallpapers
 
 ## Export Var
 export NAMESPACE=${POD_NAMESPACE:-'abcdesktop'}
-export LIBOVERLAY_SCROLLBAR=0
-export UBUNTU_MENUPROXY=
 export DISPLAY=${DISPLAY:-':0'}
 export X11LISTEN=${X11LISTEN:-'udp'}
 export USER=${USER:-'balloon'}
@@ -30,9 +28,38 @@ export ABCDESKTOP_LOG_DIR=${ABCDESKTOP_LOG_DIR:-'/var/log/desktop'}
 export DISABLE_REMOTEIP_FILTERING=${DISABLE_REMOTEIP_FILTERING:-'disabled'}
 export BROADCAST_COOKIE=${BROADCAST_COOKIE:-$ABCDESKTOP_SESSION}
 export SUPERVISOR_PID_FILE=/var/run/desktop/supervisord.pid
-export XDG_SESSION_TYPE=${XDG_SESSION_TYPE:-x11}
-export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-${HOME}/.runtime}
+export XDG_SESSION_TYPE=${XDG_SESSION_TYPE:-wayland}
+export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/tmp/xdg-runtime-user}
+# export XKB_LAYOUT=${XKB_LAYOUT}
 export DESKTOPTHEME=${DESKTOPTHEME:-'Win11OS-light'}
+
+
+# export for wayland
+export QT_QPA_PLATFORM=wayland
+export WLR_RENDERER=pixman
+export GDK_BACKEND=wayland
+
+# 1. Setup minimal directory structure (must exist and be writable)
+mkdir -p ${XDG_RUNTIME_DIR}
+chmod 700 ${XDG_RUNTIME_DIR}
+
+# 2. Force software pipeline (Mesa llvmpipe)
+export LIBGL_ALWAYS_SOFTWARE=1
+export GALLIUM_DRIVER=llvmpipe
+export WLR_RENDERER_ALLOW_SOFTWARE=1
+
+# 3. Direct Aquamarine & wlroots to go headless
+export AQ_BACKENDS=headless
+export WLR_BACKENDS=headless
+export AQ_NO_MODIFIERS=1
+
+# 4. Strip hardware seat / pointer dependencies
+export LIBSEAT_BACKEND=noop
+export WLR_LIBINPUT_NO_DEVICES=1
+
+# 5. Prevent toolkit locks
+export QT_QPA_PLATFORM=offscreen
+
 
 # TRAP for container signal SIGINT SIGQUIT SIGHUP SIGTERM
 stop() {
@@ -55,7 +82,6 @@ echo "== stage init == "
 # dump vars
 echo NAMESPACE=${NAMESPACE}
 echo "Container local ip addr is $CONTAINER_IP_ADDR"
-echo X11LISTEN=${X11LISTEN}
 
 # set umask to 
 # make sur log file can not be read by everyone
@@ -66,25 +92,55 @@ id
 # Clean lock 
 rm -rf /tmp/.X0-lock &
 
-
 echo "== stage vnc == "
 
-# get VNC_PASSWORD 
-# use vncpasswd command line to create a vnc passwd file
-mkdir -p ${ABCDESKTOP_RUN_DIR}/.vnc
-# read the vnc password from the kubernetes secret
-if [ -f ${ABCDESKTOP_SECRETS_DIR}/vnc/password ]; then
-        echo 'vnc password use kubernetes secret'
-        cat ${ABCDESKTOP_SECRETS_DIR}/vnc/password | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
-else
-	echo file ${ABCDESKTOP_SECRETS_DIR}/vnc/password DOES NOT EXIST
-        echo THIS IS AN ERROR error: no vnc password has been set
-        echo run a ls -la ${ABCDESKTOP_SECRETS_DIR}/vnc command for you to help troubleshooting
-        ls -la ${ABCDESKTOP_SECRETS_DIR}/vnc
-        echo 'fix use changemeplease as vncpassword'
-        echo changemeplease | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
+# check if wayvnc exists
+if command -v wayvnc &> /dev/null
+then
+	echo "create config file for wayvnc"
+	# 
+	# create config file for wayvnc 
+	#
+	# read the vnc password from the kubernetes secret
+	mkdir -p ~/.config/wayvnc
+	if [ -f ${ABCDESKTOP_SECRETS_DIR}/vnc/password ]; then
+        	echo 'vnc password use kubernetes secret'
+		ABCDESKTOP_VNCPASSWORD=$(cat ${ABCDESKTOP_SECRETS_DIR}/vnc/password)
+	else
+		echo file ${ABCDESKTOP_SECRETS_DIR}/vnc/password DOES NOT EXIST
+        	echo THIS IS AN ERROR error: no vnc password has been set
+        	echo run a ls -la ${ABCDESKTOP_SECRETS_DIR}/vnc command for you to help troubleshooting
+        	echo 'fix use changemeplease as vncpassword'
+		ABCDESKTOP_VNCPASSWORD=changemeplease
+	fi
+	# create ~/.config/wayvnc/config
+	ABCDESKTOP_VNCPASSWORD=${ABCDESKTOP_VNCPASSWORD} envsubst < /composer/.config/wayvnc/config.template >  ~/.config/wayvnc/config
 fi
 
+# check if vncpasswd exists
+if command -v vncpasswd &> /dev/null
+then 
+	echo "create config file for w0vncserver"
+	# get VNC_PASSWORD 
+	# use vncpasswd command line to create a vnc passwd file
+	mkdir -p ${ABCDESKTOP_RUN_DIR}/.vnc
+	# read the vnc password from the kubernetes secret
+	if [ -f ${ABCDESKTOP_SECRETS_DIR}/vnc/password ]; then
+        	echo 'vnc password use kubernetes secret'
+        	cat ${ABCDESKTOP_SECRETS_DIR}/vnc/password | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
+	else
+        	echo file ${ABCDESKTOP_SECRETS_DIR}/vnc/password DOES NOT EXIST
+        	echo THIS IS AN ERROR error: no vnc password has been set
+        	echo run a ls -la ${ABCDESKTOP_SECRETS_DIR}/vnc command for you to help troubleshooting
+        	ls -la ${ABCDESKTOP_SECRETS_DIR}/vnc
+        	echo 'fix use changemeplease as vncpassword'
+        	echo changemeplease | vncpasswd -f > ${ABCDESKTOP_RUN_DIR}/.vnc/passwd
+	fi
+fi
+
+
+echo "== stage .config == "
+cp /composer/.config/
 
 
 echo "== stage env == "
@@ -102,30 +158,50 @@ fi
 
 # create directory in home directory 
 mkdir -p ~/.store ~/Desktop &
-# create ~/.config
-mkdir -p ~/.config
 mkdir -p ~/.config/nautilus &
 
 # Define file name for plasma kde5 
-files=(
-    "plasmashellrc"
-    "plasma-org.kde.plasma.desktop-appletsrc"
-    "kwinrc"
-    "plasmarc"
-    "kactivitymanagerdrc"
-    "kglobalshortcutsrc"
-)
+# files=(
+#    "plasmashellrc"
+#    "plasma-org.kde.plasma.desktop-appletsrc"
+#    "kwinrc"
+#    "plasmarc"
+#    "kactivitymanagerdrc"
+#    "kglobalshortcutsrc"
+#)
 
-# loop to check if file doesn't exist, copy it
-for file in "${files[@]}"; do
-    if [ ! -f ~/.config/"$file" ] || [ ! -z "$ABCDESKTOP_FORCE_OVERWRITE_PLASMA_CONFIG" ]; then
-        echo "create $file"
-        cp "/composer/.config/$file" ~/.config/
-    fi
-done
+# # loop to check if file doesn't exist, copy it
+#for file in "${files[@]}"; do
+#    if [ ! -f ~/.config/"$file" ] || [ ! -z "$ABCDESKTOP_FORCE_OVERWRITE_PLASMA_CONFIG" ]; then
+#        echo "create $file"
+#        cp "/composer/.config/$file" ~/.config/
+#    fi
+# done
 
-if [ ! -d ~/.config/plasma-workspace ] || [ ! -z "$ABCDESKTOP_FORCE_OVERWRITE_PLASMA_CONFIG" ]; then
-	cp -r -f /composer/.config/plasma-workspace ~/.config
+# if [ ! -d ~/.config/plasma-workspace ] || [ ! -z "$ABCDESKTOP_FORCE_OVERWRITE_PLASMA_CONFIG" ]; then
+#	cp -r -f /composer/.config/plasma-workspace ~/.config
+# fi
+#
+#
+
+if [ ! -d ~/.config/labwc ] || [ ! -z "$ABCDESKTOP_FORCE_OVERWRITE_PLASMA_CONFIG" ]; then
+	mkdir -p ~/.config/labwc 
+       	cp -r -f /composer/.config/labwc ~/.config
+fi
+
+if [ ! -d ~/.config/waybar ] || [ ! -z "$ABCDESKTOP_FORCE_OVERWRITE_PLASMA_CONFIG" ]; then
+        mkdir -p ~/.config/waybar
+        cp -r -f /composer/.config/waybar ~/.config
+fi
+
+if [ ! -d ~/.config/sfwbar ] || [ ! -z "$ABCDESKTOP_FORCE_OVERWRITE_PLASMA_CONFIG" ]; then
+        mkdir -p ~/.config/sfwbar
+        cp -r -f /composer/.config/sfwbar ~/.config
+fi
+
+if [ ! -d ~/.config/rofi ] || [ ! -z "$ABCDESKTOP_FORCE_OVERWRITE_PLASMA_CONFIG" ]; then
+        mkdir -p ~/.config/rofi
+        cp -r -f /composer/.config/rofi ~/.config
 fi
 
 if [ ! -z "$PULSEAUDIO_COOKIE" ]; then
@@ -137,7 +213,7 @@ if [ ! -z "$PULSEAUDIO_COOKIE" ]; then
 	# create a 256 Bytes cookie file for pulseaudio
 	for i in {1..8} 
 	do 
-		echo -n "$PULSEAUDIO_COOKIE" >> ~/.config/pulse/cookie
+	  echo -n "$PULSEAUDIO_COOKIE" >> ~/.config/pulse/cookie
 	done
  else
  	echo "error PULSEAUDIO_COOKIE is not defined, sound goes wrong"
@@ -338,8 +414,9 @@ export EXTERNAL_DESKTOP_DOMAIN
 #fi
 
 # Starting system dbus 
-dbus-daemon --config-file=/usr/share/dbus-1/system.conf --print-address  --fork --nosyslog
+# dbus-daemon --config-file=/usr/share/dbus-1/system.conf --print-address  --fork --nosyslog
 # export ${dbus_system}
+#
 
 echo "== stage XDG_RUNTIME_DIR == "
 if [ ! -d "${XDG_RUNTIME_DIR}" ]; then
@@ -482,22 +559,7 @@ else
 fi
 
 
-echo "== stage plasmashell == "
-# should be $(/usr/bin/plasmashell --version |awk '{ print $2 }') 
-# /usr/bin/plasmashell --version failed if X11 is not running
-export PLASMASHELL_VERSION=6
-if [ -x /usr/bin/kded5 ]; then
-	export PLASMASHELL_VERSION=5
-fi
-
-if [ -x /usr/bin/kded6 ]; then
-        export PLASMASHELL_VERSION=6
-fi
-echo "PLASMASHELL_VERSION=$PLASMASHELL_VERSION"
-
-
 echo "== stage gpu == "
-
 # nvidia test
 if [ -d /proc/driver/nvidia ]; then
        echo /proc/driver/nvidia exists

@@ -15,7 +15,7 @@ const fs = require('fs');
 const childProcess = require('child_process');
 const util = require('util');
 const asyncHandler = require('express-async-handler');
-const colorflow = require('./colorflow/colorflow');
+// const colorflow = require('./colorflow/colorflow');
 const broadcast = require('./broadcast');
 const { set } = require('./utils');
 const middlewares = require('./middlewares');
@@ -100,11 +100,11 @@ async function plasmabackgroundcolor(bgColor) {
 async function changeBgImage(imgName = '') {
   const ret = { code: 500, data: 'Internal server error' };
   try {
-    const color = await colorflow(imgName);
+    const color = null; // await colorflow(imgName);
     const { code, data } = await plasmabackgroundimage( imgName );
     if (code === 200) {
-      await set('currentImgColor', color);
-      await broadcast.broadcastevent('display.setBackgroundBorderColor', color);
+      //await set('currentImgColor', color);
+      //await broadcast.broadcastevent('display.setBackgroundBorderColor', color);
       ret.code = code;
       ret.data = { color: color, subData: data };
     }

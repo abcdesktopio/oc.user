@@ -3,8 +3,8 @@ ARG BUILDPLATFORM
 ARG TAG
 # Default base image 
 ARG BASE_IMAGE=ubuntu
-# Default release is 24.04
-ARG BASE_IMAGE_RELEASE=24.04
+# Default release is 26.04
+ARG BASE_IMAGE_RELEASE=26.04
 
 
 
@@ -25,7 +25,7 @@ ARG TARGET_PRUNE
 # convert ARG to ENV with same name
 ENV TARGET_MODE=$TARGET_MODE
 ENV TARGET_PRUNE=$TARGET_PRUNE
-ENV NODE_MAJOR=20
+ENV NODE_MAJOR=24
 
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 RUN apt-get update && apt-get install -y  --no-install-recommends \
@@ -45,11 +45,11 @@ RUN apt-get update && apt-get install -y  --no-install-recommends \
         gnupg \
         dpkg
 
-# install npm nodejs 
-RUN  mkdir -p /etc/apt/keyrings && \
-     curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
-     echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list && apt-get update && apt-get install -y --no-install-recommends nodejs && npm install -g npm
-
+# install nodejs
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x -o nodesource_setup.sh && \
+    bash nodesource_setup.sh && rm nodesource_setup.sh && \
+    apt install nodejs -y
+    
 
 COPY composer /composer
 
@@ -63,32 +63,32 @@ RUN npm install --omit=dev && npm audit fix
 
 WORKDIR /composer/node/broadcast-service
 RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
-RUN npm i --package-lock-only && npm audit fix
+RUN npm i --package-lock-only && npm audit fix --omit=dev
 
 RUN git clone https://github.com/abcdesktopio/run-service.git /composer/node/ocrun 
 WORKDIR /composer/node/ocrun
 RUN if [ ! -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
 RUN cp ocrun.js ocrun.builtin.js    && sed -Ei 's/^let DEFAULT_EXECMODE;/let DEFAULT_EXECMODE="builtin";/'    ocrun.builtin.js 
 RUN cp ocrun.js ocrun.frontendjs.js && sed -Ei 's/^let DEFAULT_EXECMODE;/let DEFAULT_EXECMODE="frontendjs";/' ocrun.frontendjs.js    
-RUN npm i --package-lock-only && npm audit fix
+RUN npm i --package-lock-only && npm audit fix --omit=dev
 
 WORKDIR /composer/node/ocdownload
 RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
-RUN npm audit fix
+RUN npm audit fix --omit=dev
 
 WORKDIR /composer/node/occall
 RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
-RUN npm audit fix
+RUN npm audit fix --omit=dev
 
-RUN git clone https://github.com/abcdesktopio/colorflow.git /composer/node/spawner-service/lib_spawner/colorflow
-WORKDIR /composer/node/spawner-service/lib_spawner/colorflow
-RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; npm run build;  fi
-RUN rm colorflow.test.js && rm -rf images/
+# RUN git clone https://github.com/abcdesktopio/colorflow.git /composer/node/spawner-service/lib_spawner/colorflow
+# WORKDIR /composer/node/spawner-service/lib_spawner/colorflow
+# RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; npm run build;  fi
+# RUN rm colorflow.test.js && rm -rf images/
 
 WORKDIR /composer/node/spawner-service
 # install node-gyp to build spawner-service
 RUN if [ -z "$TARGET_PRUNE" ] ; then npm install ; else npm install --omit=dev; fi
-# RUN npm audit fix 
+# RUN npm audit fix --omit=dev
 
 
 WORKDIR /
@@ -101,6 +101,77 @@ RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
 
 # version.json must be created by mkversion.sh bash script
 COPY composer/version.json /composer/version.json
+
+# rofi theme
+FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} AS ubuntu_rofi_themes__builder 
+RUN apt-get update
+RUN apt-get install -y git
+RUN git clone https://github.com/lr-tech/rofi-themes-collection.git
+
+
+FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} AS ubuntu_waybar_builder
+RUN apt-get update
+RUN apt-get install -y git cmake   meson   scdoc   wayland-protocols libxml2-utils
+RUN apt-get install -y clang-tidy gobject-introspection libdbusmenu-gtk3-dev libevdev-dev   libfmt-dev libgirepository1.0-dev libgtk-3-dev libgtkmm-3.0-dev   libinput-dev libjsoncpp-dev libmpdclient-dev libnl-3-dev libnl-genl-3-dev   libpulse-dev libsigc++-2.0-dev libspdlog-dev libwayland-dev scdoc upower   libxkbregistry-dev wayland-protocols
+RUN git clone https://github.com/Alexays/Waybar
+RUN cd Waybar && meson setup build
+RUN cd Waybar && ninja -C build
+
+
+
+
+## Buid wayvnc 
+FROM ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} AS ubuntu_wayvnc_builder
+# get packages to build
+RUN apt-get update
+RUN apt-get install -y build-essential automake
+RUN apt install -y meson libdrm-dev libxkbcommon-dev libjansson-dev \
+        libpam0g-dev libgnutls28-dev libavfilter-dev libavcodec-dev \
+        libavutil-dev libturbojpeg0-dev scdoc
+RUN apt-get install -y libwlroots-0.19-dev || true 
+RUN apt-get install -y libpixman-1-dev || true
+RUN apt-get install -y libpixman-1-0 || true
+RUN apt-get install -y libwlroots-dev || true
+
+# clone source code
+RUN apt-get install -y git wget
+RUN wget https://github.com/any1/neatvnc/archive/refs/tags/v1.0.2.tar.gz && tar -xvf v1.0.2.tar.gz && mv neatvnc-1.0.2 neatvnc
+RUN wget https://github.com/any1/aml/archive/refs/tags/v1.0.0.tar.gz && tar -xvf v1.0.0.tar.gz && mv aml-1.0.0 aml
+RUN wget https://github.com/any1/wayvnc/archive/refs/tags/v0.10.2.tar.gz && tar -xvf v0.10.2.tar.gz && mv wayvnc-0.10.2 wayvnc
+# RUN git clone https://github.com/any1/neatvnc.git
+# RUN git clone https://github.com/any1/aml
+# RUN git clone https://github.com/any1/wayvnc
+# COPY src/wayvnc-0.10.2 /wayvnc
+# build 
+RUN mkdir -p wayvnc/subprojects
+RUN cd wayvnc/subprojects && ln -s ../../neatvnc . || true
+RUN cd wayvnc/subprojects && ln -s ../../aml . || true
+RUN mkdir -p neatvnc/subprojects
+RUN cd neatvnc/subprojects && ln -s ../../aml . || true
+RUN cd wayvnc && meson build && ninja -C build
+# test
+RUN cd wayvnc && meson test -C build
+RUN mkdir /install
+RUN cd wayvnc && DESTDIR=/install ninja -C build install
+
+
+## build sfwbar
+FROM  ${BASE_IMAGE}:${BASE_IMAGE_RELEASE} AS ubuntu_sfwbar_builder
+
+## Buid sfwbar
+RUN apt-get update && apt-get install -y build-essential automake ninja-build meson git gettext
+RUN apt install -y libgtk-3-dev libgtk-layer-shell-dev libjson-c-dev 
+RUN apt install -y libpulse-dev libasound2-dev libmpdclient-dev 
+RUN apt install -y libwayland-dev wayland-protocols libgtk-layer-shell-dev 
+RUN apt install -y bluez libbluetooth-dev libasound2-dev libxkbregistry-dev wayland-protocols gettext
+
+# clone source code
+RUN git clone https://github.com/LBCrion/sfwbar
+# meson setup build --werror -Dpulse=enabled -Dmpd=disabled -Dnetwork=enabled -Dalsa=disabled -Dbluez=disabled -Dxkb=enabled -Didleinhibit=disabled
+RUN cd sfwbar && meson setup build
+RUN cd sfwbar && ninja -C build
+RUN mkdir /install
+RUN cd sfwbar && DESTDIR=/install ninja -C build install
 
 
 #
@@ -118,7 +189,7 @@ ARG TARGET_MODE
 ENV ABCDESKTOP_LOCALACCOUNT_DIR=$ABCDESKTOP_LOCALACCOUNT_DIR
 ENV TARGET_MODE=$TARGET_MODE
 # set node release
-ENV NODE_MAJOR=20
+ENV NODE_MAJOR=24
 
 COPY etc /etc
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
@@ -127,7 +198,7 @@ RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selectio
     apt-get install -y --no-install-recommends \
         ca-certificates \
         curl \
-	gnupg \
+        gnupg \
         net-tools \
         bash && \
     apt-get clean && \
@@ -158,89 +229,142 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # tigervncserver_1.14.80-1ubuntu1_22.04_amd64.deb
 # tigervncserver_1.14.1-1ubuntu1_22.04.amd64.deb
 # tigervncserver_1.14.1-1ubuntu1_24.04.amd64.deb
-ENV TIGERVNC_RELEASE=1.16.2
-RUN apt-get update  && \
-    source /etc/lsb-release && \
-    echo DISTRIB_RELEASE=${DISTRIB_RELEASE} && \
-    tigervncdeburl="https://github.com/abcdesktopio/oc.user/raw/4.4/tigervncserver_${TIGERVNC_RELEASE}-1ubuntu1_${DISTRIB_RELEASE}_$(dpkg --print-architecture).deb" && \
-    echo Downloading $tigervncdeburl && \
-    curl -sL --output /tmp/tigervncserver.deb "$tigervncdeburl" && \  
-    apt-get install -y --no-install-recommends /tmp/tigervncserver.deb && \
-    rm -f /tmp/*.deb && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* 
+# ENV TIGERVNC_RELEASE=1.16.2
+# RUN apt-get update  && \
+#    source /etc/lsb-release && \
+#    echo DISTRIB_RELEASE=${DISTRIB_RELEASE} && \
+#    tigervncdeburl="https://github.com/abcdesktopio/oc.user/raw/4.4/tigervncserver_${TIGERVNC_RELEASE}-1ubuntu1_${DISTRIB_RELEASE}_$(dpkg --print-architecture).deb" && \
+#    echo Downloading $tigervncdeburl && \
+#    curl -sL --output /tmp/tigervncserver.deb "$tigervncdeburl" && \  
+#    apt-get install -y --no-install-recommends /tmp/tigervncserver.deb && \
+#    rm -f /tmp/*.deb && \
+#    apt-get clean && rm -rf /var/lib/apt/lists/* 
 
 # install core packages
 # x11-apps is need to install xeyes xeyes is a test application
+# sfwbar need librsvg2-common librsvg2-bin to paint svg icon
 RUN apt-get update && \    
     apt-get install -y --no-install-recommends \
         supervisor \
-	libnss-extrausers \
+        libnss-extrausers \
         cups-client \
         pulseaudio-utils \
-        pavumeter \
         xauth \
+        krb5-user \
+        xdg-user-dirs \
+        dbus-x11 \
+        xdg-utils \
+        desktop-file-utils \
+        labwc \
+        waybar \ 
+	librsvg2-common \
+	librsvg2-bin \
         websockify \
-	krb5-user \
-	desktop-file-utils \
-	xdg-user-dirs \
-	xclip \
-	libimlib2t64 \
-	libglib2.0-bin \
+        swaybg \
+        xwayland \
+        rofi \
+        gettext-base \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
+# note the packages :
+# - xdg-desktop-portal
+# - xdg-desktop-portal-gtk
+# xdg-desktop-portal \
+# xdg-desktop-portal-gtk \
+# are not required but need for w0vncserver for tigervnc 
+# if you want to replace wayvnc by w0vncserver
+# RUN apt-get update && \
+#    apt-get install -y --no-install-recommends \
+#      dbus-x11 \
+#      xdg-utils \
+#      desktop-file-utils \
+#    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# install themes
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-      dbus-x11 \
-      x11-utils \
-      xdg-utils \
-      kwin-x11 \
-      x11-apps && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+	papirus-icon-theme \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-
-# for xwayland
+# libimlib2 for colorflow
 # RUN apt-get update && \
-#     apt-get install -y --no-install-recommends \
-#	weston \
-#    	xwayland \
-#	xterm \
-#    	mesa-utils && \
-#    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-#RUN apt-get update && \
 #    apt-get install -y --no-install-recommends \
-#      task-french-kde-desktop \
-#      task-romanian-kde-desktop \
-#      task-german-kde-desktop && \
-#    apt-get clean && rm -rf /var/lib/apt/lists/*
+#        libimlib2 \
+#    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# install lib for wayvnc in ubuntu 24.04
+# RUN apt-get update && \
+#    apt-get install -y --no-install-recommends \
+#        libdrm2 \
+#        libxkbcommon0 \
+#        libwlroots12t64 \
+#        libjansson4 \
+#        libpam0g \
+#        libavfilter9 \
+#        libavcodec60 \
+#        libavutil58 \
+#        libturbojpeg \
+#    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
+# install lib for wayvnc in ubuntu 26.04
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        libjansson4 \
+        libdrm2 \
+        libxkbcommon0 \
+        libwlroots-0.19 \
+        libjansson4 \
+        libpam0g \
+        libavfilter11 \
+        libavcodec62 \
+        libavutil60 \
+        libturbojpeg0 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# install lib for sfwbar in ubuntu 26.04
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+	libjson-c5 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# install wayvnc
+# COPY --from=ubuntu_wayvnc_builder /wayvnc/build/wayvnc /usr/local/bin/wayvnc
+# COPY --from=ubuntu_wayvnc_builder /wayvnc/build/wayvncctl /usr/local/bin/wayvncctl
+# COPY --from=ubuntu_wayvnc_builder /wayvnc/build/subprojects/aml/libaml.so /usr/lib/x86_64-linux-gnu/libaml.so
+# COPY --from=ubuntu_wayvnc_builder /wayvnc/build/subprojects/neatvnc/libneatvnc.so /usr/lib/x86_64-linux-gnu/libneatvnc.so
+
+# install wayvnc
+COPY --from=ubuntu_wayvnc_builder /install/usr/local/ /usr/local/
+
+
+# RUN apt-get update && \
+#    apt-get install -y --no-install-recommends \
+#        wayvnc \
+#    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# install sfwbar
+COPY --from=ubuntu_sfwbar_builder /install/usr/local/ /usr/local/
+
+# install rofi theme
+COPY --from=ubuntu_rofi_themes__builder /rofi-themes-collection/themes/ /usr/local/share/rofi/themes/
 
 # install composer
 COPY --from=ubuntu_node_modules_builder /composer /composer
 
-RUN apt-get update  && \
-    apt-get install -y --no-install-recommends \
-      plasma-desktop \
-      plasma-workspace \
-      plasma-workspace-data \
-      libplasma-geolocation-interface5 \
-      libkfontinst5 \
-      systemsettings \
-      qml-module-org-kde-kcm \
-      qml-module-org-kde-kwindowsystem && \
-    if [ "$TARGET_MODE" = "hardening" ] ; then  dpkg -L libkf5su5 | /composer/rmfol.sh; fi && \    
-    if [ "$TARGET_MODE" = "hardening" ] ; then  dpkg -L sudo      | /composer/rmfol.sh; fi && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+# install waybar
+# COPY --from=ubuntu_waybar_builder /Waybar/build/waybar /usr/local/bin/waybar
+ 
+RUN if [ "$TARGET_MODE" = "hardening" ] ; then  dpkg -L libkf5su5 | /composer/rmfol.sh; fi && \    
+    if [ "$TARGET_MODE" = "hardening" ] ; then  dpkg -L sudo      | /composer/rmfol.sh; fi 
 
 
-
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-      libnotificationmanager1 \
-      libnotify-bin \
-      libnotify4 && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+ENV BUSER=balloon
+RUN groupadd --gid 4096 $BUSER && \
+    useradd --create-home --shell /bin/bash --uid 4096 -g $BUSER $BUSER && \
+    echo "balloon:lmdpocpetit" | chpasswd $BUSER &&\
+    chown -R $BUSER:$BUSER /home/$BUSER
 
 
 # for gamepad
@@ -271,18 +395,29 @@ RUN apt-get update && \
 #    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
-# install Selawik fonts
+# install Selawik and JetBrainsMono fonts
 # comment for licencing
 # ADD fonts/SegoeUI.tar /usr/share/fonts/Microsoft/TrueType/SegoeUI/ 
 #  fc-cache -f /usr/share/fonts/Microsoft/TrueType/SegoeUI/ && \
+# mkdir -p /usr/share/fonts/NerdFonts/JetBrainsMono && \
+#    curl -fsSL https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/JetBrainsMono.tar.xz -o /tmp/JetBrainsMono.tar.xz && \
+#    tar -xJf /tmp/JetBrainsMono.tar.xz -C /usr/share/fonts/NerdFonts/JetBrainsMono && \
+#    rm -f /tmp/JetBrainsMono.tar.xz && \
+#    fc-cache -f /usr/share/fonts/NerdFonts/JetBrainsMono 
 ADD fonts/Selawik.tar /usr/share/fonts/Microsoft/TrueType/Selawik/
+ADD fonts/JetBrainsMono.tar /usr/share/fonts/NerdFonts/JetBrainsMono/ 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends fontconfig fonts-noto xfonts-base && \
-    fc-cache -f /usr/share/fonts/Microsoft/TrueType/Selawik/ && \
+    apt-get install -y --no-install-recommends \
+	fontconfig \
+	fonts-noto \
+	fonts-font-awesome \
+	xfonts-base && \
+    fc-cache -f /usr/share/fonts/Microsoft/TrueType/Selawik/ /usr/share/fonts/NerdFonts/JetBrainsMono/ && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Add usr/share/themes/Windows-10 themes 
 COPY usr/share/themes/Windows-10 /usr/share/themes/Windows-10
+COPY usr/share/themes/Lab-W11 /usr/share/themes/Lab-W11
 COPY usr/share/aurorae /usr/share/aurorae
 
 # https://github.com/yeyushengfan258/Win11OS-kde
@@ -307,19 +442,14 @@ RUN cp /usr/share/wallpapers/Win11OS-light/contents/images/3840x2400.jpg /compos
 # add breeze theme
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-	breeze-gtk-theme \
-	qml-module-org-kde-qqc2breezestyle \
-	gtk-update-icon-cache && \
-    gtk-update-icon-cache && \ 
+	breeze-gtk-theme && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* 
 
 # install nodejs
-RUN mkdir -p /etc/apt/keyrings && \
-    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
-    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends nodejs && \
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x -o nodesource_setup.sh && \
+    bash nodesource_setup.sh && rm nodesource_setup.sh && \
+    apt install -y nodejs --no-install-recommends && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -339,11 +469,10 @@ RUN if [ "$TARGET_MODE" = "hardening" ] ; then \
 
 # set build date
 RUN date > /etc/build.date
-# install qterminal xfonts-base
+# install foot
 RUN if [ "${TARGET_MODE}" != "hardening" ]; then \
 	apt-get update && \
-	apt-get install -y --no-install-recommends qterminal vim-gtk3 && \
-        rm -rf /usr/share/applications/qterminal-drop.desktop && \
+	apt-get install -y --no-install-recommends foot vim-gtk3 && \
 	apt-get clean && rm -rf /var/lib/apt/lists/*; \
     fi
 
