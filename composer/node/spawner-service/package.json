@@ -19,7 +19,6 @@
     "express-validator": "^6.14.0",
     "geoip-lite": "^1.4.10",
     "helmet": "^8.0.0",
-    "ini": "^6.0.0",
     "mime-types": "2.1.35",
     "mmmagic": "^0.5.3",
     "node-addon-api": "^8.1.0",
@@ -27,7 +26,7 @@
     "npid": "0.4.0",
     "oc.user.libraries": "^1.0.5",
     "which": "^5.0.0",
-    "ws": "^8.21.0"
+    "ws": "^8.21.3"
   },
   "devDependencies": {
     "jest": "^29.7.0",

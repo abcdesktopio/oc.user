@@ -27,7 +27,7 @@ ToolBoxButtonX=319
 
 [Containments][47][Wallpaper][org.kde.image][General]
 FillMode=0
-Image=/usr/share/wallpapers/Win11OS-light/
+Image=file://$HOME/.config/current_wallpaper
 SlidePaths=/usr/share/wallpapers/
 
 [Containments][48]

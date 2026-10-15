@@ -2,6 +2,8 @@ name: Build and test oc.user images linux/amd64, linux/arm64
 
 on:
   push:
+  schedule:
+    - cron: '42 18 * * 1'
   
 env: 
   imagetag: ${{ github.head_ref || github.ref_name || 'dev' }}

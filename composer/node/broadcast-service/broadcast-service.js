@@ -47,7 +47,7 @@ function broadcastconnectionlist() {
 
 function getstrJSONstatus() {
   const data = {
-    data: 'I am a teapot',
+    data: 'I am a teapot', // reserved in standard RFC 9110, https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/418
     date: Date.now().toString(),
   };
   const message = { method: 'keepalive', data };
@@ -71,21 +71,28 @@ wss.broadcast_keepalive = () => {
   setTimeout(wss.broadcast_keepalive, KEEPALIVE_TIMEOUT);
 };
 
-wss.unicast = (data) => {
+wss.unicast = (ws, data) => {
   let bSendDone = false;
+  console.log( `wss.clients.size=${wss.clients.size}` );
   for (const client of wss.clients) {
-    if (bSendDone) {
-      continue;
+    // Broadcast to one only of everyone EXCEPT the sender
+    if (client !== ws && client.readyState === 1) {
+      if (bSendDone) {
+        continue;
+      }
+      try {
+      	// Broadcast to everyone EXCEPT the sender
+	console.log('sending unicat');
+      	client.send(data);
+      	bSendDone = true;
+        console.log('send unicat done');
+      }
+      catch (err) {
+      	console.error(err);
+      }
     }
-
-    try {
-      console.log('unicat try to send');
-      console.log(data);
-      client.send(data);
-      bSendDone = true;
-      console.log('unicat done');
-    } catch (err) {
-      console.error(err);
+    else {
+        console.log( 'ws client is skipped, except the sender')
     }
   }
 };
@@ -103,40 +110,24 @@ wss.on('connection', async (ws, req) => {
   // console.log( JSON.stringify(req.headers, null, 4) ); 
 
   if ( remoteAddress !== process.env.CONTAINER_IP_ADDR && broadcast_cookie !== process.env.BROADCAST_COOKIE ) {
-
-      console.log( 'incoming request from external(' + remoteAddress + ')' );
-
-      /*
-      try {
-	console.log( 'incoming request from external(' + remoteAddress + ')' );
-        await assertIp(remoteAddress);
-      } catch (e) {
-        console.log(e);
-        console.log(`Connection forbiden for ip ${remoteAddress}`);
-        ws.close();
-        return;
-      }
-      console.log(`assertIp:connection permit for ip ${remoteAddress}`);
-      */
-
+      console.log( `incoming request from external ${remoteAddress} calling broadcastconnectionlist`);
       // first connection
       // send a broadcast connection list 
       // to notify connected session of a new session
       // do not notify local client
-      console.log(`calling broadcastconnectionlist for ip ${remoteAddress}`);
       broadcastconnectionlist();
   }
   else {
-      console.log(`connection permit for ip ${remoteAddress} and broadcast_cookie ${broadcast_cookie}`);	 
+      console.log(`connection permit from ip source ${remoteAddress} and broadcast_cookie ${broadcast_cookie}`);	 
   }
   
   ws.on('message', async (message) => {
-    console.log('received: %s', message);
+    console.log(`received message ${message}`);
     let json;
     try {
       json = JSON.parse(message);
     } catch (e) {
-      console.error("Can't parse data received");
+      console.error("Bad data, can't parse data received");
       ws.close();
       return;
     }
@@ -145,10 +136,11 @@ wss.on('connection', async (ws, req) => {
     // broadcast send
     let broadcast_methods = [ 'hello', 'proc.killed', 'proc.started', 'window.list', 'printer.new', 'printer.available', 'display.setBackgroundBorderColor', 'speaker.available', 'snapshot' ];
     if (broadcast_methods.includes( json.method ) ) {
-      console.log('sending: %s', message);
+      console.log(`sending: ${message}`);
       wss.broadcast(message);
     }
 
+    // send connect counter
     if (json.method === 'connect.counter') {
       broadcastconnectionlist();
     }
@@ -156,17 +148,19 @@ wss.on('connection', async (ws, req) => {
     // unicast send
     let unicast_methods = [ 'ocrun', 'logout', 'disconnect', 'container', 'download' ];
     if ( unicast_methods.includes( json.method ) ) {
-      console.log('Unicast send msg: %s', message);
-      wss.unicast(message);
+      console.log(`unicast send method ${json.method}`);
+      wss.unicast(ws, message);
     }
   });
 
   ws.on('close', () => {
-    console.log('Closed');
+    console.log('ws is closed');
+    // notify other that the connection is closed
     if (remoteAddress !== process.env.CONTAINER_IP_ADDR && broadcast_cookie !== process.env.BROADCAST_COOKIE ) {
       broadcastconnectionlist();
     }
   });
 });
 
+// ping pong to keep alive
 wss.broadcast_keepalive();
