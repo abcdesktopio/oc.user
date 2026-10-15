@@ -1,0 +1,7 @@
+address=0.0.0.0
+port=6081
+enable_auth=true
+relax_encryption=true
+use_relative_paths=true
+username=${ABCDESKTOP_USERID}
+password=${ABCDESKTOP_VNCPASSWORD}

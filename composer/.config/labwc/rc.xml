@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<labwc_config>
+
+<!-- theme -->
+<theme>
+	<name>Lab-W11</name>
+	<icon>Papirus</icon>
+        <cornerRadius>8</cornerRadius>
+        <font name="Noto Sans" size="11"/>
+        <keppBorder>yes</keppBorder>
+        <dropShadows>yes</dropShadows>
+        <titlebar>
+          <layout>icon:iconify,max,close</layout>
+        </titlebar>
+</theme>
+
+
+<!-- settings -->
+<placement>
+  <policy>Center</policy>
+</placement>
+
+<desktops>
+  <popupTime>1000</popupTime>
+  <number>1</number>
+  <prefix>Escritorio</prefix>
+</desktops>
+
+</labwc_config>

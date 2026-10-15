@@ -1,0 +1,113 @@
+/* Style Général */
+* {
+    font-family: "Segoe UI Variable", "Segoe UI", "JetBrainsMono Nerd Font", sans-serif;
+    font-size: 12px;
+    border: none;
+    border-radius: 0;
+}
+
+/* Corps principal : Couleur Mica Light de Windows 11 */
+window#waybar {
+    background-color: rgba(243, 243, 243, 0.8); /* #f3f3f3 avec transparence */
+    color: #1a1a1a; /* Texte presque noir pour le contraste */
+    border-top: 1px solid rgba(0, 0, 0, 0.08); /* Ligne supérieure gris clair très fine */
+    box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.05); /* Ombre subtile propre à Windows 11 */
+}
+
+/* Boutons de la barre des tâches (Applications et Launcher) */
+#custom-launcher,
+#taskbar button {
+    padding: 0px 12px;
+    margin: 4px 3px;
+    border-radius: 4px;
+    background-color: transparent;
+    transition: all 0.1s ease-out;
+}
+
+/* Couleur au survol (Gris foncé subtil pour le mode clair) */
+#custom-launcher:hover,
+#taskbar button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Bouton Démarrer (Icône sombre par défaut, bleue au survol) */
+#custom-launcher {
+    font-size: 20px;
+    color: #1a1a1a;
+}
+#custom-launcher:hover {
+    color: #0078d4; /* Bleu accent Windows 11 */
+}
+
+/* Icônes épinglées (Quick Launch), entre le bouton Démarrer et les fenêtres ouvertes */
+#custom-pin-files,
+#custom-pin-browser,
+#custom-pin-terminal {
+    font-size: 16px;
+    padding: 0px 10px;
+    margin: 4px 1px;
+    border-radius: 4px;
+    color: #1a1a1a;
+    background-color: transparent;
+    transition: all 0.1s ease-out;
+}
+#custom-pin-files:hover,
+#custom-pin-browser:hover,
+#custom-pin-terminal:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+/* Séparateur discret avant les fenêtres ouvertes de la taskbar */
+#custom-pin-terminal {
+    margin-right: 8px;
+    padding-right: 14px;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Application active (Fond légèrement gris + indicateur bleu en bas) */
+#taskbar button.active {
+    background-color: rgba(0, 0, 0, 0.03);
+    box-shadow: inset 0 -3px 0 #0078d4; /* Ligne bleue de Windows 11 */
+}
+
+/* Zone des indicateurs à droite (Systray, Son, Réseau, Horloge) */
+#tray {
+    color: #1a1a1a;
+    padding: 0px 10px;
+    margin: 4px 2px;
+    border-radius: 4px;
+}
+
+/* Regroupement "pilule" Son/Réseau/Batterie, comme la zone de notification de Windows 11 */
+#pulseaudio,
+#network,
+#battery {
+    color: #1a1a1a;
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 0px 8px;
+    margin: 4px 0px;
+}
+#pulseaudio {
+    margin-left: 2px;
+    border-radius: 4px 0px 0px 4px;
+}
+#battery {
+    margin-right: 2px;
+    border-radius: 0px 4px 4px 0px;
+}
+#pulseaudio:hover,
+#network:hover,
+#battery:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Horloge style Windows (Heure au-dessus, Date en-dessous), pilule séparée */
+#clock {
+    color: #1a1a1a;
+    padding: 0px 10px;
+    margin: 4px 2px;
+    border-radius: 4px;
+    font-size: 11px;
+}
+#clock:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}

@@ -1,0 +1,67 @@
+{
+    "layer": "top",
+    "position": "bottom", 
+    "height": 40, // the minimum height: 40 required by the modules 
+    "spacing": 4,
+
+    "modules-left": [], 
+    
+    "modules-center": [
+        "custom/launcher",
+        "custom/pin-files",
+        "custom/pin-browser",
+        "custom/pin-terminal",
+        "wlr/taskbar"
+    ],
+    
+    "modules-right": [
+        "tray",
+        "pulseaudio",
+        "network",
+        "battery",
+        "clock"
+    ],
+
+    "custom/launcher": {
+        "format": "  ", // Icône moderne Windows 11 (Nerd Font)
+        "on-click": "rofi -show drun || wofi --show drun", 
+        "tooltip": false
+    },
+
+    // Icônes épinglées façon "quick launch" Windows 11, à côté de la taskbar
+    "custom/pin-files": {
+        "format": "",
+        "on-click": "nautilus --no-desktop $HOME || thunar $HOME || pcmanfm $HOME || xdg-open $HOME",
+        "tooltip-format": "Explorateur de fichiers"
+    },
+
+    "custom/pin-browser": {
+        "format": "",
+        "on-click": "firefox || google-chrome-stable || chromium || xdg-open https://",
+        "tooltip-format": "Navigateur"
+    },
+
+    "custom/pin-terminal": {
+        "format": " ",
+        "on-click": "foot",
+        "tooltip-format": "Terminal"
+    },
+
+    "wlr/taskbar": {
+        "format": "{icon} {title}",
+        "icon-size": 24, // Taille ajustée style Windows 11
+        "spacing": 8,
+        "on-click": "activate",
+        "on-click-middle": "close"
+    },
+
+    "clock": {
+        "format": "{:%H:%M\n%d/%m/%Y}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+
+    "tray": {
+        "icon-size": 18,
+        "spacing": 12
+    }
+}

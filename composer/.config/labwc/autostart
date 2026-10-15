@@ -1,0 +1,14 @@
+#!/bin/bash
+
+env > /tmp/env.debug
+
+# Start the WayVNC server on all network interfaces
+wayvnc -w ${CONTAINER_IP_ADDR} &
+# /composer/w0vncserver.sh &
+# waybar &
+swaybg -i ~/.wallpapers/Win11OS-light.jpg -m fill &
+sfwbar &
+# Optional: Add other desktop components
+# pipewire &             # Audio support
+# waybar &               # Status bar
+# mako &                 # Notification daemon
