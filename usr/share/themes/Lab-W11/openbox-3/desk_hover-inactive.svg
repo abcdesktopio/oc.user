@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24"
+   height="24"
+   version="1.1"
+   viewBox="0 0 24 24"
+   id="svg1"
+   sodipodi:docname="desk_hover-inactive.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1">
+    <inkscape:page
+       x="0"
+       y="0"
+       width="24"
+       height="24"
+       id="page2"
+       margin="0"
+       bleed="0" />
+  </sodipodi:namedview>
+  <path
+     d="M 12,5.5000002 C 8.412,5.5000002 5.4999997,8.4120004 5.4999997,12 5.4999997,15.588 8.412,18.5 12,18.5 15.588,18.5 18.5,15.588 18.5,12 18.5,8.4120004 15.588,5.5000002 12,5.5000002 Z M 12,10.7 c 0.71799,0 1.3,0.58203 1.3,1.3 0,0.717971 -0.58203,1.3 -1.3,1.3 -0.717971,0 -1.3,-0.582029 -1.3,-1.3 0,-0.71797 0.582029,-1.3 1.3,-1.3 z"
+     fill="#cba6f7"
+     id="path1"
+     style="stroke-width:0.65" />
+</svg>
