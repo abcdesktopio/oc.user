@@ -405,13 +405,17 @@ RUN groupadd --gid 4096 $BUSER && \
 #    rm -f /tmp/JetBrainsMono.tar.xz && \
 #    fc-cache -f /usr/share/fonts/NerdFonts/JetBrainsMono 
 ADD fonts/Selawik.tar /usr/share/fonts/Microsoft/TrueType/Selawik/
-ADD fonts/JetBrainsMono.tar /usr/share/fonts/NerdFonts/JetBrainsMono/ 
+# ADD fonts/JetBrainsMono.tar /usr/share/fonts/NerdFonts/JetBrainsMono/ 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
 	fontconfig \
 	fonts-noto \
 	fonts-font-awesome \
 	xfonts-base && \
+    curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh && \
+    chmod 755 install_manual.sh && \
+    ./install_manual.sh && \
+    rm install_manual.sh && \
     fc-cache -f /usr/share/fonts/Microsoft/TrueType/Selawik/ /usr/share/fonts/NerdFonts/JetBrainsMono/ && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
