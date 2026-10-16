@@ -32,7 +32,7 @@ done;
 # install package before running tests
 # list files
 # echo "Dump test install scripts"
-# docker exec --user root ${CONTAINER_ID} cat /composer/node/install-tests.sh
+docker exec --user root ${CONTAINER_ID} cat /composer/node/install-tests.sh
 # echo
 echo "Dump test run scripts"
 docker exec --user root ${CONTAINER_ID} cat /composer/node/run-tests.sh
