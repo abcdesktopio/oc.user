@@ -258,7 +258,6 @@ RUN apt-get update && \
         waybar \ 
 	librsvg2-common \
 	librsvg2-bin \
-        websockify \
         swaybg \
         xwayland \
         rofi \
