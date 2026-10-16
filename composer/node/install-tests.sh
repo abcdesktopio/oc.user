@@ -18,8 +18,8 @@ fi
 if [[ ${ID} == "ubuntu" ]]; then
 	echo "install packages for $ID"
 	apt-get update
-	echo "apt-get install -y curl libxmu-dev gcc g++ make libx11-dev libxmu-dev git libimlib2-dev libpng-dev"
-	apt-get install -y curl libxmu-dev gcc g++ make libx11-dev libxmu-dev git libimlib2-dev libpng-dev
+	# echo "apt-get install -y curl libxmu-dev gcc g++ make libx11-dev libxmu-dev git libimlib2-dev libpng-dev"
+	# apt-get install -y curl libxmu-dev gcc g++ make libx11-dev libxmu-dev git libimlib2-dev libpng-dev
 	apt-get install -y net-tools
 fi
 
