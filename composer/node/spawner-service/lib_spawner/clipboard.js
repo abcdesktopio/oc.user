@@ -85,7 +85,7 @@ function routerInit(router) {
    */
   router.post('/clipboardsync', (_, res) => {
     // Sync primary clipboard to gtk default clipboard
-    clipboardsync();
+    //clipboardsync();
     res.status(200).send({ code: 200, data: 'ok' });
   });
 }
