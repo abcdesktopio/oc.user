@@ -94,7 +94,6 @@ router.use(express.json({ limit: '500mb' }));
  */
 
 router.get('/version', asyncHandler(async (_req, res) => {
-  console.log('call /version');
   const ret = { code: 404, data: 'Can not found version file' };
   let fileExist = false;
   try {
