@@ -88,15 +88,15 @@ describe('Test app endpoints', () => {
     });
   }
 
-  it('Should forbidden on run xeyes because not an handled application', () => {
+  it('Should forbidden on run foot because not an handled application', () => {
     const expected = {
       errors: [{
-        value: 'xeyes', msg: 'Command must be a valid handled command', param: 'command', location: 'body',
+        value: 'foot', msg: 'Command must be a valid handled command', param: 'command', location: 'body',
       }],
     };
     return request
       .post('/spawner/launch')
-      .send({ command: 'xeyes' })
+      .send({ command: 'foot' })
       .expect(422)
       .expect(expected);
   });

@@ -50,9 +50,8 @@ fi
 
 echo "${CONTAINER_ID} has ip address ${CONTAINER_IP}" 
 
-echo "Waiting for X11 service"
-# desktopservicestcpport = { 'x11server': 6081, 'spawner': 29786, 'broadcast': 29784 }"
-# wait for X11 
+echo "Waiting for wayvnc service"
+# wait for waynnc
 docker exec ${CONTAINER_ID} /composer/node/wait-port/node_modules/.bin/wait-port -t $TIMEOUT $CONTAINER_IP:6081
 if [ $? -ne 0 ]; then
 	echo "docker exec ${CONTAINER_ID} /composer/node/wait-port/node_modules/.bin/wait-port -t $TIMEOUT $CONTAINER_IP:6081 command failed"
@@ -79,7 +78,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # service 
-MAX_SERVICE_COUNT=6
+MAX_SERVICE_COUNT=4
 echo "TARGET_MODE is $TARGET_MODE"
 # test if the image id hardening mode
 if [ "$TARGET_MODE" == "hardening" ]; then

@@ -3,7 +3,7 @@ const roothomedir = `${process.env.HOME}`;
 const abcdesktoprundir= `${process.env.ABCDESKTOP_RUN_DIR}`;
 const abcdesktoplogdir= `${process.env.ABCDESKTOP_LOG_DIR}`;
 const pathVersion = '/composer/version.json';
-const applist = [ { key: 'xeyes.XEyes', path: '/usr/bin/xeyes' } ];
+const applist = [ { key: 'foot.Foot', path: '/usr/bin/foot' } ];
 
 if (process.env.TARGET_MODE != "hardening" ) {
   // if this is not hardening add application qterminal
