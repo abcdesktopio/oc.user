@@ -20,7 +20,7 @@ if [[ ${ID} == "ubuntu" ]]; then
 	apt-get update
 	echo "apt-get install -y curl libxmu-dev gcc g++ make libx11-dev libxmu-dev git libimlib2-dev libpng-dev"
 	apt-get install -y curl libxmu-dev gcc g++ make libx11-dev libxmu-dev git libimlib2-dev libpng-dev
-	apt-get install -y x11-apps net-tools
+	apt-get install -y net-tools
 fi
 
 echo "install /composer/node/spawner-service"
